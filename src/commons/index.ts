@@ -1,4 +1,4 @@
-export * from "./di-helper";
 export * from "./interface";
+export * from "./mediator";
 export * from "./module";
 export * from "./store";

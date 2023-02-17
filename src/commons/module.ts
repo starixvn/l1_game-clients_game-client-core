@@ -1,11 +1,5 @@
-import { AnyConstructor } from "./interface";
+import { AnyConstructor, IContainer } from "./interface";
 
-export interface IListener<Input, Output = any> {
-  properties: string[];
-
-  handle(input: Input): Output;
-}
-
-export interface IModule {
-  listeners: AnyConstructor<IListener<any, any>>[];
+export function registerModule(container: IContainer, module: AnyConstructor) {
+  container.resolve(module);
 }
