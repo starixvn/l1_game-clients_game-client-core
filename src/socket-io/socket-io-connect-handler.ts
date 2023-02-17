@@ -1,14 +1,16 @@
-import { io, ManagerOptions } from "socket.io-client";
+import { inject, injectable } from "inversify";
+import { io, ManagerOptions, SocketOptions } from "socket.io-client";
 import { Mediator } from "../commons";
 import { SocketIOStore } from "./socket-io-store";
 
+@injectable()
 export class SocketIOConnectHandler {
   constructor(
-    protected readonly mediator: Mediator,
-    protected readonly store: SocketIOStore
+    @inject(Mediator) protected readonly mediator: Mediator,
+    @inject(SocketIOStore) protected readonly store: SocketIOStore
   ) {}
 
-  handle(options: ManagerOptions) {
+  handle(options: Partial<ManagerOptions & SocketOptions>) {
     const socket = io(options);
 
     socket.on("connection", this.onConnected.bind(this));

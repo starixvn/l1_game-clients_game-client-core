@@ -1,3 +1,4 @@
+import { inject, injectable } from "inversify";
 import { PlayerStore } from "./player-store";
 
 interface PlayerProfile {
@@ -6,8 +7,9 @@ interface PlayerProfile {
   avatarId?: number;
 }
 
+@injectable()
 export class SyncPlayerProfileHandler {
-  constructor(protected readonly store: PlayerStore) {}
+  constructor(@inject(PlayerStore) protected readonly store: PlayerStore) {}
 
   handle(profile: PlayerProfile) {
     profile?.name && (this.store.name = profile.name);

@@ -1,3 +1,4 @@
+import { injectable } from "inversify";
 import { Store } from "../commons";
 
 export interface IStakeLevel {
@@ -5,6 +6,7 @@ export interface IStakeLevel {
   maxBet: number;
 }
 
+@injectable()
 export class PlayerStore extends Store {
   stakeLevel: IStakeLevel = { minBet: 0, maxBet: 0 };
 

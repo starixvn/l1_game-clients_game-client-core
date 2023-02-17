@@ -1,12 +1,15 @@
+import { inject, injectable } from "inversify";
 import { Mediator } from "../commons";
 import { SyncPlayerProfileHandler } from "./sync-player-profile-handler";
 import { SyncStakeLevelHandler } from "./sync-stake-level-handler";
 
+@injectable()
 export class PlayerModule {
   constructor(
-    mediator: Mediator,
+    @inject(Mediator) mediator: Mediator,
+    @inject(SyncPlayerProfileHandler)
     syncPlayerProfile: SyncPlayerProfileHandler,
-    syncStakeLevel: SyncStakeLevelHandler
+    @inject(SyncStakeLevelHandler) syncStakeLevel: SyncStakeLevelHandler
   ) {
     mediator.registerListener(syncPlayerProfile);
     mediator.registerListener(syncStakeLevel);
