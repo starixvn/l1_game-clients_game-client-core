@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { io, ManagerOptions, SocketOptions } from "socket.io-client";
+import { io, ManagerOptions, SocketOptions, Socket } from "socket.io-client";
 import { Mediator } from "../common";
 import { SocketIOStore } from "./socket-io-store";
 
@@ -10,17 +10,35 @@ export class SocketIOConnectHandler {
     @inject(SocketIOStore) protected readonly store: SocketIOStore
   ) {}
 
-  handle(options: Partial<ManagerOptions & SocketOptions>) {
-    const socket = io(options);
+  socket: Socket;
+  gameName: string;
 
-    socket.on("connection", this.onConnected.bind(this));
+  handle(
+    options: Partial<
+      ManagerOptions & SocketOptions & { socketUri: string; gameName: string }
+    >
+  ) {
+    this.socket = io(options.socketUri, options);
+    this.gameName = options.gameName;
+    this.socket.on("connect", this.onConnected.bind(this));
 
-    this.store.connection = socket;
+    this.store.connection = this.socket;
   }
 
-  onConnected(connection: any) {
-    connection.onAny(this.mediator.emit.bind(this.mediator));
+  onConnected() {
+    this.socket.onAny((event: any, value: any) => {
+      if (event == this.gameName) {
+        Object.entries(value).forEach((entry) => {
+          const [key, value] = entry;
+          this.mediator.emit(key, value);
+        });
+      } else {
+        this.mediator.emit(event, value);
+      }
+    });
 
-    this.mediator.onAny(connection.emit.bind(connection));
+    this.mediator.onAny((event: any, value: any) => {
+      this.socket.emit(event, value);
+    });
   }
 }

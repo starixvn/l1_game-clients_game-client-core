@@ -11,7 +11,6 @@ export class PlayerModule {
     syncPlayerProfile: SyncPlayerProfileHandler,
     @inject(SyncStakeLevelHandler) syncStakeLevel: SyncStakeLevelHandler
   ) {
-    mediator.registerListener(syncPlayerProfile);
-    mediator.registerListener(syncStakeLevel);
+    mediator.registerHandlers([syncPlayerProfile, syncStakeLevel]);
   }
 }

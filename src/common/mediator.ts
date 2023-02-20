@@ -1,8 +1,8 @@
 import { EventEmitter2 } from "eventemitter2";
 import { injectable } from "inversify";
 
-export interface IListener<Input, Output = any> {
-  properties: string[];
+export interface IHandler<Input, Output = any> {
+  eventNames: string[];
 
   handle(input: Input): Output;
 }
@@ -11,14 +11,20 @@ export interface IListener<Input, Output = any> {
 export class Mediator {
   private event = new EventEmitter2({ maxListeners: 0 });
 
-  registerListener(listener: IListener<any>) {
-    listener.properties.forEach((property) => {
-      this.event.on(property, listener.handle.bind(listener));
+  registerHandler(handler: IHandler<any>) {
+    handler.eventNames.forEach((property) => {
+      this.event.on(property, handler.handle.bind(handler));
     });
   }
 
-  onAny(listener: (...params: any[]) => void) {
-    this.event.onAny(listener);
+  registerHandlers(handlers: IHandler<any>[]) {
+    if (handlers && handlers.length > 0) {
+      handlers.forEach((handler) => this.registerHandler(handler));
+    }
+  }
+
+  onAny(handler: (...params: any[]) => void) {
+    this.event.onAny(handler);
   }
 
   emit(event: string, ...value: any[]) {

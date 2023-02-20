@@ -1,5 +1,5 @@
-import { injectable } from "inversify";
-import { Store } from "../common";
+import { injectable, inject } from "inversify";
+import { Store, MakeObservableFn } from "../common";
 
 export interface IStakeLevel {
   minBet: number;
@@ -7,7 +7,11 @@ export interface IStakeLevel {
 }
 
 @injectable()
-export class PlayerStore extends Store {
+export class PlayerStore implements Store {
+  constructor(@inject("makeObservable") makeObservable: MakeObservableFn) {
+    makeObservable(this);
+  }
+
   stakeLevel: IStakeLevel = { minBet: 0, maxBet: 0 };
 
   name: string = "";

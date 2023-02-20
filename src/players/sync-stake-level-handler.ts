@@ -1,13 +1,20 @@
 import { inject, injectable } from "inversify";
 import { IStakeLevel, PlayerStore } from "./player-store";
+import { IGameServiceMessage } from "../models/contract-models";
+import { nameof } from "ts-simple-nameof";
+import { runInAction } from "mobx";
 
 @injectable()
 export class SyncStakeLevelHandler {
   constructor(@inject(PlayerStore) protected readonly store: PlayerStore) {}
 
   handle(stakeLevel: IStakeLevel) {
-    stakeLevel && (this.store.stakeLevel = stakeLevel);
+    runInAction(() => {
+      stakeLevel && (this.store.stakeLevel = stakeLevel);
+    });
   }
 
-  properties = ["userStakeLevel"];
+  eventNames = [
+    nameof<IGameServiceMessage>((receiveData) => receiveData.userStakeLevel),
+  ];
 }

@@ -1,5 +1,7 @@
 import { inject, injectable } from "inversify";
 import { PlayerStore } from "./player-store";
+import { IGameServiceMessage } from "../models/contract-models";
+import { nameof } from "ts-simple-nameof";
 
 interface PlayerProfile {
   name?: string;
@@ -17,5 +19,5 @@ export class SyncPlayerProfileHandler {
     profile?.avatarId && (this.store.avatar = profile.avatarId);
   }
 
-  properties = ["user"];
+  eventNames = [nameof<IGameServiceMessage>((receiveData) => receiveData.user)];
 }
