@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { Mediator } from "../commons";
+import { Mediator } from "../common";
 import { SyncPlayerProfileHandler } from "./sync-player-profile-handler";
 import { SyncStakeLevelHandler } from "./sync-stake-level-handler";
 

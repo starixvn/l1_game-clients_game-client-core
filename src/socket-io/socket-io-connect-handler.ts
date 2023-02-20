@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { io, ManagerOptions, SocketOptions } from "socket.io-client";
-import { Mediator } from "../commons";
+import { Mediator } from "../common";
 import { SocketIOStore } from "./socket-io-store";
 
 @injectable()

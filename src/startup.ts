@@ -1,4 +1,4 @@
-import { IContainer, registerModule } from "./commons";
+import { IContainer, registerModule } from "./common";
 import players from "./players";
 import socketIO from "./socket-io";
 

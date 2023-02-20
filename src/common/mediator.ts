@@ -21,7 +21,7 @@ export class Mediator {
     this.event.onAny(listener);
   }
 
-  emit(event: string) {
-    this.event.emit(event);
+  emit(event: string, ...value: any[]) {
+    this.event.emit(event, ...value);
   }
 }

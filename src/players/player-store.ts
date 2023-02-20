@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { Store } from "../commons";
+import { Store } from "../common";
 
 export interface IStakeLevel {
   minBet: number;
