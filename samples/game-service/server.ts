@@ -1,18 +1,19 @@
-const express = require("express");
+import * as express from "express";
+import * as http from "http";
+import { Server } from "socket.io";
+import { GameCron } from "./game-cron";
+
 const app = express();
-const http = require("http");
 const server = http.createServer(app);
-const { Server } = require("socket.io");
 const io = new Server(server);
-const GameCron = require("./game-cron");
 const gameName = "sedie";
+const gameCron = new GameCron(io);
+
 app.get("/", (req, res) => {
   res.send("<h1>Hello world</h1>");
 });
 
 io.on("connection", (socket) => {
-  console.log("a user connected");
-
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
@@ -37,5 +38,4 @@ server.listen(3000, () => {
   console.log("listening on *:3000");
 });
 
-const gameCron = new GameCron(io);
-gameCron.startCron(io);
+gameCron.startCron();

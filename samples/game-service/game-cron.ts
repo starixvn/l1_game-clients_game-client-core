@@ -1,12 +1,12 @@
-const cron = require("cron");
+import { CronJob } from "cron";
+import { IGameServiceMessage } from "./../../src/models/contract-models";
 
-class GameCron {
+export class GameCron {
   constructor(io) {
     this.io = io;
   }
 
   gameName = "sedie";
-  roundId = 0;
 
   durations = {
     wholeRound: 39,
@@ -30,12 +30,10 @@ class GameCron {
   io;
 
   startCron() {
-    console.log("cron started");
-    const job = new cron.CronJob(
+    const job = new CronJob(
       "* * * * * *",
       () => this.proceed().catch(console.log),
-      (e) => {
-        console.log(e);
+      () => {
         job.start();
       }
     );
@@ -45,7 +43,7 @@ class GameCron {
 
   async proceed() {
     if (this.gameData.remainingTime === this.durations.wholeRound) {
-      console.log("Check game status");
+      this.publishStartGame();
     }
 
     if (!this.gameData.disabled) {
@@ -66,14 +64,11 @@ class GameCron {
 
     if (this.gameData.remainingTime < 0) {
       this.gameData.remainingTime = this.durations.wholeRound;
+      this.publishEndRound();
       this.gameData.roundId += 1;
-      console.log("Settle round");
-      this.publishStartGame();
     }
 
-    console.log(
-      `Round: ${this.gameData.roundId}, Remaining time: ${this.gameData.remainingTime}`
-    );
+    //this.publishRemainingTime();
   }
 
   isStartingTime(remainingTime, durations) {
@@ -88,21 +83,34 @@ class GameCron {
   }
 
   publishStartGame() {
-    // remainingTime: this.gameData.remainingTime,
-    // snr: true,
-    this.io.sockets.emit("snr", true);
-    console.log("snr");
+    this.emitToAllClients({
+      snr: true,
+      roundId: this.gameData.roundId,
+      remainingTime: this.gameData.remainingTime,
+    });
   }
   publishStartPlacingBetStatus() {
-    //spb: true,
-    this.io.sockets.emit("spb", true);
-    console.log("spb");
+    this.emitToAllClients({
+      spb: true,
+    });
   }
 
   publishEndPlacingBetStatus() {
-    this.io.sockets.emit("epb", true);
-    console.log("epb");
-    //epb: true,
+    this.emitToAllClients({
+      epb: true,
+    });
+  }
+
+  publishRemainingTime() {
+    this.emitToAllClients({
+      remainingTime: this.gameData.remainingTime,
+    });
+  }
+
+  publishEndRound() {
+    this.emitToAllClients({
+      finish: true,
+    });
   }
 
   resetForNewRound() {
@@ -111,10 +119,7 @@ class GameCron {
   }
 
   emitToAllClients(data) {
+    console.log(data);
     this.io.sockets.emit(this.gameName, data);
   }
 }
-
-
-
-module.exports = GameCron;

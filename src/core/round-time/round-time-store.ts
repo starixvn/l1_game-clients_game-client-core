@@ -1,5 +1,5 @@
 import { injectable, inject } from "inversify";
-import { MakeObservableFn, Store } from "../common/store";
+import { MakeObservableFn, Store } from "../../common/store";
 
 export type RoundTimeOptions = {
   wholeRound?: number;
@@ -34,6 +34,11 @@ export class RoundTimeStore implements Store {
 
   duration: number;
   remaining: number;
+
+  startNewRound: boolean = false;
+  endRound: boolean = false;
+  startPlacingBet: boolean = false;
+  endPlacingBet: boolean = false;
 
   overrideEvent: {
     name: string;
@@ -111,5 +116,25 @@ export class RoundTimeStore implements Store {
 
   stop() {
     this.isStopGameLoop = true;
+  }
+
+  toJSON() {
+    return {
+      wholeRound: this.wholeRound,
+      placingBet: this.placingBet,
+      roundTime: this.roundTime,
+      serviceStatus: {
+        startNewRound: this.startNewRound,
+        startPlacingBet: this.startPlacingBet,
+        endPlacingBet: this.endPlacingBet,
+        endRound: this.endRound,
+      },
+      clientStatus: {
+        isWaiting: this.getIsWaiting,
+        isBeforePlacingBet: this.getIsBeforePlacingBet,
+        isPlacingBet: this.getIsPlacingBet,
+        isLocking: this.getIsLocking,
+      },
+    };
   }
 }

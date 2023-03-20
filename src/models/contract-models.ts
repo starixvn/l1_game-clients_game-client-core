@@ -23,7 +23,7 @@ export interface IGameClientEmitMessage {
 
 export interface IGameServiceMessage {
   userStakeLevel: { minBet: number; maxBet: number };
-  remainingTime: 37;
+  remainingTime: number;
   um: false;
   um_message: {
     "vi-VN": string;
