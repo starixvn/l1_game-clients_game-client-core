@@ -15,10 +15,9 @@
   },
   "scripts": {
     "build": "tsc && webpack",
-    "start:dev-client": "nodemon ./samples/game-client/startup-dev.ts",
-    "start:dev-server": "nodemon ./samples/game-service/server.ts",
-    "test-coverage": "jest",
-    "test-demo": "node ./demo/test.js",
+    "dev:game-client": "nodemon ./tests/integration-tests/game-client/startup.ts",
+    "dev:game-service": "nodemon ./tests/integration-tests/game-service/server.ts",
+    "test:coverage": "jest",
     "reg": "npm set registry http://npm.lumigame.com"
   },
   "jestSonar": {
@@ -44,6 +43,7 @@
     "jest-sonar-reporter": "2.0.0",
     "mobx": "^6.8.0",
     "nodemon": "2.0.20",
+    "observer": "^1.1.1",
     "reflect-metadata": "0.1.13",
     "socket.io": "^4.6.1",
     "ts-jest": "29.0.5",

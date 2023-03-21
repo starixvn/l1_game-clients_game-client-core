@@ -9,4 +9,8 @@ export class SocketIOStore implements Store {
   }
 
   connection: Socket = {} as any;
+
+  // connection: {
+  //   status
+  // }
 }

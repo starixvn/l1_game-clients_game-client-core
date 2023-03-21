@@ -1,4 +1,4 @@
-import { container } from "./container";
+import { container } from "../../src/container";
 
 export const makeObservable = jest.fn();
 

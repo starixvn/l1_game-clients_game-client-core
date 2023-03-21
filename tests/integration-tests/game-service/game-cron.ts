@@ -1,5 +1,5 @@
 import { CronJob } from "cron";
-import { IGameServiceMessage } from "./../../src/models/contract-models";
+import { IGameServiceMessage } from "../../../src/models/game-messages";
 
 export class GameCron {
   constructor(io) {

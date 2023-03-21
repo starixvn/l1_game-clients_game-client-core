@@ -18,20 +18,19 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
 
-  socket.on("event-name", (data) => {
-    console.log(data);
+  socket.on("signin", (data) => {
+    if (data.ss == "ricky-ss") {
+      socket.emit(gameName, {
+        user: {
+          red: 10000,
+          avatarId: 1,
+        },
+        userStakeLevel: { minBet: 10, maxBet: 15 },
+      });
+      socket.emit("signedIn");
+      socket.emit("message", { toGame: "SeDie" });
+    }
   });
-
-  setInterval(() => {
-    socket.emit(gameName, {
-      user: {
-        name: "Test user",
-        red: 2321,
-        avatarId: 1,
-      },
-      userStakeLevel: { minBet: 10, maxBet: 15 },
-    });
-  }, 5000);
 });
 
 server.listen(3000, () => {

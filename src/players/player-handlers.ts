@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { IStakeLevel, PlayerStore } from "./player-store";
-import { IGameServiceMessage } from "../models/contract-models";
+import { IGameServiceMessage } from "../models/game-messages";
 import { nameof } from "ts-simple-nameof";
 import { runInAction } from "mobx";
 import { IMultipleHandlers } from "../common";
@@ -24,7 +24,7 @@ export class PlayerHandlers implements IMultipleHandlers {
   handlePlayerProfile(profile: PlayerProfile) {
     profile?.name && (this.store.name = profile.name);
     profile?.red && (this.store.balance = profile.red);
-    profile?.avatarId && (this.store.avatar = profile.avatarId);
+    profile?.avatarId && (this.store.avatarId = profile.avatarId);
   }
 
   eventHandleList = [

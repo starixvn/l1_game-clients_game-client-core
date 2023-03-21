@@ -1,7 +1,7 @@
 import { IMultipleHandlers } from "../../common/mediator";
 import { RoundTimeStore } from "./round-time-store";
 import { inject, injectable } from "inversify";
-import { IGameServiceMessage } from "../../models/contract-models";
+import { IGameServiceMessage } from "../../models/game-messages";
 import { nameof } from "ts-simple-nameof";
 
 @injectable()

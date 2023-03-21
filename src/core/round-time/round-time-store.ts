@@ -1,11 +1,11 @@
 import { injectable, inject } from "inversify";
 import { MakeObservableFn, Store } from "../../common/store";
 
-export type RoundTimeOptions = {
-  wholeRound?: number;
-  placingBet?: number;
-  lockingBet?: number;
-  waitingTime?: number;
+export type RoundTimeSetting = {
+  wholeRound: number;
+  placingBet: number;
+  lockingBet: number;
+  genResult: number;
 };
 
 @injectable()
@@ -13,6 +13,7 @@ export class RoundTimeStore implements Store {
   wholeRound: number = 0;
   placingBet: number = 0;
   lockingBet: number = 0;
+  genResult: number = 0;
   roundTime: number = 0;
 
   isLockingBet: boolean;
@@ -46,8 +47,12 @@ export class RoundTimeStore implements Store {
     duration: number;
   };
 
-  constructor(@inject("makeObservable") makeObservable: MakeObservableFn) {
+  constructor(
+    @inject("makeObservable") makeObservable: MakeObservableFn,
+    @inject("roundTimeSetting") roundTimeSetting: RoundTimeSetting
+  ) {
     makeObservable(this);
+    this.setRoundTimeSetting(roundTimeSetting);
   }
 
   get getIsWaiting() {
@@ -68,6 +73,13 @@ export class RoundTimeStore implements Store {
 
   get getIsBeforePlacingBet() {
     return this.roundTime > this.placingBet;
+  }
+
+  setRoundTimeSetting(setting: RoundTimeSetting) {
+    this.wholeRound = setting.wholeRound;
+    this.placingBet = setting.placingBet;
+    this.lockingBet = setting.lockingBet;
+    this.genResult = setting.genResult;
   }
 
   countdown() {

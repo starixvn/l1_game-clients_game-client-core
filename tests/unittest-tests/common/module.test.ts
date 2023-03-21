@@ -1,4 +1,4 @@
-import { registerModule } from ".";
+import { registerModule } from "../../src/common";
 
 describe(registerModule.name, () => {
   describe("when called", () => {

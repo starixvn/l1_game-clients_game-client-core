@@ -1,10 +1,18 @@
 import { inject, injectable } from "inversify";
 import { io, ManagerOptions, SocketOptions, Socket } from "socket.io-client";
-import { IHandler, Mediator } from "../common";
+import { Mediator } from "../common";
 import { SocketIOStore } from "./socket-io-store";
 
+export const events = {
+  connect: "connect",
+  reconnect: "reconnect",
+  connectFailed: "connect_failed",
+  connectError: "connect_error",
+  disconnect: "disconnect",
+};
+
 @injectable()
-export class SocketIOConnectHandler {
+export class SocketIOConnector {
   constructor(
     @inject(Mediator) protected readonly mediator: Mediator,
     @inject(SocketIOStore) protected readonly store: SocketIOStore
@@ -20,7 +28,7 @@ export class SocketIOConnectHandler {
   ) {
     this.socket = io(options.socketUri, options);
     this.gameName = options.gameName;
-    this.socket.on("connect", this.onConnected.bind(this));
+    this.socket.on(events.connect, this.onConnected.bind(this));
 
     this.store.connection = this.socket;
   }
@@ -40,5 +48,13 @@ export class SocketIOConnectHandler {
     this.mediator.onAny((event: any, value: any) => {
       this.socket.emit(event, value);
     });
+  }
+
+  onDisconnected() {
+    this.socket.disconnect();
+  }
+
+  send(eventName: string, data: any) {
+    this.socket.emit(eventName, data);
   }
 }

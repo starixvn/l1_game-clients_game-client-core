@@ -1,4 +1,4 @@
-import { IListener, Mediator } from ".";
+import { IHandler, Mediator } from "../../../src/common";
 import container from "../container.test";
 import { EventEmitter2 } from "eventemitter2";
 
@@ -34,13 +34,13 @@ describe(Mediator.name, () => {
     describe("when called", () => {
       it("should register an event", () => {
         // Arrange
-        const listener: IListener<any> = {
+        const handler: IHandler<any> = {
           handle: jest.fn(),
-          properties: ["event"],
+          eventNames: ["event"],
         };
 
         // Act
-        mediator.registerListener(listener);
+        mediator.registerHandler(handler);
 
         // Assert
         expect(event.on).toBeCalledWith("event", expect.any(Function));
@@ -52,13 +52,13 @@ describe(Mediator.name, () => {
     describe("when called", () => {
       it("should call onAny method", () => {
         // Arrange
-        const listener = jest.fn();
+        const handler = jest.fn();
 
         // Act
-        mediator.onAny(listener);
+        mediator.onAny(handler);
 
         // Assert
-        expect(event.onAny).toBeCalledWith(listener);
+        expect(event.onAny).toBeCalledWith(handler);
       });
     });
   });
