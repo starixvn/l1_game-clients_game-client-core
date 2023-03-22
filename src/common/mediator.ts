@@ -29,6 +29,14 @@ export class Mediator {
     }
   }
 
+  registerMultipleHandlers(multipleHandlers: IMultipleHandlers[]) {
+    if (multipleHandlers && multipleHandlers.length > 0) {
+      multipleHandlers.forEach((handlers) => {
+        this.registerHandlers(handlers);
+      });
+    }
+  }
+
   onAny(handler: (...params: any[]) => void) {
     this.event.onAny(handler);
   }

@@ -1,3 +1,4 @@
+import { PlayerService } from "./player-service";
 import * as express from "express";
 import * as http from "http";
 import { Server } from "socket.io";
@@ -6,9 +7,8 @@ import { GameCron } from "./game-cron";
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-const gameName = "sedie";
 const gameCron = new GameCron(io);
-
+const playerService = new PlayerService(gameCron);
 app.get("/", (req, res) => {
   res.send("<h1>Hello world</h1>");
 });
@@ -19,17 +19,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("signin", (data) => {
-    if (data.ss == "ricky-ss") {
-      socket.emit(gameName, {
-        user: {
-          red: 10000,
-          avatarId: 1,
-        },
-        userStakeLevel: { minBet: 10, maxBet: 15 },
-      });
-      socket.emit("signedIn");
-      socket.emit("message", { toGame: "SeDie" });
-    }
+    playerService.onSignIn(socket, data);
   });
 });
 

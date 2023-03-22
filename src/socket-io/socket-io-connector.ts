@@ -1,3 +1,4 @@
+import { GameSetting } from "./../core/game-setting";
 import { inject, injectable } from "inversify";
 import { io, ManagerOptions, SocketOptions, Socket } from "socket.io-client";
 import { Mediator } from "../common";
@@ -15,27 +16,28 @@ export const events = {
 export class SocketIOConnector {
   constructor(
     @inject(Mediator) protected readonly mediator: Mediator,
-    @inject(SocketIOStore) protected readonly store: SocketIOStore
+    @inject(SocketIOStore) protected readonly store: SocketIOStore,
+    @inject(GameSetting) protected readonly gameSetting: GameSetting
   ) {}
 
   socket: Socket;
-  gameName: string;
 
   handle(
-    options: Partial<
-      ManagerOptions & SocketOptions & { socketUri: string; gameName: string }
-    >
+    options: Partial<ManagerOptions & SocketOptions & { socketUri: string }>
   ) {
     this.socket = io(options.socketUri, options);
-    this.gameName = options.gameName;
     this.socket.on(events.connect, this.onConnected.bind(this));
 
     this.store.connection = this.socket;
   }
 
   onConnected() {
-    this.socket.onAny((event: any, value: any) => {
-      if (event == this.gameName) {
+    this.socket.onAny((event: string, value: any) => {
+      if (
+        event?.toLocaleLowerCase() ===
+          this.gameSetting?.name.toLocaleLowerCase() ||
+        event?.toLocaleLowerCase() == "message"
+      ) {
         Object.entries(value).forEach((entry) => {
           const [key, value] = entry;
           this.mediator.emit(key, value);

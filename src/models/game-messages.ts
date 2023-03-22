@@ -22,6 +22,7 @@ export interface IGameClientEmitMessage {
 }
 
 export interface IGameServiceMessage {
+  toGame: string;
   userStakeLevel: { minBet: number; maxBet: number };
   remainingTime: number;
   um: false;

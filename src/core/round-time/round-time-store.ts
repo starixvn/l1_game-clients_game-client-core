@@ -1,3 +1,4 @@
+import { GameSetting } from "./../game-setting";
 import { injectable, inject } from "inversify";
 import { MakeObservableFn, Store } from "../../common/store";
 
@@ -8,33 +9,40 @@ export type RoundTimeSetting = {
   genResult: number;
 };
 
+export const ROUND_STATE = {
+  START_GAME_LOOP: "startGameLoop",
+  BEGIN_STARTING_ROUND: "beginStartingRound",
+  STARTING_ROUND: "startingRound",
+  BEGIN_PLACING_BET: "beginPlacingBet",
+  PLACING_BET: "placingBet",
+  BEGIN_LOCKING_BET: "beginLockingBet",
+  LOCKING_BET: "lockingBet",
+  BEGIN_WAITING: "beginWaiting",
+  WAITING: "waiting",
+  BEGIN_SHOW_ANIMATION: "beginShowAnimation",
+  SHOW_ANIMATION: "showAnimation",
+  CHANGE_REMAINING_TIME: "changeRemainingTime",
+  STOP_GAME_LOOP: "stopGameLoop",
+};
+
 @injectable()
 export class RoundTimeStore implements Store {
   wholeRound: number = 0;
   placingBet: number = 0;
   lockingBet: number = 0;
   genResult: number = 0;
-  roundTime: number = 0;
+  _roundTime: number = 0;
+  _roundState: string = ROUND_STATE.STARTING_ROUND;
+  _beginState: string = "";
 
-  isLockingBet: boolean;
-  isPlacingBet: boolean;
-  isWaiting: boolean;
-  isChangeRemainingTime: boolean;
-  isShowAnimation: boolean;
-  isBeginShowAnimation: boolean;
-  isBeginLockingBet: boolean;
-  isBeginWaiting: boolean;
-  isBeginPlacingBet: boolean;
-  isTimeout: boolean;
+  _isLockingBet: boolean;
+  _isPlacingBet: boolean;
+  _isWaiting: boolean;
+  _isStartGameLoop: boolean;
+  _isStopGameLoop: boolean;
 
-  isStartingRound: boolean;
-  isBeginStartingRound: boolean;
-
-  isStartGameLoop: boolean;
-  isStopGameLoop: boolean;
-
-  duration: number;
-  remaining: number;
+  _duration: number;
+  _remaining: number;
 
   startNewRound: boolean = false;
   endRound: boolean = false;
@@ -49,30 +57,48 @@ export class RoundTimeStore implements Store {
 
   constructor(
     @inject("makeObservable") makeObservable: MakeObservableFn,
-    @inject("roundTimeSetting") roundTimeSetting: RoundTimeSetting
+    @inject(GameSetting) gameSetting: GameSetting
   ) {
     makeObservable(this);
-    this.setRoundTimeSetting(roundTimeSetting);
+    const durations = gameSetting.durations;
+    this.setRoundTimeSetting({
+      lockingBet: durations.lockingBet,
+      wholeRound: durations.wholeRound,
+      placingBet: durations.placingBet,
+      genResult: durations.generatingResult,
+    });
   }
 
-  get getIsWaiting() {
-    return this.roundTime > this.placingBet && this.wholeRound !== 0;
+  get isWaiting() {
+    return this._roundTime > this.placingBet && this.wholeRound !== 0;
   }
 
-  get getIsLocking() {
-    return this.roundTime <= this.lockingBet && this.wholeRound !== 0;
+  get isStartWaiting() {
+    return this._roundTime === this.wholeRound && this.wholeRound !== 0;
   }
 
-  get getIsPlacingBet() {
+  get isLocking() {
+    return this._roundTime <= this.lockingBet && this.wholeRound !== 0;
+  }
+
+  get isStaringLocking() {
+    return this._roundTime === this.lockingBet && this.wholeRound !== 0;
+  }
+
+  get isPlacingBet() {
     return (
-      this.roundTime <= this.placingBet &&
-      this.roundTime > this.lockingBet &&
+      this._roundTime <= this.placingBet &&
+      this._roundTime > this.lockingBet &&
       this.wholeRound !== 0
     );
   }
 
-  get getIsBeforePlacingBet() {
-    return this.roundTime > this.placingBet;
+  get isStartPlacingBet() {
+    return this._roundTime === this.placingBet && this.wholeRound !== 0;
+  }
+
+  get isBeforePlacingBet() {
+    return this._roundTime > this.placingBet;
   }
 
   setRoundTimeSetting(setting: RoundTimeSetting) {
@@ -83,70 +109,65 @@ export class RoundTimeStore implements Store {
   }
 
   countdown() {
-    if (this.roundTime <= 1) {
-      this.roundTime = 0;
+    if (this._roundTime <= 1) {
+      this._roundTime = 0;
     } else {
-      this.roundTime--;
+      this._roundTime--;
     }
 
     this.calculateRoundStatus();
   }
 
+  set roundTime(roundTime: number) {
+    this._roundTime = roundTime;
+    this.calculateRoundStatus();
+  }
+
   calculateRoundStatus() {
-    if (this.roundTime < 0) {
+    if (this._roundTime < 0) {
+      this._roundState = ROUND_STATE.WAITING;
       return;
     }
 
-    if (this.overrideEvent && this.overrideEvent.remaining > 0) {
-      this.overrideEvent.remaining--;
+    if (this.isStartPlacingBet) {
+      this._beginState = ROUND_STATE.BEGIN_PLACING_BET;
     }
 
-    if (this.getIsWaiting) {
-      this.isWaiting = true;
-      this.remaining = this.roundTime - this.placingBet;
-      this.duration = this.wholeRound - this.roundTime;
+    if (this.isStaringLocking) {
+      this._beginState = ROUND_STATE.BEGIN_LOCKING_BET;
     }
 
-    if (this.getIsLocking) {
-      this.isLockingBet = true;
-      this.duration = this.wholeRound - this.roundTime;
-      this.remaining = this.roundTime;
+    if (this.isStartWaiting) {
+      this._beginState = ROUND_STATE.BEGIN_WAITING;
+    }
+
+    if (this.isWaiting) {
+      this._isWaiting = true;
+      this._roundState = ROUND_STATE.WAITING;
+      this._remaining = this._roundTime - this.placingBet;
+      this._duration = this.wholeRound - this._roundTime;
+    }
+
+    if (this.isLocking) {
+      this._isLockingBet = true;
+      this._roundState = ROUND_STATE.LOCKING_BET;
+      this._duration = this.wholeRound - this._roundTime;
+      this._remaining = this._roundTime;
     }
 
     if (this.isPlacingBet) {
-      this.isPlacingBet = true;
-      this.remaining = this.roundTime - this.lockingBet;
-      this.duration = this.placingBet - this.roundTime;
+      this._isPlacingBet = true;
+      this._roundState = ROUND_STATE.PLACING_BET;
+      this._remaining = this._roundTime - this.lockingBet;
+      this._duration = this.placingBet - this._roundTime;
     }
   }
 
-  calculateRoundStatusOnStartupGame() {}
-
   start() {
-    this.isStartGameLoop = true;
+    this._isStartGameLoop = true;
   }
 
   stop() {
-    this.isStopGameLoop = true;
-  }
-
-  toJSON() {
-    return {
-      wholeRound: this.wholeRound,
-      placingBet: this.placingBet,
-      roundTime: this.roundTime,
-      serviceStatus: {
-        startNewRound: this.startNewRound,
-        startPlacingBet: this.startPlacingBet,
-        endPlacingBet: this.endPlacingBet,
-        endRound: this.endRound,
-      },
-      clientStatus: {
-        isWaiting: this.getIsWaiting,
-        isBeforePlacingBet: this.getIsBeforePlacingBet,
-        isPlacingBet: this.getIsPlacingBet,
-        isLocking: this.getIsLocking,
-      },
-    };
+    this._isStopGameLoop = true;
   }
 }
