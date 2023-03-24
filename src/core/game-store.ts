@@ -3,7 +3,6 @@ import { RoundTimeStore } from "./round-time/round-time-store";
 import { SocketIOStore } from "../socket-io/socket-io-store";
 import { injectable, inject } from "inversify";
 import { MakeObservableFn, Store } from "../common/store";
-import { clearInterval } from "timers";
 
 @injectable()
 export class GameStore implements Store {

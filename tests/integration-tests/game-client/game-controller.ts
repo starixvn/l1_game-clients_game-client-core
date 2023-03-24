@@ -27,7 +27,7 @@ export class GameController {
 
   logInfo() {
     const roundTimeStore = container.resolve(RoundTimeStore);
-
+    const mainDiv = this.getMainDiv();
     reaction(
       () => roundTimeStore._beginState,
       (beginState) => {
@@ -40,11 +40,22 @@ export class GameController {
     reaction(
       () => roundTimeStore._roundTime,
       (roundTime) => {
-        console.log(
-          `Round Time: ${roundTime}, Round State: ${roundTimeStore._roundState}`
-        );
+        const message = `Round Time: ${roundTime}, Round State: ${roundTimeStore._roundState}`;
+        console.log(message);
+
+        if (mainDiv) {
+          mainDiv.innerHTML = message;
+        }
       }
     );
+  }
+
+  getMainDiv() {
+    try {
+      return document && document?.getElementById("main");
+    } catch (error) {
+      return null;
+    }
   }
 
   init() {

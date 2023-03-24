@@ -9,9 +9,10 @@ const server = http.createServer(app);
 const io = new Server(server);
 const gameCron = new GameCron(io);
 const playerService = new PlayerService(gameCron);
-app.get("/", (req, res) => {
-  res.send("<h1>Hello world</h1>");
-});
+const port = 3000;
+// app.get("/", (req, res) => {
+//   res.send("<h1>Hello world</h1>");
+// });
 
 io.on("connection", (socket) => {
   socket.on("disconnect", () => {
@@ -23,8 +24,10 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(3000, () => {
-  console.log("listening on *:3000");
+app.use(express.static("public"));
+
+server.listen(port, () => {
+  console.log(`listening on *:${port}`);
 });
 
 gameCron.startCron();
