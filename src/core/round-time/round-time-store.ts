@@ -118,6 +118,10 @@ export class RoundTimeStore implements Store {
     this.calculateRoundStatus();
   }
 
+  get roundTime() {
+    return this._roundTime;
+  }
+
   set roundTime(roundTime: number) {
     this._roundTime = roundTime;
     this.calculateRoundStatus();

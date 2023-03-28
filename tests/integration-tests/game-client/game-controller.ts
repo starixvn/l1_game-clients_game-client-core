@@ -1,13 +1,13 @@
-import { GameStore } from "./../../../src/core/game-store";
 import { GameSetting } from "./../../../src/core/game-setting";
 import { IContainer } from "./../../../src/common/interface";
 import { container, startup } from "../../../src/index";
 import { PlayerStore } from "../../../src/players";
 import { SocketIOConnector } from "../../../src/socket-io";
-import { reaction, makeAutoObservable } from "mobx";
+import { reaction, makeAutoObservable, makeObservable } from "mobx";
 import { RoundTimeStore } from "../../../src/core/round-time/round-time-store";
 
 export class GameController {
+  gameServiceUrl = "http://localhost:3000";
   gameSetting: GameSetting = {
     id: 1,
     name: "SeDie",
@@ -19,7 +19,6 @@ export class GameController {
   };
 
   start() {
-    this.init();
     this.connectGameService();
     this.joinGame();
     this.logInfo();
@@ -27,7 +26,6 @@ export class GameController {
 
   logInfo() {
     const roundTimeStore = container.resolve(RoundTimeStore);
-    const mainDiv = this.getMainDiv();
     reaction(
       () => roundTimeStore._beginState,
       (beginState) => {
@@ -42,36 +40,14 @@ export class GameController {
       (roundTime) => {
         const message = `Round Time: ${roundTime}, Round State: ${roundTimeStore._roundState}`;
         console.log(message);
-
-        if (mainDiv) {
-          mainDiv.innerHTML = message;
-        }
       }
     );
-  }
-
-  getMainDiv() {
-    try {
-      return document && document?.getElementById("main");
-    } catch (error) {
-      return null;
-    }
-  }
-
-  init() {
-    function makeObservableFn(...params: any[]) {
-      makeAutoObservable(params[0]);
-    }
-    container.bind("makeObservable").toFunction(makeObservableFn);
-    container.bind(GameSetting).toConstantValue(this.gameSetting);
-
-    startup(container as IContainer);
   }
 
   connectGameService() {
     const handler = container.resolve(SocketIOConnector);
     handler.handle({
-      socketUri: "http://localhost:3000",
+      socketUri: this.gameServiceUrl,
     });
   }
 
