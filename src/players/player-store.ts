@@ -1,7 +1,6 @@
 import { injectable, inject } from "inversify";
-import { Store, MakeObservableFn } from "../common";
 import { SocketIOConnector } from "../socket-io/socket-io-connector";
-import { SocketIOStore } from "../socket-io/socket-io-store";
+import { makeAutoObservable } from "mobx";
 
 export interface IStakeLevel {
   minBet: number;
@@ -9,12 +8,11 @@ export interface IStakeLevel {
 }
 
 @injectable()
-export class PlayerStore implements Store {
+export class PlayerStore {
   constructor(
-    @inject("makeObservable") makeObservable: MakeObservableFn,
     @inject(SocketIOConnector) private socketConnector: SocketIOConnector
   ) {
-    makeObservable(this);
+    makeAutoObservable(this);
   }
 
   stakeLevel: IStakeLevel = { minBet: 0, maxBet: 0 };

@@ -1,9 +1,8 @@
 import { GameSetting } from "./../../../src/core/game-setting";
-import { IContainer } from "./../../../src/common/interface";
-import { container, startup } from "../../../src/index";
+import { container } from "../../../src/index";
 import { PlayerStore } from "../../../src/players";
 import { SocketIOConnector } from "../../../src/socket-io";
-import { reaction, makeAutoObservable, makeObservable } from "mobx";
+import { reaction } from "mobx";
 import { RoundTimeStore } from "../../../src/core/round-time/round-time-store";
 
 export class GameController {

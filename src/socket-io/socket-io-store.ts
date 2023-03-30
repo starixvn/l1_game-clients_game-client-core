@@ -1,11 +1,11 @@
 import { Socket } from "socket.io-client";
-import { Store, MakeObservableFn } from "../common";
 import { injectable, inject } from "inversify";
+import { makeAutoObservable } from "mobx";
 
 @injectable()
-export class SocketIOStore implements Store {
-  constructor(@inject("makeObservable") makeObservable: MakeObservableFn) {
-    makeObservable(this);
+export class SocketIOStore {
+  constructor() {
+    makeAutoObservable(this);
   }
 
   connection: Socket = {} as any;

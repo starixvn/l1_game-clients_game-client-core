@@ -2,19 +2,22 @@ import { GameSetting } from "./game-setting";
 import { RoundTimeStore } from "./round-time/round-time-store";
 import { SocketIOStore } from "../socket-io/socket-io-store";
 import { injectable, inject } from "inversify";
-import { MakeObservableFn, Store } from "../common/store";
+import { makeAutoObservable } from "mobx";
 
 @injectable()
-export class GameStore implements Store {
+export class GameStore {
   gameRunnerId;
 
   constructor(
     @inject(SocketIOStore) private socket: SocketIOStore,
     @inject(RoundTimeStore) private roundTimeStore: RoundTimeStore,
-    @inject(GameSetting) private gameSetting: GameSetting,
-    @inject("makeObservable") makeObservable: MakeObservableFn
+    @inject(GameSetting) private gameSetting: GameSetting
   ) {
-    makeObservable(this);
+    makeAutoObservable(this);
+  }
+
+  get gameName() {
+    return this.gameSetting.name;
   }
 
   startGameRunner() {

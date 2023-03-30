@@ -34,6 +34,7 @@ const gameBaseModule = Object.assign({}, common, {
 });
 
 const gameClientTestModule = Object.assign({}, common, {
+  mode: "development",
   name: "game-client-test",
   entry: "./tests/integration-tests/game-client/startup.ts",
   output: {

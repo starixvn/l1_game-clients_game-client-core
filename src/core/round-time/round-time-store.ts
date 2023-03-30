@@ -1,12 +1,12 @@
 import { GameSetting } from "./../game-setting";
 import { injectable, inject } from "inversify";
-import { MakeObservableFn, Store } from "../../common/store";
+import { makeAutoObservable } from "mobx";
 
 export type RoundTimeSetting = {
   wholeRound: number;
   placingBet: number;
   lockingBet: number;
-  genResult: number;
+  generatingResult: number;
 };
 
 export const ROUND_STATE = {
@@ -26,7 +26,7 @@ export const ROUND_STATE = {
 };
 
 @injectable()
-export class RoundTimeStore implements Store {
+export class RoundTimeStore {
   wholeRound: number = 0;
   placingBet: number = 0;
   lockingBet: number = 0;
@@ -55,18 +55,9 @@ export class RoundTimeStore implements Store {
     duration: number;
   };
 
-  constructor(
-    @inject("makeObservable") makeObservable: MakeObservableFn,
-    @inject(GameSetting) gameSetting: GameSetting
-  ) {
-    makeObservable(this);
-    const durations = gameSetting.durations;
-    this.setRoundTimeSetting({
-      lockingBet: durations.lockingBet,
-      wholeRound: durations.wholeRound,
-      placingBet: durations.placingBet,
-      genResult: durations.generatingResult,
-    });
+  constructor(@inject(GameSetting) gameSetting: GameSetting) {
+    makeAutoObservable(this);
+    this.setRoundTimeSetting(gameSetting.durations as RoundTimeSetting);
   }
 
   get isWaiting() {
@@ -105,7 +96,7 @@ export class RoundTimeStore implements Store {
     this.wholeRound = setting.wholeRound;
     this.placingBet = setting.placingBet;
     this.lockingBet = setting.lockingBet;
-    this.genResult = setting.genResult;
+    this.genResult = setting.generatingResult;
   }
 
   countdown() {
@@ -122,9 +113,33 @@ export class RoundTimeStore implements Store {
     return this._roundTime;
   }
 
+  get roundState() {
+    return this._roundState;
+  }
+
   set roundTime(roundTime: number) {
     this._roundTime = roundTime;
-    this.calculateRoundStatus();
+    this.calculateBeginStatus();
+  }
+
+  calculateBeginStatus() {
+    if (
+      this.isStartPlacingBet &&
+      this._beginState !== ROUND_STATE.BEGIN_PLACING_BET
+    ) {
+      this._beginState = ROUND_STATE.BEGIN_PLACING_BET;
+    }
+
+    if (
+      this.isStaringLocking &&
+      this._beginState !== ROUND_STATE.BEGIN_LOCKING_BET
+    ) {
+      this._beginState = ROUND_STATE.BEGIN_LOCKING_BET;
+    }
+
+    if (this.isStartWaiting && this._beginState !== ROUND_STATE.BEGIN_WAITING) {
+      this._beginState = ROUND_STATE.BEGIN_WAITING;
+    }
   }
 
   calculateRoundStatus() {
@@ -133,17 +148,7 @@ export class RoundTimeStore implements Store {
       return;
     }
 
-    if (this.isStartPlacingBet) {
-      this._beginState = ROUND_STATE.BEGIN_PLACING_BET;
-    }
-
-    if (this.isStaringLocking) {
-      this._beginState = ROUND_STATE.BEGIN_LOCKING_BET;
-    }
-
-    if (this.isStartWaiting) {
-      this._beginState = ROUND_STATE.BEGIN_WAITING;
-    }
+    this.calculateBeginStatus();
 
     if (this.isWaiting) {
       this._isWaiting = true;
