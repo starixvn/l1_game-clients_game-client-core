@@ -1,27 +1,28 @@
 import "reflect-metadata";
-import { MainGame } from "./views/main-game";
-import { GameController } from "./game-controller";
+import { SedieGameController } from "./games/sedie/sedie-game-controller";
 import { IContainer } from "./../../../src/common/interface";
-import { container, startup } from "../../../src/index";
+import { getContainer, registerSharedModules } from "../../../src/index";
 import * as mobx from "mobx";
-import { GameSetting } from "./../../../src/core/game-setting";
 import Observer from "observer";
-const gameController = new GameController();
+import { DragonTigerGameController } from "./games/dragon-tiger/dragon-tiger-controller";
 
-function init() {
-  container.bind(GameSetting).toConstantValue(gameController.gameSetting);
+const defaultContainer = getContainer();
+registerSharedModules(defaultContainer as IContainer);
 
-  startup(container as IContainer);
-}
+const sedieGameController = new SedieGameController();
+sedieGameController.init();
 
-init();
+const dragonTigerGameController = new DragonTigerGameController();
+dragonTigerGameController.init();
 
 Observer.configure({
-  default: { mobx, container },
+  // Should use default container
+  default: { mobx, container: sedieGameController.container },
+  // [sedieGameController.gameSetting.name]: {
+  //   mobx,
+  //   container: sedieGameController.container,
+  // },
 });
 
-// Temporary simulator engine life cycle
-const mainGame = container.get(MainGame);
-mainGame.onLoad();
-
-gameController.start();
+sedieGameController.start();
+dragonTigerGameController.start();

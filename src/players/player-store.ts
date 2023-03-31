@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
-import { SocketIOConnector } from "../socket-io/socket-io-connector";
 import { makeAutoObservable } from "mobx";
+import { Socket } from "socket.io-client";
 
 export interface IStakeLevel {
   minBet: number;
@@ -9,9 +9,7 @@ export interface IStakeLevel {
 
 @injectable()
 export class PlayerStore {
-  constructor(
-    @inject(SocketIOConnector) private socketConnector: SocketIOConnector
-  ) {
+  constructor() {
     makeAutoObservable(this);
   }
 
@@ -35,8 +33,8 @@ export class PlayerStore {
 
   scoin = 0;
 
-  signIn() {
-    this.socketConnector?.send("signin", {
+  signIn(socket: Socket) {
+    socket.emit("signin", {
       name: this.name,
       ss: this.ss,
     });

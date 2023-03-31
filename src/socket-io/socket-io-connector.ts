@@ -47,9 +47,9 @@ export class SocketIOConnector {
       }
     });
 
-    this.mediator.onAny((event: any, value: any) => {
-      this.socket.emit(event, value);
-    });
+    // this.mediator.onAny((event: any, value: any) => {
+    //   this.socket.emit(event, value);
+    // });
   }
 
   onDisconnected() {
@@ -58,5 +58,9 @@ export class SocketIOConnector {
 
   send(eventName: string, data: any) {
     this.socket.emit(eventName, data);
+  }
+
+  getSocket() {
+    return this.socket;
   }
 }

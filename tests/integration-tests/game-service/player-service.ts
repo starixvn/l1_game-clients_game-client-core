@@ -1,38 +1,52 @@
-import { Socket } from "socket.io-client";
-import { GameCron } from "./game-cron";
+import { Server } from "socket.io";
+import { SedieGameService } from "./sedie-game-service";
+import { DragonTigerGameService } from "./dragon-tiger-game-service";
 
 export class PlayerService {
-  sessionName = "ricky-ss";
-
-  constructor(private gameCron: GameCron) {}
-
-  onSignIn(socket: any, message: any) {
-    if (message.ss == this.sessionName) {
-      console.log(message);
-      this.sendPlayerInformation(socket);
-      this.sendInGame(socket);
-    }
-  }
-
-  private sendPlayerInformation(socket: Socket) {
-    socket.emit(this.gameCron.gameName, {
+  players = [
+    {
+      sessionName: "player-ss-sedie",
       user: {
         red: 10000,
         avatarId: 1,
       },
       userStakeLevel: { minBet: 10, maxBet: 15 },
-    });
-  }
+      room: SedieGameService.gameName,
+    },
+    {
+      sessionName: "player-ss-dragon-tiger",
+      user: {
+        red: 2000,
+        avatarId: 2,
+      },
+      userStakeLevel: { minBet: 1, maxBet: 15 },
+      room: DragonTigerGameService.gameName,
+    },
+  ];
 
-  private sendInGame(socket: Socket) {
-    const gameData = this.gameCron.gameData;
-    socket.emit("signedIn");
-    socket.emit("message", { toGame: this.gameCron.gameName });
-    socket.emit(this.gameCron.gameName, {
-      roundId: gameData.roundId,
-      remainingTime: gameData.remainingTime,
-    });
+  constructor(
+    private io: Server,
+    private sedieGameService: SedieGameService,
+    private dragonTigerGameService: DragonTigerGameService
+  ) {}
 
-    console.log("send ingame");
+  onSignIn(socket, message: any) {
+    const player = this.players.find(
+      (player) => player.sessionName == message.ss
+    );
+
+    if (player && player.room === SedieGameService.gameName) {
+      console.log(message);
+      socket.join(player.room);
+      this.sedieGameService.sendPlayerInformation(player, socket);
+      this.sedieGameService.sendInGame(socket);
+    }
+
+    if (player && player.room === DragonTigerGameService.gameName) {
+      console.log(message);
+      socket.join(player.room);
+      this.dragonTigerGameService.sendPlayerInformation(player, socket);
+      this.dragonTigerGameService.sendInGame(socket);
+    }
   }
 }

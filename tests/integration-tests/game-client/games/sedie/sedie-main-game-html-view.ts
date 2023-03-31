@@ -1,19 +1,21 @@
-import { PlayerStore } from "./../../../../src/players/player-store";
-import { GameStore } from "./../../../../src/core/game-store";
-import { RoundTimeStore } from "../../../../src/core/round-time/round-time-store";
+import { PlayerStore } from "../../../../../src/players/player-store";
+import { GameStore } from "../../../../../src/core/game-store";
+import { RoundTimeStore } from "../../../../../src/core/rounds/round-time-store";
 import Observer from "observer";
 import { injectable } from "inversify";
-import { ViewEngine } from "./view-engine";
+import { HtmlViewEngine } from "../../views/html-view-engine";
+import { RoundStore } from "../../../../../src/core";
 
 const { observer, handle, render } = Observer;
 
 @observer
 @injectable()
-export class MainGame extends ViewEngine {
+export class SedieGameHtmlView extends HtmlViewEngine {
   roundTimeComponent: HTMLElement | null;
   playerComponent: HTMLElement | null;
   gameNameComponent: HTMLElement | null;
   roundStateComponent: HTMLElement | null;
+  roundIdComponent: HTMLElement | null;
 
   constructor() {
     super();
@@ -23,12 +25,15 @@ export class MainGame extends ViewEngine {
   initView() {
     try {
       this.roundTimeComponent =
-        document && document?.getElementById("round-time");
-      this.playerComponent = document && document?.getElementById("player");
+        document && document?.getElementById("sedie-round-time");
+      this.playerComponent =
+        document && document?.getElementById("sedie-player");
       this.gameNameComponent =
-        document && document?.getElementById("game-name");
+        document && document?.getElementById("sedie-game-name");
       this.roundStateComponent =
-        document && document?.getElementById("round-state");
+        document && document?.getElementById("sedie-round-state");
+      this.roundIdComponent =
+        document && document?.getElementById("sedie-round-id");
     } catch (error) {
       return null;
     }
@@ -52,6 +57,11 @@ export class MainGame extends ViewEngine {
   @render(RoundTimeStore, (store) => store.roundState)
   renderRoundState(roundState: string) {
     this.setInnerHtml(this.roundStateComponent, roundState);
+  }
+
+  @render(RoundStore, (store) => store.roundId)
+  renderRoundId(roundId: string) {
+    this.setInnerHtml(this.roundIdComponent, roundId);
   }
 
   private setInnerHtml(component: HTMLElement | null, data: string) {

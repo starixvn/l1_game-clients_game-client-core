@@ -1,5 +1,6 @@
+import { RoundHandlers } from "./rounds/round-handlers";
 import { JoinGameHandlers } from "./join-game/join-game-handlers";
-import { RoundTimeHandlers } from "./round-time/round-time-handlers";
+import { RoundTimeHandlers } from "./rounds/round-time-handlers";
 import { inject, injectable } from "inversify";
 import { Mediator } from "../common";
 
@@ -8,8 +9,13 @@ export class CoreModule {
   constructor(
     @inject(Mediator) mediator: Mediator,
     @inject(RoundTimeHandlers) roundTimeHandlers: RoundTimeHandlers,
-    @inject(JoinGameHandlers) joinGameHandlers: JoinGameHandlers
+    @inject(JoinGameHandlers) joinGameHandlers: JoinGameHandlers,
+    @inject(RoundHandlers) roundHandlers: RoundHandlers
   ) {
-    mediator.registerMultipleHandlers([roundTimeHandlers, joinGameHandlers]);
+    mediator.registerMultipleHandlers([
+      roundTimeHandlers,
+      joinGameHandlers,
+      roundHandlers,
+    ]);
   }
 }

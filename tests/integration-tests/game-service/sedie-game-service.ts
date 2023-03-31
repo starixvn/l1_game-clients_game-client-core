@@ -1,12 +1,14 @@
 import { CronJob } from "cron";
 import { IGameServiceMessage } from "../../../src/models/game-messages";
+import { Socket } from "socket.io-client";
+import { Server } from "socket.io";
 
-export class GameCron {
-  constructor(io) {
+export class SedieGameService {
+  constructor(io: Server) {
     this.io = io;
   }
 
-  gameName = "sedie";
+  static gameName = "sedie";
 
   durations = {
     wholeRound: 39,
@@ -27,7 +29,7 @@ export class GameCron {
     admins: {},
   };
 
-  io;
+  io: Server;
 
   startCron() {
     const job = new CronJob(
@@ -39,6 +41,23 @@ export class GameCron {
     );
 
     job.start();
+  }
+
+  sendPlayerInformation(player: any, socket: Socket) {
+    socket.emit(SedieGameService.gameName, player.user);
+    socket.emit(SedieGameService.gameName, player.userStakeLevel);
+  }
+
+  sendInGame(socket: Socket) {
+    const gameData = this.gameData;
+    socket.emit("signedIn");
+    socket.emit("message", { toGame: SedieGameService.gameName });
+    socket.emit(SedieGameService.gameName, {
+      roundId: gameData.roundId,
+      remainingTime: gameData.remainingTime,
+    });
+
+    console.log(`${SedieGameService.gameName} send ingame`);
   }
 
   async proceed() {
@@ -119,7 +138,10 @@ export class GameCron {
   }
 
   emitToAllClients(data) {
-    console.log(data);
-    this.io.sockets.emit(this.gameName, data);
+    console.log({
+      game: SedieGameService.gameName,
+      ...data,
+    });
+    this.io.to(SedieGameService.gameName).emit(SedieGameService.gameName, data);
   }
 }

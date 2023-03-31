@@ -1,7 +1,7 @@
-import { container } from "../../src/container";
+// import { container } from "../../src/container";
 
-export const makeObservable = jest.fn();
+// export const makeObservable = jest.fn();
 
-container.bind("makeObservable").toFunction(makeObservable);
+// container.bind("makeObservable").toFunction(makeObservable);
 
-export default container;
+// export default container;

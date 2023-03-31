@@ -2,17 +2,20 @@ import { PlayerService } from "./player-service";
 import * as express from "express";
 import * as http from "http";
 import { Server } from "socket.io";
-import { GameCron } from "./game-cron";
+import { SedieGameService } from "./sedie-game-service";
+import { DragonTigerGameService } from "./dragon-tiger-game-service";
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-const gameCron = new GameCron(io);
-const playerService = new PlayerService(gameCron);
+const sedieGameService = new SedieGameService(io);
+const dragonTigerGameService = new DragonTigerGameService(io);
+const playerService = new PlayerService(
+  io,
+  sedieGameService,
+  dragonTigerGameService
+);
 const port = 3000;
-// app.get("/", (req, res) => {
-//   res.send("<h1>Hello world</h1>");
-// });
 
 io.on("connection", (socket) => {
   socket.on("disconnect", () => {
@@ -30,4 +33,5 @@ server.listen(port, () => {
   console.log(`listening on *:${port}`);
 });
 
-gameCron.startCron();
+sedieGameService.startCron();
+dragonTigerGameService.startCron();

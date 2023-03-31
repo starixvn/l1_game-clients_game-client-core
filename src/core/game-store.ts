@@ -1,5 +1,5 @@
 import { GameSetting } from "./game-setting";
-import { RoundTimeStore } from "./round-time/round-time-store";
+import { RoundTimeStore } from "./rounds/round-time-store";
 import { SocketIOStore } from "../socket-io/socket-io-store";
 import { injectable, inject } from "inversify";
 import { makeAutoObservable } from "mobx";

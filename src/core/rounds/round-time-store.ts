@@ -1,4 +1,4 @@
-import { GameSetting } from "./../game-setting";
+import { GameSetting } from "../game-setting";
 import { injectable, inject } from "inversify";
 import { makeAutoObservable } from "mobx";
 

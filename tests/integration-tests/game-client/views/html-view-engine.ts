@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 
 @injectable()
-export class ViewEngine {
+export class HtmlViewEngine {
   onLoad() {}
 
   onDestroy() {}
