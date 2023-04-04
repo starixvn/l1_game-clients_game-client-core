@@ -1,15 +1,14 @@
-import { PlayerStore } from "../../../../../src/players/player-store";
+import { injectable } from "inversify";
+import Observer from "observer";
+import { RoundStore } from "../../../../../src/core";
 import { GameStore } from "../../../../../src/core/game-store";
 import { RoundTimeStore } from "../../../../../src/core/rounds/round-time-store";
-import Observer from "observer";
-import { injectable, inject } from "inversify";
+import { PlayerStore } from "../../../../../src/players/player-store";
 import { HtmlViewEngine } from "../../views/html-view-engine";
-import { reaction } from "mobx";
-import { RoundStore } from "../../../../../src/core";
 
 const { observer, handle, render } = Observer;
 
-@observer
+@observer("dragonTiger")
 @injectable()
 export class DragonTigerGameHtmlView extends HtmlViewEngine {
   roundTimeComponent: HTMLElement | null;
@@ -18,12 +17,7 @@ export class DragonTigerGameHtmlView extends HtmlViewEngine {
   roundStateComponent: HTMLElement | null;
   roundIdComponent: HTMLElement | null;
 
-  constructor(
-    @inject(RoundTimeStore) private roundTimeStore: RoundTimeStore,
-    @inject(PlayerStore) private playerStore: PlayerStore,
-    @inject(GameStore) private gameStore: GameStore,
-    @inject(RoundStore) private roundStore: RoundStore
-  ) {
+  constructor() {
     super();
     this.initView();
   }
@@ -40,66 +34,35 @@ export class DragonTigerGameHtmlView extends HtmlViewEngine {
         document && document?.getElementById("dragon-tiger-round-state");
       this.roundIdComponent =
         document && document?.getElementById("dragon-tiger-round-id");
-
-      this.registerRenderGameName();
-      this.registerRenderPlayer();
-      this.registerRenderRoundState();
-      this.registerRenderRoundTime();
-      this.registerRenderRoundId();
     } catch (error) {
       //console.log(error);
       return null;
     }
   }
 
-  //@render(GameStore, (store) => store.gameName)
-  registerRenderGameName() {
-    this.setInnerHtml(this.gameNameComponent, this.gameStore.gameName);
-    reaction(
-      () => this.gameStore.gameName,
-      (gameName) => {
-        this.setInnerHtml(this.gameNameComponent, gameName);
-      }
-    );
+  @render(GameStore, (store) => store.gameName)
+  renderGameName(gameName: string) {
+    this.setInnerHtml(this.gameNameComponent, gameName);
   }
 
-  //@render(PlayerStore, (store) => store.name)
-  registerRenderPlayer() {
-    reaction(
-      () => this.playerStore.name,
-      (playerName) => {
-        this.setInnerHtml(this.playerComponent, playerName);
-      }
-    );
+  @render(PlayerStore, (store) => store.name)
+  renderPlayer(playerName: string) {
+    this.setInnerHtml(this.playerComponent, playerName);
   }
 
-  //@render(RoundTimeStore, (store) => store.roundTime)
-  registerRenderRoundTime() {
-    reaction(
-      () => this.roundTimeStore.roundTime,
-      (roundTime) => {
-        this.setInnerHtml(this.roundTimeComponent, roundTime?.toString());
-      }
-    );
+  @render(RoundTimeStore, (store) => store.roundTime)
+  renderRoundTime(roundTime: number) {
+    this.setInnerHtml(this.roundTimeComponent, roundTime?.toString());
   }
 
-  //@render(RoundTimeStore, (store) => store.roundState)
-  registerRenderRoundState() {
-    reaction(
-      () => this.roundTimeStore.roundState,
-      (roundState) => {
-        this.setInnerHtml(this.roundStateComponent, roundState);
-      }
-    );
+  @render(RoundTimeStore, (store) => store.roundState)
+  renderRoundState(roundState: string) {
+    this.setInnerHtml(this.roundStateComponent, roundState);
   }
 
-  registerRenderRoundId() {
-    reaction(
-      () => this.roundStore.roundId,
-      (roundId) => {
-        this.setInnerHtml(this.roundIdComponent, roundId?.toString());
-      }
-    );
+  @render(RoundStore, (store) => store.roundId)
+  renderRoundId(roundId: number) {
+    this.setInnerHtml(this.roundIdComponent, roundId?.toString());
   }
 
   private setInnerHtml(component: HTMLElement | null, data: string) {

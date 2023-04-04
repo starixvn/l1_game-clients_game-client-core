@@ -8,7 +8,7 @@ import { RoundStore } from "../../../../../src/core";
 
 const { observer, handle, render } = Observer;
 
-@observer
+@observer("sedie")
 @injectable()
 export class SedieGameHtmlView extends HtmlViewEngine {
   roundTimeComponent: HTMLElement | null;

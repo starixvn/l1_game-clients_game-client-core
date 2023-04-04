@@ -36,6 +36,8 @@ export class DragonTigerGameController {
     this.joinGame();
     this.logInfo();
     const mainGame = this.container.resolve(DragonTigerGameHtmlView);
+
+    mainGame.onLoad();
   }
 
   logInfo() {

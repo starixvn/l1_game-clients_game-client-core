@@ -16,12 +16,14 @@ const dragonTigerGameController = new DragonTigerGameController();
 dragonTigerGameController.init();
 
 Observer.configure({
-  // Should use default container
-  default: { mobx, container: sedieGameController.container },
-  // [sedieGameController.gameSetting.name]: {
-  //   mobx,
-  //   container: sedieGameController.container,
-  // },
+  sedie: {
+    mobx,
+    container: sedieGameController.container,
+  },
+  dragonTiger: {
+    mobx,
+    container: dragonTigerGameController.container,
+  },
 });
 
 sedieGameController.start();
