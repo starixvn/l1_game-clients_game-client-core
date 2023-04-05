@@ -1,7 +1,6 @@
 import { IMultipleHandlers } from "../../common/mediator";
 import { inject, injectable } from "inversify";
-import { IGameServiceMessage } from "../../models/game-messages";
-import { nameof } from "ts-simple-nameof";
+import { GameServiceMessage } from "../../models/game-messages";
 import { RoundStore } from "./round-store";
 
 @injectable()
@@ -16,7 +15,7 @@ export class RoundHandlers implements IMultipleHandlers {
 
   eventHandleList = [
     {
-      name: nameof<IGameServiceMessage>((receiveData) => receiveData.roundId),
+      name: GameServiceMessage.roundId,
       handle: this.handleRoundId.bind(this),
     },
   ];

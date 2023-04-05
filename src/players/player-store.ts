@@ -1,6 +1,7 @@
 import { injectable, inject } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { Socket } from "socket.io-client";
+import { GameClientEmitMessage } from "../models/game-messages";
 
 export interface IStakeLevel {
   minBet: number;
@@ -34,9 +35,10 @@ export class PlayerStore {
   scoin = 0;
 
   signIn(socket: Socket) {
-    socket.emit("signin", {
-      name: this.name,
-      ss: this.ss,
-    });
+    const signIn = new GameClientEmitMessage.Signin();
+    signIn.username = this.name;
+    signIn.ss = this.ss;
+
+    socket.emit(GameClientEmitMessage.Signin.eventName, signIn);
   }
 }

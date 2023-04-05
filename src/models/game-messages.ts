@@ -1,5 +1,5 @@
-export interface IGameClientEmitMessage {
-  signin: {
+export namespace GameClientEmitMessage {
+  export class Signin {
     isAuthenticated: boolean;
     umInfo: string;
     username: string;
@@ -9,54 +9,32 @@ export interface IGameClientEmitMessage {
     memberName: string;
     isUM: boolean;
     time: string;
-  };
-  bet: {
+
+    static eventName = "signin";
+  }
+  export class Bet {
     amount: number;
     username: string;
     m: number;
     freeBet: boolean;
     betChoice: string;
-  };
-  inGame: any;
-  getHistory: { page: number };
+
+    static eventName = "bet";
+  }
+
+  export const inGame = "inGame";
+
+  export class GetHistory {
+    page: number;
+
+    static eventName = "getHistory";
+  }
 }
 
-export interface IGameServiceMessage {
-  toGame: string;
-  userStakeLevel: { minBet: number; maxBet: number };
-  remainingTime: number;
-  um: false;
-  um_message: {
-    "vi-VN": string;
-    "en-US": string;
-    "zh-CN": string;
-    "zh-TW": string;
-    "th-TH": string;
-    "id-ID": string;
-  };
-  roundId: number;
-  gameConfigs: {
-    groupId: string;
-    minBet: number;
-    maxBet: number;
-    maxBetPerChoices: any;
-    chips: string[];
-    stakeLevels: [];
-    odds: any;
-    enableFreeBet: boolean;
-  };
-  odds: {
-    boostedChoices: Array<any>;
-    values: any;
-  };
-  roundHistory: Array<{
-    roundId: number;
-    result: any;
-    settlementResult: any;
-  }>;
-  ownBets: any;
-  totalBets: any;
-  user: {
+export namespace GameServiceMessage {
+  export const toGame = "toGame";
+
+  export class User {
     name: string;
     UID: number;
     avatarId: number;
@@ -68,41 +46,103 @@ export interface IGameServiceMessage {
     rate: number;
     minBet: number;
     maxBet: number;
-  };
 
-  ownChip: { betChoice: string; amount: number };
-  outgame: { playerId: string };
-  playerChip: {
+    static eventName = "user";
+  }
+
+  export class UserStakeLevel {
+    minBet: number;
+    maxBet: number;
+
+    static eventName = "userStakeLevel";
+  }
+  export const remainingTime = "remainingTime";
+  export const um = "um";
+  export class UmMessage {
+    "vi-VN": string;
+    "en-US": string;
+    "zh-CN": string;
+    "zh-TW": string;
+    "th-TH": string;
+    "id-ID": string;
+
+    static eventName = "um_message";
+  }
+  export const roundId = "roundId";
+  export class GameConfigs {
+    groupId: string;
+    minBet: number;
+    maxBet: number;
+    maxBetPerChoices: any;
+    chips: string[];
+    stakeLevels: [];
+    odds: any;
+    enableFreeBet: boolean;
+
+    static eventName = "gameConfigs";
+  }
+  export class Odds {
+    boostedChoices: Array<any>;
+    values: any;
+
+    static eventName = "odds";
+  }
+  export const roundHistory = "roundHistory";
+  export const ownBets = "ownBets";
+  export const totalBets = "totalBets";
+
+  export class OwnChip {
+    betChoice: string;
+    amount: number;
+
+    static eventName = "ownChip";
+  }
+  export class Outgame {
+    playerId: string;
+
+    static eventName = "outgame";
+  }
+  export class PlayerChip {
     playerId: string;
     betChoice: string;
     amount: number;
     red: number;
-  };
-  player: {
+
+    static eventName = "playerChip";
+  }
+  export class Player {
     id: string;
     name: string;
     red: number;
     avatarId: number;
     type: boolean;
-  };
-  resultHash: {
+
+    static eventName = "player";
+  }
+  export class ResultHash {
     rawValue: string;
     extraInfos: any;
-  };
-  endBet: number;
-  betChoice: string;
-  freeBet: boolean;
-  status: {
+
+    static eventName = "resultHash";
+  }
+  export const endBet = "endBet";
+  export const betChoice = "betChoice";
+  export const freeBet = "freeBet";
+  export class Status {
     winningByChoices: any;
     win: boolean;
     bet: number;
-  };
-  finish: {
+
+    static eventName = "status";
+  }
+  export class Finish {
     result: any;
     settlementResult: any;
     roundId: number;
-  };
-  spb: boolean;
-  snr: boolean;
-  epb: boolean;
+
+    static eventName = "finish";
+  }
+  export const spb = "spb";
+  export const snr = "snr";
+  export const epb = "epb";
 }

@@ -1,15 +1,8 @@
 import { inject, injectable } from "inversify";
 import { IStakeLevel, PlayerStore } from "./player-store";
-import { IGameServiceMessage } from "../models/game-messages";
-import { nameof } from "ts-simple-nameof";
+import { GameServiceMessage } from "../models/game-messages";
 import { runInAction } from "mobx";
 import { IMultipleHandlers } from "../common";
-
-interface PlayerProfile {
-  name?: string;
-  red?: number;
-  avatarId?: number;
-}
 
 @injectable()
 export class PlayerHandlers implements IMultipleHandlers {
@@ -21,7 +14,7 @@ export class PlayerHandlers implements IMultipleHandlers {
     });
   }
 
-  handlePlayerProfile(profile: PlayerProfile) {
+  handlePlayerProfile(profile: GameServiceMessage.User) {
     profile?.name && (this.store.name = profile.name);
     profile?.red && (this.store.balance = profile.red);
     profile?.avatarId && (this.store.avatarId = profile.avatarId);
@@ -29,13 +22,11 @@ export class PlayerHandlers implements IMultipleHandlers {
 
   eventHandleList = [
     {
-      name: nameof<IGameServiceMessage>(
-        (receiveData) => receiveData.userStakeLevel
-      ),
+      name: GameServiceMessage.toGame,
       handle: this.handleStakeLevel.bind(this),
     },
     {
-      name: nameof<IGameServiceMessage>((receiveData) => receiveData.user),
+      name: GameServiceMessage.User.eventName,
       handle: this.handlePlayerProfile.bind(this),
     },
   ];

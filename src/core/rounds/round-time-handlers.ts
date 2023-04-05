@@ -1,8 +1,7 @@
 import { IMultipleHandlers } from "../../common/mediator";
 import { RoundTimeStore } from "./round-time-store";
 import { inject, injectable } from "inversify";
-import { IGameServiceMessage } from "../../models/game-messages";
-import { nameof } from "ts-simple-nameof";
+import { GameServiceMessage } from "../../models/game-messages";
 
 @injectable()
 export class RoundTimeHandlers implements IMultipleHandlers {
@@ -28,7 +27,7 @@ export class RoundTimeHandlers implements IMultipleHandlers {
     this.store.endPlacingBet = epb;
   }
 
-  handleEndRoundStatus(finish: boolean) {
+  handleEndRoundStatus(finish: GameServiceMessage.Finish) {
     if (finish) {
       this.store.endRound = true;
       this.store.endPlacingBet = false;
@@ -38,25 +37,23 @@ export class RoundTimeHandlers implements IMultipleHandlers {
 
   eventHandleList = [
     {
-      name: nameof<IGameServiceMessage>(
-        (receiveData) => receiveData.remainingTime
-      ),
+      name: GameServiceMessage.remainingTime,
       handle: this.handleRemainingTime.bind(this),
     },
     {
-      name: nameof<IGameServiceMessage>((receiveData) => receiveData.snr),
+      name: GameServiceMessage.snr,
       handle: this.handleStartNewRoundStatus.bind(this),
     },
     {
-      name: nameof<IGameServiceMessage>((receiveData) => receiveData.spb),
+      name: GameServiceMessage.spb,
       handle: this.handleStartPlacingBetStatus.bind(this),
     },
     {
-      name: nameof<IGameServiceMessage>((receiveData) => receiveData.epb),
+      name: GameServiceMessage.epb,
       handle: this.handleEndPlacingBetStatus.bind(this),
     },
     {
-      name: nameof<IGameServiceMessage>((receiveData) => receiveData.finish),
+      name: GameServiceMessage.Finish.eventName,
       handle: this.handleEndRoundStatus.bind(this),
     },
   ];

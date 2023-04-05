@@ -1,8 +1,7 @@
 import { GameStore } from "../game-store";
 import { inject, injectable } from "inversify";
 import { IMultipleHandlers } from "../../common";
-import { nameof } from "ts-simple-nameof";
-import { IGameServiceMessage } from "../../models/game-messages";
+import { GameServiceMessage } from "../../models/game-messages";
 
 @injectable()
 export class JoinGameHandlers implements IMultipleHandlers {
@@ -10,7 +9,7 @@ export class JoinGameHandlers implements IMultipleHandlers {
 
   eventHandleList = [
     {
-      name: nameof<IGameServiceMessage>((receiveData) => receiveData.toGame),
+      name: GameServiceMessage.toGame,
       handle: this.handleToGame.bind(this),
     },
   ];
