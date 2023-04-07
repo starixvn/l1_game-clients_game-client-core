@@ -12,6 +12,7 @@ const common = {
     extensions: [".ts", ".js"],
   },
   node: false,
+  devtool: "source-map",
   module: {
     rules: [
       {

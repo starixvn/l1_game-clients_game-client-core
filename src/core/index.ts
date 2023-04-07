@@ -1,7 +1,8 @@
 import { CoreModule } from "./core-module";
 
-export * from "./rounds/round-time-store";
-export * from "./rounds/round-store";
+export * from "./game-setting";
 export * from "./game-store";
+export * from "./rounds/round-store";
+export * from "./rounds/round-time-store";
 
 export default CoreModule;
