@@ -4,10 +4,15 @@ import * as http from "http";
 import { Server } from "socket.io";
 import { SedieGameService } from "./sedie-game-service";
 import { DragonTigerGameService } from "./dragon-tiger-game-service";
+import * as cors from "cors";
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 const sedieGameService = new SedieGameService(io);
 const dragonTigerGameService = new DragonTigerGameService(io);
 const playerService = new PlayerService(
@@ -16,6 +21,12 @@ const playerService = new PlayerService(
   dragonTigerGameService
 );
 const port = 3000;
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 io.on("connection", (socket) => {
   socket.on("disconnect", () => {

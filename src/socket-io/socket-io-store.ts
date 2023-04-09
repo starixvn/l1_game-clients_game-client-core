@@ -1,4 +1,3 @@
-import { Socket } from "socket.io-client";
 import { injectable, inject } from "inversify";
 import { makeAutoObservable } from "mobx";
 
@@ -8,7 +7,7 @@ export class SocketIOStore {
     makeAutoObservable(this);
   }
 
-  connection: Socket = {} as any;
+  connection: any = {};
 
   // connection: {
   //   status

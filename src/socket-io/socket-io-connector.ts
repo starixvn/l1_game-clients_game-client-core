@@ -1,6 +1,6 @@
 import { GameSetting } from "./../core/game-setting";
 import { inject, injectable } from "inversify";
-import { io, ManagerOptions, SocketOptions, Socket } from "socket.io-client";
+import { io } from "socket.io-client/dist/socket.io.js";
 import { Mediator } from "../common";
 import { SocketIOStore } from "./socket-io-store";
 
@@ -20,11 +20,9 @@ export class SocketIOConnector {
     @inject(GameSetting) protected readonly gameSetting: GameSetting
   ) {}
 
-  socket: Socket;
+  socket: any;
 
-  handle(
-    options: Partial<ManagerOptions & SocketOptions & { socketUri: string }>
-  ) {
+  handle(options) {
     this.socket = io(options.socketUri, options);
     this.socket.on(events.connect, this.onConnected.bind(this));
 

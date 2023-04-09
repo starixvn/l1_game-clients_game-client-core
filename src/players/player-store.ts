@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { Socket } from "socket.io-client";
+// import { Socket } from "socket.io-client";
 import { GameClientEmitMessage } from "../models/game-messages";
 
 export interface IStakeLevel {
@@ -34,7 +34,7 @@ export class PlayerStore {
 
   scoin = 0;
 
-  signIn(socket: Socket) {
+  signIn(socket) {
     const signIn = new GameClientEmitMessage.Signin();
     signIn.username = this.name;
     signIn.ss = this.ss;
