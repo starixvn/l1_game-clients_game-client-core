@@ -1,4 +1,5 @@
 import "reflect-metadata";
+
 import Observer from "observer";
 import GameClient from "game-client-base";
 import mobx from "mobx";

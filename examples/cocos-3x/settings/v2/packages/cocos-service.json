@@ -8,13 +8,13 @@
   "appConfigMaps": [
     {
       "app_id": "UNKNOW",
-      "config_id": "a5125d"
+      "config_id": "f86d3e"
     }
   ],
   "configs": [
     {
       "app_id": "UNKNOW",
-      "config_id": "a5125d",
+      "config_id": "f86d3e",
       "config_name": "Default",
       "config_remarks": "",
       "services": []
