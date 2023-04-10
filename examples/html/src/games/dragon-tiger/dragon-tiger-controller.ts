@@ -1,19 +1,19 @@
+import {
+  Common,
+  Core,
+  Player,
+  SocketIO,
+  getContainer,
+  registerGameModules,
+} from "game-client-base";
 import { Container } from "inversify";
-import { GameSetting } from "../../../../../src/core/game-setting";
-import { getContainer, registerGameModules } from "../../../../../src/index";
-import { PlayerStore } from "../../../../../src/players";
-import { SocketIOConnector } from "../../../../../src/socket-io";
 import { reaction } from "mobx";
-import { RoundTimeStore } from "../../../../../src/core/rounds/round-time-store";
-import { IContainer } from "../../../../../src/common";
-import { SocketIOStore } from "../../../../../src/socket-io/socket-io-store";
 import { DragonTigerGameHtmlView } from "./dragon-tiger-game-html-view";
-import { RoundStore } from "../../../../../src/core/rounds/round-store";
 
 export class DragonTigerGameController {
   container: Container;
   gameServiceUrl = "http://localhost:3000";
-  gameSetting: GameSetting = {
+  gameSetting: Core.GameSetting = {
     id: 7,
     name: "DragonTiger",
     durations: {
@@ -26,8 +26,8 @@ export class DragonTigerGameController {
   init() {
     const rootContainer = getContainer();
     this.container = getContainer(this.gameSetting.name);
-    this.container.bind(GameSetting).toConstantValue(this.gameSetting);
-    registerGameModules(this.container as IContainer);
+    this.container.bind(Core.GameSetting).toConstantValue(this.gameSetting);
+    registerGameModules(this.container as Common.IContainer);
     this.container.parent = rootContainer;
   }
 
@@ -41,8 +41,8 @@ export class DragonTigerGameController {
   }
 
   logInfo() {
-    const roundTimeStore = this.container.resolve(RoundTimeStore);
-    const roundStore = this.container.resolve(RoundStore);
+    const roundTimeStore = this.container.resolve(Core.RoundTimeStore);
+    const roundStore = this.container.resolve(Core.RoundStore);
     reaction(
       () => roundTimeStore._beginState,
       (beginState) => {
@@ -63,15 +63,16 @@ export class DragonTigerGameController {
   }
 
   connectGameService() {
-    const handler = this.container.resolve(SocketIOConnector);
+    const handler = this.container.resolve(SocketIO.SocketIOConnector);
     handler.handle({
       socketUri: this.gameServiceUrl,
     });
   }
 
   joinGame() {
-    const player = this.container.resolve(PlayerStore);
-    const socketIOStore = this.container.get(SocketIOStore);
+    const player = this.container.resolve(Player.PlayerStore);
+    const socketIOStore = this.container.get(SocketIO.SocketIOStore);
+
     player.ss = "player-ss-dragon-tiger";
     player.signIn(socketIOStore.connection);
   }

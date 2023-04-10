@@ -1,19 +1,19 @@
+import {
+  Common,
+  Core,
+  Player,
+  SocketIO,
+  getContainer,
+  registerGameModules,
+} from "game-client-base";
 import { Container } from "inversify";
-import { GameSetting } from "../../../../../src/core/game-setting";
-import { getContainer, registerGameModules } from "../../../../../src/index";
-import { PlayerStore } from "../../../../../src/players";
-import { SocketIOConnector } from "../../../../../src/socket-io";
 import { reaction } from "mobx";
-import { RoundTimeStore } from "../../../../../src/core/rounds/round-time-store";
-import { IContainer } from "../../../../../src/common";
 import { SedieGameHtmlView } from "./sedie-main-game-html-view";
-import { SocketIOStore } from "../../../../../src/socket-io/socket-io-store";
-import { RoundStore } from "../../../../../src/core";
 
 export class SedieGameController {
   container: Container;
   gameServiceUrl = "http://localhost:3000";
-  gameSetting: GameSetting = {
+  gameSetting: Core.GameSetting = {
     id: 1,
     name: "SeDie",
     durations: {
@@ -26,8 +26,8 @@ export class SedieGameController {
   init() {
     const rootContainer = getContainer();
     this.container = getContainer(this.gameSetting.name);
-    this.container.bind(GameSetting).toConstantValue(this.gameSetting);
-    registerGameModules(this.container as IContainer);
+    this.container.bind(Core.GameSetting).toConstantValue(this.gameSetting);
+    registerGameModules(this.container as Common.IContainer);
     this.container.parent = rootContainer;
   }
 
@@ -40,8 +40,8 @@ export class SedieGameController {
   }
 
   logInfo() {
-    const roundTimeStore = this.container.resolve(RoundTimeStore);
-    const roundStore = this.container.resolve(RoundStore);
+    const roundTimeStore = this.container.resolve(Core.RoundTimeStore);
+    const roundStore = this.container.resolve(Core.RoundStore);
     reaction(
       () => roundTimeStore._beginState,
       (beginState) => {
@@ -62,15 +62,16 @@ export class SedieGameController {
   }
 
   connectGameService() {
-    const handler = this.container.resolve(SocketIOConnector);
+    const handler = this.container.resolve(SocketIO.SocketIOConnector);
     handler.handle({
       socketUri: this.gameServiceUrl,
     });
   }
 
   joinGame() {
-    const player = this.container.resolve(PlayerStore);
-    const socketIOStore = this.container.get(SocketIOStore);
+    const player = this.container.resolve(Player.PlayerStore);
+    const socketIOStore = this.container.get(SocketIO.SocketIOStore);
+
     player.ss = "player-ss-sedie";
     player.signIn(socketIOStore.connection);
   }

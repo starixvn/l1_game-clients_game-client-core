@@ -5,12 +5,9 @@
     "outDir": "dist",
     "declaration": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "sourceMap": true
   },
-  "include": [
-    "src/*",
-    "samples/game-client/startup-dev.ts",
-    "tests/unittest-tests/container.test.ts"
-  ],
+  "include": ["src/*"],
   "exclude": ["**/*.test.ts"]
 }
