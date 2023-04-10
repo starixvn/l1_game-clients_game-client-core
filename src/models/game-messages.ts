@@ -46,6 +46,10 @@ export namespace GameServiceMessage {
     rate: number;
     minBet: number;
     maxBet: number;
+    offerGames?: any;
+    availSpins?: number;
+    fractionalOddsFormat?: boolean;
+    isDisplayPlayerCurrency?: boolean;
 
     static eventName = "user";
   }
@@ -70,7 +74,6 @@ export namespace GameServiceMessage {
   }
   export const roundId = "roundId";
   export class GameConfigs {
-    groupId: string;
     minBet: number;
     maxBet: number;
     maxBetPerChoices: any;
@@ -78,6 +81,8 @@ export namespace GameServiceMessage {
     stakeLevels: [];
     odds: any;
     enableFreeBet: boolean;
+    originalOdds?: any;
+    boostedChoices?: any;
 
     static eventName = "gameConfigs";
   }

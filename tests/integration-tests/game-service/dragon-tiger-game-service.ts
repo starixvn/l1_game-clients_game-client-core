@@ -22,7 +22,17 @@ export class DragonTigerGameService {
     roundId: 1000,
     delayStartTime: 0,
     disabled: false,
-    gameConfigs: {},
+    gameConfigs: {
+      groupId: "61765beed2b6510001f18bd6",
+      minBet: 1,
+      maxBet: 2000,
+      maxBetPerChoices: { dragon: 2000, tiger: 2000, tie: 500 },
+      chips: ["1", "5", "10", "50", "100", "200", "500", "1000", "2000"],
+      enableFreeBet: false,
+      odds: { dragon: 2, tiger: 2, tie: 11 },
+      originalOdds: { dragon: 2, tiger: 2, tie: 11 },
+      stakeLevels: [],
+    },
     realPlayers: {},
     ingame: {},
     admins: {},
@@ -54,6 +64,7 @@ export class DragonTigerGameService {
     socket.emit(DragonTigerGameService.gameName, {
       roundId: gameData.roundId,
       remainingTime: gameData.remainingTime,
+      gameConfigs: gameData.gameConfigs,
     });
 
     console.log(`${DragonTigerGameService.gameName} send ingame`);

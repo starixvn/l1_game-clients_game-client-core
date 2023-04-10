@@ -5,6 +5,7 @@ import { Server } from "socket.io";
 import { SedieGameService } from "./sedie-game-service";
 import { DragonTigerGameService } from "./dragon-tiger-game-service";
 import * as cors from "cors";
+import userRouter from "./user-service-router";
 
 const app = express();
 const server = http.createServer(app);
@@ -38,6 +39,7 @@ io.on("connection", (socket) => {
   });
 });
 
+app.use("/user", userRouter);
 app.use(express.static("public"));
 
 server.listen(port, () => {

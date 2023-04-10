@@ -5,6 +5,8 @@ import { GameStore } from "../../../../../src/core/game-store";
 import { RoundTimeStore } from "../../../../../src/core/rounds/round-time-store";
 import { PlayerStore } from "../../../../../src/players/player-store";
 import { HtmlViewEngine } from "../../views/html-view-engine";
+import { GameConfigStore } from "../../../../../src/core/game-configs/game-config-store";
+import { AuthStore } from "../../../../../src/auth/auth-store";
 
 const { observer, handle, render } = Observer;
 
@@ -16,6 +18,7 @@ export class DragonTigerGameHtmlView extends HtmlViewEngine {
   gameNameComponent: HTMLElement | null;
   roundStateComponent: HTMLElement | null;
   roundIdComponent: HTMLElement | null;
+  oddsComponent: HTMLElement | null;
 
   constructor() {
     super();
@@ -34,6 +37,8 @@ export class DragonTigerGameHtmlView extends HtmlViewEngine {
         document && document?.getElementById("dragon-tiger-round-state");
       this.roundIdComponent =
         document && document?.getElementById("dragon-tiger-round-id");
+      this.oddsComponent =
+        document && document?.getElementById("dragon-tiger-odds");
     } catch (error) {
       //console.log(error);
       return null;
@@ -63,6 +68,16 @@ export class DragonTigerGameHtmlView extends HtmlViewEngine {
   @render(RoundStore, (store) => store.roundId)
   renderRoundId(roundId: number) {
     this.setInnerHtml(this.roundIdComponent, roundId?.toString());
+  }
+
+  @render(AuthStore, (store) => store.isAuthenticated)
+  logAuthentication(isAuthenticated: any) {
+    console.log("dragon tiger game", { isAuthenticated });
+  }
+
+  @render(GameConfigStore, (store) => store.odds)
+  renderGameConfig(odds: any) {
+    this.setInnerHtml(this.oddsComponent, JSON.stringify(odds));
   }
 
   private setInnerHtml(component: HTMLElement | null, data: string) {

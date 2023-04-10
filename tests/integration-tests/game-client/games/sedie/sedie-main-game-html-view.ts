@@ -5,6 +5,9 @@ import Observer from "observer";
 import { injectable } from "inversify";
 import { HtmlViewEngine } from "../../views/html-view-engine";
 import { RoundStore } from "../../../../../src/core";
+import { GameConfigStore } from "../../../../../src/core/game-configs/game-config-store";
+import { AuthStore } from "../../../../../src/auth/auth-store";
+import { AuthHandlers } from "../../../../../src/auth/auth-handlers";
 
 const { observer, handle, render } = Observer;
 
@@ -16,10 +19,15 @@ export class SedieGameHtmlView extends HtmlViewEngine {
   gameNameComponent: HTMLElement | null;
   roundStateComponent: HTMLElement | null;
   roundIdComponent: HTMLElement | null;
+  oddsComponent: HTMLElement | null;
 
   constructor() {
     super();
     this.initView();
+  }
+
+  onLoad(): void {
+    this.sso();
   }
 
   initView() {
@@ -34,6 +42,7 @@ export class SedieGameHtmlView extends HtmlViewEngine {
         document && document?.getElementById("sedie-round-state");
       this.roundIdComponent =
         document && document?.getElementById("sedie-round-id");
+      this.oddsComponent = document && document?.getElementById("sedie-odds");
     } catch (error) {
       return null;
     }
@@ -63,6 +72,27 @@ export class SedieGameHtmlView extends HtmlViewEngine {
   renderRoundId(roundId: string) {
     this.setInnerHtml(this.roundIdComponent, roundId);
   }
+
+  @render(GameConfigStore, (store) => store.odds)
+  renderGameConfig(odds: any) {
+    this.setInnerHtml(this.oddsComponent, JSON.stringify(odds));
+  }
+
+  @render(AuthStore, (store) => store.isAuthenticated)
+  logAuthentication(isAuthenticated: any) {
+    console.log("sedie game", { isAuthenticated });
+    if (isAuthenticated) {
+      this.authorize();
+    }
+  }
+
+  @handle(AuthHandlers.SSO)
+  sso() {
+    return { token: "player-token", system: 1 };
+  }
+
+  @handle(AuthHandlers.Authorize)
+  authorize() {}
 
   private setInnerHtml(component: HTMLElement | null, data: string) {
     component && (component.innerHTML = data);

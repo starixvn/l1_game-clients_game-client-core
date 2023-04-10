@@ -2,7 +2,7 @@ import { EventEmitter2 } from "eventemitter2";
 import { injectable } from "inversify";
 
 export interface IHandler<Input, Output = any> {
-  eventNames: string[];
+  eventNames?: string[];
 
   handle(input: Input): Output;
 }

@@ -15,11 +15,7 @@ const gameSetting: GameClient.Core.GameSetting = {
     placingBet: 30,
   },
 };
-
 const rootContainer = GameClient.getContainer();
-
-GameClient.registerSharedModules(rootContainer);
-
 const gameContainer = GameClient.getContainer(gameSetting.name);
 
 gameContainer.bind(GameClient.Core.GameSetting).toConstantValue(gameSetting);

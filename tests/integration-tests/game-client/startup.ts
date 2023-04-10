@@ -1,13 +1,13 @@
 import "reflect-metadata";
 import { SedieGameController } from "./games/sedie/sedie-game-controller";
-import { IContainer } from "./../../../src/common/interface";
 import { getContainer, registerSharedModules } from "../../../src/index";
 import * as mobx from "mobx";
 import Observer from "observer";
 import { DragonTigerGameController } from "./games/dragon-tiger/dragon-tiger-controller";
 
+const userServiceUrl = "http://localhost:3000/user";
 const defaultContainer = getContainer();
-registerSharedModules(defaultContainer as IContainer);
+registerSharedModules(defaultContainer, userServiceUrl);
 
 const sedieGameController = new SedieGameController();
 sedieGameController.init();

@@ -22,7 +22,42 @@ export class SedieGameService {
     roundId: 0,
     delayStartTime: 0,
     disabled: false,
-    gameConfigs: {},
+    gameConfigs: {
+      groupId: "61765beed2b6510001f18bd6",
+      minBet: 1,
+      maxBet: 3000,
+      maxBetPerChoices: {
+        even: 3000,
+        odd: 3000,
+        red3: 2000,
+        white3: 2000,
+        red4: 500,
+        white4: 500,
+        red2: 2000,
+      },
+      chips: ["1", "5", "10", "50", "100", "200", "500", "1000", "2000"],
+      enableFreeBet: false,
+      stakeLevels: [],
+      odds: {
+        even: 1.96,
+        odd: 1.96,
+        red3: 3.75,
+        white3: 3.75,
+        red4: 14.4,
+        white4: 14.4,
+        red2: 2.4,
+      },
+      originalOdds: {
+        even: 1.96,
+        odd: 1.96,
+        red3: 3.75,
+        white3: 3.75,
+        red4: 14.4,
+        white4: 14.4,
+        red2: 2.4,
+      },
+      boostedChoices: [],
+    },
     realPlayers: {},
     ingame: {},
     admins: {},
@@ -54,6 +89,7 @@ export class SedieGameService {
     socket.emit(SedieGameService.gameName, {
       roundId: gameData.roundId,
       remainingTime: gameData.remainingTime,
+      gameConfigs: gameData.gameConfigs,
     });
 
     console.log(`${SedieGameService.gameName} send ingame`);
