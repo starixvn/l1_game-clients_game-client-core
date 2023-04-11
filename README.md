@@ -5,6 +5,40 @@
 
 ## How to run and develop this project
 
-1. Run the npm script "dev:game-service" to host the game service simulation.
-2. Run the npm script "dev:game-client" to see the game client console demo that uses the game client round base.
-3. You can go to http://locahost:3000 to run the game client HTML. Please be noted that the game client HTML is built from the npm script "build". Every time you change the code related to "./tests/integration-tests/game-client/startup.ts" you should run the build command
+### 1. Install dependencies
+
+```shell
+npm install
+```
+
+### 2. Build library
+
+```shell
+npm run build
+```
+
+### 3. Install all example packages
+
+```shell
+npm install --prefix examples/cocos-3x
+npm install --prefix examples/html
+npm install --prefix examples/server-simulator
+```
+
+### 4. Start `service simulator`, it is running at: http://localhost:3000
+
+```shell
+npm start --prefix examples/server-simulator
+```
+
+### 5. Start `webpack server`, it is running at: http://localhost:3001
+
+```shell
+npm start --prefix examples/html
+```
+
+### 6. Start `tsc` with watch mode
+
+```shell
+npm start
+```

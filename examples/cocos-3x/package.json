@@ -4,9 +4,6 @@
   "creator": {
     "version": "3.7.2"
   },
-  "scripts": {
-    "prepare": "npm run build --prefix ../.."
-  },
   "dependencies": {
     "game-client-base": "file:../..",
     "inversify": "6.0.1",

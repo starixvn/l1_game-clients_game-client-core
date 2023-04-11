@@ -9,6 +9,7 @@
     "dist/"
   ],
   "scripts": {
+    "start": "tsc --watch",
     "build": "tsc",
     "test:coverage": "jest",
     "reg": "npm set registry http://npm.lumigame.com"
