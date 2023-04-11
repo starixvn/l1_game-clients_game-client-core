@@ -1,7 +1,7 @@
-import { GameSetting } from "./../core/game-setting";
 import { inject, injectable } from "inversify";
 import { io } from "socket.io-client/dist/socket.io.js";
-import { Mediator } from "../common";
+import { Mediator } from "../shared";
+import { GameSetting } from "./../game/game-setting";
 import { SocketIOStore } from "./socket-io-store";
 
 export const events = {

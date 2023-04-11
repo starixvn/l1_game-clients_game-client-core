@@ -2,7 +2,7 @@ import Observer from "observer";
 import GameClient from "game-client-base";
 import { Component, Label, _decorator } from "cc";
 
-const { Player, Core } = GameClient;
+const { Player, Game } = GameClient;
 const { ccclass, property } = _decorator;
 const { observer, render } = Observer;
 
@@ -24,7 +24,7 @@ export default class Sedie extends Component {
   @property(Label)
   roundState: Label = null;
 
-  @render(Core.RoundTimeStore, (store) => store.roundTime)
+  @render(Game.RoundTimeStore, (store) => store.roundTime)
   renderRoundTime(roundTime: number) {
     this.updateLabelValue(this.roundTime, roundTime.toString());
   }
@@ -39,12 +39,12 @@ export default class Sedie extends Component {
     this.updateLabelValue(this.gameName, gameName);
   }
 
-  @render(Core.RoundStore, (store) => store.roundId)
+  @render(Game.RoundStore, (store) => store.roundId)
   renderRoundId(roundId: number) {
     this.updateLabelValue(this.roundId, roundId.toString());
   }
 
-  @render(Core.RoundTimeStore, (store) => store.roundState)
+  @render(Game.RoundTimeStore, (store) => store.roundState)
   renderRoundState(state: string) {
     this.updateLabelValue(this.roundState, state);
   }

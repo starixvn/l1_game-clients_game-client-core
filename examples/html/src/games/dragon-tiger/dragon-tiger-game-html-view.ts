@@ -1,4 +1,4 @@
-import { Core, Player, Auth } from "game-client-base";
+import { Game, Player, Auth } from "game-client-base";
 import { injectable } from "inversify";
 import { observer, render } from "observer";
 import { HtmlViewEngine } from "../../views/html-view-engine";
@@ -38,7 +38,7 @@ export class DragonTigerGameHtmlView extends HtmlViewEngine {
     }
   }
 
-  @render(Core.GameStore, (store) => store.gameName)
+  @render(Game.GameStore, (store) => store.gameName)
   renderGameName(gameName: string) {
     this.setInnerHtml(this.gameNameComponent, gameName);
   }
@@ -48,17 +48,17 @@ export class DragonTigerGameHtmlView extends HtmlViewEngine {
     this.setInnerHtml(this.playerComponent, playerName);
   }
 
-  @render(Core.RoundTimeStore, (store) => store.roundTime)
+  @render(Game.RoundTimeStore, (store) => store.roundTime)
   renderRoundTime(roundTime: number) {
     this.setInnerHtml(this.roundTimeComponent, roundTime?.toString());
   }
 
-  @render(Core.RoundTimeStore, (store) => store.roundState)
+  @render(Game.RoundTimeStore, (store) => store.roundState)
   renderRoundState(roundState: string) {
     this.setInnerHtml(this.roundStateComponent, roundState);
   }
 
-  @render(Core.RoundStore, (store) => store.roundId)
+  @render(Game.RoundStore, (store) => store.roundId)
   renderRoundId(roundId: number) {
     this.setInnerHtml(this.roundIdComponent, roundId?.toString());
   }
@@ -68,7 +68,7 @@ export class DragonTigerGameHtmlView extends HtmlViewEngine {
     console.log("dragon tiger game", { isAuthenticated });
   }
 
-  @render(Core.GameConfigStore, (store) => store.odds)
+  @render(Game.GameConfigStore, (store) => store.odds)
   renderGameConfig(odds: any) {
     this.setInnerHtml(this.oddsComponent, JSON.stringify(odds));
   }

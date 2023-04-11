@@ -1,6 +1,6 @@
 import { PlayerHandlers } from "./player-handlers";
 import { inject, injectable } from "inversify";
-import { Mediator } from "../common";
+import { Mediator } from "../shared";
 
 @injectable()
 export class PlayerModule {

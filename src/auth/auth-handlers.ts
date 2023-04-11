@@ -1,10 +1,9 @@
-import { Container, inject, injectable } from "inversify";
-import { UserService } from "./user-service";
-import { AuthStore } from "./auth-store";
-import { IHandler } from "../common";
-import { GameServiceMessage } from "../models/game-messages";
+import { inject, injectable } from "inversify";
 import { UMInfo } from "sc-user-service-client/dist/auth";
 import { PlayerStore } from "../players";
+import { GameServiceMessage, IHandler } from "../shared";
+import { AuthStore } from "./auth-store";
+import { UserService } from "./user-service";
 
 interface AuthorizeResponse {
   errorCode?: string;

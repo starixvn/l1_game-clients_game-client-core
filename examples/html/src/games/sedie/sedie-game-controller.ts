@@ -1,6 +1,6 @@
 import {
-  Common,
-  Core,
+  Shared,
+  Game,
   Player,
   SocketIO,
   getContainer,
@@ -13,7 +13,7 @@ import { SedieGameHtmlView } from "./sedie-main-game-html-view";
 export class SedieGameController {
   container: Container;
   gameServiceUrl = "http://localhost:3000";
-  gameSetting: Core.GameSetting = {
+  gameSetting: Game.GameSetting = {
     id: 1,
     name: "SeDie",
     durations: {
@@ -26,8 +26,8 @@ export class SedieGameController {
   init() {
     const rootContainer = getContainer();
     this.container = getContainer(this.gameSetting.name);
-    this.container.bind(Core.GameSetting).toConstantValue(this.gameSetting);
-    registerGameModules(this.container as Common.IContainer);
+    this.container.bind(Game.GameSetting).toConstantValue(this.gameSetting);
+    registerGameModules(this.container as Shared.IContainer);
     this.container.parent = rootContainer;
   }
 
@@ -40,8 +40,8 @@ export class SedieGameController {
   }
 
   logInfo() {
-    const roundTimeStore = this.container.resolve(Core.RoundTimeStore);
-    const roundStore = this.container.resolve(Core.RoundStore);
+    const roundTimeStore = this.container.resolve(Game.RoundTimeStore);
+    const roundStore = this.container.resolve(Game.RoundStore);
     reaction(
       () => roundTimeStore._beginState,
       (beginState) => {

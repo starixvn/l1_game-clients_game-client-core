@@ -1,8 +1,7 @@
 import { inject, injectable } from "inversify";
-import { IStakeLevel, PlayerStore } from "./player-store";
-import { GameServiceMessage } from "../models/game-messages";
 import { runInAction } from "mobx";
-import { IMultipleHandlers } from "../common";
+import { GameServiceMessage, IMultipleHandlers } from "../shared";
+import { IStakeLevel, PlayerStore } from "./player-store";
 
 @injectable()
 export class PlayerHandlers implements IMultipleHandlers {

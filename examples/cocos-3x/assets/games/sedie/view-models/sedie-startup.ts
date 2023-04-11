@@ -6,7 +6,7 @@ import mobx from "mobx";
 import { Component, _decorator } from "cc";
 import { LogStore } from "./stores/log-store";
 
-const gameSetting: GameClient.Core.GameSetting = {
+const gameSetting: GameClient.Game.GameSetting = {
   id: 1,
   name: "SeDie",
   durations: {
@@ -18,7 +18,7 @@ const gameSetting: GameClient.Core.GameSetting = {
 const rootContainer = GameClient.getContainer();
 const gameContainer = GameClient.getContainer(gameSetting.name);
 
-gameContainer.bind(GameClient.Core.GameSetting).toConstantValue(gameSetting);
+gameContainer.bind(GameClient.Game.GameSetting).toConstantValue(gameSetting);
 gameContainer.bind(LogStore).to(LogStore);
 
 GameClient.registerGameModules(gameContainer);

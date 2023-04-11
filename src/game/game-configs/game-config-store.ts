@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { GameServiceMessage } from "../../models/game-messages";
+import { GameServiceMessage } from "../../shared";
 
 @injectable()
 export class GameConfigStore {

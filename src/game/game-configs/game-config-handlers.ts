@@ -1,6 +1,5 @@
 import { inject, injectable } from "inversify";
-import { GameServiceMessage } from "../../models/game-messages";
-import { IMultipleHandlers } from "../../common";
+import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { GameConfigStore } from "./game-config-store";
 
 @injectable()

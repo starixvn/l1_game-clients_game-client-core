@@ -6,14 +6,14 @@ const { injectable, inject } = inversify;
 
 @injectable()
 export class LogStore {
-  @inject(GameClient.Core.GameSetting)
-  protected readonly gameSetting: GameClient.Core.GameSetting;
+  @inject(GameClient.Game.GameSetting)
+  protected readonly gameSetting: GameClient.Game.GameSetting;
 
-  @inject(GameClient.Core.RoundStore)
-  protected readonly roundStore: GameClient.Core.RoundStore;
+  @inject(GameClient.Game.RoundStore)
+  protected readonly roundStore: GameClient.Game.RoundStore;
 
-  @inject(GameClient.Core.RoundTimeStore)
-  protected readonly roundTimeStore: GameClient.Core.RoundTimeStore;
+  @inject(GameClient.Game.RoundTimeStore)
+  protected readonly roundTimeStore: GameClient.Game.RoundTimeStore;
 
   constructor() {
     mobx.makeAutoObservable(this);
