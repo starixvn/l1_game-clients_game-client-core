@@ -8,13 +8,13 @@
   },
   "dependencies": {
     "game-client-base": "file:../..",
-    "html-webpack-plugin": "^5.5.0",
-    "observer": "^1.1.2",
-    "reflect-metadata": "^0.1.13",
-    "ts-loader": "^9.4.2",
-    "typescript": "^5.0.4",
-    "webpack": "^5.78.0",
-    "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.13.2"
+    "html-webpack-plugin": "5.5.0",
+    "observer": "1.1.2",
+    "reflect-metadata": "0.1.13",
+    "ts-loader": "9.4.2",
+    "typescript": "5.0.4",
+    "webpack": "5.78.0",
+    "webpack-cli": "5.0.1",
+    "webpack-dev-server": "4.13.2"
   }
 }
