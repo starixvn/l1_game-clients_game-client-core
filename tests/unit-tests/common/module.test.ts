@@ -1,5 +1,4 @@
-import { registerModule } from "../../../src/common";
-
+import { registerModule } from "../../../src/shared";
 describe("registerModule", () => {
     describe("when called", () => {
         it("should call resolve method of the container instance", () => {

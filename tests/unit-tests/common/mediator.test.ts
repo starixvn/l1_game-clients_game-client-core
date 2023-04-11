@@ -1,4 +1,4 @@
-import { IHandler, Mediator } from "../../../src/common";
+import { Mediator, IHandler } from "../../../src/shared";
 import container from "../container.test";
 import { EventEmitter2 } from "eventemitter2";
 
