@@ -1,37 +1,40 @@
 {
-  "name": "game-client-base",
-  "version": "0.0.0",
-  "type": "commonjs",
-  "types": "dist/index.d.ts",
-  "main": "dist/index.js",
-  "license": "UNLICENSED",
-  "files": [
-    "dist/"
-  ],
-  "scripts": {
-    "start": "tsc --watch",
-    "build": "tsc",
-    "test:coverage": "jest",
-    "reg": "npm set registry http://npm.lumigame.com"
-  },
-  "jestSonar": {
-    "reportPath": "reports",
-    "reportFile": "test-reporter.xml",
-    "indent": 4
-  },
-  "dependencies": {
-    "eventemitter2": "6.4.9",
-    "inversify": "6.0.1",
-    "sc-user-service-client": "1.5.1-beta.1",
-    "socket.io-client": "4.6.1"
-  },
-  "devDependencies": {
-    "@types/jest": "29.5.0",
-    "jest": "29.5.0",
-    "jest-junit": "15.0.0",
-    "jest-sonar-reporter": "2.0.0",
-    "mobx": "6.9.0",
-    "ts-jest": "29.1.0",
-    "typescript": "5.0.4"
-  }
+    "name": "game-client-base",
+    "version": "0.0.0",
+    "type": "commonjs",
+    "types": "dist/index.d.ts",
+    "main": "dist/index.js",
+    "license": "UNLICENSED",
+    "files": [
+        "dist/"
+    ],
+    "scripts": {
+        "start": "tsc --watch",
+        "build": "tsc",
+        "test:coverage": "jest",
+        "test:watch": "jest --watch --verbose",
+        "reg": "npm set registry http://npm.lumigame.com"
+    },
+    "jestSonar": {
+        "reportPath": "reports",
+        "reportFile": "test-reporter.xml",
+        "indent": 4
+    },
+    "dependencies": {
+        "eventemitter2": "6.4.9",
+        "inversify": "6.0.1",
+        "sc-user-service-client": "1.5.1-beta.1",
+        "socket.io-client": "4.6.1"
+    },
+    "devDependencies": {
+        "@types/jest": "29.5.0",
+        "jest": "29.5.0",
+        "jest-junit": "15.0.0",
+        "jest-sonar-reporter": "2.0.0",
+        "mobx": "6.9.0",
+        "reflect-metadata": "^0.1.13",
+        "ts-jest": "29.1.0",
+        "ts-node": "^10.9.1",
+        "typescript": "5.0.4"
+    }
 }
