@@ -1,16 +1,13 @@
 import { inject, injectable } from "inversify";
-import { runInAction } from "mobx";
 import { GameServiceMessage, IMultipleHandlers } from "../shared";
-import { IStakeLevel, PlayerStore } from "./player-store";
+import { PlayerStore } from "./player-store";
 
 @injectable()
 export class PlayerHandlers implements IMultipleHandlers {
     constructor(@inject(PlayerStore) protected readonly store: PlayerStore) {}
 
-    handleStakeLevel(stakeLevel: IStakeLevel) {
-        runInAction(() => {
-            stakeLevel && (this.store.stakeLevel = stakeLevel);
-        });
+    handleStakeLevel(stakeLevel: GameServiceMessage.UserStakeLevel) {
+        this.store.setStakeLevel(stakeLevel);
     }
 
     handlePlayerProfile(profile: GameServiceMessage.User) {
@@ -21,7 +18,7 @@ export class PlayerHandlers implements IMultipleHandlers {
 
     eventHandleList = [
         {
-            name: GameServiceMessage.toGame,
+            name: GameServiceMessage.UserStakeLevel.eventName,
             handle: this.handleStakeLevel.bind(this)
         },
         {

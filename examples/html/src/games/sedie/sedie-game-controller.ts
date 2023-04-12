@@ -63,9 +63,9 @@ export class SedieGameController {
 
     joinGame() {
         const player = this.container.resolve(Player.PlayerStore);
-        const socketIOStore = this.container.get(SocketIO.SocketIOStore);
-
         player.ss = "player-ss-sedie";
-        player.signIn(socketIOStore.connection);
+
+        const playerSignin = this.container.resolve(Player.SignInHandler);
+        playerSignin.handle();
     }
 }

@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
 import { PlayerStore } from "../player-store";
 import { SocketIOStore } from "../../socket-io";
+import { GameClientEmitMessage } from "../../shared";
 
 @injectable()
 export class SignInHandler {
@@ -10,7 +11,10 @@ export class SignInHandler {
     ) {}
 
     handle() {
-        // TODO: why the signIn business is put in Store ???
-        this.store.signIn(this.socketStore.connection);
+        const signIn = new GameClientEmitMessage.Signin();
+        signIn.username = this.store.name;
+        signIn.ss = this.store.ss;
+        // signIn.ss = this.authStore.ss;
+        this.socketStore.connection.emit(GameClientEmitMessage.Signin.eventName, signIn);
     }
 }

@@ -64,9 +64,9 @@ export class DragonTigerGameController {
 
     joinGame() {
         const player = this.container.resolve(Player.PlayerStore);
-        const socketIOStore = this.container.get(SocketIO.SocketIOStore);
-
         player.ss = "player-ss-dragon-tiger";
-        player.signIn(socketIOStore.connection);
+
+        const playerSignin = this.container.resolve(Player.SignInHandler);
+        playerSignin.handle();
     }
 }

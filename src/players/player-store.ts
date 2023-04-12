@@ -48,12 +48,7 @@ export class PlayerStore {
         this.scoin = scoin ?? 0;
     }
 
-    signIn(socket) {
-        const signIn = new GameClientEmitMessage.Signin();
-        signIn.username = this.name;
-        signIn.ss = this.ss;
-        // signIn.ss = this.authStore.ss;
-
-        socket.emit(GameClientEmitMessage.Signin.eventName, signIn);
+    setStakeLevel(stakeLevel: GameServiceMessage.UserStakeLevel) {
+        stakeLevel && (this.stakeLevel = stakeLevel);
     }
 }
