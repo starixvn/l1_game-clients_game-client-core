@@ -2,3 +2,41 @@ include:
   - project: "ci/core-cicd"
     ref: main
     file: "luminet.gitlab-ci.yml"
+
+variables:
+  COCOS_VERSION: "3.7.2"
+
+.build_cocos_creator_script: &build_cocos_creator_script
+  stage: build-cocos-web
+  script:
+    - echo "====== Build Cocos Web Mobile ======"
+    - |
+      if [[ -d "./build/web-mobile" ]]; then
+        echo "Using cache with key $CI_COMMIT_SHA"
+        exit 0
+      fi
+    - npm install
+    - npm run build
+    - npm install --prefix examples/cocos-3x
+    - /Applications/CocosCreator/Creator/$COCOS_VERSION/CocosCreator.app/Contents/MacOS/CocosCreator --project ./examples/cocos-3x --build "platform=web-mobile;debug=false;webOrientation=landscape;md5Cache=true"
+  tags:
+    - cocos-new
+  artifacts:
+    when: always
+    paths:
+      - ./examples/cocos-3x/build/web-mobile
+    expire_in: 1 day
+  cache:
+    - key:
+        files:
+          - package.json
+          - package-lock.json
+      paths:
+        - node_modules
+    - key: $CI_COMMIT_SHORT_SHA
+      paths:
+        - build
+
+.base_build_cocos:
+  <<: *build_cocos_creator_script
+  allow_failure: true
