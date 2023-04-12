@@ -18,7 +18,7 @@ variables:
     - npm install
     - npm run build
     - npm install --prefix examples/cocos-3x
-    - /Applications/CocosCreator/Creator/$COCOS_VERSION/CocosCreator.app/Contents/MacOS/CocosCreator --project ./examples/cocos-3x --build "platform=web-mobile;debug=false;webOrientation=landscape;md5Cache=true"
+    - /Applications/CocosCreator/Creator/$COCOS_VERSION/CocosCreator.app/Contents/MacOS/CocosCreator --project ./examples/cocos-3x --build "platform=web-mobile;debug=false;webOrientation=landscape;md5Cache=true;enableSplash=false"
   tags:
     - cocos-new
   artifacts:
