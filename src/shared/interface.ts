@@ -1,7 +1,7 @@
 export interface AnyConstructor<T = any> {
-  new (...params: any[]): T;
+    new (...params: any[]): T;
 }
 
 export interface IContainer {
-  resolve<T>(ctor: AnyConstructor<T> | string): T;
+    resolve<T>(ctor: AnyConstructor<T> | string): T;
 }

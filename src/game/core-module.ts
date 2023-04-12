@@ -7,18 +7,13 @@ import { Mediator } from "../shared";
 
 @injectable()
 export class CoreModule {
-  constructor(
-    @inject(Mediator) mediator: Mediator,
-    @inject(RoundTimeHandlers) roundTimeHandlers: RoundTimeHandlers,
-    @inject(JoinGameHandlers) joinGameHandlers: JoinGameHandlers,
-    @inject(GameConfigHandlers) gameConfigHandlers: GameConfigHandlers,
-    @inject(RoundHandlers) roundHandlers: RoundHandlers
-  ) {
-    mediator.registerMultipleHandlers([
-      roundTimeHandlers,
-      joinGameHandlers,
-      roundHandlers,
-      gameConfigHandlers,
-    ]);
-  }
+    constructor(
+        @inject(Mediator) mediator: Mediator,
+        @inject(RoundTimeHandlers) roundTimeHandlers: RoundTimeHandlers,
+        @inject(JoinGameHandlers) joinGameHandlers: JoinGameHandlers,
+        @inject(GameConfigHandlers) gameConfigHandlers: GameConfigHandlers,
+        @inject(RoundHandlers) roundHandlers: RoundHandlers
+    ) {
+        mediator.registerMultipleHandlers([roundTimeHandlers, joinGameHandlers, roundHandlers, gameConfigHandlers]);
+    }
 }

@@ -6,37 +6,34 @@ import { makeAutoObservable } from "mobx";
 
 @injectable()
 export class GameStore {
-  gameRunnerId;
+    gameRunnerId;
 
-  constructor(
-    @inject(SocketIOStore) private socket: SocketIOStore,
-    @inject(RoundTimeStore) private roundTimeStore: RoundTimeStore,
-    @inject(GameSetting) private gameSetting: GameSetting
-  ) {
-    makeAutoObservable(this);
-  }
-
-  get gameName() {
-    return this.gameSetting.name;
-  }
-
-  startGameRunner() {
-    this.stopGameRunner();
-    this.gameRunnerId = setInterval(() => {
-      this.roundTimeStore.countdown();
-    }, 1000);
-  }
-
-  toGame(gameName: string) {
-    if (
-      gameName &&
-      gameName.toLocaleLowerCase() === this.gameSetting.name.toLocaleLowerCase()
+    constructor(
+        @inject(SocketIOStore) private socket: SocketIOStore,
+        @inject(RoundTimeStore) private roundTimeStore: RoundTimeStore,
+        @inject(GameSetting) private gameSetting: GameSetting
     ) {
-      this.startGameRunner();
+        makeAutoObservable(this);
     }
-  }
 
-  stopGameRunner() {
-    clearInterval(this.gameRunnerId);
-  }
+    get gameName() {
+        return this.gameSetting.name;
+    }
+
+    startGameRunner() {
+        this.stopGameRunner();
+        this.gameRunnerId = setInterval(() => {
+            this.roundTimeStore.countdown();
+        }, 1000);
+    }
+
+    toGame(gameName: string) {
+        if (gameName && gameName.toLocaleLowerCase() === this.gameSetting.name.toLocaleLowerCase()) {
+            this.startGameRunner();
+        }
+    }
+
+    stopGameRunner() {
+        clearInterval(this.gameRunnerId);
+    }
 }

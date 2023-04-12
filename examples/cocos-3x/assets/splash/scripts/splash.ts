@@ -9,48 +9,48 @@ const userServiceUrl = "http://localhost:3000/user";
 const rootContainer = GameClient.getContainer();
 GameClient.registerSharedModules(rootContainer, userServiceUrl);
 Observer.configure({
-  default: {
-    mobx,
-    container: rootContainer,
-  },
+    default: {
+        mobx,
+        container: rootContainer
+    }
 });
 @ccclass
 @observer("default")
 export default class Splash extends Component {
-  @property({ type: Node })
-  btnJoinGame: Node = null;
+    @property({ type: Node })
+    btnJoinGame: Node = null;
 
-  @property({ type: Label })
-  playerName: Label = null;
+    @property({ type: Label })
+    playerName: Label = null;
 
-  onLoad() {
-    this.sso();
-  }
-
-  @handle(GameClient.Auth.AuthHandlers.SSO)
-  sso() {
-    return { token: "player-token", system: 1 };
-  }
-  @render(GameClient.Auth.AuthStore, (store) => store.isAuthenticated)
-  logAuthentication(isAuthenticated: boolean) {
-    if (isAuthenticated) {
-      this.authorize();
+    onLoad() {
+        this.sso();
     }
-  }
-  @handle(GameClient.Auth.AuthHandlers.Authorize)
-  authorize() {}
 
-  @render(GameClient.Auth.AuthStore, (store) => store.isAuthorized)
-  showButtonJoinGame(isAuthorized: boolean) {
-    this.btnJoinGame && (this.btnJoinGame.active = isAuthorized);
-  }
+    @handle(GameClient.Auth.AuthHandlers.SSO)
+    sso() {
+        return { token: "player-token", system: 1 };
+    }
+    @render(GameClient.Auth.AuthStore, (store) => store.isAuthenticated)
+    logAuthentication(isAuthenticated: boolean) {
+        if (isAuthenticated) {
+            this.authorize();
+        }
+    }
+    @handle(GameClient.Auth.AuthHandlers.Authorize)
+    authorize() {}
 
-  @render(GameClient.Player.PlayerStore, (store) => store.name)
-  showName(name: string) {
-    this.playerName && (this.playerName.string = name);
-  }
+    @render(GameClient.Auth.AuthStore, (store) => store.isAuthorized)
+    showButtonJoinGame(isAuthorized: boolean) {
+        this.btnJoinGame && (this.btnJoinGame.active = isAuthorized);
+    }
 
-  openGameSedie() {
-    director.loadScene("sedie");
-  }
+    @render(GameClient.Player.PlayerStore, (store) => store.name)
+    showName(name: string) {
+        this.playerName && (this.playerName.string = name);
+    }
+
+    openGameSedie() {
+        director.loadScene("sedie");
+    }
 }

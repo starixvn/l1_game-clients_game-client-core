@@ -4,19 +4,19 @@ import { GameStore } from "../game-store";
 
 @injectable()
 export class JoinGameHandlers implements IMultipleHandlers {
-  constructor(@inject(GameStore) protected readonly gameStore: GameStore) {}
+    constructor(@inject(GameStore) protected readonly gameStore: GameStore) {}
 
-  eventHandleList = [
-    {
-      name: GameServiceMessage.toGame,
-      handle: this.handleToGame.bind(this),
-    },
-  ];
+    eventHandleList = [
+        {
+            name: GameServiceMessage.toGame,
+            handle: this.handleToGame.bind(this)
+        }
+    ];
 
-  handleToGame(toGame: string) {
-    if (toGame && toGame != "") {
-      console.log(toGame);
-      this.gameStore.toGame(toGame);
+    handleToGame(toGame: string) {
+        if (toGame && toGame != "") {
+            console.log(toGame);
+            this.gameStore.toGame(toGame);
+        }
     }
-  }
 }

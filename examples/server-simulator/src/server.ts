@@ -10,40 +10,36 @@ import userRouter from "./user-service-router";
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "*",
-  },
+    cors: {
+        origin: "*"
+    }
 });
 const sedieGameService = new SedieGameService(io);
 const dragonTigerGameService = new DragonTigerGameService(io);
-const playerService = new PlayerService(
-  io,
-  sedieGameService,
-  dragonTigerGameService
-);
+const playerService = new PlayerService(io, sedieGameService, dragonTigerGameService);
 const port = 3000;
 
 app.use(
-  cors({
-    origin: "*",
-  })
+    cors({
+        origin: "*"
+    })
 );
 
 io.on("connection", (socket) => {
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
+    socket.on("disconnect", () => {
+        console.log("user disconnected");
+    });
 
-  socket.on("signin", (data) => {
-    playerService.onSignIn(socket, data);
-  });
+    socket.on("signin", (data) => {
+        playerService.onSignIn(socket, data);
+    });
 });
 
 app.use("/user", userRouter);
 app.use(express.static("public"));
 
 server.listen(port, () => {
-  console.log(`listening on *:${port}`);
+    console.log(`listening on *:${port}`);
 });
 
 sedieGameService.startCron();

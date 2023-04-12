@@ -4,10 +4,7 @@ import { Mediator } from "../shared";
 
 @injectable()
 export class PlayerModule {
-  constructor(
-    @inject(Mediator) mediator: Mediator,
-    @inject(PlayerHandlers) playerHandlers: PlayerHandlers
-  ) {
-    mediator.registerHandlers(playerHandlers);
-  }
+    constructor(@inject(Mediator) mediator: Mediator, @inject(PlayerHandlers) playerHandlers: PlayerHandlers) {
+        mediator.registerHandlers(playerHandlers);
+    }
 }

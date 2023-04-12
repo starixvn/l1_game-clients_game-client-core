@@ -3,13 +3,13 @@ import { makeAutoObservable } from "mobx";
 
 @injectable()
 export class SocketIOStore {
-  constructor() {
-    makeAutoObservable(this);
-  }
+    constructor() {
+        makeAutoObservable(this);
+    }
 
-  connection: any = {};
+    connection: any = {};
 
-  // connection: {
-  //   status
-  // }
+    // connection: {
+    //   status
+    // }
 }

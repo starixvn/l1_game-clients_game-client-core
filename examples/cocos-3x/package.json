@@ -1,14 +1,14 @@
 {
-  "name": "cocos-3x",
-  "uuid": "c276db36-9eca-406d-ab37-8c88b377139f",
-  "creator": {
-    "version": "3.7.2"
-  },
-  "dependencies": {
-    "game-client-base": "file:../..",
-    "inversify": "6.0.1",
-    "mobx": "6.9.0",
-    "observer": "1.1.2",
-    "reflect-metadata": "0.1.13"
-  }
+    "name": "cocos-3x",
+    "uuid": "c276db36-9eca-406d-ab37-8c88b377139f",
+    "creator": {
+        "version": "3.7.2"
+    },
+    "dependencies": {
+        "game-client-base": "file:../..",
+        "inversify": "6.0.1",
+        "mobx": "6.9.0",
+        "observer": "1.1.2",
+        "reflect-metadata": "0.1.13"
+    }
 }

@@ -5,60 +5,56 @@ import { GameSetting } from "./../game/game-setting";
 import { SocketIOStore } from "./socket-io-store";
 
 export const events = {
-  connect: "connect",
-  reconnect: "reconnect",
-  connectFailed: "connect_failed",
-  connectError: "connect_error",
-  disconnect: "disconnect",
+    connect: "connect",
+    reconnect: "reconnect",
+    connectFailed: "connect_failed",
+    connectError: "connect_error",
+    disconnect: "disconnect"
 };
 
 @injectable()
 export class SocketIOConnector {
-  constructor(
-    @inject(Mediator) protected readonly mediator: Mediator,
-    @inject(SocketIOStore) protected readonly store: SocketIOStore,
-    @inject(GameSetting) protected readonly gameSetting: GameSetting
-  ) {}
+    constructor(
+        @inject(Mediator) protected readonly mediator: Mediator,
+        @inject(SocketIOStore) protected readonly store: SocketIOStore,
+        @inject(GameSetting) protected readonly gameSetting: GameSetting
+    ) {}
 
-  socket: any;
+    socket: any;
 
-  handle(options) {
-    this.socket = io(options.socketUri, options);
-    this.socket.on(events.connect, this.onConnected.bind(this));
+    handle(options) {
+        this.socket = io(options.socketUri, options);
+        this.socket.on(events.connect, this.onConnected.bind(this));
 
-    this.store.connection = this.socket;
-  }
+        this.store.connection = this.socket;
+    }
 
-  onConnected() {
-    this.socket.onAny((event: string, value: any) => {
-      if (
-        event?.toLocaleLowerCase() ===
-          this.gameSetting?.name.toLocaleLowerCase() ||
-        event?.toLocaleLowerCase() == "message"
-      ) {
-        Object.entries(value).forEach((entry) => {
-          const [key, value] = entry;
-          this.mediator.emit(key, value);
+    onConnected() {
+        this.socket.onAny((event: string, value: any) => {
+            if (event?.toLocaleLowerCase() === this.gameSetting?.name.toLocaleLowerCase() || event?.toLocaleLowerCase() == "message") {
+                Object.entries(value).forEach((entry) => {
+                    const [key, value] = entry;
+                    this.mediator.emit(key, value);
+                });
+            } else {
+                this.mediator.emit(event, value);
+            }
         });
-      } else {
-        this.mediator.emit(event, value);
-      }
-    });
 
-    // this.mediator.onAny((event: any, value: any) => {
-    //   this.socket.emit(event, value);
-    // });
-  }
+        // this.mediator.onAny((event: any, value: any) => {
+        //   this.socket.emit(event, value);
+        // });
+    }
 
-  onDisconnected() {
-    this.socket.disconnect();
-  }
+    onDisconnected() {
+        this.socket.disconnect();
+    }
 
-  send(eventName: string, data: any) {
-    this.socket.emit(eventName, data);
-  }
+    send(eventName: string, data: any) {
+        this.socket.emit(eventName, data);
+    }
 
-  getSocket() {
-    return this.socket;
-  }
+    getSocket() {
+        return this.socket;
+    }
 }

@@ -1,7 +1,7 @@
 # Game Client Base
 
-- Implement the game client base to not depend on any Javascript game engine.
-- Testable, includes unittest and integration test.
+-   Implement the game client base to not depend on any Javascript game engine.
+-   Testable, includes unittest and integration test.
 
 ## How to run and develop this project
 
