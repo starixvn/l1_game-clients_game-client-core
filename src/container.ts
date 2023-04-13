@@ -1,16 +1,50 @@
 import { Container } from "inversify";
+import * as Auth from "./auth";
+import * as Game from "./game";
+import * as Players from "./players";
+import { FeatureLoader } from "./shared";
 
-const containers: { [id: string]: Container } = {};
+export interface IContainerOptions {
+    onContainerCreated?: (container: Container) => void;
 
-export const getContainer = (moduleName: string = "default"): Container => {
-    if (containers[moduleName]) {
-        return containers[moduleName];
-    }
+    disabledFeatures?: string[];
 
-    containers[moduleName] = new Container({
+    enabledFeatures?: string[];
+
+    globalContainer?: Container;
+}
+
+function serializeOptions(input: IContainerOptions): IContainerOptions {
+    const defaultOptions: IContainerOptions = {
+        onContainerCreated: () => {},
+        disabledFeatures: [],
+        globalContainer: null,
+        enabledFeatures: [],
+    };
+
+    return Object.assign(defaultOptions, input);
+}
+
+export function getContainer(options: IContainerOptions = {}) {
+    const { onContainerCreated, disabledFeatures, globalContainer, enabledFeatures } = serializeOptions(options);
+
+    const container = new Container({
         autoBindInjectable: true,
         defaultScope: "Singleton",
     });
 
-    return containers[moduleName];
-};
+    container.parent = globalContainer;
+
+    onContainerCreated(container);
+
+    const featureLoaderOptions: FeatureLoader.IFeatureLoaderOptions = {
+        container: container,
+        disabledFeatures: disabledFeatures,
+        enabledFeatures: enabledFeatures,
+        features: [Auth, Players, Game],
+    };
+
+    FeatureLoader.loadFeatures(featureLoaderOptions);
+
+    return container;
+}

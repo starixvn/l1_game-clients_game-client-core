@@ -1,8 +1,8 @@
-import Observer from "observer";
-import GameClient from "game-client-base";
 import { Component, Label, _decorator } from "cc";
+import GameClient from "game-client-base";
+import Observer from "observer";
 
-const { Player, Game } = GameClient;
+const { Player, Rounds, GameConfigs, Connection } = GameClient;
 const { ccclass, property } = _decorator;
 const { observer, render, handle } = Observer;
 
@@ -24,15 +24,15 @@ export default class Sedie extends Component {
     @property(Label)
     roundState: Label = null;
 
-    @render(GameClient.Game.ConnectionStore, (store) => store.signedIn)
+    @render(Connection.ConnectionStore, (store) => store.signedIn)
     onSignedIn() {
         this.inGame();
     }
 
-    @handle(GameClient.Game.ConnectionHandlers.InGameHandler)
+    @handle(Connection.ConnectionHandlers.InGameHandler)
     inGame() {}
 
-    @render(Game.RoundTimeStore, (store) => store.roundTime)
+    @render(Rounds.RoundTimeStore, (store) => store.roundTime)
     renderRoundTime(roundTime: number) {
         this.updateLabelValue(this.roundTime, roundTime.toString());
     }
@@ -42,17 +42,17 @@ export default class Sedie extends Component {
         this.updateLabelValue(this.player, player);
     }
 
-    @render(Player.PlayerStore, (store) => store.name)
+    @render(GameConfigs.GameSetting, (store) => store.name)
     renderGameName(gameName: string) {
         this.updateLabelValue(this.gameName, gameName);
     }
 
-    @render(Game.RoundStore, (store) => store.roundId)
+    @render(Rounds.RoundStore, (store) => store.roundId)
     renderRoundId(roundId: number) {
         this.updateLabelValue(this.roundId, roundId.toString());
     }
 
-    @render(Game.RoundTimeStore, (store) => store.roundState)
+    @render(Rounds.RoundTimeStore, (store) => store.roundState)
     renderRoundState(state: string) {
         this.updateLabelValue(this.roundState, state);
     }

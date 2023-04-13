@@ -1,8 +1,8 @@
-import { GameSetting } from "./game-setting";
-import { RoundTimeStore } from "./rounds/round-time-store";
-import { ConnectionStore } from "./connection/connection-store";
-import { injectable, inject } from "inversify";
+import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+import { ConnectionStore } from "./connection";
+import { GameSetting } from "./game-configs";
+import { RoundTimeStore } from "./rounds";
 
 @injectable()
 export class GameStore {

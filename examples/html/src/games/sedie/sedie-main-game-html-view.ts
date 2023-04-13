@@ -1,4 +1,4 @@
-import { Auth, Game, Player } from "game-client-base";
+import { Auth, GameConfigs, GameStore, Player, Rounds } from "game-client-base";
 import { injectable } from "inversify";
 import { handle, observer, render } from "observer";
 import { HtmlViewEngine } from "../../views/html-view-engine";
@@ -31,7 +31,7 @@ export class SedieGameHtmlView extends HtmlViewEngine {
         }
     }
 
-    @render(Game.GameStore, (store) => store.gameName)
+    @render(GameStore, (store) => store.gameName)
     renderGameName(gameName: string) {
         this.setInnerHtml(this.gameNameComponent, gameName);
     }
@@ -41,22 +41,22 @@ export class SedieGameHtmlView extends HtmlViewEngine {
         this.setInnerHtml(this.playerComponent, playerName);
     }
 
-    @render(Game.RoundTimeStore, (store) => store.roundTime)
+    @render(Rounds.RoundTimeStore, (store) => store.roundTime)
     renderRoundTime(roundTime: string) {
         this.setInnerHtml(this.roundTimeComponent, roundTime);
     }
 
-    @render(Game.RoundTimeStore, (store) => store.roundState)
+    @render(Rounds.RoundTimeStore, (store) => store.roundState)
     renderRoundState(roundState: string) {
         this.setInnerHtml(this.roundStateComponent, roundState);
     }
 
-    @render(Game.RoundStore, (store) => store.roundId)
+    @render(Rounds.RoundStore, (store) => store.roundId)
     renderRoundId(roundId: string) {
         this.setInnerHtml(this.roundIdComponent, roundId);
     }
 
-    @render(Game.GameConfigStore, (store) => store.odds)
+    @render(GameConfigs.GameConfigStore, (store) => store.odds)
     renderGameConfig(odds: any) {
         this.setInnerHtml(this.oddsComponent, JSON.stringify(odds));
     }

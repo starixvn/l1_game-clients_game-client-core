@@ -1,12 +1,12 @@
-import "reflect-metadata";
+import { container as SharedContainer } from "../../../splash/scripts/splash-container";
 
-import Observer from "observer";
-import GameClient from "game-client-base";
-import mobx from "mobx";
 import { Component, _decorator } from "cc";
+import gc from "game-client-base";
+import mobx from "mobx";
+import Observer from "observer";
 import { LogStore } from "./stores/log-store";
 
-const gameSetting: GameClient.Game.GameSetting = {
+const gameSetting: gc.GameConfigs.GameSetting = {
     id: 1,
     name: "SeDie",
     durations: {
@@ -15,22 +15,18 @@ const gameSetting: GameClient.Game.GameSetting = {
         placingBet: 30,
     },
 };
-const rootContainer = GameClient.getContainer();
-const gameContainer = GameClient.getContainer(gameSetting.name);
 
-gameContainer.bind(GameClient.Game.GameSetting).toConstantValue(gameSetting);
-gameContainer.bind(LogStore).to(LogStore);
-
-GameClient.registerGameModules(gameContainer);
-
-gameContainer.parent = rootContainer;
-
-Observer.configure({
-    sedie: {
-        mobx,
-        container: gameContainer,
+const containerOptions: gc.IContainerOptions = {
+    globalContainer: SharedContainer,
+    onContainerCreated: (container) => {
+        container.bind(gc.GameConfigs.GameSetting).toConstantValue(gameSetting);
+        container.bind(LogStore).to(LogStore);
     },
-});
+};
+
+const container = gc.getContainer(containerOptions);
+
+Observer.configure({ sedie: { mobx, container } });
 
 const { ccclass } = _decorator;
 const { observer, handle, render } = Observer;
@@ -38,17 +34,16 @@ const { observer, handle, render } = Observer;
 @ccclass
 @observer("sedie")
 export default class Startup extends Component {
-    @handle(GameClient.Game.ConnectionHandlers.ConnectHandler)
+    @handle(gc.Connection.ConnectionHandlers.ConnectHandler)
     connectToService() {
         const socketUri = "http://localhost:3000";
 
         return { socketUri };
     }
 
-    @handle(GameClient.Game.ConnectionHandlers.SignInHandler)
+    @handle(gc.Connection.ConnectionHandlers.SignInHandler)
     signIn() {
-        const auth = gameContainer.resolve(GameClient.Auth.AuthStore);
-        return { session: auth.session, username: auth.username, system: auth.system };
+        return {};
     }
 
     @render(LogStore, (store) => store.message)
@@ -56,7 +51,7 @@ export default class Startup extends Component {
         console.log(message);
     }
 
-    @render(GameClient.Game.ConnectionStore, (store) => store.isConnected)
+    @render(gc.Connection.ConnectionStore, (store) => store.isConnected)
     onConnected(isConnected: boolean) {
         if (isConnected) {
             this.joinRoom();
@@ -65,10 +60,12 @@ export default class Startup extends Component {
     }
 
     joinRoom() {
-        gameContainer.resolve(GameClient.Game.ConnectionStore).send("joinRoom", "sedie");
+        // TODO: should create a new handler for this statement
+        container.resolve(gc.Connection.ConnectionStore).send("joinRoom", "sedie");
     }
 
     onLoad() {
         this.connectToService();
+        this.signIn();
     }
 }

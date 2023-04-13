@@ -1,10 +1,5 @@
-import { CoreModule } from "./core-module";
-
-export * from "./game-configs";
-export * from "./game-setting";
+export * as Connection from "./connection";
+export * as GameConfigs from "./game-configs";
 export * from "./game-store";
-export * from "./rounds/round-store";
-export * from "./rounds/round-time-store";
-export * from "./connection";
-
-export default CoreModule;
+export * as JoinGame from "./join-game";
+export * as Rounds from "./rounds";

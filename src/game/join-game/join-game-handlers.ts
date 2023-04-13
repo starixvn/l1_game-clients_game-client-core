@@ -9,7 +9,7 @@ export class JoinGameHandlers implements IMultipleHandlers {
     eventHandleList = [
         {
             name: GameServiceMessage.toGame,
-            handle: this.handleToGame.bind(this),
+            handle: this.handleToGame,
         },
     ];
 

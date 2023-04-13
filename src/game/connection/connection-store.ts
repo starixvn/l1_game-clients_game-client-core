@@ -1,8 +1,8 @@
-import { injectable, inject } from "inversify";
+import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { Socket } from "socket.io-client/dist/socket.io.js";
 import { Mediator } from "../../shared";
-import { GameSetting } from "../game-setting";
+import { GameSetting } from "../game-configs";
 
 export const events = {
     connect: "connect",

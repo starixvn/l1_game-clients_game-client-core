@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { AuthStore } from "../auth/auth-store";
-import { GameClientEmitMessage, GameServiceMessage } from "../shared";
+import { GameServiceMessage } from "../shared";
 
 export interface IStakeLevel {
     minBet: number;

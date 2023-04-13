@@ -101,7 +101,7 @@ export namespace AuthHandlers {
         ) {}
 
         async handle({ session = "", username = "" }) {
-            const response = await this.userService.getBalance(session, username);
+            const response: any = await this.userService.getBalance(session, username);
             if (response.isSuccessful) {
                 this.playerStore.setBalance(response.balance, response.scoins, response.availableSpins);
             } else {

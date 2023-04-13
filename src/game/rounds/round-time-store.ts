@@ -1,6 +1,6 @@
-import { GameSetting } from "../game-setting";
-import { injectable, inject } from "inversify";
+import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+import { GameSetting } from "../game-configs";
 
 export type RoundTimeSetting = {
     wholeRound: number;

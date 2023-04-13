@@ -13,7 +13,7 @@ export class GameConfigHandlers implements IMultipleHandlers {
     eventHandleList = [
         {
             name: GameServiceMessage.GameConfigs.eventName,
-            handle: this.handleGameConfigs.bind(this),
+            handle: this.handleGameConfigs,
         },
     ];
 }
