@@ -1,6 +1,6 @@
 import { GameSetting } from "./game-setting";
 import { RoundTimeStore } from "./rounds/round-time-store";
-import { SocketIOStore } from "../socket-io/socket-io-store";
+import { ConnectionStore } from "./connection/connection-store";
 import { injectable, inject } from "inversify";
 import { makeAutoObservable } from "mobx";
 
@@ -9,7 +9,7 @@ export class GameStore {
     gameRunnerId;
 
     constructor(
-        @inject(SocketIOStore) private socket: SocketIOStore,
+        @inject(ConnectionStore) private socket: ConnectionStore,
         @inject(RoundTimeStore) private roundTimeStore: RoundTimeStore,
         @inject(GameSetting) private gameSetting: GameSetting
     ) {

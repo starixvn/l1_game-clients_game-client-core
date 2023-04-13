@@ -38,29 +38,37 @@ const { observer, handle, render } = Observer;
 @ccclass
 @observer("sedie")
 export default class Startup extends Component {
-    @handle(GameClient.SocketIO.SocketIOConnector)
+    @handle(GameClient.Game.ConnectionHandlers.ConnectHandler)
     connectToService() {
         const socketUri = "http://localhost:3000";
 
         return { socketUri };
     }
 
-    @handle(GameClient.Player.UpdatePlayerProfileHandler)
-    setPlayerProfile(): GameClient.Player.IPlayerProfile {
-        return { name: "sedie-player", ss: "player-ss-sedie" };
+    @handle(GameClient.Game.ConnectionHandlers.SignInHandler)
+    signIn() {
+        const auth = gameContainer.resolve(GameClient.Auth.AuthStore);
+        return { session: auth.session, username: auth.username, system: auth.system };
     }
-
-    @handle(GameClient.Player.SignInHandler)
-    signIn() {}
 
     @render(LogStore, (store) => store.message)
     logInfo(message: string) {
         console.log(message);
     }
 
+    @render(GameClient.Game.ConnectionStore, (store) => store.isConnected)
+    onConnected(isConnected: boolean) {
+        if (isConnected) {
+            this.joinRoom();
+            this.signIn();
+        }
+    }
+
+    joinRoom() {
+        gameContainer.resolve(GameClient.Game.ConnectionStore).send("joinRoom", "sedie");
+    }
+
     onLoad() {
         this.connectToService();
-        this.setPlayerProfile();
-        this.signIn();
     }
 }

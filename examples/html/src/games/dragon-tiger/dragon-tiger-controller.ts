@@ -1,4 +1,4 @@
-import { Shared, Game, Player, SocketIO, getContainer, registerGameModules } from "game-client-base";
+import { Shared, Game, getContainer, registerGameModules, Auth } from "game-client-base";
 import { Container } from "inversify";
 import { reaction } from "mobx";
 import { DragonTigerGameHtmlView } from "./dragon-tiger-game-html-view";
@@ -28,6 +28,7 @@ export class DragonTigerGameController {
         this.connectGameService();
         this.joinGame();
         this.logInfo();
+        this.inGame();
         const mainGame = this.container.resolve(DragonTigerGameHtmlView);
 
         mainGame.onLoad();
@@ -56,17 +57,20 @@ export class DragonTigerGameController {
     }
 
     connectGameService() {
-        const handler = this.container.resolve(SocketIO.SocketIOConnector);
+        const handler = this.container.resolve(Game.ConnectionHandlers.ConnectHandler);
         handler.handle({
             socketUri: this.gameServiceUrl,
         });
+        const connection = this.container.resolve(Game.ConnectionStore).connection;
+        connection.emit("joinRoom", this.gameSetting.name.toLocaleLowerCase());
     }
 
     joinGame() {
-        const player = this.container.resolve(Player.PlayerStore);
-        player.ss = "player-ss-dragon-tiger";
+        const auth = this.container.resolve(Auth.AuthStore);
+        this.container.resolve(Game.ConnectionHandlers.SignInHandler).handle(auth);
+    }
 
-        const playerSignin = this.container.resolve(Player.SignInHandler);
-        playerSignin.handle();
+    inGame() {
+        this.container.resolve(Game.ConnectionHandlers.InGameHandler).handle();
     }
 }

@@ -2043,10 +2043,10 @@ resolve@^1.20.0:
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
 
-sc-user-service-client@1.5.1-beta.1:
-  version "1.5.1-beta.1"
-  resolved "https://npm.lumigame.com/sc-user-service-client/-/sc-user-service-client-1.5.1-beta.1.tgz"
-  integrity sha512-iM24Gm7mp67Vbnhnt0ae2r376zXl/gOTtapK5sfKT9ep9+H6PpHC/v6CVHMFdVKu9UNjeJgkEiXe5jPj2yrnpA==
+sc-user-service-client@1.5.1-beta.2:
+  version "1.5.1-beta.2"
+  resolved "https://npm.lumigame.com/sc-user-service-client/-/sc-user-service-client-1.5.1-beta.2.tgz"
+  integrity sha512-Qu35Cc4BM75l3QQ5YLy4UxMtcVGhI4Oalj8RgvYhsOyQeanD8SC6L3E5lDObNW6/w+y5FPB6CmPX8x/5MKBJDA==
   dependencies:
     axios "^0.21.1"
 

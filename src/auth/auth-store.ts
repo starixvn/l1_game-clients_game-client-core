@@ -7,31 +7,38 @@ export class AuthStore {
     isAuthenticated: boolean = false;
     username: string | null = null;
     language: string | null = null;
-    ss: string | null = null;
+    session: string | null = null;
     system: number = 0;
     memberName: string | null = null;
     isUM: boolean = false;
     umInfo: UMInfo | null = null;
     isAuthorized?: boolean = null;
     isSessionTimeout: boolean = false;
+    isDisabledAccount: boolean = false;
+    errorCode: string | null = null;
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    updateUM(umInfo: UMInfo) {
+    setUM(umInfo: UMInfo) {
         this.isUM = true;
         this.umInfo = umInfo;
     }
 
-    updateAuthSSOStore(authData: SSOResponse) {
-        this.isAuthenticated = authData.isAuthenticated;
-        this.username = authData.username;
-        this.language = authData.language;
-        this.ss = authData.ss;
-        this.system = authData.system;
-        this.memberName = authData.memberName;
+    setAuthSSOStore(response: SSOResponse) {
+        this.isAuthenticated = response.isAuthenticated;
+        this.username = response.username;
+        this.language = response.language;
+        this.session = response.ss;
+        this.system = response.system;
+        this.memberName = response.memberName;
     }
 
-    signOut() {}
+    signOut() {
+        this.username = null;
+        this.session = null;
+        this.isAuthenticated = false;
+        this.isSessionTimeout = true;
+    }
 }

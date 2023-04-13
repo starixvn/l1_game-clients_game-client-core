@@ -31,21 +31,21 @@ export class PlayerStore {
     displayPlayerCurrency = true;
     offerGames? = null;
 
-    updateAuthorizeStore(data: GameServiceMessage.User) {
-        this.UID = data.UID;
-        this.name = data.name;
-        this.avatarId = data.avatarId;
-        this.updateBalance(data.red, data.scoins);
-        this.currency = data.currency;
-        this.offerGames = data.offerGames;
-        this.fractionalOddsFormat = data.fractionalOddsFormat;
-        this.displayPlayerCurrency = data.isDisplayPlayerCurrency;
-        data.availSpins && (this.availSpins = data.availSpins);
+    setAuthorizeStore(user: GameServiceMessage.User) {
+        this.UID = user.UID;
+        this.name = user.name;
+        this.avatarId = user.avatarId;
+        this.setBalance(user.red, user.scoins, user.availSpins);
+        this.currency = user.currency;
+        this.offerGames = user.offerGames;
+        this.fractionalOddsFormat = user.fractionalOddsFormat;
+        this.displayPlayerCurrency = user.isDisplayPlayerCurrency;
     }
 
-    updateBalance(balance: number, scoin: number) {
+    setBalance(balance: number, scoin: number, availSpins: number) {
         this.balance = balance ?? 0;
-        this.scoin = scoin ?? 0;
+        scoin && (this.scoin = scoin);
+        availSpins && (this.availSpins = availSpins);
     }
 
     setStakeLevel(stakeLevel: GameServiceMessage.UserStakeLevel) {

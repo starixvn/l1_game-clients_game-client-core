@@ -4,7 +4,7 @@ import { Component, Label, _decorator } from "cc";
 
 const { Player, Game } = GameClient;
 const { ccclass, property } = _decorator;
-const { observer, render } = Observer;
+const { observer, render, handle } = Observer;
 
 @ccclass
 @observer("sedie")
@@ -23,6 +23,14 @@ export default class Sedie extends Component {
 
     @property(Label)
     roundState: Label = null;
+
+    @render(GameClient.Game.ConnectionStore, (store) => store.signedIn)
+    onSignedIn() {
+        this.inGame();
+    }
+
+    @handle(GameClient.Game.ConnectionHandlers.InGameHandler)
+    inGame() {}
 
     @render(Game.RoundTimeStore, (store) => store.roundTime)
     renderRoundTime(roundTime: number) {

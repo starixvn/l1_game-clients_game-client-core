@@ -15,7 +15,6 @@ export class JoinGameHandlers implements IMultipleHandlers {
 
     handleToGame(toGame: string) {
         if (toGame && toGame != "") {
-            console.log(toGame);
             this.gameStore.toGame(toGame);
         }
     }

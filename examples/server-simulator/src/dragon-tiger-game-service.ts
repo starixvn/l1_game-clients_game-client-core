@@ -1,6 +1,7 @@
 import { CronJob } from "cron";
 import { Socket } from "socket.io-client";
 import { Server } from "socket.io";
+import { player } from "./player-service";
 
 export class DragonTigerGameService {
     constructor(io: Server) {
@@ -53,18 +54,18 @@ export class DragonTigerGameService {
     }
 
     sendPlayerInformation(player: any, socket: Socket) {
-        socket.emit(DragonTigerGameService.gameName, player.user);
-        socket.emit(DragonTigerGameService.gameName, player.userStakeLevel);
+        socket.emit("message", { userStakeLevel: player.userStakeLevel });
+        socket.emit("signedIn");
+        socket.emit("message", { toGame: DragonTigerGameService.gameName });
     }
 
     sendInGame(socket: Socket) {
         const gameData = this.gameData;
-        socket.emit("signedIn");
-        socket.emit("message", { toGame: DragonTigerGameService.gameName });
         socket.emit(DragonTigerGameService.gameName, {
             roundId: gameData.roundId,
             remainingTime: gameData.remainingTime,
             gameConfigs: gameData.gameConfigs,
+            user: player,
         });
 
         console.log(`${DragonTigerGameService.gameName} send ingame`);

@@ -1,6 +1,7 @@
 import { CronJob } from "cron";
 import { Socket } from "socket.io-client";
 import { Server } from "socket.io";
+import { player } from "./player-service";
 
 export class SedieGameService {
     constructor(io: Server) {
@@ -78,18 +79,18 @@ export class SedieGameService {
     }
 
     sendPlayerInformation(player: any, socket: Socket) {
-        socket.emit(SedieGameService.gameName, player.user);
-        socket.emit(SedieGameService.gameName, player.userStakeLevel);
+        socket.emit("message", { userStakeLevel: player.userStakeLevel });
+        socket.emit("signedIn");
+        socket.emit("message", { toGame: SedieGameService.gameName });
     }
 
     sendInGame(socket: Socket) {
         const gameData = this.gameData;
-        socket.emit("signedIn");
-        socket.emit("message", { toGame: SedieGameService.gameName });
         socket.emit(SedieGameService.gameName, {
             roundId: gameData.roundId,
             remainingTime: gameData.remainingTime,
             gameConfigs: gameData.gameConfigs,
+            user: player,
         });
 
         console.log(`${SedieGameService.gameName} send ingame`);

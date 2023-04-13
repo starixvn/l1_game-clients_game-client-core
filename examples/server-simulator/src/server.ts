@@ -30,8 +30,16 @@ io.on("connection", (socket) => {
         console.log("user disconnected");
     });
 
+    socket.on("joinRoom", (room) => {
+        socket.join(room);
+    });
+
     socket.on("signin", (data) => {
         playerService.onSignIn(socket, data);
+    });
+
+    socket.on("inGame", () => {
+        playerService.onInGame(socket);
     });
 });
 
