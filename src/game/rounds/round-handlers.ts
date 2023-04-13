@@ -15,7 +15,7 @@ export class RoundHandlers implements IMultipleHandlers {
     eventHandleList = [
         {
             name: GameServiceMessage.roundId,
-            handle: this.handleRoundId.bind(this)
-        }
+            handle: this.handleRoundId.bind(this),
+        },
     ];
 }

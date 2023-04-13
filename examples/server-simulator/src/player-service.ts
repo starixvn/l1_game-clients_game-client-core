@@ -8,20 +8,20 @@ export class PlayerService {
             sessionName: "player-ss-sedie",
             user: {
                 red: 10000,
-                avatarId: 1
+                avatarId: 1,
             },
             userStakeLevel: { minBet: 10, maxBet: 15 },
-            room: SedieGameService.gameName
+            room: SedieGameService.gameName,
         },
         {
             sessionName: "player-ss-dragon-tiger",
             user: {
                 red: 2000,
-                avatarId: 2
+                avatarId: 2,
             },
             userStakeLevel: { minBet: 1, maxBet: 15 },
-            room: DragonTigerGameService.gameName
-        }
+            room: DragonTigerGameService.gameName,
+        },
     ];
 
     constructor(private io: Server, private sedieGameService: SedieGameService, private dragonTigerGameService: DragonTigerGameService) {}

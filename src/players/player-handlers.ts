@@ -19,11 +19,11 @@ export class PlayerHandlers implements IMultipleHandlers {
     eventHandleList = [
         {
             name: GameServiceMessage.UserStakeLevel.eventName,
-            handle: this.handleStakeLevel.bind(this)
+            handle: this.handleStakeLevel.bind(this),
         },
         {
             name: GameServiceMessage.User.eventName,
-            handle: this.handlePlayerProfile.bind(this)
-        }
+            handle: this.handlePlayerProfile.bind(this),
+        },
     ];
 }

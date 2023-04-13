@@ -13,7 +13,7 @@ export class DragonTigerGameService {
         wholeRound: 29,
         placingBets: 20,
         lockingBet: 5,
-        shakeThePlateDuration: 2
+        shakeThePlateDuration: 2,
     };
 
     gameData = {
@@ -31,11 +31,11 @@ export class DragonTigerGameService {
             enableFreeBet: false,
             odds: { dragon: 2, tiger: 2, tie: 11 },
             originalOdds: { dragon: 2, tiger: 2, tie: 11 },
-            stakeLevels: []
+            stakeLevels: [],
         },
         realPlayers: {},
         ingame: {},
-        admins: {}
+        admins: {},
     };
 
     io: Server;
@@ -64,7 +64,7 @@ export class DragonTigerGameService {
         socket.emit(DragonTigerGameService.gameName, {
             roundId: gameData.roundId,
             remainingTime: gameData.remainingTime,
-            gameConfigs: gameData.gameConfigs
+            gameConfigs: gameData.gameConfigs,
         });
 
         console.log(`${DragonTigerGameService.gameName} send ingame`);
@@ -115,30 +115,30 @@ export class DragonTigerGameService {
         this.emitToAllClients({
             snr: true,
             roundId: this.gameData.roundId,
-            remainingTime: this.gameData.remainingTime
+            remainingTime: this.gameData.remainingTime,
         });
     }
     publishStartPlacingBetStatus() {
         this.emitToAllClients({
-            spb: true
+            spb: true,
         });
     }
 
     publishEndPlacingBetStatus() {
         this.emitToAllClients({
-            epb: true
+            epb: true,
         });
     }
 
     publishRemainingTime() {
         this.emitToAllClients({
-            remainingTime: this.gameData.remainingTime
+            remainingTime: this.gameData.remainingTime,
         });
     }
 
     publishEndRound() {
         this.emitToAllClients({
-            finish: true
+            finish: true,
         });
     }
 
@@ -150,7 +150,7 @@ export class DragonTigerGameService {
     emitToAllClients(data) {
         console.log({
             game: DragonTigerGameService.gameName,
-            ...data
+            ...data,
         });
         this.io.to(DragonTigerGameService.gameName).emit(DragonTigerGameService.gameName, data);
     }

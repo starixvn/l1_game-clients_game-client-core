@@ -8,7 +8,7 @@ const config: Config = {
     coverageDirectory: "coverage",
     collectCoverageFrom: ["src/**/*.ts"],
     transform: {
-        "^.+\\.tsx?$": "ts-jest"
+        "^.+\\.tsx?$": "ts-jest",
     },
     testPathIgnorePatterns: ["/node_modules/", "/container.test.ts"],
     testResultsProcessor: "jest-sonar-reporter",
@@ -19,12 +19,12 @@ const config: Config = {
         [
             "jest-junit",
             {
-                outputDirectory: "coverage"
-            }
-        ]
+                outputDirectory: "coverage",
+            },
+        ],
     ],
     testMatch,
-    verbose: true
+    verbose: true,
 };
 
 export default config;

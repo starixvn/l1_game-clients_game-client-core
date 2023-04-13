@@ -12,8 +12,8 @@ export class SedieGameController {
         durations: {
             wholeRound: 39,
             lockingBet: 5,
-            placingBet: 30
-        }
+            placingBet: 30,
+        },
     };
 
     init() {
@@ -57,7 +57,7 @@ export class SedieGameController {
     connectGameService() {
         const handler = this.container.resolve(SocketIO.SocketIOConnector);
         handler.handle({
-            socketUri: this.gameServiceUrl
+            socketUri: this.gameServiceUrl,
         });
     }
 

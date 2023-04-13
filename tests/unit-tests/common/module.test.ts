@@ -4,7 +4,7 @@ describe("registerModule", () => {
         it("should call resolve method of the container instance", () => {
             // Arrange
             const container = {
-                resolve: jest.fn()
+                resolve: jest.fn(),
             };
 
             const module = class Module {};

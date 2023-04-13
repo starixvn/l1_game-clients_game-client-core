@@ -35,23 +35,23 @@ export class RoundTimeHandlers implements IMultipleHandlers {
     eventHandleList = [
         {
             name: GameServiceMessage.remainingTime,
-            handle: this.handleRemainingTime.bind(this)
+            handle: this.handleRemainingTime.bind(this),
         },
         {
             name: GameServiceMessage.snr,
-            handle: this.handleStartNewRoundStatus.bind(this)
+            handle: this.handleStartNewRoundStatus.bind(this),
         },
         {
             name: GameServiceMessage.spb,
-            handle: this.handleStartPlacingBetStatus.bind(this)
+            handle: this.handleStartPlacingBetStatus.bind(this),
         },
         {
             name: GameServiceMessage.epb,
-            handle: this.handleEndPlacingBetStatus.bind(this)
+            handle: this.handleEndPlacingBetStatus.bind(this),
         },
         {
             name: GameServiceMessage.Finish.eventName,
-            handle: this.handleEndRoundStatus.bind(this)
-        }
+            handle: this.handleEndRoundStatus.bind(this),
+        },
     ];
 }

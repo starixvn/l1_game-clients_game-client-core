@@ -11,8 +11,8 @@ GameClient.registerSharedModules(rootContainer, userServiceUrl);
 Observer.configure({
     default: {
         mobx,
-        container: rootContainer
-    }
+        container: rootContainer,
+    },
 });
 @ccclass
 @observer("default")

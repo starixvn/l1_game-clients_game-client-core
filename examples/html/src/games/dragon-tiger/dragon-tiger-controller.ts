@@ -12,8 +12,8 @@ export class DragonTigerGameController {
         durations: {
             wholeRound: 29,
             lockingBet: 5,
-            placingBet: 20
-        }
+            placingBet: 20,
+        },
     };
 
     init() {
@@ -58,7 +58,7 @@ export class DragonTigerGameController {
     connectGameService() {
         const handler = this.container.resolve(SocketIO.SocketIOConnector);
         handler.handle({
-            socketUri: this.gameServiceUrl
+            socketUri: this.gameServiceUrl,
         });
     }
 

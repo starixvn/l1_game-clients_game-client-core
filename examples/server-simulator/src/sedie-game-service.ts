@@ -13,7 +13,7 @@ export class SedieGameService {
         wholeRound: 39,
         placingBets: 30,
         lockingBet: 5,
-        shakeThePlateDuration: 2
+        shakeThePlateDuration: 2,
     };
 
     gameData = {
@@ -33,7 +33,7 @@ export class SedieGameService {
                 white3: 2000,
                 red4: 500,
                 white4: 500,
-                red2: 2000
+                red2: 2000,
             },
             chips: ["1", "5", "10", "50", "100", "200", "500", "1000", "2000"],
             enableFreeBet: false,
@@ -45,7 +45,7 @@ export class SedieGameService {
                 white3: 3.75,
                 red4: 14.4,
                 white4: 14.4,
-                red2: 2.4
+                red2: 2.4,
             },
             originalOdds: {
                 even: 1.96,
@@ -54,13 +54,13 @@ export class SedieGameService {
                 white3: 3.75,
                 red4: 14.4,
                 white4: 14.4,
-                red2: 2.4
+                red2: 2.4,
             },
-            boostedChoices: []
+            boostedChoices: [],
         },
         realPlayers: {},
         ingame: {},
-        admins: {}
+        admins: {},
     };
 
     io: Server;
@@ -89,7 +89,7 @@ export class SedieGameService {
         socket.emit(SedieGameService.gameName, {
             roundId: gameData.roundId,
             remainingTime: gameData.remainingTime,
-            gameConfigs: gameData.gameConfigs
+            gameConfigs: gameData.gameConfigs,
         });
 
         console.log(`${SedieGameService.gameName} send ingame`);
@@ -140,30 +140,30 @@ export class SedieGameService {
         this.emitToAllClients({
             snr: true,
             roundId: this.gameData.roundId,
-            remainingTime: this.gameData.remainingTime
+            remainingTime: this.gameData.remainingTime,
         });
     }
     publishStartPlacingBetStatus() {
         this.emitToAllClients({
-            spb: true
+            spb: true,
         });
     }
 
     publishEndPlacingBetStatus() {
         this.emitToAllClients({
-            epb: true
+            epb: true,
         });
     }
 
     publishRemainingTime() {
         this.emitToAllClients({
-            remainingTime: this.gameData.remainingTime
+            remainingTime: this.gameData.remainingTime,
         });
     }
 
     publishEndRound() {
         this.emitToAllClients({
-            finish: true
+            finish: true,
         });
     }
 
@@ -175,7 +175,7 @@ export class SedieGameService {
     emitToAllClients(data) {
         console.log({
             game: SedieGameService.gameName,
-            ...data
+            ...data,
         });
         this.io.to(SedieGameService.gameName).emit(SedieGameService.gameName, data);
     }

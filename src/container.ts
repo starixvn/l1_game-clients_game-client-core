@@ -9,7 +9,7 @@ export const getContainer = (moduleName: string = "default"): Container => {
 
     containers[moduleName] = new Container({
         autoBindInjectable: true,
-        defaultScope: "Singleton"
+        defaultScope: "Singleton",
     });
 
     return containers[moduleName];

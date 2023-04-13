@@ -19,12 +19,12 @@ dragonTigerGameController.init();
 Observer.configure({
     sedie: {
         mobx,
-        container: sedieGameController.container
+        container: sedieGameController.container,
     },
     dragonTiger: {
         mobx,
-        container: dragonTigerGameController.container
-    }
+        container: dragonTigerGameController.container,
+    },
 });
 
 sedieGameController.start();

@@ -11,8 +11,8 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*"
-    }
+        origin: "*",
+    },
 });
 const sedieGameService = new SedieGameService(io);
 const dragonTigerGameService = new DragonTigerGameService(io);
@@ -21,7 +21,7 @@ const port = 3000;
 
 app.use(
     cors({
-        origin: "*"
+        origin: "*",
     })
 );
 

@@ -9,7 +9,7 @@ export const events = {
     reconnect: "reconnect",
     connectFailed: "connect_failed",
     connectError: "connect_error",
-    disconnect: "disconnect"
+    disconnect: "disconnect",
 };
 
 @injectable()

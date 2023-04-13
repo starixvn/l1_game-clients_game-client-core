@@ -15,7 +15,7 @@ userRouter.get("/auth/sso", (req, res) => {
         ss: "mock-session",
         system: system,
         umInfo: null,
-        username: "ONEworks1_99"
+        username: "ONEworks1_99",
     };
     res.send(authData);
 });
@@ -33,8 +33,8 @@ userRouter.post("/auth/authorize", (req, res) => {
             red: 2000,
             fractionalOddsFormat: true,
             isDisplayPlayerCurrency: true,
-            offerGames: [{ gameId: 2 }, { gameId: 7 }]
-        }
+            offerGames: [{ gameId: 2 }, { gameId: 7 }],
+        },
     };
     res.send(data);
 });

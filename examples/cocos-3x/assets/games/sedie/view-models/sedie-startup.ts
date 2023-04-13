@@ -12,8 +12,8 @@ const gameSetting: GameClient.Game.GameSetting = {
     durations: {
         wholeRound: 39,
         lockingBet: 5,
-        placingBet: 30
-    }
+        placingBet: 30,
+    },
 };
 const rootContainer = GameClient.getContainer();
 const gameContainer = GameClient.getContainer(gameSetting.name);
@@ -28,8 +28,8 @@ gameContainer.parent = rootContainer;
 Observer.configure({
     sedie: {
         mobx,
-        container: gameContainer
-    }
+        container: gameContainer,
+    },
 });
 
 const { ccclass } = _decorator;

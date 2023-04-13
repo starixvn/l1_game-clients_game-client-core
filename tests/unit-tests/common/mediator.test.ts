@@ -12,7 +12,7 @@ describe("Mediator", () => {
         event = {
             on: jest.fn(),
             onAny: jest.fn(),
-            emit: jest.fn()
+            emit: jest.fn(),
         } as any;
 
         mediator["event"] = event;
@@ -36,7 +36,7 @@ describe("Mediator", () => {
                 // Arrange
                 const handler: IHandler<any> = {
                     handle: jest.fn(),
-                    eventNames: ["event"]
+                    eventNames: ["event"],
                 };
 
                 // Act

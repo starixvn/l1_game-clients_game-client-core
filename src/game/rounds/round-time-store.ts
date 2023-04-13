@@ -22,7 +22,7 @@ export const ROUND_STATE = {
     BEGIN_SHOW_ANIMATION: "beginShowAnimation",
     SHOW_ANIMATION: "showAnimation",
     CHANGE_REMAINING_TIME: "changeRemainingTime",
-    STOP_GAME_LOOP: "stopGameLoop"
+    STOP_GAME_LOOP: "stopGameLoop",
 };
 
 @injectable()
