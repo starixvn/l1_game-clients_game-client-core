@@ -4,6 +4,7 @@ import { Component, _decorator } from "cc";
 import gc from "game-client-base";
 import mobx from "mobx";
 import Observer from "observer";
+import { JoinRoomHandler } from "./handlers/join-room-handler";
 import { LogStore } from "./stores/log-store";
 
 const gameSetting: gc.GameConfigs.GameSetting = {
@@ -21,6 +22,7 @@ const containerOptions: gc.IContainerOptions = {
     onContainerCreated: (container) => {
         container.bind(gc.GameConfigs.GameSetting).toConstantValue(gameSetting);
         container.bind(LogStore).to(LogStore);
+        container.bind(JoinRoomHandler).to(JoinRoomHandler);
     },
 };
 
@@ -59,9 +61,9 @@ export default class Startup extends Component {
         }
     }
 
+    @handle(JoinRoomHandler)
     joinRoom() {
-        // TODO: should create a new handler for this statement
-        container.resolve(gc.Connection.ConnectionStore).send("joinRoom", "sedie");
+        return "sedie";
     }
 
     onLoad() {

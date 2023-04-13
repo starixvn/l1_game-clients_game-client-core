@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import gc from "game-client-base";
 
 const USER_SERVICE_URL = "http://localhost:3000/user";
