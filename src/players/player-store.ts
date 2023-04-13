@@ -30,6 +30,7 @@ export class PlayerStore {
     fractionalOddsFormat = false;
     displayPlayerCurrency = true;
     offerGames? = null;
+  browserUserAgent = "";
 
     setAuthorizeStore(user: GameServiceMessage.User) {
         this.UID = user.UID;

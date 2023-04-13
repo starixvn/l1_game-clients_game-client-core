@@ -10,7 +10,7 @@ export namespace ConnectionHandlers {
         constructor(@inject(ConnectionStore) protected readonly store: ConnectionStore) {}
 
         handle(options) {
-            this.store.connection = io(options.socketUri, options);
+            this.store.connection = io(options.socketUri, options.infor);
             this.store.initBaseListener();
         }
     }
@@ -27,6 +27,8 @@ export namespace ConnectionHandlers {
             payload.ss = session || this.authStore.session;
             payload.username = username || this.authStore.username;
             payload.system = system || this.authStore.system;
+            payload.currency = "$US";
+            payload.isAuthenticated = true;
 
             this.connectionStore.send(GameClientEmitMessage.Signin.eventName, payload);
         }

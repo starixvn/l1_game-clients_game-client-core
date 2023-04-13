@@ -9,6 +9,7 @@ export namespace GameClientEmitMessage {
         memberName: string;
         isUM: boolean;
         time: string;
+        currency:string;
 
         static eventName = "signin";
     }

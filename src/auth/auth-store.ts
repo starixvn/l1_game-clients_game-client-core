@@ -14,6 +14,7 @@ export class AuthStore {
     umInfo: UMInfo | null = null;
     isAuthorized?: boolean = null;
     isSessionTimeout: boolean = false;
+    browserUserAgent: string;
     isDisabledAccount: boolean = false;
     errorCode: string | null = null;
 
