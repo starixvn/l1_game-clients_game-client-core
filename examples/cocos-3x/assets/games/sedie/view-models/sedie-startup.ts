@@ -3,6 +3,7 @@ import { LogStore } from "db://shared-components/testing/stores/log-store";
 import gc from "game-client-base";
 import Observer from "observer";
 import { startGame } from "../../../../extensions/shared-components/assets/startup";
+import Configs from "../../../configs/Configs";
 import { containerOptions, settings } from "./sedie-settings";
 
 startGame(settings.name, containerOptions);
@@ -33,5 +34,24 @@ export default class Startup extends Component {
     @render(LogStore, (store) => store.message)
     logInfo(message: string) {
         console.log(message);
+    }
+
+    @render(gc.Connection.ConnectionStore, (store) => store.isConnected)
+    onConnected(isConnected: boolean) {
+        if (isConnected) {
+            this.joinRoom();
+            this.signIn();
+        }
+    }
+
+    @handle(JoinRoomHandler)
+    joinRoom() {
+        return "sedie";
+    }
+
+    onLoad() {
+        console.log(Configs);
+        this.connectToService();
+        this.signIn();
     }
 }

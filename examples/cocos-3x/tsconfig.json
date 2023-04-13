@@ -5,6 +5,9 @@
     /* Add your custom configuration here. */
     "compilerOptions": {
         "strict": false,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "types": [
+            "node"
+          ]
     }
 }
