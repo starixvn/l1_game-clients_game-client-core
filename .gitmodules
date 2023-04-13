@@ -1,0 +1,4 @@
+[submodule "examples/sedie-service"]
+	path = examples/sedie-service
+	url = git@git3.nexdev.net:l1/game-services/sedie-service.git
+	branch = support-game-base-client
