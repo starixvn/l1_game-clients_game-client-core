@@ -54,7 +54,7 @@ class Memory implements IActionStorage {
     }
 }
 
-class StorageUtils {
+export class StorageUtils {
     static supportStorage: IActionStorage;
 
     static get() {
@@ -69,4 +69,6 @@ class StorageUtils {
     }
 }
 
-export default StorageUtils;
+export const localStorageKeys = {
+    session: "auth-session",
+};

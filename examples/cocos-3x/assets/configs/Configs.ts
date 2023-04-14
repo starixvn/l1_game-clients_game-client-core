@@ -12,15 +12,7 @@ const defaultConfig: IConfigs = {
         localhost: "lumigame.com",
     },
     subDomain: "l1-proxy",
-    env: "",
-    sentry: {
-        url: "",
-        env: "LOCAL",
-    },
-    gameAnalytics: {
-        clientId: "093146669bf12df12eeedd2d57ddb469",
-        secretKey: "f41dc948ed66a029406413327a68b6ae27fe4e6c",
-    },
+    env: "LOCAL",
     subGuideDomain: "l1-guide",
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,

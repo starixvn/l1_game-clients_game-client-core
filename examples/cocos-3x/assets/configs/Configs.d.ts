@@ -4,8 +4,7 @@ interface IConfigs {
     serverDomainMapper: { [key: string]: string };
     subDomain: string;
     env: string;
-    sentry: { [key: string]: string };
-    gameAnalytics: { [key: string]: string };
+    sentryUrl?: string;
     subGuideDomain: string;
     enableMsgpackParserAllGames: boolean;
     enableMsgpackParserOnNotification: boolean;

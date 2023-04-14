@@ -1,3 +1,4 @@
+import { StorageUtils, localStorageKeys } from "./../shared/utils/storage-utils";
 import { inject, injectable } from "inversify";
 import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
 import { PlayerStore } from "../players";
@@ -26,6 +27,7 @@ export namespace AuthHandlers {
                 this.store.setUM(response.umInfo);
             } else {
                 this.store.setAuthSSOStore(response);
+                response.isAuthenticated && StorageUtils.get().set(localStorageKeys.session, JSON.stringify(response));
             }
         }
     }
@@ -48,6 +50,7 @@ export namespace AuthHandlers {
             } else {
                 if (response.isSuccessful !== undefined && !response.isSuccessful) {
                     this.authStore.signOut();
+                    StorageUtils.get().remove(localStorageKeys.session);
                 } else {
                     this.authStore.isAuthorized = response.authorized;
                     response.user && this.playerStore.setAuthorizeStore(response.user);
