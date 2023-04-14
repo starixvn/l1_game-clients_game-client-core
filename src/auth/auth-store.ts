@@ -17,6 +17,7 @@ export class AuthStore {
     browserUserAgent: string;
     isDisabledAccount: boolean = false;
     errorCode: string | null = null;
+    time: Date;
 
     constructor() {
         makeAutoObservable(this);
@@ -34,6 +35,19 @@ export class AuthStore {
         this.session = response.ss;
         this.system = +response.system;
         this.memberName = response.memberName;
+        this.time = new Date();
+    }
+
+    getSessionInfo() {
+        return {
+            isAuthenticated: this.isAuthenticated,
+            username: this.username,
+            language: this.language,
+            session: this.session,
+            system: this.system,
+            memberName: this.memberName,
+            time: this.time,
+        };
     }
 
     signOut() {

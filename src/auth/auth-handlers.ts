@@ -1,4 +1,4 @@
-import { StorageUtils, localStorageKeys } from "./../shared/utils/storage-utils";
+import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
 import { inject, injectable } from "inversify";
 import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
 import { PlayerStore } from "../players";
@@ -16,6 +16,14 @@ interface AuthorizeResponse {
     user?: GameServiceMessage.User;
 }
 
+interface ISession {
+    username: string;
+    language: string;
+    ss: string;
+    time: Date;
+    isAuthenticated: boolean;
+}
+
 export namespace AuthHandlers {
     @injectable()
     export class SSO implements IHandler<{ token: string; system?: number }> {
@@ -25,9 +33,12 @@ export namespace AuthHandlers {
             const response = await this.userService.sso(token, system);
             if (response.isUM) {
                 this.store.setUM(response.umInfo);
-            } else {
+                return;
+            }
+
+            if (response.isAuthenticated) {
                 this.store.setAuthSSOStore(response);
-                response.isAuthenticated && StorageUtils.get().set(localStorageKeys.session, JSON.stringify(response));
+                StorageManager.set(localStorageKeys.session, this.store.getSessionInfo());
             }
         }
     }
@@ -50,7 +61,7 @@ export namespace AuthHandlers {
             } else {
                 if (response.isSuccessful !== undefined && !response.isSuccessful) {
                     this.authStore.signOut();
-                    StorageUtils.get().remove(localStorageKeys.session);
+                    StorageManager.remove(localStorageKeys.session);
                 } else {
                     this.authStore.isAuthorized = response.authorized;
                     response.user && this.playerStore.setAuthorizeStore(response.user);
@@ -70,13 +81,17 @@ export namespace AuthHandlers {
         async handle({ session = "", username = "" }) {
             const response = await this.userService.reCheckIn(session || this.authStore.session, username || this.authStore.username);
             if (response.isSuccessful) {
-                if (response.apiError) {
-                    this.handleError(response);
-                } else {
-                    this.playerStore.setBalance(response.balance, response.scoins, response.availSpins);
-                }
+                this.handleSuccessful(response);
             } else {
                 this.authStore.signOut();
+            }
+        }
+
+        handleSuccessful(response: ReCheckInResponse) {
+            if (response.apiError) {
+                this.handleError(response);
+            } else {
+                this.playerStore.setBalance(response.balance, response.scoins, response.availSpins);
             }
         }
 
@@ -92,6 +107,55 @@ export namespace AuthHandlers {
                     this.authStore.signOut();
                 }
             }
+        }
+    }
+
+    @injectable()
+    export class TriggerRecheckIn implements IHandler<void> {
+        static reCheckInId: NodeJS.Timeout;
+        private readonly sessionExpiredTimeoutMinutes = 19.8;
+        constructor(@inject(ReCheckIn) private readonly reCheckIn: ReCheckIn, @inject(AuthStore) private readonly authStore: AuthStore) {}
+
+        async handle() {
+            this.clearInterval();
+            TriggerRecheckIn.reCheckInId = setInterval(() => {
+                this.handleRecheckIn();
+            }, 60 * 1000);
+        }
+
+        async handleRecheckIn() {
+            const infoSession = StorageManager.get(localStorageKeys.session) as AuthStore;
+            const isSessionExpired = this.verifySession(infoSession);
+
+            if (isSessionExpired) {
+                this.authStore.signOut();
+            } else {
+                await this.reCheckIn.handle({ session: infoSession.session, username: infoSession.username });
+            }
+        }
+
+        verifySession(infoSession: AuthStore) {
+            let isSessionExpired = true;
+
+            try {
+                if (infoSession && infoSession.time) {
+                    const now: Date = new Date();
+                    const lastRecheckIn: Date = new Date(infoSession.time);
+                    const differenceInMinutes = Math.abs(now.getMinutes() - lastRecheckIn.getMinutes());
+
+                    if (differenceInMinutes <= this.sessionExpiredTimeoutMinutes) {
+                        isSessionExpired = false;
+                    }
+                }
+            } catch (ex) {
+                console.log(ex);
+            }
+
+            return isSessionExpired;
+        }
+
+        clearInterval() {
+            TriggerRecheckIn.reCheckInId && clearInterval(TriggerRecheckIn.reCheckInId);
         }
     }
 

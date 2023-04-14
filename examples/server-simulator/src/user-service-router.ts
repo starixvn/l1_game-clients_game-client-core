@@ -39,4 +39,21 @@ userRouter.post("/auth/authorize", (req, res) => {
     res.send(data);
 });
 
+userRouter.post("/auth/reCheckIn", (req, res) => {
+    const data = {
+        errorCode: "0",
+        message: "",
+        umInfo: null,
+        isSuccessful: true,
+        isUM: false,
+        balance: 2000,
+        scoins: 0,
+        availableSpins: 0,
+        apiError: null,
+        availSpins: 0,
+        isDisableAccount: null,
+    };
+    res.send(data);
+});
+
 export default userRouter;

@@ -20,6 +20,7 @@ export default class Splash extends Component {
 
     @handle(gc.Auth.AuthHandlers.SSO)
     sso() {
+        this.triggerRecheckIn();
         return { token: "player-token", system: 1 };
     }
 
@@ -38,4 +39,7 @@ export default class Splash extends Component {
     openGame(isAuthorized: boolean) {
         isAuthorized && director.loadScene("sedie");
     }
+
+    @handle(gc.Auth.AuthHandlers.TriggerRecheckIn)
+    triggerRecheckIn() {}
 }

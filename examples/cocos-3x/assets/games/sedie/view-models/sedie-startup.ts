@@ -1,4 +1,4 @@
-import { Component, _decorator } from "cc";
+import { Component, _decorator, director } from "cc";
 import { LogStore } from "db://shared-components/testing/stores/log-store";
 import gc from "game-client-base";
 import Observer from "observer";
@@ -42,6 +42,11 @@ export default class Startup extends Component {
             this.joinRoom();
             this.signIn();
         }
+    }
+
+    @render(gc.Auth.AuthStore, (store) => store.isSessionTimeout)
+    checkSession(isSessionTimeout: boolean) {
+        isSessionTimeout && director.loadScene("session-timeout");
     }
 
     @handle(JoinRoomHandler)

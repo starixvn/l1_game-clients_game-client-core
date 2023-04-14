@@ -1,2 +1,2 @@
 export * from "./url-utils";
-export * from "./storage-utils";
+export * from "./storage-manager";

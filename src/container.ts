@@ -2,6 +2,7 @@ import { Container } from "inversify";
 import * as Auth from "./auth";
 import * as Game from "./game";
 import * as Players from "./players";
+import * as Configs from "./config";
 import { FeatureLoader } from "./shared";
 
 export interface IContainerOptions {
@@ -41,7 +42,7 @@ export function getContainer(options: IContainerOptions = {}) {
         container: container,
         disabledFeatures: disabledFeatures,
         enabledFeatures: enabledFeatures,
-        features: [Auth, Players, Game],
+        features: [Auth, Players, Configs, Game],
     };
 
     FeatureLoader.loadFeatures(featureLoaderOptions);

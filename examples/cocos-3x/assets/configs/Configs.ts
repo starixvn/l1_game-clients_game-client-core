@@ -1,11 +1,12 @@
-import IConfigs from "./Configs.d";
+import gc from "game-client-base";
+
 declare global {
     interface Window {
-        envConfig: IConfigs;
+        envConfig: gc.Config.Configs;
     }
 }
 
-const defaultConfig: IConfigs = {
+const defaultConfig: gc.Config.Configs = {
     systemType: "SC1",
     ssl: true,
     serverDomainMapper: {
@@ -19,7 +20,7 @@ const defaultConfig: IConfigs = {
 };
 
 const domainMapper = window.envConfig ? undefined : defaultConfig.serverDomainMapper;
-const configs =
+const configs: gc.Config.Configs =
     window.envConfig && window.envConfig.isDev
         ? defaultConfig
         : { ...defaultConfig, serverDomainMapper: domainMapper, ...window.envConfig };

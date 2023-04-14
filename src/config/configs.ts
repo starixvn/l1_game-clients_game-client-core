@@ -1,4 +1,4 @@
-interface IConfigs {
+export class Configs {
     systemType: string;
     ssl: boolean;
     serverDomainMapper: { [key: string]: string };
@@ -10,5 +10,3 @@ interface IConfigs {
     enableMsgpackParserOnNotification: boolean;
     isDev?: boolean;
 }
-
-export default IConfigs;
