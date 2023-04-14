@@ -1,4 +1,4 @@
-import { Auth, GameConfigs, GameStore, Player, Rounds } from "game-client-base";
+import { Auth, GameConfigs, Player, Rounds } from "game-client-base";
 import { injectable } from "inversify";
 import { observer, render } from "observer";
 import { HtmlViewEngine } from "../../views/html-view-engine";
@@ -22,7 +22,6 @@ export class DragonTigerGameHtmlView extends HtmlViewEngine {
         try {
             this.roundTimeComponent = document && document?.getElementById("dragon-tiger-round-time");
             this.playerComponent = document && document?.getElementById("dragon-tiger-player");
-            this.gameNameComponent = document && document?.getElementById("dragon-tiger-game-name");
             this.roundStateComponent = document && document?.getElementById("dragon-tiger-round-state");
             this.roundIdComponent = document && document?.getElementById("dragon-tiger-round-id");
             this.oddsComponent = document && document?.getElementById("dragon-tiger-odds");
@@ -30,11 +29,6 @@ export class DragonTigerGameHtmlView extends HtmlViewEngine {
             //console.log(error);
             return null;
         }
-    }
-
-    @render(GameStore, (store) => store.gameName)
-    renderGameName(gameName: string) {
-        this.setInnerHtml(this.gameNameComponent, gameName);
     }
 
     @render(Player.PlayerStore, (store) => store.name)

@@ -24,6 +24,6 @@ export class LogStore {
             return "";
         }
 
-        return `${this.gameSetting?.name}: RoundId: ${this.roundStore?.roundId} Round Time: ${this.roundTimeStore?._roundTime}, Begin State: ${this.roundTimeStore?._beginState}`;
+        return `${this.gameSetting?.name}: RoundId: ${this.roundStore?.roundId} Round Time: ${this.roundTimeStore?._roundTime}, State: ${this.roundTimeStore?._roundState}`;
     }
 }
