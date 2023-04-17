@@ -46,10 +46,6 @@ export default class Startup extends Component {
             upgrade: false,
             path: "/socket.io",
             forceNew: true,
-            extraHeaders: {
-                "user-agent": "browser-user-agent",
-                "test-test": "browser-user-agent",
-            },
         };
 
         return { socketUri, socketOptions };

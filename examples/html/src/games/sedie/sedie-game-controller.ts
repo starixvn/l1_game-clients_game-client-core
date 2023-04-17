@@ -1,7 +1,7 @@
-import { Auth, Connection } from "game-client-base";
+import { Connection } from "game-client-base";
 import { Container } from "inversify";
-import { SedieGameHtmlView } from "./sedie-main-game-html-view";
 import { ManagerOptions, SocketOptions } from "socket.io-client";
+import { SedieGameHtmlView } from "./sedie-main-game-html-view";
 
 export class SedieGameController {
     gameServiceUrl = `http://localhost:5002/user/sedie`;
@@ -20,10 +20,6 @@ export class SedieGameController {
             transports: ["websocket"],
             upgrade: false,
             path: "/socket.io",
-            extraHeaders: {
-                "user-agent": "browser-user-agent",
-                "test-test": "browser-user-agent",
-            },
         };
         handler.handle({
             socketUri: this.gameServiceUrl,
