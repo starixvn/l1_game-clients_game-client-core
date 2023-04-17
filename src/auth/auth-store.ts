@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { UMInfo, SSOResponse, Response } from "sc-user-service-client/dist/auth";
+import { SSOResponse, UMInfo } from "sc-user-service-client/dist/auth";
 
 @injectable()
 export class AuthStore {
@@ -17,7 +17,7 @@ export class AuthStore {
     browserUserAgent: string;
     isDisabledAccount: boolean = false;
     errorCode: string | null = null;
-    time: Date;
+    ssoTime: Date;
 
     constructor() {
         makeAutoObservable(this);
@@ -35,7 +35,7 @@ export class AuthStore {
         this.session = response.ss;
         this.system = +response.system;
         this.memberName = response.memberName;
-        this.time = new Date();
+        this.ssoTime = new Date();
     }
 
     getSessionInfo() {
@@ -46,7 +46,7 @@ export class AuthStore {
             session: this.session,
             system: this.system,
             memberName: this.memberName,
-            time: this.time,
+            time: this.ssoTime,
         };
     }
 

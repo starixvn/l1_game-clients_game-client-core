@@ -9,4 +9,8 @@ export class Configs {
     enableMsgpackParserAllGames: boolean;
     enableMsgpackParserOnNotification: boolean;
     isDev?: boolean;
+    optionsDev?: {
+        userServiceUrl: string;
+        gameConfigurationUrl: string;
+    };
 }

@@ -2,8 +2,8 @@ import { Container } from "inversify";
 import * as Auth from "./auth";
 import * as Game from "./game";
 import * as Players from "./players";
-import * as Configs from "./config";
 import { FeatureLoader } from "./shared";
+import * as SiteConfigs from "./site-configs";
 
 export interface IContainerOptions {
     onContainerCreated?: (container: Container) => void;
@@ -42,7 +42,7 @@ export function getContainer(options: IContainerOptions = {}) {
         container: container,
         disabledFeatures: disabledFeatures,
         enabledFeatures: enabledFeatures,
-        features: [Auth, Players, Configs, Game],
+        features: [Auth, Players, SiteConfigs, Game],
     };
 
     FeatureLoader.loadFeatures(featureLoaderOptions);

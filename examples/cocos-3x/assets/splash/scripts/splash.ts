@@ -15,13 +15,18 @@ Observer.configure({ default: { mobx, container: sharedContainer } });
 export default class Splash extends Component {
     onLoad() {
         console.log("splash loading...");
+        this.initGameConfiguration();
         this.sso();
+        ///////
     }
 
     @handle(gc.Auth.AuthHandlers.SSO)
     sso() {
         this.triggerRecheckIn();
-        return { token: "player-token", system: 1 };
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.has("token") ? urlParams.get("token") : "player-token";
+        console.log("token", token);
+        return { token, system: 1 };
     }
 
     @render(gc.Auth.AuthStore, (store) => store.isAuthenticated)
@@ -42,4 +47,7 @@ export default class Splash extends Component {
 
     @handle(gc.Auth.AuthHandlers.TriggerRecheckIn)
     triggerRecheckIn() {}
+
+    @handle(gc.SiteConfigs.GameConfigurationHandler)
+    initGameConfiguration() {}
 }

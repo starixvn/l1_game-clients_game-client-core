@@ -2,25 +2,30 @@ import gc from "game-client-base";
 
 declare global {
     interface Window {
-        envConfig: gc.Config.Configs;
+        envConfig: gc.SiteConfigs.Configs;
     }
 }
 
-const defaultConfig: gc.Config.Configs = {
+const defaultConfig: gc.SiteConfigs.Configs = {
+    isDev: true,
     systemType: "SC1",
-    ssl: true,
+    ssl: false,
     serverDomainMapper: {
-        localhost: "lumigame.com",
+        localhost: "localhost:5002",
     },
-    subDomain: "l1-proxy",
-    env: "LOCAL",
+    subDomain: "",
+    env: "",
     subGuideDomain: "l1-guide",
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,
+    optionsDev: {
+        userServiceUrl: "http://localhost:3000/user",
+        gameConfigurationUrl: "http://l1-proxy.lumigame.com/game/configurations/",
+    },
 };
 
 const domainMapper = window.envConfig ? undefined : defaultConfig.serverDomainMapper;
-const configs: gc.Config.Configs =
+const configs: gc.SiteConfigs.Configs =
     window.envConfig && window.envConfig.isDev
         ? defaultConfig
         : { ...defaultConfig, serverDomainMapper: domainMapper, ...window.envConfig };

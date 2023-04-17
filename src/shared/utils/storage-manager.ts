@@ -95,5 +95,5 @@ export class StorageManager {
 }
 
 export const localStorageKeys = {
-    session: "auth-session",
+    session: "ss",
 };

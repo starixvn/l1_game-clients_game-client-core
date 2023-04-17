@@ -1,13 +1,18 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import UserServiceClient from "sc-user-service-client";
 import Auth from "sc-user-service-client/dist/auth";
+import { UrlUtils } from "../shared/utils";
+import { Configs } from "../site-configs";
 
 @injectable()
 export class UserService {
     readonly auth: Auth;
     readonly userServiceClient: UserServiceClient;
 
-    constructor(url: string) {
+    constructor(@inject(Configs) protected readonly config: Configs) {
+        const path = this.config.env === "" ? "/user" : `/${this.config.env}/user`;
+        const url = this.config.isDev ? this.config.optionsDev.userServiceUrl : UrlUtils.buildUrlWithPath(path, this.config);
+
         this.userServiceClient = new UserServiceClient(url);
         this.auth = this.userServiceClient.auth;
     }

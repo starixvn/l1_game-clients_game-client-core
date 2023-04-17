@@ -1,4 +1,4 @@
-import { Auth, Connection, GameConfigs, Player, Rounds } from "game-client-base";
+import { Auth, GameConfigs, Player, Rounds, SiteConfigs, Connection } from "game-client-base";
 import { injectable } from "inversify";
 import { handle, observer, render } from "observer";
 import { HtmlViewEngine } from "../../views/html-view-engine";
@@ -16,6 +16,8 @@ export class SedieGameHtmlView extends HtmlViewEngine {
     constructor() {
         super();
         this.initView();
+        this.initGameConfiguration();
+        this.sso();
     }
 
     initView() {
@@ -93,4 +95,7 @@ export class SedieGameHtmlView extends HtmlViewEngine {
     private setInnerHtml(component: HTMLElement | null, data: string) {
         component && (component.innerHTML = data);
     }
+
+    @handle(SiteConfigs.GameConfigurationHandler)
+    initGameConfiguration() {}
 }

@@ -20,43 +20,22 @@ export default class Startup extends Component {
 
     @handle(gc.Connection.ConnectionHandlers.ConnectHandler)
     connectToService() {
-        const socketUri = "http://localhost:5002/user/sedie";
-        const socketOptions = {
-            transports: ["websocket"],
-            upgrade: false,
-            path: "/socket.io",
+        const option = {
+            gameId: gameSetting.id,
             forceNew: true,
+            enableMsgpackParser: Configs.enableMsgpackParserAllGames,
         };
 
-        return { socketUri, socketOptions };
+        return { option };
+    }
+
+    @render(gc.Auth.AuthStore, (store) => store.isSessionTimeout)
+    loadSessionTimeoutScene(isSessionTimeout: boolean) {
+        isSessionTimeout && director.loadScene("session-timeout");
     }
 
     @render(LogStore, (store) => store.message)
     logInfo(message: string) {
         console.log(message);
-    }
-
-    @render(gc.Connection.ConnectionStore, (store) => store.isConnected)
-    onConnected(isConnected: boolean) {
-        if (isConnected) {
-            this.joinRoom();
-            this.signIn();
-        }
-    }
-
-    @render(gc.Auth.AuthStore, (store) => store.isSessionTimeout)
-    checkSession(isSessionTimeout: boolean) {
-        isSessionTimeout && director.loadScene("session-timeout");
-    }
-
-    @handle(JoinRoomHandler)
-    joinRoom() {
-        return "sedie";
-    }
-
-    onLoad() {
-        console.log(Configs);
-        this.connectToService();
-        this.signIn();
     }
 }

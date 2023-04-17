@@ -1,7 +1,7 @@
-import { Auth, GameConfigs, IContainerOptions, getContainer } from "game-client-base";
+import { GameConfigs, IContainerOptions, SiteConfigs, getContainer } from "game-client-base";
 import * as mobx from "mobx";
 import Observer from "observer";
-import { userService } from "../../user-service";
+import configs from "../../configs/Configs";
 import { DragonTigerGameController } from "./dragon-tiger-controller";
 
 const gameSetting: GameConfigs.GameSetting = {
@@ -17,7 +17,7 @@ const gameSetting: GameConfigs.GameSetting = {
 const containerOptions: IContainerOptions = {
     onContainerCreated: (container) => {
         container.bind(GameConfigs.GameSetting).toConstantValue(gameSetting);
-        container.bind(Auth.UserService).toConstantValue(userService);
+        container.bind(SiteConfigs.Configs).toConstantValue(configs);
     },
 };
 

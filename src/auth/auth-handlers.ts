@@ -1,8 +1,8 @@
-import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
 import { inject, injectable } from "inversify";
 import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
 import { PlayerStore } from "../players";
 import { GameServiceMessage, IHandler } from "../shared";
+import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
 import { AuthStore } from "./auth-store";
 import { UserService } from "./user-service";
 
@@ -39,6 +39,15 @@ export namespace AuthHandlers {
             if (response.isAuthenticated) {
                 this.store.setAuthSSOStore(response);
                 StorageManager.set(localStorageKeys.session, this.store.getSessionInfo());
+                this.clearTokenOnUrl();
+            }
+        }
+
+        clearTokenOnUrl() {
+            try {
+                history.pushState(null, "", location.href.split("?")[0]);
+            } catch (ex) {
+                console.log(ex);
             }
         }
     }
@@ -138,9 +147,9 @@ export namespace AuthHandlers {
             let isSessionExpired = true;
 
             try {
-                if (infoSession && infoSession.time) {
+                if (infoSession && infoSession.ssoTime) {
                     const now: Date = new Date();
-                    const lastRecheckIn: Date = new Date(infoSession.time);
+                    const lastRecheckIn: Date = new Date(infoSession.ssoTime);
                     const differenceInMinutes = Math.abs(now.getMinutes() - lastRecheckIn.getMinutes());
 
                     if (differenceInMinutes <= this.sessionExpiredTimeoutMinutes) {
