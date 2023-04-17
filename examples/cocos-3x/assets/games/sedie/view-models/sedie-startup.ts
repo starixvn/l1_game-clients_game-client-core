@@ -4,7 +4,6 @@ import { Component, _decorator } from "cc";
 import gc from "game-client-base";
 import mobx from "mobx";
 import Observer from "observer";
-import { JoinRoomHandler } from "./handlers/join-room-handler";
 import { LogStore } from "./stores/log-store";
 
 const gameSetting: gc.GameConfigs.GameSetting = {
@@ -22,7 +21,6 @@ const containerOptions: gc.IContainerOptions = {
     onContainerCreated: (container) => {
         container.bind(gc.GameConfigs.GameSetting).toConstantValue(gameSetting);
         container.bind(LogStore).to(LogStore);
-        container.bind(JoinRoomHandler).to(JoinRoomHandler);
     },
 };
 
@@ -36,11 +34,32 @@ const { observer, handle, render } = Observer;
 @ccclass
 @observer("sedie")
 export default class Startup extends Component {
+    onLoad() {
+        this.connectToService();
+    }
+
     @handle(gc.Connection.ConnectionHandlers.ConnectHandler)
     connectToService() {
-        const socketUri = "http://localhost:3000";
+        const socketUri = "http://localhost:5002/user/sedie";
+        const socketOptions = {
+            transports: ["websocket"],
+            upgrade: false,
+            path: "/socket.io",
+            forceNew: true,
+            extraHeaders: {
+                "user-agent": "browser-user-agent",
+                "test-test": "browser-user-agent",
+            },
+        };
 
-        return { socketUri };
+        return { socketUri, socketOptions };
+    }
+
+    @render(gc.Connection.ConnectionStore, (store) => store.isConnected)
+    onConnected(isConnected: boolean) {
+        if (isConnected) {
+            this.signIn();
+        }
     }
 
     @handle(gc.Connection.ConnectionHandlers.SignInHandler)
@@ -51,23 +70,5 @@ export default class Startup extends Component {
     @render(LogStore, (store) => store.message)
     logInfo(message: string) {
         console.log(message);
-    }
-
-    @render(gc.Connection.ConnectionStore, (store) => store.isConnected)
-    onConnected(isConnected: boolean) {
-        if (isConnected) {
-            this.joinRoom();
-            this.signIn();
-        }
-    }
-
-    @handle(JoinRoomHandler)
-    joinRoom() {
-        return "sedie";
-    }
-
-    onLoad() {
-        this.connectToService();
-        this.signIn();
     }
 }

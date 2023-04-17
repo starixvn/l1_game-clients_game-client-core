@@ -20,6 +20,7 @@ export class DragonTigerGameController {
         const handler = this.container.resolve(Connection.ConnectionHandlers.ConnectHandler);
         handler.handle({
             socketUri: this.gameServiceUrl,
+            socketOptions: {},
         });
         const connection = this.container.resolve(Connection.ConnectionStore).connection;
         connection.emit("joinRoom", "dragontiger");

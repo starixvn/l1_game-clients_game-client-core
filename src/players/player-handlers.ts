@@ -12,8 +12,9 @@ export class PlayerHandlers implements IMultipleHandlers {
 
     handlePlayerProfile(profile: GameServiceMessage.User) {
         profile?.name && (this.store.name = profile.name);
-        profile?.red && (this.store.balance = profile.red);
         profile?.avatarId && (this.store.avatarId = profile.avatarId);
+        profile?.rate && (this.store.rate = profile.rate);
+        this.store.setBalance(profile?.red, profile?.scoins, 0);
     }
 
     eventHandleList = [

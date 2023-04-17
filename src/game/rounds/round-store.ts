@@ -1,19 +1,36 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+import { GameServiceMessage } from "../../shared";
+import { GameConfigStore } from "../game-configs";
+import { PlayerStore } from "../../players";
 
+export type Bets = {
+    [betChoice: string]: number;
+};
 @injectable()
 export class RoundStore {
-    constructor() {
+    constructor(
+        @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore,
+        @inject(PlayerStore) protected readonly playerStore: PlayerStore
+    ) {
         makeAutoObservable(this);
     }
 
-    _roundId = 0;
+    roundId: number = 0;
+    ownBets: Bets = {};
+    totalBets: Bets = {};
+    resultHash: GameServiceMessage.ResultHash = {};
 
-    get roundId() {
-        return this._roundId;
+    get minBet() {
+        return Math.max(this.gameConfigStore.minBet, this.playerStore.stakeLevel.minBet);
     }
 
-    set roundId(roundId: number) {
-        this._roundId = roundId;
+    get maxBet() {
+        return Math.min(this.gameConfigStore.maxBet, this.playerStore.stakeLevel.maxBet);
+    }
+
+    resetForNewRound() {
+        this.ownBets = {};
+        this.totalBets = {};
     }
 }

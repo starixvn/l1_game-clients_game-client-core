@@ -12,10 +12,10 @@ userRouter.get("/auth/sso", (req, res) => {
         isUM: false,
         language: "vi-VN",
         memberName: "QFMYQQN6",
-        ss: "mock-session",
+        ss: "1-session-id",
         system: system,
         umInfo: null,
-        username: "ONEworks1_99",
+        username: "1_NormalUser",
     };
     res.send(authData);
 });
@@ -26,11 +26,11 @@ userRouter.post("/auth/authorize", (req, res) => {
         isUM: false,
         umInfo: null,
         user: {
-            UID: 20037,
+            UID: 1,
             name: "Scarlet95714",
             avatarId: 19,
             currency: "$US",
-            red: 2000,
+            red: 25000,
             fractionalOddsFormat: true,
             isDisplayPlayerCurrency: true,
             offerGames: [{ gameId: 2 }, { gameId: 7 }],

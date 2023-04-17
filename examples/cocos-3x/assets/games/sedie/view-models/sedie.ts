@@ -24,9 +24,15 @@ export default class Sedie extends Component {
     @property(Label)
     roundState: Label = null;
 
+    @property(Label)
+    minMaxBet: Label = null;
+
+    @property(Label)
+    odds: Label = null;
+
     @render(Connection.ConnectionStore, (store) => store.signedIn)
-    onSignedIn() {
-        this.inGame();
+    onSignedIn(signedIn: boolean) {
+        signedIn && this.inGame();
     }
 
     @handle(Connection.ConnectionHandlers.InGameHandler)
@@ -55,6 +61,16 @@ export default class Sedie extends Component {
     @render(Rounds.RoundTimeStore, (store) => store.roundState)
     renderRoundState(state: string) {
         this.updateLabelValue(this.roundState, state);
+    }
+
+    @render(Rounds.RoundStore, (store) => ({ minBet: store.minBet, maxBet: store.maxBet }))
+    renderMinMaxBet({ minBet, maxBet }) {
+        this.updateLabelValue(this.minMaxBet, `min: ${minBet} max: ${maxBet}`);
+    }
+
+    @render(GameConfigs.GameConfigStore, (store) => store.odds)
+    renderOdds(odds: any) {
+        this.updateLabelValue(this.odds, JSON.stringify(odds));
     }
 
     updateLabelValue(label: Label, value: string) {

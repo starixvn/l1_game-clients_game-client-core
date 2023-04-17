@@ -29,8 +29,8 @@ export class PlayerStore {
     availSpins?: number = 0;
     fractionalOddsFormat = false;
     displayPlayerCurrency = true;
-    offerGames? = null;
-  browserUserAgent = "";
+    offerGames?: { gameId: number }[] = null;
+    browserUserAgent = "";
 
     setAuthorizeStore(user: GameServiceMessage.User) {
         this.UID = user.UID;

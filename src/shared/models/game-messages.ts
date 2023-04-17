@@ -9,7 +9,7 @@ export namespace GameClientEmitMessage {
         memberName: string;
         isUM: boolean;
         time: string;
-        currency:string;
+        currency: string;
 
         static eventName = "signin";
     }
@@ -42,12 +42,12 @@ export namespace GameServiceMessage {
         currency: string;
         joinedOn: string;
         red: number;
-        scoins: number;
+        scoins?: number;
         type: boolean;
-        rate: number;
+        rate?: number;
         minBet: number;
         maxBet: number;
-        offerGames?: any;
+        offerGames?: { gameId: number }[];
         availSpins?: number;
         fractionalOddsFormat?: boolean;
         isDisplayPlayerCurrency?: boolean;
@@ -74,28 +74,28 @@ export namespace GameServiceMessage {
         static eventName = "um_message";
     }
     export const roundId = "roundId";
+    export type Odds = {
+        [betChoice: string]: number;
+    };
+    export type MaxBetPerChoices = Odds;
     export class GameConfigs {
         minBet: number;
         maxBet: number;
-        maxBetPerChoices: any;
+        maxBetPerChoices: MaxBetPerChoices;
         chips: string[];
         stakeLevels: [];
-        odds: any;
+        odds: Odds;
         enableFreeBet: boolean;
-        originalOdds?: any;
-        boostedChoices?: any;
+        originalOdds?: Odds;
+        boostedChoices?: Odds;
 
         static eventName = "gameConfigs";
     }
-    export class Odds {
-        boostedChoices: Array<any>;
-        values: any;
 
-        static eventName = "odds";
-    }
     export const roundHistory = "roundHistory";
     export const ownBets = "ownBets";
     export const totalBets = "totalBets";
+    export const chips = "chips";
 
     export class OwnChip {
         betChoice: string;
@@ -126,8 +126,9 @@ export namespace GameServiceMessage {
         static eventName = "player";
     }
     export class ResultHash {
-        rawValue: string;
-        extraInfos: any;
+        rawValue?: string;
+        extraInfos?: any;
+        hashValue?: string;
 
         static eventName = "resultHash";
     }

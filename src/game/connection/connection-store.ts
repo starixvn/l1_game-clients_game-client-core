@@ -14,24 +14,28 @@ export const events = {
 };
 @injectable()
 export class ConnectionStore {
-    constructor(@inject(Mediator) private readonly mediator: Mediator, @inject(GameSetting) private readonly gameSetting: GameSetting) {
+    constructor(@inject(Mediator) protected readonly mediator: Mediator, @inject(GameSetting) protected readonly gameSetting: GameSetting) {
         makeAutoObservable(this);
     }
 
     connection: Socket = null;
     isConnected: boolean = false;
+    isConnectFailed: boolean = false;
     signedIn: boolean = false;
 
     initBaseListener() {
         if (this.connection) {
             this.connection.on(events.connect, this.onConnected.bind(this));
             this.connection.on(events.signedIn, this.onSignedIn.bind(this));
+            this.connection.on(events.connectError, this.onConnectFailed.bind(this));
+            this.connection.on(events.connectFailed, this.onConnectFailed.bind(this));
             this.connection.on(events.disconnect, this.onDisconnected.bind(this));
         }
     }
 
     onConnected() {
         this.isConnected = true;
+        this.isConnectFailed = false;
         this.connection.onAny((event: string, value: any) => {
             if (event?.toLocaleLowerCase() === this.gameSetting?.name.toLocaleLowerCase() || event?.toLocaleLowerCase() == "message") {
                 Object.entries(value).forEach((entry) => {
@@ -46,6 +50,11 @@ export class ConnectionStore {
 
     onSignedIn() {
         this.signedIn = true;
+    }
+
+    onConnectFailed() {
+        this.isConnectFailed = true;
+        this.onDisconnected();
     }
 
     onDisconnected() {

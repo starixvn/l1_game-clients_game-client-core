@@ -1,5 +1,5 @@
-import { Auth, GameConfigs, Player, Rounds } from "game-client-base";
-import { injectable } from "inversify";
+import { Auth, GameConfigs, Player, Rounds, Connection } from "game-client-base";
+import { injectable, inject } from "inversify";
 import { handle, observer, render } from "observer";
 import { HtmlViewEngine } from "../../views/html-view-engine";
 
@@ -29,6 +29,10 @@ export class SedieGameHtmlView extends HtmlViewEngine {
         } catch (error) {
             return null;
         }
+    }
+
+    onLoad(): void {
+        this.sso();
     }
 
     renderGameName(gameName: string) {
@@ -61,12 +65,30 @@ export class SedieGameHtmlView extends HtmlViewEngine {
     }
 
     @render(Auth.AuthStore, (store) => store.isAuthenticated)
-    logAuthentication(isAuthenticated: any) {
+    logAuthentication(isAuthenticated: boolean) {
         console.log("sedie game", { isAuthenticated });
         if (isAuthenticated) {
             this.authorize();
         }
     }
+
+    @render(Connection.ConnectionStore, (store) => store.isConnected)
+    onConnect(isConnected: boolean) {
+        isConnected && this.signIn();
+    }
+
+    @handle(Connection.ConnectionHandlers.SignInHandler)
+    signIn() {
+        return {};
+    }
+
+    @render(Connection.ConnectionStore, (store) => store.signedIn)
+    onSignIn(signedIn: boolean) {
+        signedIn && this.inGame();
+    }
+
+    @handle(Connection.ConnectionHandlers.InGameHandler)
+    inGame() {}
 
     @handle(Auth.AuthHandlers.SSO)
     sso() {
@@ -74,7 +96,9 @@ export class SedieGameHtmlView extends HtmlViewEngine {
     }
 
     @handle(Auth.AuthHandlers.Authorize)
-    authorize() {}
+    authorize() {
+        return {};
+    }
 
     private setInnerHtml(component: HTMLElement | null, data: string) {
         component && (component.innerHTML = data);

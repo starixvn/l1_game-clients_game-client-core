@@ -32,7 +32,7 @@ export class AuthStore {
         this.username = response.username;
         this.language = response.language;
         this.session = response.ss;
-        this.system = response.system;
+        this.system = +response.system;
         this.memberName = response.memberName;
     }
 

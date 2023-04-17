@@ -6,13 +6,13 @@ import { GameServiceMessage } from "../../shared";
 export class GameConfigStore {
     minBet: number = 0;
     maxBet: number = 0;
-    maxBetPerChoices: any = {};
+    maxBetPerChoices: GameServiceMessage.MaxBetPerChoices = {};
     chips: string[] = [];
     stakeLevels: [] = [];
-    odds: any = {};
+    odds: GameServiceMessage.Odds = {};
     enableFreeBet: boolean = false;
-    originalOdds?: any = null;
-    boostedChoices?: any = null;
+    originalOdds?: GameServiceMessage.Odds = null;
+    boostedChoices?: GameServiceMessage.Odds = null;
 
     constructor() {
         makeAutoObservable(this);
