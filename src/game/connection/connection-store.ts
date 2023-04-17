@@ -1,7 +1,8 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { Socket } from "socket.io-client/dist/socket.io.js";
-import { Mediator } from "../../shared";
+import { AuthStore } from "../../auth";
+import { GameClientEmitMessage, Mediator } from "../../shared";
 import { GameSetting } from "../game-configs";
 
 export const events = {
@@ -14,7 +15,11 @@ export const events = {
 };
 @injectable()
 export class ConnectionStore {
-    constructor(@inject(Mediator) protected readonly mediator: Mediator, @inject(GameSetting) protected readonly gameSetting: GameSetting) {
+    constructor(
+        @inject(Mediator) protected readonly mediator: Mediator,
+        @inject(GameSetting) protected readonly gameSetting: GameSetting,
+        @inject(AuthStore) protected readonly authStore: AuthStore
+    ) {
         makeAutoObservable(this);
     }
 
@@ -46,6 +51,16 @@ export class ConnectionStore {
                 this.mediator.emit(event, value);
             }
         });
+        this.signIn();
+    }
+
+    signIn() {
+        const payload = new GameClientEmitMessage.Signin();
+        payload.ss = this.authStore.session;
+        payload.username = this.authStore.username;
+        payload.system = this.authStore.system;
+
+        this.send(GameClientEmitMessage.Signin.eventName, payload);
     }
 
     onSignedIn() {

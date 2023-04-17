@@ -1,5 +1,5 @@
-import { Auth, GameConfigs, Player, Rounds, Connection } from "game-client-base";
-import { injectable, inject } from "inversify";
+import { Auth, Connection, GameConfigs, Player, Rounds } from "game-client-base";
+import { injectable } from "inversify";
 import { handle, observer, render } from "observer";
 import { HtmlViewEngine } from "../../views/html-view-engine";
 
@@ -70,16 +70,6 @@ export class SedieGameHtmlView extends HtmlViewEngine {
         if (isAuthenticated) {
             this.authorize();
         }
-    }
-
-    @render(Connection.ConnectionStore, (store) => store.isConnected)
-    onConnect(isConnected: boolean) {
-        isConnected && this.signIn();
-    }
-
-    @handle(Connection.ConnectionHandlers.SignInHandler)
-    signIn() {
-        return {};
     }
 
     @render(Connection.ConnectionStore, (store) => store.signedIn)

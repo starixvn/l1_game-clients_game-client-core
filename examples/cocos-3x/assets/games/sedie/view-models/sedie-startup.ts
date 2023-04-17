@@ -51,18 +51,6 @@ export default class Startup extends Component {
         return { socketUri, socketOptions };
     }
 
-    @render(gc.Connection.ConnectionStore, (store) => store.isConnected)
-    onConnected(isConnected: boolean) {
-        if (isConnected) {
-            this.signIn();
-        }
-    }
-
-    @handle(gc.Connection.ConnectionHandlers.SignInHandler)
-    signIn() {
-        return {};
-    }
-
     @render(LogStore, (store) => store.message)
     logInfo(message: string) {
         console.log(message);

@@ -1,4 +1,4 @@
-import { Auth, Connection } from "game-client-base";
+import { Connection } from "game-client-base";
 import { Container } from "inversify";
 import { DragonTigerGameHtmlView } from "./dragon-tiger-game-html-view";
 
@@ -9,7 +9,6 @@ export class DragonTigerGameController {
 
     start() {
         this.connectGameService();
-        this.joinGame();
         this.inGame();
         const mainGame = this.container.resolve(DragonTigerGameHtmlView);
 
@@ -24,11 +23,6 @@ export class DragonTigerGameController {
         });
         const connection = this.container.resolve(Connection.ConnectionStore).connection;
         connection.emit("joinRoom", "dragontiger");
-    }
-
-    joinGame() {
-        const auth = this.container.resolve(Auth.AuthStore);
-        this.container.resolve(Connection.ConnectionHandlers.SignInHandler).handle(auth);
     }
 
     inGame() {
