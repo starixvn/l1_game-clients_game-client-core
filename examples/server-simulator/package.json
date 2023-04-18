@@ -2,20 +2,24 @@
     "name": "server-simulator",
     "version": "1.0.0",
     "scripts": {
-        "start": "nodemon src/server.ts"
+        "mock-sedie-service": "cd ../sedie-service && yarn install && npm run mock-service",
+        "mock-user-service": "npm install && nodemon src/server.ts ",
+        "start": "concurrently -c \"auto\" \"npm run mock-user-service\" \"npm run mock-sedie-service\"",
+        "install-then-start": "npm install && npm run start"
     },
     "dependencies": {
         "@types/express": "4.17.17",
         "@types/node": "18.15.11",
         "cors": "2.8.5",
-        "cron": "2.3.0",
         "express": "4.18.2",
-        "game-client-base": "file:../..",
-        "mobx": "6.9.0",
         "nodemon": "2.0.22",
+        "sedie-service": "file:../sedie-service",
         "socket.io": "4.6.1",
         "ts-loader": "9.4.2",
         "ts-node": "10.9.1",
         "typescript": "5.0.4"
+    },
+    "devDependencies": {
+        "concurrently": "^8.0.1"
     }
 }
