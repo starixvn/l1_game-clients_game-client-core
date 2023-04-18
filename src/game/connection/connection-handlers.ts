@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { io } from "socket.io-client/dist/socket.io.js";
 import { GameClientEmitMessage, IHandler } from "../../shared";
 import { UrlUtils } from "../../shared/utils";
-import { Configs, GameConfigurationStore } from "../../site-configs";
+import { Configs } from "../../site-configs";
 import { GameSetting } from "../game-configs";
 import { ConnectionStore } from "./connection-store";
 
@@ -22,23 +22,23 @@ export namespace ConnectionHandlers {
     export class ConnectHandler {
         constructor(
             @inject(ConnectionStore) protected readonly store: ConnectionStore,
-            @inject(GameConfigurationStore) protected readonly configurationStore: GameConfigurationStore,
-            @inject(Configs) protected readonly config: Configs,
+            @inject(Configs) protected readonly configs: Configs,
             @inject(GameSetting) protected readonly gameSetting: GameSetting
         ) {}
 
-        handle(options: ISocketOption) {
+        handle(optionsCustomize?: ISocketOption) {
             const gameId = this.gameSetting.id;
-            const gameConfiguration = this.configurationStore.getGameConfigurationWithGameId(gameId);
-            console.log("gameConfiguration hanlde ", gameConfiguration);
-            const socketUri = UrlUtils.buildServerUrl("http", "", gameId, this.config, gameConfiguration.key);
-            const optionalOptions = {
-                proxyRoute: UrlUtils.getProxyRoute(gameConfiguration, this.config.env),
+            const socketUri = UrlUtils.buildServerUrl("http", "", gameId, this.configs);
+            const optionsDefault = {
+                path: UrlUtils.getProxyRoute(this.configs),
                 socketUri,
+                transports: ["websocket"],
+                upgrade: false,
+                parser: this.configs.enableMsgpackParserAllGames,
             };
-            const mergeOptions = { ...options, ...optionalOptions };
-            console.log("mergeOptions ", mergeOptions);
-            this.store.connection = io(options.socketUri, mergeOptions);
+            const options = { ...optionsDefault, ...optionsCustomize };
+            console.log("mergeOptions ", options);
+            this.store.connection = io(options.socketUri, options);
             this.store.initBaseListener();
         }
     }

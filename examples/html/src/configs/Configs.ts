@@ -8,14 +8,13 @@ const configs: gc.SiteConfigs.Configs = {
         localhost: "localhost:5002",
     },
     subDomain: "",
-    env: "",
+    env: "LOCAL",
     subGuideDomain: "l1-guide",
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,
-    optionsDev: {
-        userServiceUrl: "http://localhost:3000/user",
-        gameConfigurationUrl: "http://l1-proxy.lumigame.com/game/configurations/",
-    },
+    userServiceUrlDev: "http://localhost:3000/user",
+    proxyRoute: "",
+    wsPath: "sedie",
 };
 
 export default configs;

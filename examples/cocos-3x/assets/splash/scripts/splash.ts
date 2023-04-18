@@ -15,9 +15,7 @@ Observer.configure({ default: { mobx, container: sharedContainer } });
 export default class Splash extends Component {
     onLoad() {
         console.log("splash loading...");
-        this.initGameConfiguration();
         this.sso();
-        ///////
     }
 
     @handle(gc.Auth.AuthHandlers.SSO)
@@ -47,7 +45,4 @@ export default class Splash extends Component {
 
     @handle(gc.Auth.AuthHandlers.TriggerRecheckIn)
     triggerRecheckIn() {}
-
-    @handle(gc.SiteConfigs.GameConfigurationHandler)
-    initGameConfiguration() {}
 }

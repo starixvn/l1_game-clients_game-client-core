@@ -3,8 +3,6 @@ import { Container } from "inversify";
 import { DragonTigerGameHtmlView } from "./dragon-tiger-game-html-view";
 
 export class DragonTigerGameController {
-    gameServiceUrl = "http://localhost:3000";
-
     constructor(public readonly container: Container) {}
 
     start() {
@@ -17,8 +15,8 @@ export class DragonTigerGameController {
 
     connectGameService() {
         const handler = this.container.resolve(Connection.ConnectionHandlers.ConnectHandler);
-        const options = { socketUri: this.gameServiceUrl };
-        handler.handle(options);
+
+        handler.handle();
         const connection = this.container.resolve(Connection.ConnectionStore).connection;
         connection.emit("joinRoom", "dragontiger");
     }

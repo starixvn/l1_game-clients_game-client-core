@@ -11,7 +11,7 @@ export class UserService {
 
     constructor(@inject(Configs) protected readonly config: Configs) {
         const path = this.config.env === "" ? "/user" : `/${this.config.env}/user`;
-        const url = this.config.isDev ? this.config.optionsDev.userServiceUrl : UrlUtils.buildUrlWithPath(path, this.config);
+        const url = this.config.isDev ? this.config.userServiceUrlDev : UrlUtils.buildUrlWithPath(path, this.config);
 
         this.userServiceClient = new UserServiceClient(url);
         this.auth = this.userServiceClient.auth;

@@ -1,4 +1,4 @@
-import { Configs, IGameConfiguration } from "../../site-configs";
+import { Configs } from "../../site-configs";
 
 export namespace UrlUtils {
     export const buildUrl = (protocol = "http", path = "/", configs: Configs) => {
@@ -32,23 +32,16 @@ export namespace UrlUtils {
         return buildUrl("http", path, configs);
     };
 
-    export const buildServerUrl = (protocol = "http", path = "/", gameId = 0, configs: Configs, gameConfigurationKey: string) => {
-        const gamePath = getPath(gameId, gameConfigurationKey, configs.env);
+    export const buildServerUrl = (protocol = "http", path = "/", gameId = 0, configs: Configs) => {
+        const gamePath = getPath(gameId, configs.wsPath);
         return buildUrl(protocol, gamePath + path, configs);
     };
 
-    export const buildProxyUrl = (path: string, configs: Configs) => {
-        const envPath = configs.env === "" ? "" : `/${configs.env}`;
-        const fullPath = `${envPath}${path}`;
-
-        return buildUrl("http", fullPath, configs);
-    };
-
-    export const getPath = (gameId: number, path: string, env: string) => {
+    export const getPath = (gameId: number, path: string) => {
         path = path.toLowerCase();
         let pathStr = "";
         if (gameId === 0) {
-            pathStr = `/${getEnvironment(env)}${path}`;
+            pathStr = `/${path}`;
         } else {
             pathStr = `/user/${path}`;
         }
@@ -56,18 +49,12 @@ export namespace UrlUtils {
         return pathStr;
     };
 
-    export const getProxyRoute = (gameConfiguration: IGameConfiguration, env: string) => {
-        const route = gameConfiguration?.route || gameConfiguration?.key.toLowerCase();
-
-        return `/${getEnvironment(env)}${route}/socket.io`;
-    };
-
-    export const getEnvironment = (env: string) => {
-        let envStr = "";
-        if (env.length > 0) {
-            envStr = `${env}/`;
+    export const getProxyRoute = (configs: Configs) => {
+        if (configs.proxyRoute === "") {
+            return "/socket.io";
         }
 
-        return envStr;
+        const route = `${configs?.proxyRoute || configs.wsPath.toLowerCase()}/`;
+        return `/${route}socket.io`;
     };
 }

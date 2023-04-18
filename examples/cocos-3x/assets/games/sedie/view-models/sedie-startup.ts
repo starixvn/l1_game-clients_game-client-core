@@ -19,15 +19,7 @@ export default class Startup extends Component {
     }
 
     @handle(gc.Connection.ConnectionHandlers.ConnectHandler)
-    connectToService() {
-        const option = {
-            gameId: gameSetting.id,
-            forceNew: true,
-            enableMsgpackParser: Configs.enableMsgpackParserAllGames,
-        };
-
-        return { option };
-    }
+    connectToService() {}
 
     @render(gc.Auth.AuthStore, (store) => store.isSessionTimeout)
     loadSessionTimeoutScene(isSessionTimeout: boolean) {

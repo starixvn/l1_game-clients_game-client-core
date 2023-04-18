@@ -8,9 +8,8 @@ export class Configs {
     subGuideDomain: string;
     enableMsgpackParserAllGames: boolean;
     enableMsgpackParserOnNotification: boolean;
+    proxyRoute: string;
+    wsPath: string;
     isDev?: boolean;
-    optionsDev?: {
-        userServiceUrl: string;
-        gameConfigurationUrl: string;
-    };
+    userServiceUrlDev?: string;
 }

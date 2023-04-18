@@ -6,4 +6,6 @@ window.envConfig = {
     subGuideDomain: "l2-guide-2",
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,
+    proxyRoute: "sedie",
+    wsPath: "sedie",
 };
