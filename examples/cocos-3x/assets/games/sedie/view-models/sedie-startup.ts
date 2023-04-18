@@ -1,38 +1,17 @@
-import { container as SharedContainer } from "../../../splash/scripts/splash-container";
-
 import { Component, _decorator } from "cc";
+import { LogStore } from "db://shared-components/testing/stores/log-store";
 import gc from "game-client-base";
-import mobx from "mobx";
 import Observer from "observer";
-import { LogStore } from "./stores/log-store";
+import { startGame } from "../../../../extensions/shared-components/assets/startup";
+import { containerOptions, settings } from "./sedie-settings";
 
-const gameSetting: gc.GameConfigs.GameSetting = {
-    id: 1,
-    name: "SeDie",
-    durations: {
-        wholeRound: 39,
-        lockingBet: 5,
-        placingBet: 30,
-    },
-};
-
-const containerOptions: gc.IContainerOptions = {
-    globalContainer: SharedContainer,
-    onContainerCreated: (container) => {
-        container.bind(gc.GameConfigs.GameSetting).toConstantValue(gameSetting);
-        container.bind(LogStore).to(LogStore);
-    },
-};
-
-const container = gc.getContainer(containerOptions);
-
-Observer.configure({ sedie: { mobx, container } });
+startGame(settings.name, containerOptions);
 
 const { ccclass } = _decorator;
 const { observer, handle, render } = Observer;
 
 @ccclass
-@observer("sedie")
+@observer(settings.name)
 export default class Startup extends Component {
     onLoad() {
         this.connectToService();

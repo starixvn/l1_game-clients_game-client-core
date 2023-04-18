@@ -1,13 +1,14 @@
 import { Component, Label, _decorator } from "cc";
 import GameClient from "game-client-base";
 import Observer from "observer";
+import { settings } from "./sedie-settings";
 
 const { Player, Rounds, GameConfigs, Connection } = GameClient;
 const { ccclass, property } = _decorator;
 const { observer, render, handle } = Observer;
 
 @ccclass
-@observer("sedie")
+@observer(settings.name)
 export default class Sedie extends Component {
     @property(Label)
     roundTime: Label = null;

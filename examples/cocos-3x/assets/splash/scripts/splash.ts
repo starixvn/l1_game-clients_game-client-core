@@ -1,4 +1,4 @@
-import { container } from "./splash-container";
+import { sharedContainer } from "../../shared-container";
 
 import { Component, _decorator, director } from "cc";
 import gc from "game-client-base";
@@ -8,7 +8,7 @@ import Observer from "observer";
 const { ccclass } = _decorator;
 const { observer, handle, render } = Observer;
 
-Observer.configure({ default: { mobx, container } });
+Observer.configure({ default: { mobx, container: sharedContainer } });
 
 @ccclass
 @observer("default")
