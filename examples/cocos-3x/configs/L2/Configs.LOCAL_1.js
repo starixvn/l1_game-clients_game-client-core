@@ -7,5 +7,8 @@ window.envConfig = {
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,
     webSocketRoute: "sedie",
-    proxyPath: "sedie",
+    websocket: {
+        proxyPath: "sedie",
+        route: "sedie",
+    },
 };

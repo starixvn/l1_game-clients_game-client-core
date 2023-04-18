@@ -10,7 +10,7 @@ export class UserService {
     readonly userServiceClient: UserServiceClient;
 
     constructor(@inject(Configs) protected readonly config: Configs) {
-        const path = this.config.env === "" ? "/user" : `/${this.config.env}/user`;
+        const path = this.config?.subDirectory ? `/${this.config.subDirectory}/user` : "/user";
         const url = this.config.isDev ? this.config.userServiceUrlDev : UrlUtils.buildUrlWithPath(path, this.config);
 
         this.userServiceClient = new UserServiceClient(url);

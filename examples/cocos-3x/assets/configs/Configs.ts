@@ -19,14 +19,27 @@ const defaultConfig: gc.SiteConfigs.Configs = {
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,
     userServiceUrlDev: "http://localhost:3000/user",
-    webSocketRoute: "",
-    proxyPath: "sedie",
+    websocket: {
+        proxyPath: "sedie",
+        route: "",
+    },
 };
 
-const domainMapper = window.envConfig ? undefined : defaultConfig.serverDomainMapper;
+let configDev = {
+    isDev: defaultConfig.isDev,
+    userServiceUrlDev: defaultConfig.userServiceUrlDev,
+    serverDomainMapper: defaultConfig.serverDomainMapper,
+};
+
+if (window.envConfig) {
+    configDev = {
+        isDev: undefined,
+        userServiceUrlDev: undefined,
+        serverDomainMapper: undefined,
+    };
+}
+
 const configs: gc.SiteConfigs.Configs =
-    window.envConfig && window.envConfig.isDev
-        ? defaultConfig
-        : { ...defaultConfig, serverDomainMapper: domainMapper, ...window.envConfig };
+    window.envConfig && window.envConfig.isDev ? defaultConfig : { ...defaultConfig, ...configDev, ...window.envConfig };
 
 export default configs;

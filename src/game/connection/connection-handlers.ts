@@ -26,9 +26,9 @@ export namespace ConnectionHandlers {
             @inject(GameSetting) protected readonly gameSetting: GameSetting
         ) {}
 
-        handle(optionsCustomize?: ISocketOption) {
+        handle(customizeOptions?: ISocketOption) {
             const gameId = this.gameSetting.id;
-            const socketUri = UrlUtils.buildServerUrl("http", "", gameId, this.configs);
+            const socketUri = UrlUtils.buildServerUrl("http", `${this.configs.websocket.proxyPath}`, gameId, this.configs);
             const optionsDefault = {
                 path: UrlUtils.getProxyRoute(this.configs),
                 socketUri,
@@ -36,8 +36,7 @@ export namespace ConnectionHandlers {
                 upgrade: false,
                 parser: this.configs.enableMsgpackParserAllGames,
             };
-            const options = { ...optionsDefault, ...optionsCustomize };
-            console.log("mergeOptions ", options);
+            const options = { ...optionsDefault, ...customizeOptions };
             this.store.connection = io(options.socketUri, options);
             this.store.initBaseListener();
         }

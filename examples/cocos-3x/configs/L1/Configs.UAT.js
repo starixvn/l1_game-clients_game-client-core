@@ -1,0 +1,15 @@
+window.envConfig = {
+    systemType: "SC1",
+    ssl: true,
+    subDomain: "l1uatproxy",
+    env: "SIT",
+    sentry: "https://08d902b128ea45b6a11639833224f481@scsentry.sgamesuat.com/25",
+    subGuideDomain: "l1guidesuat",
+    enableMsgpackParserAllGames: true,
+    enableMsgpackParserOnNotification: true,
+    websocket: {
+        proxyPath: "sedie",
+        route: "sedie",
+    },
+    subDirectory: "uat",
+};

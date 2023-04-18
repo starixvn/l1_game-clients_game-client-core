@@ -46,7 +46,7 @@ export class AuthStore {
             session: this.session,
             system: this.system,
             memberName: this.memberName,
-            time: this.ssoTime,
+            ssoTime: this.ssoTime,
         };
     }
 
