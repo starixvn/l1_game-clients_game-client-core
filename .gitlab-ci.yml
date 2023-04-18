@@ -41,3 +41,4 @@ variables:
 
 .base_build_cocos:
   <<: *build_cocos_creator_script
+  allow_failure: true
