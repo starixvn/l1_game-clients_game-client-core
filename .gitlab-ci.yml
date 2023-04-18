@@ -4,6 +4,8 @@ include:
     file: "luminet.gitlab-ci.yml"
 
 variables:
+  #GIT_SUBMODULE_STRATEGY: recursive # Just for testing
+  #CI_JOB_TOKEN:  # Just for testing
   COCOS_VERSION: "3.7.2"
 
 .build_cocos_creator_script: &build_cocos_creator_script
