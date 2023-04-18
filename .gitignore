@@ -3,4 +3,4 @@ dist/
 coverage/
 reports/
 
-/yarn.lock
+yarn.lock
