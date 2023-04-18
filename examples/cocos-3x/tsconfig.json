@@ -6,5 +6,8 @@
     "compilerOptions": {
         "strict": false,
         "esModuleInterop": true,
+        "types": [
+            "node"
+        ]
     }
 }

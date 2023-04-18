@@ -33,7 +33,7 @@ export namespace UrlUtils {
     };
 
     export const buildServerUrl = (protocol = "http", path = "/", gameId = 0, configs: Configs) => {
-        const gamePath = getPath(gameId, configs.wsPath);
+        const gamePath = getPath(gameId, configs.proxyPath);
         return buildUrl(protocol, gamePath + path, configs);
     };
 
@@ -50,11 +50,10 @@ export namespace UrlUtils {
     };
 
     export const getProxyRoute = (configs: Configs) => {
-        if (configs.proxyRoute === "") {
+        if (configs?.webSocketRoute === "") {
             return "/socket.io";
         }
-
-        const route = `${configs?.proxyRoute || configs.wsPath.toLowerCase()}/`;
-        return `/${route}socket.io`;
+        const path = `/${configs?.proxyPath}${configs?.webSocketRoute}` || "";
+        return `${path}/socket.io`;
     };
 }

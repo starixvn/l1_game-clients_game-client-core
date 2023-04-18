@@ -19,8 +19,8 @@ const defaultConfig: gc.SiteConfigs.Configs = {
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,
     userServiceUrlDev: "http://localhost:3000/user",
-    proxyRoute: "",
-    wsPath: "sedie",
+    webSocketRoute: "",
+    proxyPath: "sedie",
 };
 
 const domainMapper = window.envConfig ? undefined : defaultConfig.serverDomainMapper;

@@ -13,8 +13,8 @@ const configs: gc.SiteConfigs.Configs = {
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,
     userServiceUrlDev: "http://localhost:3000/user",
-    proxyRoute: "",
-    wsPath: "sedie",
+    webSocketRoute: "",
+    proxyPath: "sedie",
 };
 
 export default configs;
