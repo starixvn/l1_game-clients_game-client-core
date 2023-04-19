@@ -136,6 +136,8 @@ export namespace AuthHandlers {
             if (response.apiError) {
                 this.handleError(response);
             } else {
+                this.authStore.renewSSOTime();
+                StorageManager.set(localStorageKeys.session, this.authStore.getSessionInfo());
                 this.playerStore.setBalance(response.balance, response.scoins, response.availSpins);
             }
         }
@@ -157,13 +159,13 @@ export namespace AuthHandlers {
 
     @injectable()
     export class TriggerRecheckIn implements IHandler<void> {
-        static reCheckInId: NodeJS.Timeout;
+        private reCheckInId: NodeJS.Timeout;
         private readonly sessionExpiredTimeoutMinutes = 19.8;
         constructor(@inject(ReCheckIn) private readonly reCheckIn: ReCheckIn, @inject(AuthStore) private readonly authStore: AuthStore) {}
 
         async handle() {
             this.clearInterval();
-            TriggerRecheckIn.reCheckInId = setInterval(() => {
+            this.reCheckInId = setInterval(() => {
                 this.handleRecheckIn();
             }, 60 * 1000);
         }
@@ -200,7 +202,7 @@ export namespace AuthHandlers {
         }
 
         clearInterval() {
-            TriggerRecheckIn.reCheckInId && clearInterval(TriggerRecheckIn.reCheckInId);
+            this.reCheckInId && clearInterval(this.reCheckInId);
         }
     }
 
@@ -219,6 +221,16 @@ export namespace AuthHandlers {
             } else {
                 this.authStore.errorCode = response.errorCode;
             }
+        }
+    }
+
+    @injectable()
+    export class SessionTimeout implements IHandler<void> {
+        constructor(@inject(TriggerRecheckIn) private readonly triggerRecheckIn: TriggerRecheckIn) {}
+
+        handle() {
+            this.triggerRecheckIn.clearInterval();
+            StorageManager.remove(localStorageKeys.session);
         }
     }
 }

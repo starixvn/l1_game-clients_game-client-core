@@ -61,6 +61,10 @@ export class AuthStore {
         };
     }
 
+    renewSSOTime() {
+        this.ssoTime = new Date();
+    }
+
     signOut() {
         this.username = null;
         this.session = null;
