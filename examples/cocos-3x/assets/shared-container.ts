@@ -1,5 +1,4 @@
 import { getSharedContainer } from "db://shared-components/startup";
+import configs from "../assets/configs/Configs";
 
-const USER_SERVICE_URL = "http://localhost:3000/user";
-
-export const sharedContainer = getSharedContainer(USER_SERVICE_URL);
+export const sharedContainer = getSharedContainer(configs);
