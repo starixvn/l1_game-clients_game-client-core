@@ -2,11 +2,12 @@ import { inject, injectable } from "inversify";
 import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
 import { PlayerStore } from "../players";
 import { GameServiceMessage, IHandler } from "../shared";
+import NameGenerator from "../shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
-import { AuthStore } from "./auth-store";
+import { AuthStore, ISessionInfo } from "./auth-store";
 import { UserService } from "./user-service";
 
-interface AuthorizeResponse {
+interface IAuthorizeResponse {
     errorCode?: string;
     message?: string;
     isSuccessful?: boolean;
@@ -16,44 +17,11 @@ interface AuthorizeResponse {
     user?: GameServiceMessage.User;
 }
 
-interface ISession {
-    username: string;
-    language: string;
-    ss: string;
-    time: Date;
-    isAuthenticated: boolean;
-}
-
 export namespace AuthHandlers {
     @injectable()
-    export class SSO implements IHandler<{ token: string; system?: number }> {
-        constructor(@inject(AuthStore) private readonly store: AuthStore, @inject(UserService) private readonly userService: UserService) {}
-
-        async handle({ token, system }) {
-            const response = await this.userService.sso(token, system);
-            if (response.isUM) {
-                this.store.setUM(response.umInfo);
-                return;
-            }
-
-            if (response.isAuthenticated) {
-                this.store.setAuthSSOStore(response);
-                StorageManager.set(localStorageKeys.session, this.store.getSessionInfo());
-                this.clearTokenOnUrl();
-            }
-        }
-
-        clearTokenOnUrl() {
-            try {
-                history.pushState(null, "", location.href.split("?")[0]);
-            } catch (ex) {
-                console.log(ex);
-            }
-        }
-    }
-
-    @injectable()
     export class Authorize implements IHandler<{ session: string; username: string }> {
+        private session = "";
+        private username = "";
         constructor(
             @inject(AuthStore) private readonly authStore: AuthStore,
             @inject(PlayerStore) private readonly playerStore: PlayerStore,
@@ -61,10 +29,10 @@ export namespace AuthHandlers {
         ) {}
 
         async handle({ session = "", username = "" }) {
-            const response = (await this.userService.authorize(
-                session || this.authStore.session,
-                username || this.authStore.username
-            )) as AuthorizeResponse;
+            const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
+            this.session = session || sessionInfo?.session;
+            this.username = username || sessionInfo?.username;
+            const response = (await this.userService.authorize(this.session, this.username)) as IAuthorizeResponse;
             if (response.isUM) {
                 this.authStore.setUM(response.umInfo);
             } else {
@@ -72,9 +40,77 @@ export namespace AuthHandlers {
                     this.authStore.signOut();
                     StorageManager.remove(localStorageKeys.session);
                 } else {
-                    this.authStore.isAuthorized = response.authorized;
-                    response.user && this.playerStore.setAuthorizeStore(response.user);
+                    await this.handleAuthorizedResponse(response);
                 }
+            }
+        }
+
+        private async handleAuthorizedResponse(response: IAuthorizeResponse) {
+            if (!response.authorized && this.authStore.isDirectMode) {
+                await this.autoGenerateName();
+            } else {
+                response.user && this.playerStore.setAuthorizeStore(response.user);
+                this.authStore.isAuthorized = response.authorized;
+            }
+        }
+
+        private async autoGenerateName() {
+            const name = NameGenerator.generateName();
+            const response = await this.userService.signName(this.session, this.username, name);
+            await this.handleAuthorizedResponse(response as IAuthorizeResponse);
+        }
+    }
+
+    @injectable()
+    export class SSO implements IHandler<{ urlParams: URLSearchParams; system: number }> {
+        constructor(
+            @inject(AuthStore) private readonly store: AuthStore,
+            @inject(UserService) private readonly userService: UserService,
+            @inject(Authorize) private readonly authorizeHandler: Authorize
+        ) {}
+
+        async handle({ urlParams, system }: { urlParams: URLSearchParams; system: number }) {
+            if (urlParams.has("token")) {
+                this.store.isDirectMode = true;
+                const token = urlParams.get("token");
+                this.clearParamsOnUrl();
+                await this.handleSSOAndAuthorize(token, system);
+            } else {
+                await this.handleAuthorize();
+            }
+        }
+
+        private async handleSSOAndAuthorize(token: string, system: number) {
+            const response = await this.userService.sso(token, system);
+            if (response.isUM) {
+                this.store.setUM(response.umInfo);
+                return;
+            }
+            if (response.isAuthenticated) {
+                this.store.setAuthSSOStore(response);
+                StorageManager.set(localStorageKeys.session, this.store.getSessionInfo());
+                await this.handleAuthorize(response.ss, response.username);
+            }
+        }
+
+        private async handleAuthorize(session?: string, username?: string) {
+            if (!session || !username) {
+                const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
+                if (!sessionInfo) {
+                    this.store.signOut();
+                    return;
+                }
+                session = sessionInfo.session;
+                username = sessionInfo.username;
+            }
+            await this.authorizeHandler.handle({ session, username });
+        }
+
+        private clearParamsOnUrl() {
+            try {
+                history.pushState(null, "", location.href.split("?")[0]);
+            } catch (ex) {
+                console.log(ex);
             }
         }
     }

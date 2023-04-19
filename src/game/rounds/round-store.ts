@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+import { PlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared";
 import { GameConfigStore } from "../game-configs";
-import { PlayerStore } from "../../players";
 
 export type Bets = {
     [betChoice: string]: number;
@@ -16,7 +16,7 @@ export class RoundStore {
         makeAutoObservable(this);
     }
 
-    roundId: number = 0;
+    roundId = 0;
     ownBets: Bets = {};
     totalBets: Bets = {};
     resultHash: GameServiceMessage.ResultHash = {};

@@ -7,7 +7,7 @@ export class GameConfigHandlers implements IMultipleHandlers {
     constructor(@inject(GameConfigStore) protected readonly store: GameConfigStore) {}
 
     handleGameConfigs(gameConfigs: GameServiceMessage.GameConfigs) {
-        this.store.updateGameConfigs(gameConfigs);
+        this.store.setGameConfigs(gameConfigs);
     }
 
     eventHandleList = [

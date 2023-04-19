@@ -1,6 +1,6 @@
+import * as cors from "cors";
 import * as express from "express";
 import * as http from "http";
-import * as cors from "cors";
 import userRouter from "./user-service-router";
 
 const app = express();
@@ -13,7 +13,7 @@ app.use(
         origin: "*",
     })
 );
-
+app.use(express.json());
 app.use("/user", userRouter);
 app.use(express.static("public"));
 

@@ -22,19 +22,10 @@ userRouter.get("/auth/sso", (req, res) => {
 
 userRouter.post("/auth/authorize", (req, res) => {
     const data = {
-        authorized: true,
+        authorized: false,
         isUM: false,
         umInfo: null,
-        user: {
-            UID: 1,
-            name: "Scarlet95714",
-            avatarId: 19,
-            currency: "$US",
-            red: 25000,
-            fractionalOddsFormat: true,
-            isDisplayPlayerCurrency: true,
-            offerGames: [{ gameId: 2 }, { gameId: 7 }],
-        },
+        user: null,
     };
     res.send(data);
 });
@@ -52,6 +43,28 @@ userRouter.post("/auth/reCheckIn", (req, res) => {
         apiError: null,
         availSpins: 0,
         isDisableAccount: null,
+    };
+    res.send(data);
+});
+
+userRouter.post("/auth/signName", (req, res) => {
+    const { nickname } = req.body;
+    const data = {
+        authorized: true,
+        isUM: false,
+        umInfo: null,
+        user: {
+            UID: 1,
+            name: nickname,
+            avatarId: 19,
+            currency: "$US",
+            red: 25000,
+            scoins: 0,
+            availableSpins: 0,
+            fractionalOddsFormat: true,
+            isDisplayPlayerCurrency: true,
+            offerGames: [{ gameId: 2 }, { gameId: 7 }],
+        },
     };
     res.send(data);
 });

@@ -4,13 +4,13 @@ import { GameServiceMessage } from "../../shared";
 
 @injectable()
 export class GameConfigStore {
-    minBet: number = 0;
-    maxBet: number = 0;
+    minBet = 0;
+    maxBet = 0;
     maxBetPerChoices: GameServiceMessage.MaxBetPerChoices = {};
     chips: string[] = [];
     stakeLevels: [] = [];
     odds: GameServiceMessage.Odds = {};
-    enableFreeBet: boolean = false;
+    enableFreeBet = false;
     originalOdds?: GameServiceMessage.Odds = null;
     boostedChoices?: GameServiceMessage.Odds = null;
 
@@ -18,7 +18,7 @@ export class GameConfigStore {
         makeAutoObservable(this);
     }
 
-    updateGameConfigs(gameConfigs: GameServiceMessage.GameConfigs) {
+    setGameConfigs(gameConfigs: GameServiceMessage.GameConfigs) {
         gameConfigs?.minBet && (this.minBet = gameConfigs.minBet);
         gameConfigs?.maxBet && (this.maxBet = gameConfigs.maxBet);
         gameConfigs?.maxBetPerChoices && (this.maxBetPerChoices = gameConfigs.maxBetPerChoices);

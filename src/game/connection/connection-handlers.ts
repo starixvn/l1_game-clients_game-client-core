@@ -34,6 +34,7 @@ export namespace ConnectionHandlers {
                 socketUri,
                 transports: ["websocket"],
                 upgrade: false,
+                forceNew: true,
                 parser: this.siteConfigs.enableMsgpackParserAllGames,
             };
             const options = { ...optionsDefault, ...customizeOptions };

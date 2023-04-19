@@ -32,4 +32,8 @@ export class UserService {
     public getBalance(session: string, username: string) {
         return this.auth.getBalance(session, username);
     }
+
+    public signName(session: string, username: string, nickName: string) {
+        return this.auth.signName(session, username, nickName);
+    }
 }

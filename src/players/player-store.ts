@@ -1,6 +1,5 @@
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { AuthStore } from "../auth/auth-store";
 import { GameServiceMessage } from "../shared";
 
 export interface IStakeLevel {
@@ -10,7 +9,7 @@ export interface IStakeLevel {
 
 @injectable()
 export class PlayerStore {
-    constructor(@inject(AuthStore) private readonly authStore: AuthStore) {
+    constructor() {
         makeAutoObservable(this);
     }
 

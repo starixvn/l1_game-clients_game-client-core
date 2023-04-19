@@ -14,5 +14,4 @@ export class RoundHistoryStore {
     }
 
     histories: RoundHistory[] = [];
-    maxLength: number = 0;
 }

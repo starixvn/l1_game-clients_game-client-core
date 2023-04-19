@@ -1,8 +1,9 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { Socket } from "socket.io-client/dist/socket.io.js";
-import { AuthStore } from "../../auth";
+import { ISessionInfo } from "../../auth";
 import { GameClientEmitMessage, Mediator } from "../../shared";
+import { StorageManager, localStorageKeys } from "../../shared/utils";
 import { GameSetting } from "../game-configs";
 
 export const events = {
@@ -15,18 +16,14 @@ export const events = {
 };
 @injectable()
 export class ConnectionStore {
-    constructor(
-        @inject(Mediator) protected readonly mediator: Mediator,
-        @inject(GameSetting) protected readonly gameSetting: GameSetting,
-        @inject(AuthStore) protected readonly authStore: AuthStore
-    ) {
+    constructor(@inject(Mediator) protected readonly mediator: Mediator, @inject(GameSetting) protected readonly gameSetting: GameSetting) {
         makeAutoObservable(this);
     }
 
     connection: Socket = null;
-    isConnected: boolean = false;
-    isConnectFailed: boolean = false;
-    signedIn: boolean = false;
+    isConnected = false;
+    isConnectFailed = false;
+    signedIn = false;
 
     initBaseListener() {
         if (this.connection) {
@@ -42,7 +39,7 @@ export class ConnectionStore {
         this.isConnected = true;
         this.isConnectFailed = false;
         this.connection.onAny((event: string, value: any) => {
-            if (event?.toLocaleLowerCase() === this.gameSetting?.name.toLocaleLowerCase() || event?.toLocaleLowerCase() == "message") {
+            if (event?.toLocaleLowerCase() === this.gameSetting?.name.toLocaleLowerCase() || event?.toLocaleLowerCase() === "message") {
                 Object.entries(value).forEach((entry) => {
                     const [key, value] = entry;
                     this.mediator.emit(key, value);
@@ -56,9 +53,10 @@ export class ConnectionStore {
 
     signIn() {
         const payload = new GameClientEmitMessage.Signin();
-        payload.ss = this.authStore.session;
-        payload.username = this.authStore.username;
-        payload.system = this.authStore.system;
+        const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
+        payload.ss = sessionInfo?.session;
+        payload.username = sessionInfo?.username;
+        payload.system = sessionInfo?.system;
 
         this.send(GameClientEmitMessage.Signin.eventName, payload);
     }

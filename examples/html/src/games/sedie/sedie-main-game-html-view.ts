@@ -65,14 +65,6 @@ export class SedieGameHtmlView extends HtmlViewEngine {
         this.setInnerHtml(this.oddsComponent, JSON.stringify(odds));
     }
 
-    @render(Auth.AuthStore, (store) => store.isAuthenticated)
-    logAuthentication(isAuthenticated: boolean) {
-        console.log("sedie game", { isAuthenticated });
-        if (isAuthenticated) {
-            this.authorize();
-        }
-    }
-
     @render(Connection.ConnectionStore, (store) => store.signedIn)
     onSignIn(signedIn: boolean) {
         signedIn && this.inGame();
@@ -86,8 +78,12 @@ export class SedieGameHtmlView extends HtmlViewEngine {
         return { token: "player-token", system: 1 };
     }
 
-    @handle(Auth.AuthHandlers.Authorize)
-    authorize() {
+    @render(Auth.AuthStore, (store) => store.isAuthorized)
+    onAuthorize(isAuthorized: boolean) {
+        isAuthorized && this.connectGameService();
+    }
+    @handle(Connection.ConnectionHandlers.ConnectHandler)
+    connectGameService() {
         return {};
     }
 

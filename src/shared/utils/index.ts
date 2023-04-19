@@ -1,2 +1,3 @@
-export * from "./url-utils";
+export * from "./name-generator";
 export * from "./storage-manager";
+export * from "./url-utils";

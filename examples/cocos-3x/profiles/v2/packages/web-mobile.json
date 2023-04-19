@@ -9,7 +9,7 @@
       "useSplashScreen": false,
       "skipCompressTexture": false,
       "mainBundleIsRemote": false,
-      "startScene": "88533b39-c866-4217-bbf2-9413f6a00b7c",
+      "startScene": "506af2b4-22ed-4607-bd2e-39cef771c97e",
       "scenes": [
         {
           "url": "db://assets/session-timeout/views/session-timeout.scene",
