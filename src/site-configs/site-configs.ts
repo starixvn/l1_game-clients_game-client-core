@@ -1,4 +1,4 @@
-export class Configs {
+export class SiteConfigs {
     systemType: string;
     ssl: boolean;
     serverDomainMapper: { [key: string]: string };

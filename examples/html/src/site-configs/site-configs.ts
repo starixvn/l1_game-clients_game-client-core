@@ -1,6 +1,6 @@
 import gc from "game-client-base";
 
-const configs: gc.SiteConfigs.Configs = {
+export const siteConfigs: gc.Configs.SiteConfigs = {
     isDev: true,
     systemType: "SC1",
     ssl: false,
@@ -18,5 +18,3 @@ const configs: gc.SiteConfigs.Configs = {
         route: "",
     },
 };
-
-export default configs;

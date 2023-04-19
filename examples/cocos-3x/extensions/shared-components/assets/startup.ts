@@ -10,10 +10,10 @@ export function startGame(namespace: string, containerOptions: gc.IContainerOpti
     return container;
 }
 
-export function getSharedContainer(configs: gc.SiteConfigs.Configs) {
+export function getSharedContainer(siteConfigs: gc.Configs.SiteConfigs) {
     const containerOptions: gc.IContainerOptions = {
         onContainerCreated: (container) => {
-            container.bind(gc.SiteConfigs.Configs).toConstantValue(configs);
+            container.bind(gc.Configs.SiteConfigs).toConstantValue(siteConfigs);
         },
         enabledFeatures: [gc.Player.FEATURE_NAME, gc.Auth.FEATURE_NAME],
     };

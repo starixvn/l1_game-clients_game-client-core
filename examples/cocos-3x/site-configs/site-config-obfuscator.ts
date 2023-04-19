@@ -26,7 +26,7 @@ const obfuscate = async (fileName: string, content: string, outputDir: string) =
             stringArrayThreshold: 1,
         }).getObfuscatedCode();
 
-        writeFile(outputDir + fileName.replace("Configs", "c"), uglyCode.toString());
+        writeFile(outputDir + fileName.replace("site-configs", "c"), uglyCode.toString());
     } catch (e) {
         console.log(e);
     }
@@ -60,4 +60,4 @@ const runObfuscationProcess = async (dirNames: string[]) => {
     }
 };
 
-runObfuscationProcess(["./configs/L1/", "./configs/L2/"]);
+runObfuscationProcess(["./site-configs/L1/", "./site-configs/L2/"]);

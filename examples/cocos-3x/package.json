@@ -5,7 +5,7 @@
         "version": "3.7.2"
     },
     "scripts": {
-        "obfuscator-config-file": "ts-node ./configs/config-obfuscator.ts"
+        "obfuscator-config-file": "ts-node ./site-configs/site-config-obfuscator.ts"
     },
     "dependencies": {
         "game-client-base": "file:../..",

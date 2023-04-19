@@ -1,4 +1,4 @@
 import { getSharedContainer } from "db://shared-components/startup";
-import configs from "../assets/configs/Configs";
+import { siteConfigs } from "./site-configs";
 
-export const sharedContainer = getSharedContainer(configs);
+export const sharedContainer = getSharedContainer(siteConfigs);

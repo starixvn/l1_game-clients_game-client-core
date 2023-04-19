@@ -2,11 +2,11 @@ import gc from "game-client-base";
 
 declare global {
     interface Window {
-        envConfig: gc.SiteConfigs.Configs;
+        envConfig: gc.Configs.SiteConfigs;
     }
 }
 
-const defaultConfig: gc.SiteConfigs.Configs = {
+const defaultConfig: gc.Configs.SiteConfigs = {
     isDev: true,
     systemType: "SC1",
     ssl: false,
@@ -39,7 +39,5 @@ if (window.envConfig) {
     };
 }
 
-const configs: gc.SiteConfigs.Configs =
+export const siteConfigs: gc.Configs.SiteConfigs =
     window.envConfig && window.envConfig.isDev ? defaultConfig : { ...defaultConfig, ...configDev, ...window.envConfig };
-
-export default configs;

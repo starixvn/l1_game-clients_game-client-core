@@ -3,4 +3,4 @@ export * from "./container";
 export * from "./game";
 export * as Player from "./players";
 export * as Shared from "./shared";
-export * as SiteConfigs from "./site-configs";
+export * as Configs from "./site-configs";

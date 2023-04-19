@@ -1,7 +1,7 @@
-import { Configs } from "../../site-configs";
+import { SiteConfigs } from "../../site-configs";
 
 export namespace UrlUtils {
-    export const buildUrl = (protocol = "http", path = "/", configs: Configs) => {
+    export const buildUrl = (protocol = "http", path = "/", configs: SiteConfigs) => {
         const ssl = configs.ssl;
         const domain = getRootDomain(configs);
         const subDomain = configs.subDomain;
@@ -10,7 +10,7 @@ export namespace UrlUtils {
         return `${protocol}${ssl ? "s" : ""}://${subDomain === "" ? "" : subDomainText}${domain}${path}`;
     };
 
-    export const getRootDomain = (configs: Configs) => {
+    export const getRootDomain = (configs: SiteConfigs) => {
         const hostName = window.location.hostname;
         return (!!configs.serverDomainMapper && configs.serverDomainMapper[hostName]) || extractDomainFromHostName(hostName);
     };
@@ -20,7 +20,7 @@ export namespace UrlUtils {
         return `${domainParts[1]}.${domainParts[0]}`;
     };
 
-    export const buildGameGuideUrl = (configs: Configs) => {
+    export const buildGameGuideUrl = (configs: SiteConfigs) => {
         const ssl = configs.ssl;
         const rootDomain = getRootDomain(configs);
         const subGuideDomainText = `${configs.subGuideDomain}.`;
@@ -28,11 +28,11 @@ export namespace UrlUtils {
         return `${"http"}${ssl ? "s" : ""}://${subGuideDomainText}${rootDomain}`;
     };
 
-    export const buildUrlWithPath = (path: string, configs: Configs) => {
+    export const buildUrlWithPath = (path: string, configs: SiteConfigs) => {
         return buildUrl("http", path, configs);
     };
 
-    export const buildServerUrl = (protocol = "http", path = "/", gameId = 0, configs: Configs) => {
+    export const buildServerUrl = (protocol = "http", path = "/", gameId = 0, configs: SiteConfigs) => {
         const gamePath = getPath(gameId, path);
         return buildUrl(protocol, gamePath, configs);
     };
@@ -49,7 +49,7 @@ export namespace UrlUtils {
         return pathStr;
     };
 
-    export const getProxyRoute = (configs: Configs) => {
+    export const getProxyRoute = (configs: SiteConfigs) => {
         if (configs?.websocket?.route === "") {
             return "/socket.io";
         }

@@ -1,3 +1,3 @@
-export * from "./configs";
+export * from "./site-configs";
 
-export const FEATURE_NAME = "configs";
+export const FEATURE_NAME = "site-configs";

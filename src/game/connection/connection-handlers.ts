@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { io } from "socket.io-client/dist/socket.io.js";
 import { GameClientEmitMessage, IHandler } from "../../shared";
 import { UrlUtils } from "../../shared/utils";
-import { Configs } from "../../site-configs";
+import { SiteConfigs } from "../../site-configs";
 import { GameSetting } from "../game-configs";
 import { ConnectionStore } from "./connection-store";
 
@@ -22,19 +22,19 @@ export namespace ConnectionHandlers {
     export class ConnectHandler {
         constructor(
             @inject(ConnectionStore) protected readonly store: ConnectionStore,
-            @inject(Configs) protected readonly configs: Configs,
+            @inject(SiteConfigs) protected readonly siteConfigs: SiteConfigs,
             @inject(GameSetting) protected readonly gameSetting: GameSetting
         ) {}
 
         handle(customizeOptions?: ISocketOption) {
             const gameId = this.gameSetting.id;
-            const socketUri = UrlUtils.buildServerUrl("http", `${this.configs.websocket.proxyPath}`, gameId, this.configs);
+            const socketUri = UrlUtils.buildServerUrl("http", `${this.siteConfigs.websocket.proxyPath}`, gameId, this.siteConfigs);
             const optionsDefault = {
-                path: UrlUtils.getProxyRoute(this.configs),
+                path: UrlUtils.getProxyRoute(this.siteConfigs),
                 socketUri,
                 transports: ["websocket"],
                 upgrade: false,
-                parser: this.configs.enableMsgpackParserAllGames,
+                parser: this.siteConfigs.enableMsgpackParserAllGames,
             };
             const options = { ...optionsDefault, ...customizeOptions };
             this.store.connection = io(options.socketUri, options);

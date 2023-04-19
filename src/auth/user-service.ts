@@ -2,16 +2,16 @@ import { inject, injectable } from "inversify";
 import UserServiceClient from "sc-user-service-client";
 import Auth from "sc-user-service-client/dist/auth";
 import { UrlUtils } from "../shared/utils";
-import { Configs } from "../site-configs";
+import { SiteConfigs } from "../site-configs";
 
 @injectable()
 export class UserService {
     readonly auth: Auth;
     readonly userServiceClient: UserServiceClient;
 
-    constructor(@inject(Configs) protected readonly config: Configs) {
-        const path = this.config?.subDirectory ? `/${this.config.subDirectory}/user` : "/user";
-        const url = this.config.isDev ? this.config.userServiceUrlDev : UrlUtils.buildUrlWithPath(path, this.config);
+    constructor(@inject(SiteConfigs) protected readonly siteConfigs: SiteConfigs) {
+        const path = this.siteConfigs?.subDirectory ? `/${this.siteConfigs.subDirectory}/user` : "/user";
+        const url = this.siteConfigs.isDev ? this.siteConfigs.userServiceUrlDev : UrlUtils.buildUrlWithPath(path, this.siteConfigs);
 
         this.userServiceClient = new UserServiceClient(url);
         this.auth = this.userServiceClient.auth;
