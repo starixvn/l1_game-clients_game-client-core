@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import { io } from "socket.io-client/dist/socket.io.js";
+import { SiteConfigs } from "../../configs";
 import { GameClientEmitMessage, IHandler } from "../../shared";
 import { UrlUtils } from "../../shared/utils";
-import { SiteConfigs } from "../../site-configs";
 import { GameSetting } from "../game-configs";
 import { ConnectionStore } from "./connection-store";
 

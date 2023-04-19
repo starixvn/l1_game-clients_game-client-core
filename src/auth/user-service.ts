@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import UserServiceClient from "sc-user-service-client";
 import Auth from "sc-user-service-client/dist/auth";
+import { SiteConfigs } from "../configs";
 import { UrlUtils } from "../shared/utils";
-import { SiteConfigs } from "../site-configs";
 
 @injectable()
 export class UserService {

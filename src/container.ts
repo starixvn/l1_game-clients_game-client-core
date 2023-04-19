@@ -1,9 +1,9 @@
 import { Container } from "inversify";
 import * as Auth from "./auth";
+import * as SiteConfigs from "./configs";
 import * as Game from "./game";
 import * as Players from "./players";
 import { FeatureLoader } from "./shared";
-import * as SiteConfigs from "./site-configs";
 
 export interface IContainerOptions {
     onContainerCreated?: (container: Container) => void;

@@ -1,4 +1,4 @@
-import { SiteConfigs } from "../../site-configs";
+import { SiteConfigs } from "../../configs";
 
 export namespace UrlUtils {
     export const buildUrl = (protocol = "http", path = "/", configs: SiteConfigs) => {
