@@ -1,0 +1,55 @@
+version: "1.0.1"
+services:
+  # react-app:
+  #   stdin_open: true
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: ./examples/html
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - mern-app
+  #   volumes:
+  #     - ./examples/html/:/usr/src/app
+  #     - /usr/src/app/node_modules
+
+  user-service:
+    build:
+      dockerfile: Dockerfile
+      context: ./examples/server-simulator
+    ports:
+      - "3000:3000"
+    networks:
+      - mern-app
+    volumes:
+      - ./examples/server-simulator/:/usr/src/app
+      - /usr/src/app/node_modules
+      
+  sedie-service:
+    build:
+      dockerfile: Dockerfile
+      context: ./examples/sedie-service
+    ports:
+      - "5002:5002"
+    networks:
+      - mern-app
+    volumes:
+      - ./examples/sedie-service/:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4.4-bionic
+    ports:
+      - "27017:27017"
+    networks:
+      - mern-app
+    volumes:
+      - mongo-data:/data/db
+networks:
+  mern-app:
+    driver: bridge
+volumes:
+  mongo-data:
+    driver: local

@@ -52,6 +52,16 @@ export class ConnectionStore {
     }
 
     signIn() {
+        const normalUser = { playerId: 1, playerName: "NormalUser" };
+        const currencyData = { code: "USD", name: "$US" };
+        const testPlayer = {
+            session: `${normalUser.playerId}-session-id`,
+            ss: `${normalUser.playerId}-session-id`,
+            currency: currencyData.name,
+            username: `${normalUser.playerId}_${normalUser.playerName}`,
+            browserUserAgent: "browser-user-agent",
+        };
+
         const payload = new GameClientEmitMessage.Signin();
         const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
         payload.ss = sessionInfo?.session;

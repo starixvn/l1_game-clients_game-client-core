@@ -3,7 +3,9 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "start": "webpack serve --progress --mode development"
+        "reg": "npm set registry https://npm.lumigame.com",
+        "start": "webpack serve --progress --mode development",
+        "build": "webpack"
     },
     "dependencies": {
         "game-client-base": "file:../..",
