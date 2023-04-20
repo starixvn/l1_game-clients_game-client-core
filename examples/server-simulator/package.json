@@ -2,6 +2,7 @@
     "name": "server-simulator",
     "version": "1.0.0",
     "scripts": {
+        "install-sedie-dependency": "cd ../sedie-service && yarn install",
         "mock-sedie-service": "cd ../sedie-service && npm run mock-service",
         "mock-user-service": "nodemon src/server.ts ",
         "start": "concurrently -c \"auto\" \"npm run mock-user-service\" \"npm run mock-sedie-service\"",

@@ -23,6 +23,7 @@ npm run build
 npm install --prefix examples/cocos-3x
 npm install --prefix examples/html
 npm install --prefix examples/server-simulator
+npm run install-sedie-dependency --prefix examples/server-simulator
 ```
 
 ### 4. Start `service simulator`, it is running at: http://localhost:3000
