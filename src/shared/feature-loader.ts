@@ -20,7 +20,7 @@ export function search(roots: Object[], condition: (input: unknown) => boolean) 
             result.push(object);
         }
 
-        for (let key in object) {
+        for (const key in object) {
             const value = object[key];
             const isObject = typeof value === "object";
 

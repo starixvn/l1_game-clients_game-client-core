@@ -27,13 +27,13 @@ export const ROUND_STATE = {
 
 @injectable()
 export class RoundTimeStore {
-    wholeRound: number = 0;
-    placingBet: number = 0;
-    lockingBet: number = 0;
-    genResult: number = 0;
-    _roundTime: number = 0;
-    _roundState: string = ROUND_STATE.STARTING_ROUND;
-    _beginState: string = "";
+    wholeRound = 0;
+    placingBet = 0;
+    lockingBet = 0;
+    genResult = 0;
+    _roundTime = 0;
+    _roundState = ROUND_STATE.STARTING_ROUND;
+    _beginState = "";
 
     _isLockingBet: boolean;
     _isPlacingBet: boolean;
@@ -44,10 +44,10 @@ export class RoundTimeStore {
     _duration: number;
     _remaining: number;
 
-    startNewRound: boolean = false;
-    endRound: boolean = false;
-    startPlacingBet: boolean = false;
-    endPlacingBet: boolean = false;
+    startNewRound = false;
+    endRound = false;
+    startPlacingBet = false;
+    endPlacingBet = false;
 
     overrideEvent: {
         name: string;
@@ -109,13 +109,13 @@ export class RoundTimeStore {
         return this._roundTime;
     }
 
-    get roundState() {
-        return this._roundState;
-    }
-
     set roundTime(roundTime: number) {
         this._roundTime = roundTime;
         this.calculateBeginStatus();
+    }
+
+    get roundState() {
+        return this._roundState;
     }
 
     calculateBeginStatus() {
