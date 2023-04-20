@@ -1,4 +1,4 @@
-import { Component, ProgressBar, _decorator, director } from "cc";
+import { _decorator, Component, director, ProgressBar } from "cc";
 import gc from "game-client-base";
 import Observer from "observer";
 
@@ -12,7 +12,7 @@ export const AppTypes = {
 };
 
 @ccclass
-@observer("default")
+@observer
 export default class Splash extends Component {
     @property(ProgressBar)
     progressBar: ProgressBar = null;
