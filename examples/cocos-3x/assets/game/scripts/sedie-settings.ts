@@ -1,4 +1,4 @@
-import { LogStore } from "db://shared-components/testing/scripts/stores/log-store";
+import { LogStore } from "db://shared-components/game/scripts/stores/log-store";
 import gc from "game-client-base";
 import { sharedContainer } from "../../scripts/shared-container";
 
