@@ -70,6 +70,26 @@ export namespace AuthHandlers {
         ) {}
 
         async handle({ urlParams, system }: { urlParams: URLSearchParams; system: number }) {
+            if (!this.isValidSessionStorage(urlParams)) {
+                return;
+            }
+
+            await this.handleAuthorizeWithURLParams(urlParams, system);
+        }
+
+        private isValidSessionStorage(urlParams: URLSearchParams) {
+            const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
+            const isSessionExpired = verifySession(sessionInfo);
+            if (isSessionExpired && !urlParams.has("token")) {
+                this.store.signOut();
+                StorageManager.remove(localStorageKeys.session);
+                return false;
+            }
+
+            return true;
+        }
+
+        private async handleAuthorizeWithURLParams(urlParams: URLSearchParams, system: number) {
             if (urlParams.has("token")) {
                 this.store.isDirectMode = true;
                 const token = urlParams.get("token");
@@ -116,33 +136,34 @@ export namespace AuthHandlers {
     }
 
     @injectable()
-    export class ReCheckIn implements IHandler<{ session: string; username: string }> {
+    export class ReCheckIn implements IHandler<{ sessionInfo: ISessionInfo }> {
         constructor(
             @inject(AuthStore) private readonly authStore: AuthStore,
             @inject(PlayerStore) private readonly playerStore: PlayerStore,
             @inject(UserService) private readonly userService: UserService
         ) {}
 
-        async handle({ session = "", username = "" }) {
+        async handle({ sessionInfo }) {
+            const { session, username } = sessionInfo;
             const response = await this.userService.reCheckIn(session || this.authStore.session, username || this.authStore.username);
             if (response.isSuccessful) {
-                this.handleSuccessful(response);
+                this.handleSuccessful(response, sessionInfo);
             } else {
                 this.authStore.signOut();
             }
         }
 
-        handleSuccessful(response: ReCheckInResponse) {
+        private handleSuccessful(response: ReCheckInResponse, sessionInfo: ISessionInfo) {
             if (response.apiError) {
                 this.handleError(response);
             } else {
-                this.authStore.renewSSOTime();
+                this.authStore.setAuthStoreFromStorage(sessionInfo);
                 StorageManager.set(localStorageKeys.session, this.authStore.getSessionInfo());
                 this.playerStore.setBalance(response.balance, response.scoins, response.availSpins);
             }
         }
 
-        handleError(response: ReCheckInResponse) {
+        private handleError(response: ReCheckInResponse) {
             const errorCode = response.apiError.errorCode.toString();
             const expiredSessionErrorCodes = ["1001", "1002"];
             this.authStore.errorCode = errorCode;
@@ -160,7 +181,7 @@ export namespace AuthHandlers {
     @injectable()
     export class TriggerRecheckIn implements IHandler<void> {
         private reCheckInId: NodeJS.Timeout;
-        private readonly sessionExpiredTimeoutMinutes = 19.8;
+
         constructor(@inject(ReCheckIn) private readonly reCheckIn: ReCheckIn, @inject(AuthStore) private readonly authStore: AuthStore) {}
 
         async handle() {
@@ -170,35 +191,15 @@ export namespace AuthHandlers {
             }, 60 * 1000);
         }
 
-        async handleRecheckIn() {
-            const infoSession = StorageManager.get(localStorageKeys.session) as AuthStore;
-            const isSessionExpired = this.verifySession(infoSession);
+        private async handleRecheckIn() {
+            const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
+            const isSessionExpired = verifySession(sessionInfo);
 
             if (isSessionExpired) {
                 this.authStore.signOut();
             } else {
-                await this.reCheckIn.handle({ session: infoSession.session, username: infoSession.username });
+                await this.reCheckIn.handle({ sessionInfo });
             }
-        }
-
-        verifySession(infoSession: AuthStore) {
-            let isSessionExpired = true;
-
-            try {
-                if (infoSession && infoSession.ssoTime) {
-                    const now: Date = new Date();
-                    const lastRecheckIn: Date = new Date(infoSession.ssoTime);
-                    const differenceInMinutes = Math.abs(now.getMinutes() - lastRecheckIn.getMinutes());
-
-                    if (differenceInMinutes <= this.sessionExpiredTimeoutMinutes) {
-                        isSessionExpired = false;
-                    }
-                }
-            } catch (ex) {
-                console.log(ex);
-            }
-
-            return isSessionExpired;
         }
 
         clearInterval() {
@@ -233,4 +234,25 @@ export namespace AuthHandlers {
             StorageManager.remove(localStorageKeys.session);
         }
     }
+
+    const SESSION_EXPIRED_TIMEOUT_MINUTES = 19.8;
+    const verifySession = (sessionInfo: ISessionInfo) => {
+        let isSessionExpired = true;
+
+        try {
+            if (sessionInfo && sessionInfo.ssoTime) {
+                const now: Date = new Date();
+                const lastRecheckIn: Date = new Date(sessionInfo.ssoTime);
+                const differenceInMinutes = Math.abs(now.getMinutes() - lastRecheckIn.getMinutes());
+
+                if (differenceInMinutes <= SESSION_EXPIRED_TIMEOUT_MINUTES) {
+                    isSessionExpired = false;
+                }
+            }
+        } catch (ex) {
+            console.log(ex);
+        }
+
+        return isSessionExpired;
+    };
 }

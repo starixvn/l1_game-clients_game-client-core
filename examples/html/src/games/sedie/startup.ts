@@ -1,7 +1,7 @@
 import { Configs, GameConfigs, IContainerOptions, getContainer } from "game-client-base";
 import * as mobx from "mobx";
 import Observer from "observer";
-import { siteConfigs } from "../../site-configs";
+import { siteConfigs } from "../../configs";
 import { SedieGameController } from "./sedie-game-controller";
 
 const gameSetting: GameConfigs.GameSetting = {

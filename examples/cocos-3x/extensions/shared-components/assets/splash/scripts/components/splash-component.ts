@@ -4,7 +4,7 @@ import Observer from "observer";
 
 const { ccclass, property } = _decorator;
 const { observer, handle, render } = Observer;
-const { Auth } = gc;
+const { Auth, Shared } = gc;
 
 export const AppTypes = {
     Club: 1,
@@ -64,6 +64,6 @@ export default class Splash extends Component {
         );
     }
 
-    @handle(gc.Auth.AuthHandlers.TriggerRecheckIn)
+    @handle(Auth.AuthHandlers.TriggerRecheckIn)
     triggerRecheckIn() {}
 }

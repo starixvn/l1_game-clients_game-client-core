@@ -1,7 +1,9 @@
-import { Auth, Connection, GameConfigs, Player, Rounds } from "game-client-base";
+import { Auth, Connection, GameConfigs, Player, Rounds, Shared } from "game-client-base";
 import { injectable } from "inversify";
 import { handle, observer, render } from "observer";
+import { siteConfigs } from "../../configs";
 import { HtmlViewEngine } from "../../views/html-view-engine";
+import { fakeResponseSSO } from "./../fake-handle-sso";
 
 @observer("sedie")
 @injectable()
@@ -75,12 +77,15 @@ export class SedieGameHtmlView extends HtmlViewEngine {
 
     @handle(Auth.AuthHandlers.SSO)
     sso() {
-        return { token: "player-token", system: 1 };
+        return siteConfigs.isDev ? fakeResponseSSO() : { token: "player-token", system: 1 };
     }
 
     @render(Auth.AuthStore, (store) => store.isAuthorized)
     onAuthorize(isAuthorized: boolean) {
-        isAuthorized && this.connectGameService();
+        if (isAuthorized) {
+            this.connectGameService();
+            this.triggerRecheckIn();
+        }
     }
     @handle(Connection.ConnectionHandlers.ConnectHandler)
     connectGameService() {
@@ -89,5 +94,11 @@ export class SedieGameHtmlView extends HtmlViewEngine {
 
     private setInnerHtml(component: HTMLElement | null, data: string) {
         component && (component.innerHTML = data);
+    }
+
+    @handle(Auth.AuthHandlers.TriggerRecheckIn)
+    triggerRecheckIn() {
+        const sessionInfo = Shared.utils.StorageManager.get(Shared.utils.localStorageKeys.session) as Auth.ISessionInfo;
+        return { sessionInfo };
     }
 }

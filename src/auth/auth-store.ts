@@ -39,16 +39,6 @@ export class AuthStore {
         this.umInfo = umInfo;
     }
 
-    setAuthSSOStore(response: SSOResponse) {
-        this.isAuthenticated = response.isAuthenticated;
-        this.username = response.username;
-        this.language = response.language;
-        this.session = response.ss;
-        this.system = +response.system;
-        this.memberName = response.memberName;
-        this.ssoTime = new Date();
-    }
-
     getSessionInfo(): ISessionInfo {
         return {
             isAuthenticated: this.isAuthenticated,
@@ -61,14 +51,29 @@ export class AuthStore {
         };
     }
 
-    renewSSOTime() {
-        this.ssoTime = new Date();
-    }
-
     signOut() {
         this.username = null;
         this.session = null;
         this.isAuthenticated = false;
         this.isSessionTimeout = true;
+    }
+
+    setAuthSSOStore(response: SSOResponse) {
+        this.session = response.ss;
+        this.setAuthStore(response);
+    }
+
+    setAuthStoreFromStorage(response: ISessionInfo) {
+        this.session = response.session;
+        this.setAuthStore(response);
+    }
+
+    setAuthStore(response: ISessionInfo | SSOResponse) {
+        this.isAuthenticated = response.isAuthenticated;
+        this.username = response.username;
+        this.language = response.language;
+        this.system = +response.system;
+        this.memberName = response.memberName;
+        this.ssoTime = new Date();
     }
 }

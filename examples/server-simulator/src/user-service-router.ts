@@ -22,7 +22,7 @@ userRouter.get("/auth/sso", (req, res) => {
 
 userRouter.post("/auth/authorize", (req, res) => {
     const data = {
-        authorized: false,
+        authorized: true,
         isUM: false,
         umInfo: null,
         user: null,
