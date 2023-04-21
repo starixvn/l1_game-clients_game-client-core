@@ -38,17 +38,19 @@ export class ConnectionStore {
     onConnected() {
         this.isConnected = true;
         this.isConnectFailed = false;
-        this.connection.onAny((event: string, value: any) => {
-            if (event?.toLocaleLowerCase() === this.gameSetting?.name.toLocaleLowerCase() || event?.toLocaleLowerCase() === "message") {
-                Object.entries(value).forEach((entry) => {
-                    const [key, value] = entry;
-                    this.mediator.emit(key, value);
-                });
-            } else {
-                this.mediator.emit(event, value);
-            }
-        });
+        this.connection.onAny(this.onHandleData.bind(this));
         this.signIn();
+    }
+
+    onHandleData(event: string, value: any) {
+        if (event?.toLocaleLowerCase() === this.gameSetting?.name.toLocaleLowerCase() || event?.toLocaleLowerCase() === "message") {
+            Object.entries(value).forEach((entry) => {
+                const [key, value] = entry;
+                this.mediator.emit(key, value);
+            });
+        } else {
+            this.mediator.emit(event, value);
+        }
     }
 
     signIn() {

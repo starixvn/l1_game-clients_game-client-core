@@ -38,7 +38,6 @@ export namespace AuthHandlers {
             } else {
                 if (response.isSuccessful !== undefined && !response.isSuccessful) {
                     this.authStore.signOut();
-                    StorageManager.remove(localStorageKeys.session);
                 } else {
                     await this.handleAuthorizedResponse(response);
                 }
@@ -82,7 +81,6 @@ export namespace AuthHandlers {
             const isSessionExpired = verifySession(sessionInfo);
             if (isSessionExpired && !urlParams.has("token")) {
                 this.store.signOut();
-                StorageManager.remove(localStorageKeys.session);
                 return false;
             }
 

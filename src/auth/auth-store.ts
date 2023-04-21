@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { SSOResponse, UMInfo } from "sc-user-service-client/dist/auth";
+import { StorageManager, localStorageKeys } from "../shared/utils";
 
 export interface ISessionInfo {
     isAuthenticated: boolean;
@@ -28,7 +29,7 @@ export class AuthStore {
     isDisabledAccount = false;
     errorCode: string | null = null;
     ssoTime: Date;
-    isDirectMode = true;
+    isDirectMode = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -56,6 +57,7 @@ export class AuthStore {
         this.session = null;
         this.isAuthenticated = false;
         this.isSessionTimeout = true;
+        StorageManager.remove(localStorageKeys.session);
     }
 
     setAuthSSOStore(response: SSOResponse) {
