@@ -9,6 +9,7 @@ export class RoundTimeHandlers implements IMultipleHandlers {
     handleRemainingTime(remainingTime: number) {
         if (remainingTime > 0) {
             this.store.roundTime = remainingTime;
+            this.store.start();
         }
     }
 

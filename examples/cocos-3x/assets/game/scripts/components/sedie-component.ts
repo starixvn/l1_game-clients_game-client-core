@@ -1,15 +1,16 @@
-import { Component, Label, _decorator } from "cc";
+import { Component, Game, Label, _decorator, game } from "cc";
 import GameClient from "game-client-base";
 import Observer from "observer";
 import { settings } from "../sedie-settings";
 
-const { Player, Rounds, GameConfigs, Connection } = GameClient;
+const { Player, Rounds, GameConfigs, Connection, HideGame, JoinGame } = GameClient;
 const { ccclass, property } = _decorator;
 const { observer, render, handle } = Observer;
 
 @ccclass
 @observer(settings.name)
 export default class Sedie extends Component {
+    ////////////////////////////////
     @property(Label)
     roundTime: Label = null;
 
@@ -30,6 +31,34 @@ export default class Sedie extends Component {
 
     @property(Label)
     odds: Label = null;
+
+    @property(Label)
+    duration: Label = null;
+
+    @property(Label)
+    remaining: Label = null;
+
+    @property(Label)
+    countdownTimer: Label = null;
+
+    protected onLoad(): void {
+        game.on(Game.EVENT_HIDE, this.onHideGame, this);
+        game.on(Game.EVENT_SHOW, this.onJoinGame, this);
+    }
+    protected onDestroy(): void {
+        game.off(Game.EVENT_HIDE, this.onHideGame, this);
+        game.off(Game.EVENT_SHOW, this.onJoinGame, this);
+    }
+
+    @handle(HideGame.HideGameHandler)
+    onHideGame() {
+        console.log("onGameHide");
+    }
+
+    @handle(JoinGame.JoinGameHandler)
+    onJoinGame() {
+        console.log("onGameShow");
+    }
 
     @render(Connection.ConnectionStore, (store) => store.signedIn)
     onSignedIn(signedIn: boolean) {
@@ -72,6 +101,20 @@ export default class Sedie extends Component {
     @render(GameConfigs.GameConfigStore, (store) => store.odds)
     renderOdds(odds: any) {
         this.updateLabelValue(this.odds, JSON.stringify(odds));
+    }
+
+    @render(Rounds.RoundTimeStore, (store) => store.duration)
+    renderDuration(duration: number) {
+        this.updateLabelValue(this.duration, duration.toString());
+    }
+
+    @render(Rounds.RoundTimeStore, (store) => store.remaining)
+    renderRemaining(remaining: number) {
+        this.updateLabelValue(this.remaining, remaining.toString());
+    }
+    @render(Rounds.RoundTimeStore, (store) => store.countdownTimer)
+    renderCountdownTimer(countdownTimer: number) {
+        this.updateLabelValue(this.countdownTimer, countdownTimer.toString());
     }
 
     updateLabelValue(label: Label, value: string) {

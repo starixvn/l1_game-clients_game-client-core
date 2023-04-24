@@ -33,4 +33,9 @@ export class RoundStore {
         this.ownBets = {};
         this.totalBets = {};
     }
+
+    resetRoundStore() {
+        this.resetForNewRound();
+        this.resultHash = {};
+    }
 }

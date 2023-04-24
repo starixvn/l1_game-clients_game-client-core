@@ -1,5 +1,7 @@
+export * as Chips from "./chips";
 export * as Connection from "./connection";
 export * as GameConfigs from "./game-configs";
-export * as Rounds from "./rounds";
+export * as HideGame from "./hide-game";
+export * as JoinGame from "./join-game";
 export * as RoundHistories from "./round-histories";
-export * as Chips from "./chips";
+export * as Rounds from "./rounds";

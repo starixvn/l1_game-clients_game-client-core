@@ -8,6 +8,7 @@ export class GameSetting {
         lockingBet: number;
         showingResult?: number;
         generatingResult?: number;
+        startRound?: number;
     };
     choices?: string[];
     hedgeBetGroups?: string[][];
