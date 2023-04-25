@@ -1,6 +1,6 @@
-import { Mediator, IHandler } from "../../../src/shared";
-import container from "../container.test";
 import { EventEmitter2 } from "eventemitter2";
+import { IHandler, Mediator } from "../../../src/shared";
+import container from "../container.test";
 
 describe("Mediator", () => {
     let mediator: Mediator;
@@ -36,7 +36,7 @@ describe("Mediator", () => {
                 // Arrange
                 const handler: IHandler<any> = {
                     handle: jest.fn(),
-                    eventNames: ["event"],
+                    name: "event",
                 };
 
                 // Act

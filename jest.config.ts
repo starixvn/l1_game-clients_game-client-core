@@ -10,6 +10,7 @@ const config: Config = {
     transform: {
         "^.+\\.tsx?$": "ts-jest",
     },
+    testEnvironment: "jsdom",
     testPathIgnorePatterns: ["/node_modules/", "/container.test.ts"],
     testResultsProcessor: "jest-sonar-reporter",
     coverageReporters: ["cobertura", "text-summary", "text", "lcov"],

@@ -25,11 +25,12 @@ export class RoundTimeHandlers implements IMultipleHandlers {
         this.store.endPlacingBet = epb;
     }
 
-    handleEndRoundStatus(finish: GameServiceMessage.Finish) {
+    handleEndRoundStatus(finish: GameServiceMessage.Finish | undefined) {
         if (finish) {
             this.store.endRound = true;
             this.store.endPlacingBet = false;
             this.store.startPlacingBet = false;
+            this.store.startNewRound = false;
         }
     }
 

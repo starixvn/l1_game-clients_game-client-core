@@ -7,7 +7,6 @@ export type RoundTimeSetting = {
     placingBet: number;
     lockingBet: number;
     generatingResult: number;
-    showResultDuration: number;
     startRound: number;
 };
 
@@ -35,32 +34,15 @@ export class RoundTimeStore {
     lockingBet = 0;
     genResult = 0;
     startRound = 0;
-
     private _roundTime = 0;
     private _roundState = ROUND_STATE.STARTING_ROUND;
     private _beginState = "";
     private _countdownTimer = 0;
-
-    _isLockingBet: boolean;
-    _isPlacingBet: boolean;
-    _isWaiting: boolean;
-    _isStartGameLoop: boolean;
-    _isStopGameLoop: boolean;
-
-    private _duration = 0;
     private _remaining = 0;
-
     startNewRound = false;
     endRound = false;
     startPlacingBet = false;
     endPlacingBet = false;
-
-    overrideEvent: {
-        name: string;
-        remaining: number;
-        duration: number;
-        roundTime: number;
-    };
 
     constructor(@inject(GameSetting) gameSetting: GameSetting) {
         makeAutoObservable(this);
@@ -125,10 +107,6 @@ export class RoundTimeStore {
         return this._roundTime;
     }
 
-    get duration() {
-        return this._duration;
-    }
-
     get remaining() {
         return this._remaining;
     }
@@ -172,30 +150,25 @@ export class RoundTimeStore {
 
         if (this._roundTime === 0) {
             this._roundState = ROUND_STATE.TIMEOUT;
-            return;
         }
 
         this.calculateBeginStatus();
 
         if (this.isWaiting) {
-            this._isWaiting = true;
             this._roundState = ROUND_STATE.WAITING;
             this._remaining = this._roundTime - this.placingBet;
-            this._duration = this.wholeRound - this._roundTime;
             this._countdownTimer = this._roundTime - this.placingBet - this.genResult + 1;
         }
 
         if (this.isLocking) {
-            this._isLockingBet = true;
             this._roundState = ROUND_STATE.LOCKING_BET;
-            this._duration = this.wholeRound - this._roundTime;
             this._remaining = this._roundTime;
             this._countdownTimer = this._roundTime;
         }
 
         if (this.isShowAnimation) {
             this._roundState = ROUND_STATE.SHOW_RESULT;
-            this._duration = this.wholeRound + this.genResult - this._remaining;
+            this._remaining = this.genResult;
         }
 
         if (this.isStartingRound) {
@@ -204,21 +177,17 @@ export class RoundTimeStore {
         }
 
         if (this.isPlacingBet) {
-            this._isPlacingBet = true;
             this._roundState = ROUND_STATE.PLACING_BET;
             this._remaining = this._roundTime - this.lockingBet;
-            this._duration = this.placingBet - this._roundTime;
             this._countdownTimer = this._roundTime;
         }
     }
 
     start() {
-        this._isStartGameLoop = true;
         this._roundState = ROUND_STATE.START_GAME_LOOP;
     }
 
     stop() {
-        this._isStopGameLoop = true;
         this._roundState = ROUND_STATE.STOP_GAME_LOOP;
     }
 }

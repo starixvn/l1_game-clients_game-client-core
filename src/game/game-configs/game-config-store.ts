@@ -8,7 +8,7 @@ export class GameConfigStore {
     maxBet = 0;
     maxBetPerChoices: GameServiceMessage.MaxBetPerChoices = {};
     chips: string[] = [];
-    stakeLevels: [] = [];
+    stakeLevels: string[] = [];
     odds: GameServiceMessage.Odds = {};
     enableFreeBet = false;
     originalOdds?: GameServiceMessage.Odds = null;

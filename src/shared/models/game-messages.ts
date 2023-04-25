@@ -83,7 +83,7 @@ export namespace GameServiceMessage {
         maxBet: number;
         maxBetPerChoices: MaxBetPerChoices;
         chips: string[];
-        stakeLevels: [];
+        stakeLevels: string[];
         odds: Odds;
         enableFreeBet: boolean;
         originalOdds?: Odds;
