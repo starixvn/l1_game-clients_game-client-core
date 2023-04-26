@@ -168,7 +168,7 @@ describe("RoundTimeStore Unit Tests", () => {
     });
 
     describe("isPlacingBet", () => {
-        it("should return true if roundTime is <= placingBet AND _roundTime is > lockingBet AND wholeRound is not equal to 0", () => {
+        it("should return true if roundTime is <= placingBet AND roundTime is > lockingBet AND wholeRound is not equal to 0", () => {
             // Arrange
             roundTimeStore.roundTime = 6;
 
@@ -176,7 +176,7 @@ describe("RoundTimeStore Unit Tests", () => {
             expect(roundTimeStore.isPlacingBet).toBeTruthy();
         });
 
-        it("should return false if roundTime is > placingBet OR _roundTime is <= lockingBet OR wholeRound is equal to 0", () => {
+        it("should return false if roundTime is > placingBet OR roundTime is <= lockingBet OR wholeRound is equal to 0", () => {
             // Arrange
             roundTimeStore.roundTime = 35;
 
@@ -203,31 +203,13 @@ describe("RoundTimeStore Unit Tests", () => {
         });
     });
 
-    describe("isBeforePlacingBet", () => {
-        it("should return true when round time is greater than placing bet", () => {
-            // Arrange
-            roundTimeStore.roundTime = 35;
-
-            // Assert
-            expect(roundTimeStore.isBeforePlacingBet).toBeTruthy();
-        });
-
-        it("should return false when round time is less than placing bet", () => {
-            // Arrange
-            roundTimeStore.roundTime = 25;
-
-            // Assert
-            expect(roundTimeStore.isBeforePlacingBet).toBeFalsy();
-        });
-    });
-
-    describe("isShowAnimation", () => {
+    describe("isShowResult", () => {
         it("should return true when round time is less than (wholeRound - genResult) and greater than placing bet", () => {
             roundTimeStore.roundTime = 10;
             roundTimeStore.wholeRound = 20;
             roundTimeStore.genResult = 5;
             roundTimeStore.placingBet = 5;
-            expect(roundTimeStore.isShowAnimation).toBeTruthy();
+            expect(roundTimeStore.isShowResult).toBeTruthy();
         });
 
         it("should return true when round time equals (wholeRound - genResult)", () => {
@@ -235,7 +217,7 @@ describe("RoundTimeStore Unit Tests", () => {
             roundTimeStore.wholeRound = 20;
             roundTimeStore.genResult = 5;
             roundTimeStore.placingBet = 5;
-            expect(roundTimeStore.isShowAnimation).toBeTruthy();
+            expect(roundTimeStore.isShowResult).toBeTruthy();
         });
 
         it("should return false when round time equals placing bet", () => {
@@ -243,7 +225,7 @@ describe("RoundTimeStore Unit Tests", () => {
             roundTimeStore.wholeRound = 20;
             roundTimeStore.genResult = 5;
             roundTimeStore.placingBet = 5;
-            expect(roundTimeStore.isShowAnimation).toBeFalsy();
+            expect(roundTimeStore.isShowResult).toBeFalsy();
         });
 
         it("should return false when round time is greater than (wholeRound - genResult)", () => {
@@ -251,7 +233,7 @@ describe("RoundTimeStore Unit Tests", () => {
             roundTimeStore.wholeRound = 20;
             roundTimeStore.genResult = 5;
             roundTimeStore.placingBet = 5;
-            expect(roundTimeStore.isShowAnimation).toBeFalsy();
+            expect(roundTimeStore.isShowResult).toBeFalsy();
         });
     });
 
@@ -351,6 +333,105 @@ describe("RoundTimeStore Unit Tests", () => {
 
             // Assert
             expect(obj._beginState).toBe(ROUND_STATE.BEGIN_PLACING_BET);
+        });
+    });
+
+    describe("calculateRoundStatus", () => {
+        test("set round state to WAITING if round time is negative", () => {
+            // Arrange
+            roundTimeStore.roundTime = -1;
+
+            // Act
+            roundTimeStore.calculateRoundStatus();
+
+            // Assert
+            expect(roundTimeStore.roundState).toBe(ROUND_STATE.WAITING);
+        });
+
+        describe("check round state is SHOW_ANIMATION_RESULT", () => {
+            test("set round state to SHOW_ANIMATION_RESULT if isShowAnimationResult is true (roundTime=0)`", () => {
+                // Arrange
+                roundTimeStore.roundTime = 0;
+
+                // Act
+                roundTimeStore.calculateRoundStatus();
+
+                // Assert
+                expect(roundTimeStore.roundState).toBe(ROUND_STATE.SHOW_ANIMATION_RESULT);
+            });
+
+            for (let roundTime = setting.wholeRound + 2 - setting.generatingResult; roundTime <= setting.wholeRound; roundTime++) {
+                test(`set round state to SHOW_ANIMATION_RESULT if isShowAnimationResult is true (roundTime=${roundTime})`, () => {
+                    // Arrange
+                    roundTimeStore.roundTime = roundTime;
+
+                    // Act
+                    roundTimeStore.calculateRoundStatus();
+
+                    // Assert
+                    expect(roundTimeStore.roundState).toBe(ROUND_STATE.SHOW_ANIMATION_RESULT);
+                });
+            }
+        });
+
+        describe("check round state is LOCKING_BET", () => {
+            for (let roundTime = 1; roundTime <= setting.lockingBet; roundTime++) {
+                test(`set round state to LOCKING_BET if isLocking is true (roundTime=${roundTime})`, () => {
+                    // Arrange
+                    roundTimeStore.roundTime = roundTime;
+
+                    // Act
+                    roundTimeStore.calculateRoundStatus();
+
+                    // Assert
+                    expect(roundTimeStore.roundState).toBe(ROUND_STATE.LOCKING_BET);
+                });
+            }
+        });
+
+        describe("check round state is SHOW_RESULT ", () => {
+            for (
+                let roundTime = setting.placingBet + setting.startRound + 1;
+                roundTime <= setting.wholeRound - setting.generatingResult + 1;
+                roundTime++
+            ) {
+                test(`set round state to SHOW_RESULT if isShowResult is true (roundTime=${roundTime})`, () => {
+                    // Arrange
+                    roundTimeStore.roundTime = roundTime;
+
+                    // Act
+                    roundTimeStore.calculateRoundStatus();
+
+                    // Assert
+                    expect(roundTimeStore.roundState).toBe(ROUND_STATE.SHOW_RESULT);
+                });
+            }
+        });
+
+        test("set round state to STARTING_ROUND if isStartingRound is true", () => {
+            // Arrange
+            roundTimeStore.roundTime = setting.placingBet + setting.startRound;
+
+            // Act
+            roundTimeStore.calculateRoundStatus();
+
+            // Assert
+            expect(roundTimeStore.roundState).toBe(ROUND_STATE.STARTING_ROUND);
+        });
+
+        describe("check round state is PLACING_BET", () => {
+            for (let roundTime = setting.lockingBet + 1; roundTime <= setting.placingBet; roundTime++) {
+                test(`set round state to PLACING_BET if isPlacingBet is true (roundTime=${roundTime})`, () => {
+                    // Arrange
+                    roundTimeStore.roundTime = roundTime;
+
+                    // Act
+                    roundTimeStore.calculateRoundStatus();
+
+                    // Assert
+                    expect(roundTimeStore.roundState).toBe(ROUND_STATE.PLACING_BET);
+                });
+            }
         });
     });
 });

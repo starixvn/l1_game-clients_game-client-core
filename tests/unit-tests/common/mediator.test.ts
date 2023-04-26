@@ -1,23 +1,7 @@
-import { EventEmitter2 } from "eventemitter2";
 import { IHandler, Mediator } from "../../../src/shared";
 import container from "../container.test";
 
 describe("Mediator", () => {
-    let mediator: Mediator;
-    let event: EventEmitter2;
-
-    beforeEach(() => {
-        mediator = container.resolve(Mediator);
-
-        event = {
-            on: jest.fn(),
-            onAny: jest.fn(),
-            emit: jest.fn(),
-        } as any;
-
-        mediator["event"] = event;
-    });
-
     describe("constructor", () => {
         describe("when called", () => {
             it("should create an instance of event emitter", () => {
@@ -30,48 +14,59 @@ describe("Mediator", () => {
         });
     });
 
-    describe("registerListener", () => {
-        describe("when called", () => {
-            it("should register an event", () => {
-                // Arrange
-                const handler: IHandler<any> = {
+    describe("registers a single handler for a specific event", () => {
+        // Arrange
+        const mediator = new Mediator();
+        const handler: IHandler<any> = {
+            name: "eventA",
+            handle: jest.fn(),
+        };
+
+        // Act
+        mediator.registerHandler(handler);
+        mediator.emit("eventA", "arg1", "arg2");
+
+        // Assert
+        expect(handler.handle).toHaveBeenCalledWith("arg1", "arg2");
+    });
+
+    describe("registers multiple handlers for specific events", () => {
+        // Arrange
+        const mediator = new Mediator();
+        const mockHandlers = {
+            eventHandleList: [
+                {
+                    name: "eventA",
                     handle: jest.fn(),
-                    name: "event",
-                };
+                },
+                {
+                    name: "eventB",
+                    handle: jest.fn(),
+                },
+            ],
+        };
 
-                // Act
-                mediator.registerHandler(handler);
+        // Act
+        mediator.registerHandlers(mockHandlers);
+        mediator.emit("eventA", "arg1", "arg2");
+        mediator.emit("eventB", "arg1", "arg2");
 
-                // Assert
-                expect(event.on).toBeCalledWith("event", expect.any(Function));
-            });
-        });
+        // Assert
+        expect(mockHandlers.eventHandleList[0].handle).toHaveBeenCalledWith("arg1", "arg2");
+        expect(mockHandlers.eventHandleList[1].handle).toHaveBeenCalledWith("arg1", "arg2");
     });
 
-    describe("onAny", () => {
-        describe("when called", () => {
-            it("should call onAny method", () => {
-                // Arrange
-                const handler = jest.fn();
+    describe('registers an "on any" handler for all events', () => {
+        // Arrange
+        const mediator = new Mediator();
+        const mockHandler = jest.fn();
 
-                // Act
-                mediator.onAny(handler);
+        // Act
+        mediator.onAny(mockHandler);
+        mediator.emit("eventA", "arg1", "arg2");
+        mediator.emit("eventB", "arg1", "arg2");
 
-                // Assert
-                expect(event.onAny).toBeCalledWith(handler);
-            });
-        });
-    });
-
-    describe("emit", () => {
-        describe("when called", () => {
-            it("should call emit method", () => {
-                // Act
-                mediator.emit("event", 1, 2);
-
-                // Assert
-                expect(event.emit).toBeCalledWith("event", 1, 2);
-            });
-        });
+        // Assert
+        expect(mockHandler).toHaveBeenCalledTimes(2);
     });
 });

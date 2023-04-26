@@ -13,7 +13,7 @@ export interface IMultipleHandlers {
 
 @injectable()
 export class Mediator {
-    private event = new EventEmitter2({ maxListeners: 0 });
+    private readonly event = new EventEmitter2({ maxListeners: 0 });
 
     registerHandler(handler: IHandler<any>) {
         if (!!handler.name) {
