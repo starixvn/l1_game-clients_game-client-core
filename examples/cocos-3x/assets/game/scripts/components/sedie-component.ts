@@ -10,7 +10,6 @@ const { observer, render, handle } = Observer;
 @ccclass
 @observer(settings.name)
 export default class Sedie extends Component {
-    ////////////////////////////////
     @property(Label)
     roundTime: Label = null;
 
@@ -31,9 +30,6 @@ export default class Sedie extends Component {
 
     @property(Label)
     odds: Label = null;
-
-    @property(Label)
-    duration: Label = null;
 
     @property(Label)
     remaining: Label = null;
@@ -101,11 +97,6 @@ export default class Sedie extends Component {
     @render(GameConfigs.GameConfigStore, (store) => store.odds)
     renderOdds(odds: any) {
         this.updateLabelValue(this.odds, JSON.stringify(odds));
-    }
-
-    @render(Rounds.RoundTimeStore, (store) => store.duration)
-    renderDuration(duration: number) {
-        this.updateLabelValue(this.duration, duration.toString());
     }
 
     @render(Rounds.RoundTimeStore, (store) => store.remaining)

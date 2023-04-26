@@ -1,7 +1,7 @@
 import { getSharedContainer } from "db://shared-components/scripts/startup";
 import mobx from "mobx";
 import Observer from "observer";
-import { siteConfigs } from "./configs";
+import { siteConfigs } from "./site-configs";
 
 export const sharedContainer = getSharedContainer(siteConfigs);
 
