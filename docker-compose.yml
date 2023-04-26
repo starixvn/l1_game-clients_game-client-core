@@ -27,7 +27,7 @@ services:
       
   sedie-service:
     build:
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.mock
       context: ./examples/sedie-service
     ports:
       - "5002:5002"
