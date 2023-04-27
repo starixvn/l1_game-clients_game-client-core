@@ -7,7 +7,7 @@ declare global {
 }
 
 const defaultConfig: gc.Configs.SiteConfigs = {
-    isDev: true,
+    isDev: true, // if this property is true, then you should add token=anything into the querytring to sso to the game http://localhost:7456/?token=anything
     systemType: "SC1",
     ssl: false,
     serverDomainMapper: {
