@@ -30,9 +30,9 @@ export default class UserProfile extends Component {
     @render(PlayerStore, (store) => store.avatarId)
     async loadAvatar(avatarId: number) {
         log("Loading avatarId ", avatarId);
-        const spriteFrame = await bundleManager.loadSharedAsset(`images/avatars/${avatarId}/spriteFrame`, SpriteFrame);
+        const spriteFrame = await bundleManager.loadSharedAsset<SpriteFrame>(`images/avatars/${avatarId}/spriteFrame`, SpriteFrame);
         if (spriteFrame) {
-            this.setAvatar(spriteFrame as SpriteFrame);
+            this.setAvatar(spriteFrame);
         }
     }
 

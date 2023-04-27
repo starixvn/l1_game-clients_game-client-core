@@ -27,25 +27,34 @@ export class BundleManager {
         });
     }
 
-    async loadAssetsFromBundle(bundleName: string, assetPath: string, assetType: any) {
+    async loadAssetsFromBundle<AssetType extends Asset>(
+        bundleName: string,
+        assetPath: string,
+        assetType: any,
+        onProgress: ((finished: number, total: number) => void) | null
+    ) {
         const bundle = await this.loadBundle(bundleName);
         if (bundle) {
-            return new Promise<Asset>((resolve) => {
-                bundle.load(assetPath, assetType, (err, asset) => {
+            return new Promise<AssetType>((resolve) => {
+                bundle.load(assetPath, assetType, onProgress, (err, asset) => {
                     if (err) {
                         log(`Can not load assset ${assetPath} from bundle ${bundleName}`);
                         resolve(null);
                         return;
                     }
 
-                    resolve(asset);
+                    resolve(asset as AssetType);
                 });
             });
         }
     }
 
-    loadSharedAsset(assetPath: string, assetType: any) {
-        return this.loadAssetsFromBundle("shared-bundle", assetPath, assetType);
+    loadSharedAsset<AssetType extends Asset>(
+        assetPath: string,
+        assetType: any,
+        onProgress: ((finished: number, total: number) => void) | null = null
+    ) {
+        return this.loadAssetsFromBundle<AssetType>("shared-bundle", assetPath, assetType, onProgress);
     }
 }
 
