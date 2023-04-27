@@ -2,6 +2,7 @@
     "name": "server-simulator",
     "version": "1.0.0",
     "scripts": {
+        "run-docker-compose": "ts-node --script-mode src/docker-compose.ts ",
         "install-sedie-dependency": "cd ../sedie-service && yarn install",
         "mock-sedie-service": "cd ../sedie-service && npm run mock-service",
         "mock-user-service": "nodemon src/server.ts ",
@@ -14,6 +15,7 @@
     },
     "dependencies": {
         "cors": "2.8.5",
+        "docker-compose": "^0.23.19",
         "express": "^4.18.1",
         "nodemon": "2.0.22",
         "socket.io": "4.6.1"
