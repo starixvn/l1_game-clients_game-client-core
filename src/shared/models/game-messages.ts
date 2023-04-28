@@ -107,7 +107,18 @@ export namespace GameServiceMessage {
     }
 
     export const roundHistory = "roundHistory";
-    export const chips = "chips";
+    export const ownBets = "ownBets";
+    export const totalBets = "totalBets";
+
+    export class Chips {
+        [rate: string]: {
+            [betChoice: string]: {
+                [chipValue: string]: number;
+            };
+        };
+
+        static eventName = "chips";
+    }
 
     export class OwnChip {
         betChoice: string;

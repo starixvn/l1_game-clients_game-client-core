@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { ChipStore, Chips } from "./chip-store";
+import { ChipStore } from "./chip-store";
 
 @injectable()
 export class ChipHandlers implements IMultipleHandlers {
@@ -8,7 +8,7 @@ export class ChipHandlers implements IMultipleHandlers {
 
     eventHandleList = [
         {
-            name: GameServiceMessage.chips,
+            name: GameServiceMessage.Chips.eventName,
             handle: this.handleChips,
         },
         {
@@ -21,7 +21,7 @@ export class ChipHandlers implements IMultipleHandlers {
         },
     ];
 
-    handleChips(chips: Chips) {
+    handleChips(chips: GameServiceMessage.Chips) {
         this.store.chips = chips;
     }
 
