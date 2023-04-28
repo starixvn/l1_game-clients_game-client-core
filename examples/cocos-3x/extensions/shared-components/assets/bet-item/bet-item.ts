@@ -2,8 +2,6 @@ import { _decorator, Component, Label } from "cc";
 import gc from "game-client-base";
 import Observer from "observer";
 
-import { formatOdds } from "../utils/utils";
-
 const { observer, render, handle } = Observer;
 
 const { Rounds, GameConfigs } = gc;
@@ -26,11 +24,12 @@ export default class BetItem extends Component {
         this.lblOdds.string = "";
     }
 
-    @render(GameConfigs.GameConfigStore, (store) => store.odds)
-    renderOdds(odds: gc.GameServiceMessage.Odds) {
+    @render(Rounds.RoundStore, (store) => store.roundOdds)
+    renderOdds(roundOdds: gc.GameServiceMessage.RoundOdds) {
+        const { odds, fractional } = roundOdds;
         const choice = this.node.name;
         if (odds[choice]) {
-            this.lblOdds.string = formatOdds(odds[choice]);
+            this.lblOdds.string = gc.FormatUtils.formatOdds(odds[choice], fractional);
         }
     }
 

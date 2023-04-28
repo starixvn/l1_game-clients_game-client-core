@@ -78,6 +78,12 @@ export namespace GameServiceMessage {
         [betChoice: string]: number;
     };
     export type MaxBetPerChoices = Odds;
+
+    export type RoundOdds = {
+        odds: Odds;
+        fractional: boolean;
+    };
+
     export class GameConfigs {
         minBet: number;
         maxBet: number;

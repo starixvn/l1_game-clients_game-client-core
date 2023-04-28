@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+
 import { PlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared";
 import { GameConfigStore } from "../game-configs";
@@ -7,6 +8,7 @@ import { GameConfigStore } from "../game-configs";
 export type Bets = {
     [betChoice: string]: number;
 };
+
 @injectable()
 export class RoundStore {
     constructor(
@@ -27,6 +29,13 @@ export class RoundStore {
 
     get maxBet() {
         return Math.min(this.gameConfigStore.maxBet, this.playerStore.stakeLevel.maxBet);
+    }
+
+    get roundOdds() {
+        return {
+            odds: this.gameConfigStore.odds,
+            fractional: this.playerStore.fractionalOddsFormat,
+        };
     }
 
     resetForNewRound() {
