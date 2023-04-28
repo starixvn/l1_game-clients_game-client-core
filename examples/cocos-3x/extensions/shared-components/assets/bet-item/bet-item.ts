@@ -4,7 +4,7 @@ import Observer from "observer";
 
 const { observer, render, handle } = Observer;
 
-const { Rounds, GameConfigs } = gc;
+const { Rounds } = gc;
 
 const { ccclass, property } = _decorator;
 
@@ -25,7 +25,7 @@ export default class BetItem extends Component {
     }
 
     @render(Rounds.RoundStore, (store) => store.roundOdds)
-    renderOdds(roundOdds: gc.GameServiceMessage.RoundOdds) {
+    renderOdds(roundOdds: gc.Rounds.RoundOdds) {
         const { odds, fractional } = roundOdds;
         const choice = this.node.name;
         if (odds[choice]) {

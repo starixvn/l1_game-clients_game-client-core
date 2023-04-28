@@ -9,6 +9,11 @@ export type Bets = {
     [betChoice: string]: number;
 };
 
+export type RoundOdds = {
+    odds: GameServiceMessage.Odds;
+    fractional: boolean;
+};
+
 @injectable()
 export class RoundStore {
     constructor(
