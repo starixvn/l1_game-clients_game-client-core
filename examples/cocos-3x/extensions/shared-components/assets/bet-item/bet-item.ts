@@ -24,6 +24,11 @@ export default class BetItem extends Component {
         this.lblOdds.string = "";
     }
 
+    @handle(gc.Bet.BetHandler)
+    onBet() {
+        return this.node.name;
+    }
+
     @render(Rounds.RoundStore, (store) => store.roundOdds)
     renderOdds(roundOdds: gc.Rounds.RoundOdds) {
         const { odds, fractional } = roundOdds;
