@@ -1,6 +1,6 @@
 import type { Config } from "jest";
 
-const defaultTestPaths = "unit-tests";
+const defaultTestPaths = "tests";
 const testMatch = (process.env.TEST_PATHS || defaultTestPaths)
     .split(",")
     .map((path) => `**/${path.replace("./", "")}/**/?(*.)+(spec|test).+(ts)`);

@@ -11,8 +11,9 @@
     "scripts": {
         "start": "tsc --watch",
         "build": "tsc",
-        "test": "jest",
-        "test-coverage": "jest --collect-coverage",
+        "test": "jest unit-tests",
+        "integration-test": "jest integration-tests/index.test.ts",
+        "test-coverage": "jest unit-tests --collect-coverage",
         "test:watch": "jest --watch --verbose",
         "reg": "npm set registry http://npm.lumigame.com"
     },
@@ -37,6 +38,7 @@
         "mobx": "6.9.0",
         "prettier": "2.8.7",
         "reflect-metadata": "0.1.13",
+        "socket.io-mock-ts": "^1.0.2",
         "ts-jest": "29.1.0",
         "ts-node": "10.9.1",
         "typescript": "5.0.4"

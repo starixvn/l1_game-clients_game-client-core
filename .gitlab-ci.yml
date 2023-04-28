@@ -7,6 +7,7 @@ variables:
   #GIT_SUBMODULE_STRATEGY: recursive # Just for testing
   #CI_JOB_TOKEN:  # Just for testing
   COCOS_VERSION: "3.7.2"
+  NODEJS_INTEGRATION_TEST_IMAGE_VERSION: "hub.lumigame.com/docker-hub/library/node:18.1-alpine"
 
 .build_cocos_creator_script: &build_cocos_creator_script
   stage: build-cocos-web
@@ -42,3 +43,29 @@ variables:
 .base_build_cocos:
   <<: *build_cocos_creator_script
   allow_failure: true
+
+integration_test:
+  stage: test
+  tags:
+  - docker
+  image: "$NODEJS_INTEGRATION_TEST_IMAGE_VERSION"
+  before_script:
+    - npm set registry http://npm.lumigame.com
+    - npm install
+  script:
+  - npm run integration-test
+  artifacts:
+    when: always
+    paths:
+    - "./coverage"
+    reports:
+      junit:
+      - junit.xml
+    expire_in: 1 day
+  rules:
+  - - if: "$CI_COMMIT_TAG =~ /^deploy-/"
+      when: never
+    - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
+      when: never
+  - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: "$CI_COMMIT_BRANCH"

@@ -6,8 +6,9 @@
         "declaration": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "esModuleInterop": true
     },
     "include": ["src/*"],
-    "exclude": ["**/*.test.ts"]
+    "exclude": ["test/*"]
 }
