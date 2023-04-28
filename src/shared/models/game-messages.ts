@@ -77,6 +77,19 @@ export namespace GameServiceMessage {
     export type Odds = {
         [betChoice: string]: number;
     };
+
+    class Bets {
+        [betChoice: string]: number;
+    }
+
+    export class OwnBets extends Bets {
+        static eventName = "ownBets";
+    }
+
+    export class TotalBets extends Bets {
+        static eventName = "totalBets";
+    }
+
     export type MaxBetPerChoices = Odds;
 
     export class GameConfigs {
@@ -94,8 +107,6 @@ export namespace GameServiceMessage {
     }
 
     export const roundHistory = "roundHistory";
-    export const ownBets = "ownBets";
-    export const totalBets = "totalBets";
     export const chips = "chips";
 
     export class OwnChip {

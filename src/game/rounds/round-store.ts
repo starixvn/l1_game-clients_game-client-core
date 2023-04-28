@@ -24,8 +24,8 @@ export class RoundStore {
     }
 
     roundId = 0;
-    ownBets: Bets = {};
-    totalBets: Bets = {};
+    ownBets: GameServiceMessage.OwnBets = {};
+    totalBets: GameServiceMessage.TotalBets = {};
     resultHash: GameServiceMessage.ResultHash = {};
 
     get minBet() {

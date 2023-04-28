@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
+
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { Bets, RoundStore } from "./round-store";
+import { RoundStore } from "./round-store";
 
 @injectable()
 export class RoundHandlers implements IMultipleHandlers {
@@ -12,11 +13,11 @@ export class RoundHandlers implements IMultipleHandlers {
         }
     }
 
-    handleOwnBets(ownBets: Bets) {
+    handleOwnBets(ownBets: GameServiceMessage.OwnBets) {
         this.store.ownBets = ownBets;
     }
 
-    handleTotalBets(totalBets: Bets) {
+    handleTotalBets(totalBets: GameServiceMessage.TotalBets) {
         this.store.totalBets = totalBets;
     }
 
@@ -30,11 +31,11 @@ export class RoundHandlers implements IMultipleHandlers {
             handle: this.handleRoundId,
         },
         {
-            name: GameServiceMessage.ownBets,
+            name: GameServiceMessage.OwnBets.eventName,
             handle: this.handleOwnBets,
         },
         {
-            name: GameServiceMessage.totalBets,
+            name: GameServiceMessage.TotalBets.eventName,
             handle: this.handleTotalBets,
         },
         {

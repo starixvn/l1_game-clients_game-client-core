@@ -39,7 +39,7 @@ export default class BetItem extends Component {
     }
 
     @render(Rounds.RoundStore, (store) => store.ownBets)
-    renderOwnBets(ownBets: any) {
+    renderOwnBets(ownBets: gc.GameServiceMessage.OwnBets) {
         const choice = this.node.name;
         if (ownBets[choice]) {
             this.lblOwnBet.string = `${ownBets[choice]}`;
@@ -47,7 +47,7 @@ export default class BetItem extends Component {
     }
 
     @render(Rounds.RoundStore, (store) => store.totalBets)
-    renderTotalBets(totalBets: any) {
+    renderTotalBets(totalBets: gc.GameServiceMessage.TotalBets) {
         const choice = this.node.name;
         if (totalBets[choice]) {
             this.lblTotalBet.string = `${totalBets[choice]}`;
