@@ -1511,7 +1511,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Odds",
+    "_name": "lblOdds",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -1896,10 +1896,10 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "digit_1": {
+    "lblDigitFirst": {
       "__id__": 52
     },
-    "digit_2": {
+    "lblDigitSecond": {
       "__id__": 55
     },
     "heightOffset": 13,
@@ -2223,7 +2223,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "singleLabel": {
+    "lblSingle": {
       "__id__": 64
     },
     "_id": "47r/QgLMtJKZNhIxEztSQJ"
@@ -2994,13 +2994,13 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "nameLabel": {
+    "lblName": {
       "__id__": 77
     },
-    "balance": {
+    "lblBalance": {
       "__id__": 84
     },
-    "avatar": {
+    "sprAvatar": {
       "__id__": 73
     },
     "_id": "0dqAtcvFBIlprpMkZquG4f"

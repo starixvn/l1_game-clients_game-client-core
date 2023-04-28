@@ -1,10 +1,10 @@
 import { _decorator, Component, Label, log, Sprite, SpriteFrame } from "cc";
-import GameClient from "game-client-base";
+import gc from "game-client-base";
 import Observer from "observer";
 
 import { bundleManager } from "../bundle-magager/bundle-manager";
 
-const { Player } = GameClient;
+const { Player } = gc;
 const { PlayerStore } = Player;
 
 const { ccclass, property, menu } = _decorator;
@@ -14,17 +14,17 @@ const { observer, render, handle } = Observer;
 @observer
 export default class UserProfile extends Component {
     @property(Label)
-    nameLabel: Label = null;
+    lblName: Label = null;
 
     @property(Label)
-    balance: Label = null;
+    lblBalance: Label = null;
 
     @property(Sprite)
-    avatar: Sprite = null;
+    sprAvatar: Sprite = null;
 
     @render(PlayerStore, (store) => store.name)
     setName(text: string) {
-        this.nameLabel && (this.nameLabel.string = text);
+        this.lblName && (this.lblName.string = text);
     }
 
     @render(PlayerStore, (store) => store.avatarId)
@@ -37,11 +37,11 @@ export default class UserProfile extends Component {
     }
 
     setAvatar(frame: SpriteFrame) {
-        this.avatar && (this.avatar.spriteFrame = frame);
+        this.sprAvatar && (this.sprAvatar.spriteFrame = frame);
     }
 
     @render(PlayerStore, (store) => store.balance)
     setBalance(value: number) {
-        this.balance.string = value.toString();
+        this.lblBalance.string = value.toString();
     }
 }

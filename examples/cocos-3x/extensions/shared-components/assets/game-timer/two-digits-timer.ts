@@ -1,8 +1,8 @@
 import { _decorator, Color, Component, Label, Node, tween, UIRenderer, v3 } from "cc";
-import GameClient from "game-client-base";
+import gc from "game-client-base";
 import Observer from "observer";
 
-const { Rounds } = GameClient;
+const { Rounds } = gc;
 const { RoundTimeStore } = Rounds;
 const { ccclass, property } = _decorator;
 const { observer, render, handle } = Observer;
@@ -10,10 +10,10 @@ const { observer, render, handle } = Observer;
 @ccclass()
 export default class TwoDigitsTimer extends Component {
     @property(Label)
-    digit_1: Label = null;
+    lblDigitFirst: Label = null;
 
     @property(Label)
-    digit_2: Label = null;
+    lblDigitSecond: Label = null;
 
     @property
     heightOffset: number = 0;
@@ -26,24 +26,24 @@ export default class TwoDigitsTimer extends Component {
 
     setTime(time: number) {
         const text = `${time}`.padStart(2, "0");
-        const firstTimeChar = text.slice(0, 1);
-        const secondTimeChar = text.slice(1, 2);
+        const firstChar = text.slice(0, 1);
+        const secondChar = text.slice(1, 2);
 
-        if (this.digit_1.string !== firstTimeChar) {
-            this.handleBetTimeAnimation(this.digit_1.node);
+        if (this.lblDigitFirst.string !== firstChar) {
+            this.handleBetTimeAnimation(this.lblDigitFirst.node);
         }
 
-        if (this.digit_2.string !== secondTimeChar) {
-            this.handleBetTimeAnimation(this.digit_2.node);
+        if (this.lblDigitSecond.string !== secondChar) {
+            this.handleBetTimeAnimation(this.lblDigitSecond.node);
         }
 
-        this.digit_1.string = firstTimeChar;
-        this.digit_2.string = secondTimeChar;
+        this.lblDigitFirst.string = firstChar;
+        this.lblDigitSecond.string = secondChar;
     }
 
     protected setColor(color: Color) {
-        this.digit_1.getComponent(UIRenderer).color = color;
-        this.digit_2.getComponent(UIRenderer).color = color;
+        this.lblDigitFirst.getComponent(UIRenderer).color = color;
+        this.lblDigitSecond.getComponent(UIRenderer).color = color;
     }
 
     protected handleBetTimeAnimation(node: Node) {

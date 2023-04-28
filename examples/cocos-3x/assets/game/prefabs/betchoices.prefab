@@ -451,7 +451,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "odds",
+    "_name": "lblOdds",
     "_objFlags": 0,
     "_parent": {
       "__id__": 3
@@ -859,13 +859,13 @@
     "__prefab": {
       "__id__": 35
     },
-    "ownBet": {
+    "lblOwnBet": {
       "__id__": 25
     },
-    "totalBet": {
+    "lblTotalBet": {
       "__id__": 31
     },
-    "odds": {
+    "lblOdds": {
       "__id__": 19
     },
     "_id": ""
@@ -1247,7 +1247,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "odds",
+    "_name": "lblOdds",
     "_objFlags": 0,
     "_parent": {
       "__id__": 39
@@ -1655,13 +1655,13 @@
     "__prefab": {
       "__id__": 71
     },
-    "ownBet": {
+    "lblOwnBet": {
       "__id__": 61
     },
-    "totalBet": {
+    "lblTotalBet": {
       "__id__": 67
     },
-    "odds": {
+    "lblOdds": {
       "__id__": 55
     },
     "_id": ""
@@ -2723,7 +2723,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "odds",
+    "_name": "lblOdds",
     "_objFlags": 0,
     "_parent": {
       "__id__": 81
@@ -3131,13 +3131,13 @@
     "__prefab": {
       "__id__": 137
     },
-    "ownBet": {
+    "lblOwnBet": {
       "__id__": 127
     },
-    "totalBet": {
+    "lblTotalBet": {
       "__id__": 133
     },
-    "odds": {
+    "lblOdds": {
       "__id__": 121
     },
     "_id": ""
@@ -4057,7 +4057,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "odds",
+    "_name": "lblOdds",
     "_objFlags": 0,
     "_parent": {
       "__id__": 141
@@ -4465,13 +4465,13 @@
     "__prefab": {
       "__id__": 197
     },
-    "ownBet": {
+    "lblOwnBet": {
       "__id__": 187
     },
-    "totalBet": {
+    "lblTotalBet": {
       "__id__": 193
     },
-    "odds": {
+    "lblOdds": {
       "__id__": 181
     },
     "_id": ""
@@ -5391,7 +5391,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "odds",
+    "_name": "lblOdds",
     "_objFlags": 0,
     "_parent": {
       "__id__": 201
@@ -5799,13 +5799,13 @@
     "__prefab": {
       "__id__": 257
     },
-    "ownBet": {
+    "lblOwnBet": {
       "__id__": 247
     },
-    "totalBet": {
+    "lblTotalBet": {
       "__id__": 253
     },
-    "odds": {
+    "lblOdds": {
       "__id__": 241
     },
     "_id": ""
@@ -6725,7 +6725,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "odds",
+    "_name": "lblOdds",
     "_objFlags": 0,
     "_parent": {
       "__id__": 261
@@ -7133,13 +7133,13 @@
     "__prefab": {
       "__id__": 317
     },
-    "ownBet": {
+    "lblOwnBet": {
       "__id__": 307
     },
-    "totalBet": {
+    "lblTotalBet": {
       "__id__": 313
     },
-    "odds": {
+    "lblOdds": {
       "__id__": 301
     },
     "_id": ""
@@ -8059,7 +8059,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "odds",
+    "_name": "lblOdds",
     "_objFlags": 0,
     "_parent": {
       "__id__": 321
@@ -8467,13 +8467,13 @@
     "__prefab": {
       "__id__": 377
     },
-    "ownBet": {
+    "lblOwnBet": {
       "__id__": 367
     },
-    "totalBet": {
+    "lblTotalBet": {
       "__id__": 373
     },
-    "odds": {
+    "lblOdds": {
       "__id__": 361
     },
     "_id": ""

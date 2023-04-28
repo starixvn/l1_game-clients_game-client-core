@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+
 import { GameSetting } from "../game-configs";
 
 export type RoundTimeSetting = {
@@ -95,6 +96,15 @@ export class RoundTimeStore {
 
     get isTimeOut() {
         return this._roundTime === 0;
+    }
+
+    get isInRoundTime() {
+        return (
+            this.roundState === ROUND_STATE.BEGIN_PLACING_BET ||
+            this.roundState === ROUND_STATE.PLACING_BET ||
+            this.roundState === ROUND_STATE.BEGIN_LOCKING_BET ||
+            this.roundState === ROUND_STATE.LOCKING_BET
+        );
     }
 
     setRoundTimeSetting(setting: RoundTimeSetting) {

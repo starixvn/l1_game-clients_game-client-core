@@ -4,3 +4,4 @@ export * from "./container";
 export * from "./game";
 export * as Player from "./players";
 export * as Shared from "./shared";
+export * from "./shared/models/game-messages";

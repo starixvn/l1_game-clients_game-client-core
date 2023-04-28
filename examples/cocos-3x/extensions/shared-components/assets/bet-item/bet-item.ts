@@ -1,50 +1,52 @@
 import { _decorator, Component, Label } from "cc";
-import GameClient from "game-client-base";
+import gc from "game-client-base";
 import Observer from "observer";
+
+import { formatOdds } from "../utils/utils";
 
 const { observer, render, handle } = Observer;
 
-const { Rounds, GameConfigs } = GameClient;
+const { Rounds, GameConfigs } = gc;
 
 const { ccclass, property } = _decorator;
 
 export default class BetItem extends Component {
     @property(Label)
-    ownBet: Label = null;
+    lblOwnBet: Label = null;
 
     @property(Label)
-    totalBet: Label = null;
+    lblTotalBet: Label = null;
 
     @property(Label)
-    odds: Label = null;
+    lblOdds: Label = null;
 
     onLoad() {
-        this.ownBet.string = "";
-        this.totalBet.string = "";
-        this.odds.string = "";
+        this.lblOwnBet.string = "";
+        this.lblTotalBet.string = "";
+        this.lblOdds.string = "";
     }
 
     @render(GameConfigs.GameConfigStore, (store) => store.odds)
-    renderOdds(odds: any) {
+    renderOdds(odds: gc.GameServiceMessage.Odds) {
         const choice = this.node.name;
         if (odds[choice]) {
-            this.odds.string = `${odds[choice] - 1}:1`;
+            this.lblOdds.string = formatOdds(odds[choice]);
         }
     }
 
     @render(Rounds.RoundStore, (store) => store.ownBets)
-    renderOwnBets(data: any) {
+    renderOwnBets(ownBets: any) {
         const choice = this.node.name;
-        if (data[choice]) {
-            this.ownBet.string = `${data[choice]}`;
+        if (ownBets[choice]) {
+            this.lblOwnBet.string = `${ownBets[choice]}`;
         }
     }
 
     @render(Rounds.RoundStore, (store) => store.totalBets)
-    renderTotalBets(data: any) {
+    renderTotalBets(totalBets: any) {
         const choice = this.node.name;
-        if (data[choice]) {
-            this.totalBet.string = `${data[choice]}`;
+        if (totalBets[choice]) {
+            this.lblTotalBet.string = `${totalBets[choice]}`;
         }
     }
 }
