@@ -153,4 +153,10 @@ export namespace GameServiceMessage {
     export const spb = "spb";
     export const snr = "snr";
     export const epb = "epb";
+
+    export class UMInfo {
+        startTime: Date;
+        endTime: Date;
+        static eventName = "kickedOut";
+    }
 }

@@ -7,23 +7,39 @@ userRouter.get("/", (req, res) => {
 
 userRouter.get("/auth/sso", (req, res) => {
     const { system } = req.query;
+    // const authData = {
+    //     isAuthenticated: true,
+    //     isUM: true,
+    //     language: "vi-VN",
+    //     memberName: "QFMYQQN6",
+    //     ss: "1-session-id",
+    //     system: system,
+    //     umInfo: null,
+    //     username: "1_NormalUser",
+    // };
     const authData = {
-        isAuthenticated: true,
-        isUM: false,
+        isAuthenticated: false,
+        isUM: true,
         language: "vi-VN",
         memberName: "QFMYQQN6",
         ss: "1-session-id",
         system: system,
-        umInfo: null,
+        umInfo: {
+            startTime: "2023-05-08T03:54:00.000Z",
+            endTime: "2023-05-08T04:54:00.000Z",
+        },
         username: "1_NormalUser",
     };
+
+    res.send(authData);
+
     res.send(authData);
 });
 
 userRouter.post("/auth/authorize", (req, res) => {
     const data = {
         authorized: true,
-        isUM: false,
+        isUM: true,
         umInfo: null,
         user: null,
     };

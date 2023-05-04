@@ -36,6 +36,11 @@ export default class Splash extends Component {
         }
     }
 
+    @render(Auth.AuthStore, (store) => store.isUM)
+    openUndermaintenancesScreen(isUM: boolean) {
+        isUM && director.loadScene("undermaintenances");
+    }
+
     updateProgressBar(progress: number) {
         this.progressBar && (this.progressBar.progress = progress);
     }

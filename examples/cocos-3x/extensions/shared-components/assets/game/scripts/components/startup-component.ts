@@ -13,6 +13,11 @@ export default class StartupComponent extends Component {
     @handle(gc.Connection.ConnectionHandlers.ConnectHandler)
     connectToService() {}
 
+    @render(gc.Auth.AuthStore, (store) => store.isUM)
+    loadUMScene(isUM: boolean) {
+        isUM && director.loadScene("undermaintenances");
+    }
+
     @render(LogStore, (store) => store.message)
     logInfo(message: string) {
         console.log(message);
