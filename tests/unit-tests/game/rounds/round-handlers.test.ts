@@ -102,11 +102,11 @@ describe("RoundHandlers test", () => {
                     handle: roundHandler.handleRoundId,
                 },
                 {
-                    name: GameServiceMessage.ownBets,
+                    name: GameServiceMessage.OwnBets.eventName,
                     handle: roundHandler.handleOwnBets,
                 },
                 {
-                    name: GameServiceMessage.totalBets,
+                    name: GameServiceMessage.TotalBets.eventName,
                     handle: roundHandler.handleTotalBets,
                 },
                 {

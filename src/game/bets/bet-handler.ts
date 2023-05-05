@@ -21,7 +21,7 @@ export class BetHandler implements IHandler<string> {
         const betData = {
             m: this.orientationStore.m,
             username: this.playerStore.name,
-            betChoice: betChoice,
+            betChoice,
             amount,
             freeBet,
         };
