@@ -4,15 +4,6 @@ import { AudioStore } from "./audio-store";
 
 export namespace AudioHandler {
     @injectable()
-    export class init implements IHandler<void> {
-        constructor(@inject(AudioStore) private readonly audioStore: AudioStore) {}
-
-        async handle() {
-            this.audioStore.init();
-        }
-    }
-
-    @injectable()
     export class Play implements IHandler<void> {
         constructor(@inject(AudioStore) private readonly audioStore: AudioStore) {}
 

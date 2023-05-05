@@ -6,6 +6,11 @@ export enum ChipDisplayType {
     VIP,
 }
 
+export type TChipsInfo = {
+    color: string | any;
+    type: ChipDisplayType;
+};
+
 @injectable()
 export class ChipUIStore {
     constructor() {
@@ -41,5 +46,9 @@ export class ChipUIStore {
 
     set value(value: number) {
         this._value = value;
+    }
+
+    get chipInfo() {
+        return { color: this._color, type: this._type };
     }
 }

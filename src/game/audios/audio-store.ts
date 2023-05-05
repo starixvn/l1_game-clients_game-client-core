@@ -12,17 +12,6 @@ export class AudioStore {
         makeAutoObservable(this);
     }
 
-    init() {
-        this.sfxMusic();
-    }
-
-    private sfxMusic() {
-        const sfx = StorageManager.get(localStorageKeys.audioClip);
-        if (sfx === "") {
-            this._sfxEnabled = true;
-        }
-    }
-
     get sfxEnabled(): boolean {
         const check = StorageManager.get(localStorageKeys.audioClip);
         return check ? check === "true" : this._sfxEnabled;

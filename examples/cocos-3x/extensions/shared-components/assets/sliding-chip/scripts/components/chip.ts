@@ -1,10 +1,6 @@
-import { Color, Component, Label, Node, Sprite, SpriteFrame, _decorator } from "cc";
-import GameClient from "game-client-base";
-import Observer from "observer";
-
-const { observer, render, handle } = Observer;
-
-const { Rounds, GameConfigs } = GameClient;
+import { Button, Color, Component, Label, Node, Sprite, SpriteFrame, _decorator } from "cc";
+import gc from "game-client-base";
+import { chipFormatter } from "../../../utils";
 
 const { ccclass, property } = _decorator;
 
@@ -13,6 +9,7 @@ export enum ChipDisplayType {
     VIP,
 }
 
+@ccclass
 export default class Chip extends Component {
     @property(Node)
     background: Node = null;
@@ -35,15 +32,42 @@ export default class Chip extends Component {
     @property(Label)
     label: Label = null;
 
-    color = Color.WHITE;
-    type = ChipDisplayType.Normal;
+    private _color = Color.WHITE;
+    private _type = ChipDisplayType.Normal;
 
     setColor(color: Color) {
-        this.color = color;
+        this._color = color;
         this.background.getComponent(Sprite).color = color;
+        this.updateChip();
+    }
+
+    setType(type: gc.Chips.ChipDisplayType) {
+        this._type = type;
+        this.center.spriteFrame = this.centerFrames[type];
+        this.border.spriteFrame = this.borderFrames[type];
+
+        this.typeNodes.forEach((node, index) => {
+            node.active = index === type;
+        });
+        this.updateChip();
+    }
+
+    private updateChip() {
+        this.center.node.getComponent(Sprite).color = this._type === ChipDisplayType.VIP ? this._color : Color.WHITE;
+        this.label.node.getComponent(Sprite).color = this._type === ChipDisplayType.VIP ? Color.YELLOW : Color.WHITE;
     }
 
     setValue(value: number) {
+        this.label.string = chipFormatter(value, 0);
         this.node.name = value.toString();
+    }
+
+    handleSmallChip(isSmall = false) {
+        this.label.node.active = isSmall;
+
+        const button = this.getComponent(Button);
+        if (button) {
+            button.enabled = false;
+        }
     }
 }

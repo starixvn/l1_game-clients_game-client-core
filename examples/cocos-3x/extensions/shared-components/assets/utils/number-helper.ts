@@ -1,4 +1,4 @@
-const ChipFormatter = (num: number, digits = 0) => {
+const chipFormatter = (num: number, digits = 0) => {
     const si = [
         { value: 1, symbol: "" },
         { value: 1e3, symbol: "K" },
@@ -21,4 +21,4 @@ const ChipFormatter = (num: number, digits = 0) => {
     return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
 };
 
-export { ChipFormatter };
+export { chipFormatter };

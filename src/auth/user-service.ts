@@ -1,12 +1,14 @@
 import { inject, injectable } from "inversify";
 import UserServiceClient from "sc-user-service-client";
 import Auth from "sc-user-service-client/dist/auth";
+import Setting from "sc-user-service-client/dist/setting";
 import { SiteConfigs } from "../configs";
 import { UrlUtils } from "../shared/utils";
 
 @injectable()
 export class UserService {
     readonly auth: Auth;
+    readonly setting: Setting;
     readonly userServiceClient: UserServiceClient;
 
     constructor(@inject(SiteConfigs) protected readonly siteConfigs: SiteConfigs) {
@@ -15,6 +17,7 @@ export class UserService {
 
         this.userServiceClient = new UserServiceClient(url);
         this.auth = this.userServiceClient.auth;
+        this.setting = this.userServiceClient.setting;
     }
 
     public sso(token: string, system?: number) {
@@ -35,5 +38,9 @@ export class UserService {
 
     public signName(session: string, username: string, nickName: string) {
         return this.auth.signName(session, username, nickName);
+    }
+
+    public getChipSetting(session: string, username: string) {
+        return this.setting.getSettings(session, username);
     }
 }
