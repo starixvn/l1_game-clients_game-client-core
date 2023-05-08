@@ -16,6 +16,7 @@ const defaultConfig: gc.Configs.SiteConfigs = {
     subDomain: "",
     env: "LOCAL",
     subGuideDomain: "l1-guide",
+    SGConnectSubDomain: "connectsite",
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,
     userServiceUrlDev: "http://localhost:3000/user",

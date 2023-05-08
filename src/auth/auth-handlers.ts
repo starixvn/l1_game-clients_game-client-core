@@ -4,6 +4,7 @@ import { PlayerStore } from "../players";
 import { GameServiceMessage, IHandler } from "../shared";
 import NameGenerator from "../shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
+import { AppStore } from "./../app/app-store";
 import { AuthStore, ISessionInfo } from "./auth-store";
 import { UserService } from "./user-service";
 
@@ -19,13 +20,23 @@ interface IAuthorizeResponse {
 
 export namespace AuthHandlers {
     @injectable()
+    export class SignOut implements IHandler<void> {
+        constructor(@inject(AppStore) private readonly appStore: AppStore, @inject(AuthStore) private readonly authStore: AuthStore) {}
+        handle() {
+            this.authStore.signOut();
+            this.appStore.isSessionTimeout = true;
+        }
+    }
+    @injectable()
     export class Authorize implements IHandler<{ session: string; username: string }> {
         private session = "";
         private username = "";
         constructor(
             @inject(AuthStore) private readonly authStore: AuthStore,
+            @inject(AppStore) private readonly appStore: AppStore,
             @inject(PlayerStore) private readonly playerStore: PlayerStore,
-            @inject(UserService) private readonly userService: UserService
+            @inject(UserService) private readonly userService: UserService,
+            @inject(SignOut) private readonly signOutHandler: SignOut
         ) {}
 
         async handle({ session = "", username = "" }) {
@@ -34,10 +45,10 @@ export namespace AuthHandlers {
             this.username = username || sessionInfo?.username;
             const response = (await this.userService.authorize(this.session, this.username)) as IAuthorizeResponse;
             if (response.isUM) {
-                this.authStore.setUM(response.umInfo);
+                this.appStore.setUM(response.umInfo);
             } else {
                 if (response.isSuccessful !== undefined && !response.isSuccessful) {
-                    this.authStore.signOut();
+                    this.signOutHandler.handle();
                 } else {
                     await this.handleAuthorizedResponse(response);
                 }
@@ -45,7 +56,7 @@ export namespace AuthHandlers {
         }
 
         private async handleAuthorizedResponse(response: IAuthorizeResponse) {
-            if (!response.authorized && this.authStore.isDirectMode) {
+            if (!response.authorized && this.appStore.isDirectMode) {
                 await this.autoGenerateName();
             } else {
                 response.user && this.playerStore.setAuthorizeStore(response.user);
@@ -63,9 +74,11 @@ export namespace AuthHandlers {
     @injectable()
     export class SSO implements IHandler<{ urlParams: URLSearchParams; system: number }> {
         constructor(
-            @inject(AuthStore) private readonly store: AuthStore,
+            @inject(AuthStore) private readonly authStore: AuthStore,
+            @inject(AppStore) private readonly appStore: AppStore,
             @inject(UserService) private readonly userService: UserService,
-            @inject(Authorize) private readonly authorizeHandler: Authorize
+            @inject(Authorize) private readonly authorizeHandler: Authorize,
+            @inject(SignOut) private readonly signOutHandler: SignOut
         ) {}
 
         async handle({ urlParams, system }: { urlParams: URLSearchParams; system: number }) {
@@ -80,7 +93,7 @@ export namespace AuthHandlers {
             const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
             const isSessionExpired = verifySession(sessionInfo);
             if (isSessionExpired && !urlParams.has("token")) {
-                this.store.signOut();
+                this.signOutHandler.handle();
                 return false;
             }
 
@@ -89,11 +102,13 @@ export namespace AuthHandlers {
 
         private async handleAuthorizeWithURLParams(urlParams: URLSearchParams, system: number) {
             if (urlParams.has("token")) {
-                this.store.isDirectMode = true;
+                this.appStore.setURLStore(urlParams);
+                this.appStore.isDirectMode = true; // will remove
                 const token = urlParams.get("token");
                 this.clearParamsOnUrl();
                 await this.handleSSOAndAuthorize(token, system);
             } else {
+                this.appStore.loadDirectMode();
                 await this.handleAuthorize();
             }
         }
@@ -101,12 +116,15 @@ export namespace AuthHandlers {
         private async handleSSOAndAuthorize(token: string, system: number) {
             const response = await this.userService.sso(token, system);
             if (response.isUM) {
-                this.store.setUM(response.umInfo);
+                this.appStore.setUM(response.umInfo);
                 return;
             }
             if (response.isAuthenticated) {
-                this.store.setAuthSSOStore(response);
-                StorageManager.set(localStorageKeys.session, this.store.getSessionInfo());
+                this.authStore.setAuthSSOStore(response);
+                StorageManager.set(localStorageKeys.session, this.authStore.getSessionInfo());
+                if (this.appStore.isDirectMode) {
+                    this.appStore.saveDirectModeInfo();
+                }
                 await this.handleAuthorize(response.ss, response.username);
             }
         }
@@ -115,7 +133,7 @@ export namespace AuthHandlers {
             if (!session || !username) {
                 const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
                 if (!sessionInfo) {
-                    this.store.signOut();
+                    this.signOutHandler.handle();
                     return;
                 }
                 session = sessionInfo.session;
@@ -138,7 +156,8 @@ export namespace AuthHandlers {
         constructor(
             @inject(AuthStore) private readonly authStore: AuthStore,
             @inject(PlayerStore) private readonly playerStore: PlayerStore,
-            @inject(UserService) private readonly userService: UserService
+            @inject(UserService) private readonly userService: UserService,
+            @inject(SignOut) private readonly signOutHandler: SignOut
         ) {}
 
         async handle({ sessionInfo }) {
@@ -147,7 +166,7 @@ export namespace AuthHandlers {
             if (response.isSuccessful) {
                 this.handleSuccessful(response, sessionInfo);
             } else {
-                this.authStore.signOut();
+                this.signOutHandler.handle();
             }
         }
 
@@ -167,10 +186,10 @@ export namespace AuthHandlers {
             this.authStore.errorCode = errorCode;
             if (response.isDisableAccount) {
                 this.authStore.isDisabledAccount = true;
-                this.authStore.signOut();
+                this.signOutHandler.handle();
             } else {
                 if (expiredSessionErrorCodes.includes(errorCode)) {
-                    this.authStore.signOut();
+                    this.signOutHandler.handle();
                 }
             }
         }
@@ -180,7 +199,7 @@ export namespace AuthHandlers {
     export class TriggerRecheckIn implements IHandler<void> {
         private reCheckInId: NodeJS.Timeout;
 
-        constructor(@inject(ReCheckIn) private readonly reCheckIn: ReCheckIn, @inject(AuthStore) private readonly authStore: AuthStore) {}
+        constructor(@inject(ReCheckIn) private readonly reCheckIn: ReCheckIn, @inject(SignOut) private readonly signOutHandler: SignOut) {}
 
         async handle() {
             this.clearInterval();
@@ -194,7 +213,7 @@ export namespace AuthHandlers {
             const isSessionExpired = verifySession(sessionInfo);
 
             if (isSessionExpired) {
-                this.authStore.signOut();
+                this.signOutHandler.handle();
             } else {
                 await this.reCheckIn.handle({ sessionInfo });
             }

@@ -31,14 +31,14 @@
     "options": {
       "web-mobile": {
         "orientation": "landscape",
-        "embedWebDebugger": true,
+        "embedWebDebugger": false,
         "__version__": "1.0.1"
       }
     },
     "taskOptionsMap": {
       "1681353552761": {
         "orientation": "landscape",
-        "embedWebDebugger": true,
+        "embedWebDebugger": false,
         "__version__": "1.0.1"
       }
     },

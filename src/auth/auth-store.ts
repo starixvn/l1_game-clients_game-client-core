@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { SSOResponse, UMInfo } from "sc-user-service-client/dist/auth";
+import { SSOResponse } from "sc-user-service-client/dist/auth";
 import { StorageManager, localStorageKeys } from "../shared/utils";
 
 export interface ISessionInfo {
@@ -16,28 +16,19 @@ export interface ISessionInfo {
 @injectable()
 export class AuthStore {
     isAuthenticated = false;
-    username: string | null = null;
-    language: string | null = null;
-    session: string | null = null;
+    username = "";
+    language = "";
+    session = "";
     system = 0;
-    memberName: string | null = null;
-    isUM = false;
-    umInfo: UMInfo | null = null;
+    memberName = "";
     isAuthorized?: boolean = null;
-    isSessionTimeout = false;
-    browserUserAgent: string;
+    browserUserAgent = "";
     isDisabledAccount = false;
-    errorCode: string | null = null;
+    errorCode = "";
     ssoTime: Date;
-    isDirectMode = false;
 
     constructor() {
         makeAutoObservable(this);
-    }
-
-    setUM(umInfo: UMInfo) {
-        this.isUM = true;
-        this.umInfo = umInfo;
     }
 
     getSessionInfo(): ISessionInfo {
@@ -56,7 +47,6 @@ export class AuthStore {
         this.username = null;
         this.session = null;
         this.isAuthenticated = false;
-        this.isSessionTimeout = true;
         StorageManager.remove(localStorageKeys.session);
     }
 

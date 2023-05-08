@@ -1,4 +1,4 @@
-import { Component, director } from "cc";
+import { Component } from "cc";
 import gc from "game-client-base";
 import Observer from "observer";
 import { LogStore } from "../stores/log-store";
@@ -12,11 +12,6 @@ export default class StartupComponent extends Component {
 
     @handle(gc.Connection.ConnectionHandlers.ConnectHandler)
     connectToService() {}
-
-    @render(gc.Auth.AuthStore, (store) => store.isSessionTimeout)
-    loadSessionTimeoutScene(isSessionTimeout: boolean) {
-        isSessionTimeout && director.loadScene("session-timeout");
-    }
 
     @render(LogStore, (store) => store.message)
     logInfo(message: string) {

@@ -15,4 +15,5 @@ export class SiteConfigs {
     subDirectory?: string;
     isDev?: boolean;
     userServiceUrlDev?: string;
+    SGConnectSubDomain?: string;
 }

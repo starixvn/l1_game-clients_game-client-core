@@ -1,4 +1,4 @@
-import { SSOResponse, UMInfo } from "sc-user-service-client/dist/auth";
+import { SSOResponse } from "sc-user-service-client/dist/auth";
 import { AuthStore } from "../../../src/auth";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 
@@ -10,32 +10,6 @@ jest.mock("../../../src/shared/utils/storage-manager", () => ({
 }));
 
 describe("AuthStore tests", () => {
-    describe("setUM", () => {
-        it("should set isUM true", () => {
-            // arrange
-            const store = new AuthStore();
-            const umInfo: UMInfo = { startTime: new Date(1000), endTime: new Date(2000) };
-
-            // act
-            store.setUM(umInfo);
-
-            // assert
-            expect(store.isUM).toBe(true);
-        });
-
-        it("should set umInfo", () => {
-            // arrange
-            const store = new AuthStore();
-            const umInfo: UMInfo = { startTime: new Date(1000), endTime: new Date(2000) };
-
-            // act
-            store.setUM(umInfo);
-
-            // assert
-            expect(store.umInfo).toEqual(umInfo);
-        });
-    });
-
     describe("setAuthSSOStore", () => {
         it("should set store sso", () => {
             // arrange
@@ -102,7 +76,6 @@ describe("AuthStore tests", () => {
             store.isAuthenticated = true;
             store.username = "username";
             store.session = "session";
-            store.isSessionTimeout = false;
 
             // act
             store.signOut();
@@ -111,7 +84,6 @@ describe("AuthStore tests", () => {
             expect(store.isAuthenticated).toBe(false);
             expect(store.username).toBeNull();
             expect(store.session).toBeNull();
-            expect(store.isSessionTimeout).toBe(true);
         });
 
         it("should call remove StorageManager", async () => {

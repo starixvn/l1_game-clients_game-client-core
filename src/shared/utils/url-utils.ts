@@ -21,11 +21,11 @@ export namespace UrlUtils {
     };
 
     export const buildGameGuideUrl = (configs: SiteConfigs) => {
-        const ssl = configs.ssl;
-        const rootDomain = getRootDomain(configs);
-        const subGuideDomainText = `${configs.subGuideDomain}.`;
+        return buildUrlFromSubDomain(configs, configs.subGuideDomain);
+    };
 
-        return `${"http"}${ssl ? "s" : ""}://${subGuideDomainText}${rootDomain}`;
+    export const buildUrlFromSubDomain = (configs: SiteConfigs, subDomain?: string) => {
+        return `${"http"}${configs.ssl ? "s" : ""}://${subDomain}.${getRootDomain(configs)}`;
     };
 
     export const buildUrlWithPath = (path: string, configs: SiteConfigs) => {

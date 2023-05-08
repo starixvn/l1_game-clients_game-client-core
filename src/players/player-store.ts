@@ -18,7 +18,6 @@ export class PlayerStore {
     name = "";
     balance = 0;
     avatarId = 0;
-    language = "en-US";
     ss = "";
     system = 1;
     operatorName: string;

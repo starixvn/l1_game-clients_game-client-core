@@ -1,3 +1,4 @@
+import { AppStore } from "../../../src/app/app-store";
 import { AuthHandlers, AuthStore, UserService } from "../../../src/auth";
 import { PlayerStore } from "../../../src/players";
 
@@ -30,8 +31,10 @@ describe("AuthHandlers tests", () => {
                 StorageManager.get.mockReturnValueOnce({ session: "session", username: "username" });
                 const authStore = new AuthStore();
                 const playerStore = new PlayerStore();
-                authStore.setUM = jest.fn();
-                const handler = new AuthHandlers.Authorize(authStore, playerStore, userService);
+                const appStore = new AppStore();
+                appStore.setUM = jest.fn();
+                const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+                const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
 
                 // act
                 await handler.handle({});
@@ -44,8 +47,10 @@ describe("AuthHandlers tests", () => {
                 // @ts-ignore
                 const authStore = new AuthStore();
                 const playerStore = new PlayerStore();
-                authStore.setUM = jest.fn();
-                const handler = new AuthHandlers.Authorize(authStore, playerStore, userService);
+                const appStore = new AppStore();
+                appStore.setUM = jest.fn();
+                const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+                const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
 
                 // act
                 await handler.handle({ session: "1", username: "name" });
@@ -59,14 +64,16 @@ describe("AuthHandlers tests", () => {
                 StorageManager.get.mockReturnValueOnce({ session: "session", username: "username" });
                 const authStore = new AuthStore();
                 const playerStore = new PlayerStore();
-                authStore.setUM = jest.fn();
-                const handler = new AuthHandlers.Authorize(authStore, playerStore, userService);
+                const appStore = new AppStore();
+                appStore.setUM = jest.fn();
+                const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+                const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
 
                 // act
                 await handler.handle({});
 
                 // assert
-                expect(authStore.setUM).toHaveBeenCalledWith(response.umInfo);
+                expect(appStore.setUM).toHaveBeenCalledWith(response.umInfo);
             });
         });
 
@@ -76,32 +83,36 @@ describe("AuthHandlers tests", () => {
                 // @ts-ignore
                 userService.authorize.mockReturnValueOnce(response);
             });
-            it("should call auth store signOut", async () => {
+            it("should call signOut", async () => {
                 // arrange
                 const authStore = new AuthStore();
                 const playerStore = new PlayerStore();
-                authStore.signOut = jest.fn();
-                const handler = new AuthHandlers.Authorize(authStore, playerStore, userService);
+                const appStore = new AppStore();
+                const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+                signOutHandler.handle = jest.fn();
+                const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
 
                 // act
                 await handler.handle({ session: "session", username: "username" });
 
                 // assert
-                expect(authStore.signOut).toHaveBeenCalled();
+                expect(signOutHandler.handle).toHaveBeenCalled();
             });
         });
 
         describe("when authorize successfully", () => {
             describe("when auth store isDirectMode false", () => {
                 const authStore = new AuthStore();
-                authStore.isDirectMode = false;
+                const appStore = new AppStore();
+                appStore.isDirectMode = false;
                 it("should set isAuthorized", async () => {
                     // arrange
                     const response = { isUM: false, umInfo: null, isSuccessful: true, authorized: true };
                     // @ts-ignore
                     userService.authorize.mockReturnValueOnce(response);
                     const playerStore = new PlayerStore();
-                    const handler = new AuthHandlers.Authorize(authStore, playerStore, userService);
+                    const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -116,7 +127,8 @@ describe("AuthHandlers tests", () => {
                     userService.authorize.mockReturnValueOnce(response);
                     const playerStore = new PlayerStore();
                     playerStore.setAuthorizeStore = jest.fn();
-                    const handler = new AuthHandlers.Authorize(authStore, playerStore, userService);
+                    const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -131,7 +143,8 @@ describe("AuthHandlers tests", () => {
                     userService.authorize.mockReturnValueOnce(response);
                     const playerStore = new PlayerStore();
                     playerStore.setAuthorizeStore = jest.fn();
-                    const handler = new AuthHandlers.Authorize(authStore, playerStore, userService);
+                    const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -152,10 +165,12 @@ describe("AuthHandlers tests", () => {
                     userService.authorize.mockReturnValueOnce(response);
                     userService.signName = jest.fn().mockReturnValue({ authorized: true });
                     const authStore = new AuthStore();
-                    authStore.isDirectMode = true;
+                    const appStore = new AppStore();
+                    appStore.isDirectMode = true;
                     const playerStore = new PlayerStore();
                     playerStore.setAuthorizeStore = jest.fn();
-                    const handler = new AuthHandlers.Authorize(authStore, playerStore, userService);
+                    const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -170,10 +185,12 @@ describe("AuthHandlers tests", () => {
                     userService.authorize.mockReturnValueOnce(response);
                     userService.signName = jest.fn().mockReturnValue({ authorized: true });
                     const authStore = new AuthStore();
-                    authStore.isDirectMode = true;
+                    const appStore = new AppStore();
+                    appStore.isDirectMode = true;
                     const playerStore = new PlayerStore();
                     playerStore.setAuthorizeStore = jest.fn();
-                    const handler = new AuthHandlers.Authorize(authStore, playerStore, userService);
+                    const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -188,10 +205,12 @@ describe("AuthHandlers tests", () => {
                     userService.authorize.mockReturnValueOnce(response);
                     userService.signName = jest.fn().mockReturnValue({ authorized: true, user: { UID: 1 } });
                     const authStore = new AuthStore();
-                    authStore.isDirectMode = true;
+                    const appStore = new AppStore();
+                    appStore.isDirectMode = true;
                     const playerStore = new PlayerStore();
                     playerStore.setAuthorizeStore = jest.fn();
-                    const handler = new AuthHandlers.Authorize(authStore, playerStore, userService);
+                    const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -231,13 +250,17 @@ describe("AuthHandlers tests", () => {
         let userService: UserService;
         let player: PlayerStore;
         let sessionTimeout: AuthHandlers.SessionTimeout;
+        let signOut: AuthHandlers.SignOut;
+        let appStore: AppStore;
 
         beforeEach(() => {
             authStore = new AuthStore();
+            appStore = new AppStore();
             userService = new UserService(siteConfigs);
             player = new PlayerStore();
-            reCheckIn = new AuthHandlers.ReCheckIn(authStore, player, userService);
-            triggerRecheckIn = new AuthHandlers.TriggerRecheckIn(reCheckIn, authStore);
+            signOut = new AuthHandlers.SignOut(appStore, authStore);
+            reCheckIn = new AuthHandlers.ReCheckIn(authStore, player, userService, signOut);
+            triggerRecheckIn = new AuthHandlers.TriggerRecheckIn(reCheckIn, signOut);
             sessionTimeout = new AuthHandlers.SessionTimeout(triggerRecheckIn);
         });
 

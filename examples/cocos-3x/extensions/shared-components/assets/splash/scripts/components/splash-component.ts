@@ -18,7 +18,6 @@ export default class Splash extends Component {
     progressBar: ProgressBar = null;
 
     onLoad() {
-        console.log("splash loading...");
         this.updateProgressBar(0);
         this.sso();
     }
@@ -37,11 +36,6 @@ export default class Splash extends Component {
         }
     }
 
-    @render(Auth.AuthStore, (store) => store.isSessionTimeout)
-    openSessionTimeoutScreen(isSessionTimeout: boolean) {
-        isSessionTimeout && director.loadScene("session-timeout");
-    }
-
     updateProgressBar(progress: number) {
         this.progressBar && (this.progressBar.progress = progress);
     }
@@ -51,7 +45,6 @@ export default class Splash extends Component {
         director.preloadScene(
             screenName,
             (completedCount: number, totalCount: number) => {
-                console.log(completedCount, totalCount);
                 this.updateProgressBar(completedCount / totalCount);
             },
             (error) => {

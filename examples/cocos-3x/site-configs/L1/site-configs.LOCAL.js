@@ -11,4 +11,5 @@ window.envConfig = {
         proxyPath: "sedie",
         route: "sedie",
     },
+    SGConnectSubDomain: "connectsite",
 };

@@ -12,4 +12,5 @@ window.envConfig = {
         route: "sedie",
     },
     subDirectory: "sit",
+    SGConnectSubDomain: "l1sitconnectsite",
 };
