@@ -1,5 +1,5 @@
 import { _decorator } from "cc";
-import Chip from "db://shared-components/sliding-chip/scripts/components/chip";
+import BetChips from "db://shared-components/sliding-chip/scripts/components/bet-chips";
 import Observer from "observer";
 
 import { settings } from "../sedie-settings";
@@ -9,4 +9,4 @@ const { observer, handle, render } = Observer;
 
 @ccclass
 @observer(settings.name)
-export default class SedieChip extends Chip {}
+export default class SedieBetChips extends BetChips {}

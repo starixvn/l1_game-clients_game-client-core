@@ -2,13 +2,16 @@ import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { ChipInfo } from "sc-user-service-client/dist/setting";
 
+export type TChipSetting = {
+    [value: number]: string;
+};
 @injectable()
 export class ChipSettingStore {
     constructor() {
         makeAutoObservable(this);
     }
 
-    private _chipSetting = {
+    private _chipSetting: TChipSetting = {
         0: "#9ec6d3",
         1: "#848484",
         5: "#2cb400",
@@ -35,4 +38,6 @@ export class ChipSettingStore {
             this._chipSetting[item.value] = item.color;
         });
     }
+
+    getChipSetting(value: number) {}
 }

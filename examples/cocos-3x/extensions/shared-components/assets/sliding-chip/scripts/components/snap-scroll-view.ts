@@ -1,7 +1,15 @@
 import { Component, ScrollView, UITransform, _decorator } from "cc";
 
+import gc from "game-client-base";
+import Observer from "observer";
+
+const { observer, render, handle } = Observer;
+const { Chips } = gc;
+
 const { ccclass, property } = _decorator;
+
 @ccclass
+@observer
 export class SnapScrollView extends Component {
     @property
     itemSize = 84;
@@ -16,9 +24,8 @@ export class SnapScrollView extends Component {
     isHorizontalLayout = true;
 
     private readonly _calculatedPercent: number[] = [];
-    private _minDisplayIndex = 0;
+    private _minDisplay = 0;
     private _scrollView: ScrollView;
-    private _scrollBegan = false;
 
     get scrollView() {
         if (!this._scrollView) {
@@ -31,6 +38,7 @@ export class SnapScrollView extends Component {
         this.initCalculatedPercent();
     }
 
+    @render(Chips.SlidingChipStore, (store) => store.isCalculatedPercent)
     public initCalculatedPercent() {
         const count = this.contentItemCount();
         const contentWidth = this.scrollContentWidth();
@@ -62,19 +70,24 @@ export class SnapScrollView extends Component {
 
     public onScroll(eventType: string) {
         if (eventType === ScrollView.EventType.SCROLL_ENDED) {
-            if (!this._scrollBegan) {
-                return;
-            }
-            this._scrollBegan = false;
-            const percent = this.getPercent();
-            this.calculateMinDisplayIndex(percent);
-            this.scrollTo(this._minDisplayIndex);
-            this.onScrollEnded();
+            this.onScrollEnd();
         }
+
         if (eventType === ScrollView.EventType.SCROLL_BEGAN) {
-            this._scrollBegan = true;
+            this.onScrollBegan();
         }
     }
+
+    @handle(Chips.SlidingChipHandler.SnapScrollEnd)
+    onScrollEnd() {
+        const percent = this.getPercent();
+        this.calculateMinDisplay(percent);
+        this.scrollTo(this._minDisplay);
+        this.actionScrollEnded();
+    }
+
+    @handle(Chips.SlidingChipHandler.SnapScrollBegan)
+    onScrollBegan() {}
 
     private getPercent(): number {
         const offset = -this.scrollView.getScrollOffset().x;
@@ -88,19 +101,19 @@ export class SnapScrollView extends Component {
         return percent;
     }
 
-    private calculateMinDisplayIndex(percent: number) {
+    private calculateMinDisplay(percent: number) {
         for (let i = 0; i < this._calculatedPercent.length; i++) {
             if (this._calculatedPercent[i] <= percent && percent <= this._calculatedPercent[i + 1]) {
                 const delta1 = percent - this._calculatedPercent[i];
                 const delta2 = this._calculatedPercent[i + 1] - percent;
                 if (delta1 + delta2 > 0) {
-                    this._minDisplayIndex = delta1 < delta2 ? i : i + 1;
+                    this._minDisplay = delta1 < delta2 ? i : i + 1;
                 }
                 break;
             }
 
             if (percent <= this._calculatedPercent[i]) {
-                this._minDisplayIndex = i;
+                this._minDisplay = i;
                 break;
             }
             if (this._calculatedPercent[i] >= 1) {
@@ -110,13 +123,13 @@ export class SnapScrollView extends Component {
     }
 
     public scrollTo(index: number) {
-        this._minDisplayIndex = index;
+        this._minDisplay = index;
         this.scrollView.scrollToPercentHorizontal(this._calculatedPercent[index], 0.3, true);
     }
 
-    public onScrollEnded = () => {};
+    public actionScrollEnded = () => {};
 
-    public getMinDisplayIndex(): number {
-        return this._minDisplayIndex;
+    public getMinDisplay(): number {
+        return this._minDisplay;
     }
 }
