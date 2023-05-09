@@ -38,7 +38,7 @@ export namespace AuthHandlers {
             @inject(AppStore) private readonly appStore: AppStore,
             @inject(PlayerStore) private readonly playerStore: PlayerStore,
             @inject(UserService) private readonly userService: UserService,
-            @inject(SignOut) private readonly signOutHandler: SignOut
+            @inject(SignOut) private readonly signOutHandler: SignOut,
             @inject(ChipSettingStore) private readonly chipSettingStore: ChipSettingStore
         ) {}
 

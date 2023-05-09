@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { makeAutoObservable, toJS } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { PlayerStore } from "../../players";
 import { GameConfigStore } from "../game-configs";
 
@@ -90,8 +90,6 @@ export class SlidingChipStore {
     }
 
     get chipValues() {
-        // this.getChipsByStakeLevel();
-        console.log(" this._chipValues-----", toJS(this._chipValues));
         return this._chipValues;
     }
 

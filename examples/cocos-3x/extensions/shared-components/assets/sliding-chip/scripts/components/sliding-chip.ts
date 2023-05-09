@@ -18,7 +18,7 @@ import {
 import gc from "game-client-base";
 import * as _ from "lodash";
 import Observer from "observer";
-import Chip from "./chip";
+import Chip, { ChipDisplayType } from "./chip";
 import { SnapScrollView } from "./snap-scroll-view";
 
 const { observer, render, handle } = Observer;
@@ -101,7 +101,6 @@ export default class SlidingChip extends Component {
 
     @render(GameConfigs.GameConfigStore, (store) => store.chips)
     setChipValues(chips: number[]) {
-        // init chips //
         console.log("chipschips-----------", chips.toString());
         chips && this.updateChipsValue();
     }
@@ -194,7 +193,7 @@ export default class SlidingChip extends Component {
     }
 
     private getChipDisplayType(index: number) {
-        return index > this.chipValues.length - 3 ? Chips.ChipDisplayType.VIP : Chips.ChipDisplayType.Normal;
+        return index > this.chipValues.length - 3 ? ChipDisplayType.VIP : ChipDisplayType.Normal;
     }
 
     @render(Chips.ChipSettingStore, (store) => store.chipSetting)
@@ -204,12 +203,14 @@ export default class SlidingChip extends Component {
 
     getChipColor(value: number): Color {
         const hexStr = this.chipSetting[value];
+        let color: Color = new Color(0, 0, 0, 255);
         if (!hexStr) {
             console.error(`Missing color for chip ${value}`);
-            return Color.BLACK.fromHEX(this.chipSetting[0]);
+            Color.fromHEX(color, this.chipSetting[0]);
+            return color;
         }
 
-        const color = Color.BLACK.fromHEX(hexStr);
+        Color.fromHEX(color, hexStr);
         return color;
     }
 
@@ -240,7 +241,7 @@ export default class SlidingChip extends Component {
     protected createBigChip(value: number): Node {
         const chipNode = instantiate(this.chipPrefab);
         const chip = chipNode.getComponent(Chip);
-        // chip.setColor(this.getChipColor(value));
+        chip.setColor(this.getChipColor(value));
         chip.setValue(value);
         const index = this.chipValues.findIndex((chipValue) => chipValue === value);
         chip.setType(this.getChipDisplayType(index));
@@ -276,7 +277,6 @@ export default class SlidingChip extends Component {
     createSmallChip() {}
     // payChipsToWinningBetItemWithAmount(){}
     // createChipNodes(){}
-    //////////////////////////////
 
     public getRandomPositionChip(chip: Node, box: Node): Vec3 {
         const chipBoundingBox = chip.getComponent(UITransform).getBoundingBox();

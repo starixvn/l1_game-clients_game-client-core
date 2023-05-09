@@ -8,7 +8,7 @@ export default class BetChips extends Component {
     betChipsContainer: Node = null;
 
     @property(Prefab)
-    betChipsPrefab: Prefab = null;
+    slidingChipPrefab: Prefab = null;
 
     protected slidingChip: SlidingChip;
 
@@ -18,7 +18,7 @@ export default class BetChips extends Component {
 
     protected initBetChips() {
         if (this.betChipsContainer) {
-            const betChipsNode = instantiate(this.betChipsPrefab);
+            const betChipsNode = instantiate(this.slidingChipPrefab);
             this.betChipsContainer.addChild(betChipsNode);
             this.initBetChipByLoader(betChipsNode);
         }

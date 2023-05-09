@@ -1,5 +1,4 @@
 import { Button, Color, Component, Label, Node, Sprite, SpriteFrame, _decorator } from "cc";
-import gc from "game-client-base";
 import { chipFormatter } from "../../../utils";
 
 const { ccclass, property } = _decorator;
@@ -41,7 +40,7 @@ export default class Chip extends Component {
         this.updateChip();
     }
 
-    setType(type: gc.Chips.ChipDisplayType) {
+    setType(type: ChipDisplayType) {
         this._type = type;
         this.center.spriteFrame = this.centerFrames[type];
         this.border.spriteFrame = this.borderFrames[type];
@@ -53,8 +52,8 @@ export default class Chip extends Component {
     }
 
     private updateChip() {
-        this.center.node.getComponent(Sprite).color = this._type === ChipDisplayType.VIP ? this._color : Color.WHITE;
-        this.label.node.getComponent(Sprite).color = this._type === ChipDisplayType.VIP ? Color.YELLOW : Color.WHITE;
+        this.center.color = this._type === ChipDisplayType.VIP ? this._color : Color.WHITE;
+        this.label.color = this._type === ChipDisplayType.VIP ? Color.YELLOW : Color.WHITE;
     }
 
     setValue(value: number) {
