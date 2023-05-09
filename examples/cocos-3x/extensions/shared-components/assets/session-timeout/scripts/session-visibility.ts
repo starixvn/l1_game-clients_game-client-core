@@ -9,7 +9,7 @@ const { ConnectSite, App } = gc;
 const { ccclass } = _decorator;
 @ccclass
 @observer
-export default class UMVisibility extends Component {
+export default class SessionTimeOutVisibility extends Component {
     @render(App.AppStore, (store) => ({ isSessionTimeout: store.isSessionTimeout, isApp: store.isApp }))
     redirectToSessionTimeoutPage({ isSessionTimeout, isApp }: { isSessionTimeout: boolean; isApp: boolean }) {
         if (isSessionTimeout) {
