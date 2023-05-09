@@ -1,18 +1,16 @@
-import { _decorator, Component, director, Label } from "cc";
+import { _decorator, Component, Label } from "cc";
 import Observer from "observer";
 import gc from "game-client-base";
 import { UMInfo } from "sc-user-service-client/dist/auth";
 import mobx from "mobx";
 import { sharedContainer } from "../../../../../../assets/scripts/shared-container";
-
 const { ccclass, property } = _decorator;
-const { observer, handle, render } = Observer;
-const { Auth, Shared } = gc;
+const { observer, render } = Observer;
+const { App } = gc;
 
 declare global {
     interface Window {
         reCheckInId: number;
-        umInfo: UMInfo;
     }
 }
 
@@ -24,25 +22,12 @@ export default class Undermaintenances extends Component {
     message: Label = null;
 
     onLoad() {
-        // if (window.umInfo) {
-        //     if (this) {
-        //         const startTime = this.formatDate(this.convertToGMT8(new Date(window.umInfo.startTime)));
-        //         const endTime = this.formatDate(this.convertToGMT8(new Date(window.umInfo.endTime)));
-
-        //         // const message = i18n.t("ui.maintain_time", { startTime: startTime, endTime: endTime });
-        //         this.message.string = `Maintain from ${startTime} to ${endTime}`;
-        //     }
-        // }
-
         if (window.reCheckInId) {
             clearInterval(window.reCheckInId);
         }
-
-        // socketIOController.closeAllSocket();
-        // MusicPlayer.getInstance().stopBackgroundAudio();
     }
 
-    @render(Auth.AuthStore, (store) => store.umInfo)
+    @render(App.AppStore, (store) => store.umInfo)
     setUMInfo(umInfo: UMInfo) {
         const startTime = this.formatDate(this.convertToGMT8(new Date(umInfo.startTime)));
         const endTime = this.formatDate(this.convertToGMT8(new Date(umInfo.endTime)));
@@ -51,6 +36,7 @@ export default class Undermaintenances extends Component {
         this.message.string = `Maintain from ${startTime} to ${endTime}`;
     }
 
+    // TO DO: Will move to utils later
     convertToGMT8(date: Date) {
         return new Date(
             date.toLocaleString("en-US", {

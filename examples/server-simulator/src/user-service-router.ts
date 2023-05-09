@@ -6,40 +6,39 @@ userRouter.get("/", (req, res) => {
 });
 
 userRouter.get("/auth/sso", (req, res) => {
-    const { system } = req.query;
-    // const authData = {
-    //     isAuthenticated: true,
-    //     isUM: true,
-    //     language: "vi-VN",
-    //     memberName: "QFMYQQN6",
-    //     ss: "1-session-id",
-    //     system: system,
-    //     umInfo: null,
-    //     username: "1_NormalUser",
-    // };
-    const authData = {
-        isAuthenticated: false,
-        isUM: true,
+    const { system, token } = req.query;
+    if (token === "testum") {
+        return res.send({
+            isAuthenticated: false,
+            isUM: true,
+            umInfo: {
+                startTime: "2023-05-08T03:54:00.000Z",
+                endTime: "2023-05-08T04:54:00.000Z",
+            },
+            language: "vi-VN",
+            memberName: "QFMYQQN6",
+            ss: "1-session-id",
+            system: system,
+            username: "1_NormalUser",
+        });
+    }
+
+    return res.send({
+        isAuthenticated: true,
+        isUM: false,
+        umInfo: null,
         language: "vi-VN",
         memberName: "QFMYQQN6",
         ss: "1-session-id",
         system: system,
-        umInfo: {
-            startTime: "2023-05-08T03:54:00.000Z",
-            endTime: "2023-05-08T04:54:00.000Z",
-        },
         username: "1_NormalUser",
-    };
-
-    res.send(authData);
-
-    res.send(authData);
+    });
 });
 
 userRouter.post("/auth/authorize", (req, res) => {
     const data = {
         authorized: true,
-        isUM: true,
+        isUM: false,
         umInfo: null,
         user: null,
     };

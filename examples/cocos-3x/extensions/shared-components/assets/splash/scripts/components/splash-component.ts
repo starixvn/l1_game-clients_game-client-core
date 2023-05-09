@@ -4,7 +4,7 @@ import Observer from "observer";
 
 const { ccclass, property } = _decorator;
 const { observer, handle, render } = Observer;
-const { Auth, Shared } = gc;
+const { Auth, Shared, App } = gc;
 
 export const AppTypes = {
     Club: 1,
@@ -36,7 +36,7 @@ export default class Splash extends Component {
         }
     }
 
-    @render(Auth.AuthStore, (store) => store.isUM)
+    @render(App.AppStore, (store) => store.isUM)
     openUndermaintenancesScreen(isUM: boolean) {
         isUM && director.loadScene("undermaintenances");
     }

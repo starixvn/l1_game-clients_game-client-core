@@ -2,17 +2,17 @@ version: "1.0.1"
 name: game-client-base-examples
 
 services:
-  cocos-3x:
-    build:
-      dockerfile: cocos-example.dockerfile
-      context: ../../
-    ports:
-      - "7467:80"
-    networks:
-      - mern-app
-    volumes:
-      - ./cocos-3x/:/usr/src/app
-      - /usr/src/app/node_modules
+  # cocos-3x:
+  #   build:
+  #     dockerfile: cocos-example.dockerfile
+  #     context: ../../
+  #   ports:
+  #     - "7467:80"
+  #   networks:
+  #     - mern-app
+  #   volumes:
+  #     - ./cocos-3x/:/usr/src/app
+  #     - /usr/src/app/node_modules
 
   user-service:
     build:
