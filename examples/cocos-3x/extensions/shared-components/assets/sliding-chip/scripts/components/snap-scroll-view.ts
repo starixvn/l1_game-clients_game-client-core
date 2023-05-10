@@ -1,15 +1,26 @@
 import { Component, ScrollView, UITransform, _decorator } from "cc";
 
-import gc from "game-client-base";
-import Observer from "observer";
-
-const { observer, render, handle } = Observer;
-const { Chips } = gc;
+import { ChipScrollView } from "../../../scroll-view/scripts/components/chip-scroll-view";
 
 const { ccclass, property } = _decorator;
 
+export const eventMapScrollView = {
+    "scroll-to-top": 0,
+    "scroll-to-bottom": 1,
+    "scroll-to-left": 2,
+    "scroll-to-right": 3,
+    scrolling: 4,
+    "bounce-bottom": 6,
+    "bounce-left": 7,
+    "bounce-right": 8,
+    "bounce-top": 5,
+    "scroll-ended": 9,
+    "touch-up": 10,
+    "scroll-ended-with-threshold": 11,
+    "scroll-began": 12,
+};
+
 @ccclass
-@observer
 export class SnapScrollView extends Component {
     @property
     itemSize = 84;
@@ -25,11 +36,11 @@ export class SnapScrollView extends Component {
 
     private readonly _calculatedPercent: number[] = [];
     private _minDisplay = 0;
-    private _scrollView: ScrollView;
+    private _scrollView: ChipScrollView;
 
     get scrollView() {
         if (!this._scrollView) {
-            this._scrollView = this.getComponent(ScrollView);
+            this._scrollView = this.getComponent(ChipScrollView);
         }
         return this._scrollView;
     }
@@ -38,7 +49,6 @@ export class SnapScrollView extends Component {
         this.initCalculatedPercent();
     }
 
-    @render(Chips.SlidingChipStore, (store) => store.isCalculatedPercent)
     public initCalculatedPercent() {
         const count = this.contentItemCount();
         const contentWidth = this.scrollContentWidth();
@@ -68,26 +78,17 @@ export class SnapScrollView extends Component {
             : this.scrollView.content.getComponent(UITransform).width;
     }
 
-    public onScroll(eventType: string) {
-        if (eventType === ScrollView.EventType.SCROLL_ENDED) {
+    public onScrollView(scrollView: ScrollView, eventType: number) {
+        if (eventType === eventMapScrollView["scroll-ended"]) {
             this.onScrollEnd();
-        }
-
-        if (eventType === ScrollView.EventType.SCROLL_BEGAN) {
-            this.onScrollBegan();
         }
     }
 
-    @handle(Chips.SlidingChipHandler.SnapScrollEnd)
     onScrollEnd() {
         const percent = this.getPercent();
         this.calculateMinDisplay(percent);
-        this.scrollTo(this._minDisplay);
         this.actionScrollEnded();
     }
-
-    @handle(Chips.SlidingChipHandler.SnapScrollBegan)
-    onScrollBegan() {}
 
     private getPercent(): number {
         const offset = -this.scrollView.getScrollOffset().x;

@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { IHandler } from "../../shared";
-import { SCROLL_STATE, SlidingChipStore } from "./sliding-chip-store";
+import { SlidingChipStore } from "./sliding-chip-store";
 
 export namespace SlidingChipHandler {
     @injectable()
@@ -8,7 +8,6 @@ export namespace SlidingChipHandler {
         constructor(@inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore) {}
 
         async handle() {
-            this.slidingChipStore.isShowLeftArrow = false;
             this.slidingChipStore.selectChip = 0;
         }
     }
@@ -27,7 +26,7 @@ export namespace SlidingChipHandler {
         constructor(@inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore) {}
 
         async handle({ chipMovingStep }) {
-            this.slidingChipStore.handleClickNext(chipMovingStep);
+            this.slidingChipStore.handleClickPrev(chipMovingStep);
         }
     }
 
@@ -46,7 +45,6 @@ export namespace SlidingChipHandler {
 
         async handle() {
             const chipValues = this.slidingChipStore.chipValues;
-            this.slidingChipStore.isCreateChips = true;
             const currentBet =
                 chipValues.findIndex((value) => parseInt(value.toString()) === parseInt(this.slidingChipStore.currentBet)) !== -1
                     ? this.slidingChipStore.currentBet
@@ -56,7 +54,6 @@ export namespace SlidingChipHandler {
             }
             this.slidingChipStore.isResetScrollViewOffset = currentBet !== this.slidingChipStore.currentBet;
             this.slidingChipStore.currentBet = currentBet;
-            this.slidingChipStore.isCalculatedPercent = true;
         }
     }
 
@@ -70,26 +67,6 @@ export namespace SlidingChipHandler {
     }
 
     @injectable()
-    export class SnapScrollEnd implements IHandler<void> {
-        constructor(@inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore) {}
-
-        async handle() {
-            if (this.slidingChipStore.scrollState === SCROLL_STATE.SCROLL_BEGAN) {
-                this.slidingChipStore.scrollState = SCROLL_STATE.SCROLL_ENDED;
-            }
-        }
-    }
-
-    @injectable()
-    export class SnapScrollBegan implements IHandler<void> {
-        constructor(@inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore) {}
-
-        async handle() {
-            this.slidingChipStore.scrollState = SCROLL_STATE.SCROLL_BEGAN;
-        }
-    }
-
-    @injectable()
     export class UpdateSelectChip implements IHandler<{ displayMin: number; displaySize: number }> {
         constructor(@inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore) {}
 
@@ -98,14 +75,6 @@ export namespace SlidingChipHandler {
         }
     }
 
-    @injectable()
-    export class UpdateArrowVisibility implements IHandler<void> {
-        constructor(@inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore) {}
-
-        async handle() {
-            this.slidingChipStore.handleArrowVisibility();
-        }
-    }
     @injectable()
     export class SetSelectChipAndScroll implements IHandler<{ selectedChip: number }> {
         constructor(@inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore) {}

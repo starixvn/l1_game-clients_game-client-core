@@ -536,8 +536,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 31,
-      "height": 100
+      "width": 870,
+      "height": 106
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -850,7 +850,7 @@
     },
     "component": "",
     "_componentId": "24c17V2yXJEVYjBGkLvN9Iu",
-    "handler": "onScroll",
+    "handler": "onScrollView",
     "customEventData": ""
   },
   {
