@@ -37,8 +37,8 @@ export default class Splash extends Component {
     }
 
     @render(App.AppStore, (store) => store.isUM)
-    openUndermaintenancesScreen(isUM: boolean) {
-        isUM && director.loadScene("undermaintenances");
+    openUnderMaintenanceScreen(isUM: boolean) {
+        isUM && director.loadScene("under-maintenance");
     }
 
     updateProgressBar(progress: number) {

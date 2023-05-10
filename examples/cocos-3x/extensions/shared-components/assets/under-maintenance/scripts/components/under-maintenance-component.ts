@@ -2,8 +2,6 @@ import { _decorator, Component, Label } from "cc";
 import Observer from "observer";
 import gc from "game-client-base";
 import { UMInfo } from "sc-user-service-client/dist/auth";
-import mobx from "mobx";
-import { sharedContainer } from "../../../../../../assets/scripts/shared-container";
 const { ccclass, property } = _decorator;
 const { observer, render } = Observer;
 const { App } = gc;
@@ -14,10 +12,9 @@ declare global {
     }
 }
 
-Observer.configure({ default: { mobx, container: sharedContainer } });
 @ccclass
 @observer
-export default class Undermaintenances extends Component {
+export default class UnderMaintenance extends Component {
     @property(Label)
     message: Label = null;
 

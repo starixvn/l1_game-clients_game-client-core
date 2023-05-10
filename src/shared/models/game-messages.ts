@@ -157,6 +157,7 @@ export namespace GameServiceMessage {
     export class UMInfo {
         startTime: Date;
         endTime: Date;
+        operatorId: string;
         static eventName = "kickedOut";
     }
 }

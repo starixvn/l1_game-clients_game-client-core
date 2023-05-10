@@ -15,7 +15,7 @@ export default class StartupComponent extends Component {
 
     @render(gc.App.AppStore, (store) => store.isUM)
     loadUMScene(isUM: boolean) {
-        isUM && director.loadScene("undermaintenances");
+        isUM && director.loadScene("under-maintenance");
     }
 
     @render(LogStore, (store) => store.message)

@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.SceneAsset",
-    "_name": "undermaintenances",
+    "_name": "under-maintenance",
     "_objFlags": 0,
     "_native": "",
     "scene": {
@@ -10,7 +10,7 @@
   },
   {
     "__type__": "cc.Scene",
-    "_name": "undermaintenances",
+    "_name": "under-maintenance",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -21,7 +21,7 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 35
+      "__id__": 37
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -52,7 +52,7 @@
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 38
+      "__id__": 40
     },
     "_id": "86a3474c-ed60-42a0-89da-9d530ed682d0"
   },
@@ -155,6 +155,12 @@
     "removedComponents": [
       {
         "__id__": 34
+      },
+      {
+        "__id__": 35
+      },
+      {
+        "__id__": 36
       }
     ]
   },
@@ -200,7 +206,7 @@
     "propertyPath": [
       "_name"
     ],
-    "value": "undermaintenances"
+    "value": "under-maintenance"
   },
   {
     "__type__": "cc.TargetInfo",
@@ -477,6 +483,18 @@
     ]
   },
   {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "c2FVIHUXxGzKvPmTdB9+Z0"
+    ]
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "e0Qvca2+5AbIVgN+ImfGWs"
+    ]
+  },
+  {
     "__type__": "cc.PrefabInfo",
     "root": null,
     "asset": null,
@@ -484,7 +502,7 @@
     "instance": null,
     "targetOverrides": [
       {
-        "__id__": 36
+        "__id__": 38
       }
     ],
     "nestedPrefabInstanceRoots": [
@@ -506,7 +524,7 @@
       "__id__": 2
     },
     "targetInfo": {
-      "__id__": 37
+      "__id__": 39
     }
   },
   {
@@ -518,22 +536,22 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 39
-    },
-    "shadows": {
-      "__id__": 40
-    },
-    "_skybox": {
       "__id__": 41
     },
-    "fog": {
+    "shadows": {
       "__id__": 42
     },
-    "octree": {
+    "_skybox": {
       "__id__": 43
     },
-    "lightProbeInfo": {
+    "fog": {
       "__id__": 44
+    },
+    "octree": {
+      "__id__": 45
+    },
+    "lightProbeInfo": {
+      "__id__": 46
     },
     "bakedWithStationaryMainLight": false,
     "bakedWithHighpLightmap": false

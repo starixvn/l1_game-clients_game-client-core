@@ -1,13 +1,12 @@
 import { inject, injectable } from "inversify";
 import { GameServiceMessage, IMultipleHandlers } from "../shared";
-import { UMInfo } from "sc-user-service-client/dist/auth";
 import { AppStore } from "../app";
 
 @injectable()
 export class UndermaintenaceHandlers implements IMultipleHandlers {
     constructor(@inject(AppStore) protected readonly appStore: AppStore) {}
 
-    handleDataKickedOut(umInfo: UMInfo) {
+    handleDataKickedOut(umInfo: GameServiceMessage.UMInfo) {
         this.appStore.setUM(umInfo);
     }
 
