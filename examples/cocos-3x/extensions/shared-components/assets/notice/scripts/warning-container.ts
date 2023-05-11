@@ -25,10 +25,8 @@ export class WarningContainer extends NodeContainer {
 
     @render(Notice.NoticeStore, (store) => store.warning, { fireImmediately: false })
     showWarning(warning) {
-        if (warning.message) {
-            const node = this.createNode();
-            const warningCmp = node.getComponent(WarningCmp);
-            warningCmp.setData(warning.message);
-        }
+        const node = this.createNode();
+        const warningCmp = node.getComponent(WarningCmp);
+        warningCmp.setData(warning.message);
     }
 }

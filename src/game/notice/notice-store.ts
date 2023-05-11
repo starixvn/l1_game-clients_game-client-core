@@ -26,7 +26,7 @@ export class NoticeStore {
 
     warning = null;
 
-    notice = {};
+    notice = null;
 
     addWarning(message: string) {
         this.warning = { message };

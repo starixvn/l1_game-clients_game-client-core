@@ -25,6 +25,7 @@ export class NoticeContainer extends NodeContainer {
 
     @render(Notice.NoticeStore, (store) => store.notice, { fireImmediately: false })
     showNotice(notice: gc.Notice.Notice) {
+        console.log("renderNotice", notice);
         const node = this.createNode();
         const noticeCmp = node.getComponent(NoticeCmp);
         noticeCmp.setData(notice);
