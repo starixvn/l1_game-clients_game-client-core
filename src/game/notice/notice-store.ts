@@ -24,9 +24,9 @@ export class NoticeStore {
         makeAutoObservable(this);
     }
 
-    warning = null;
+    warning: Warning = null;
 
-    notice = null;
+    notice: Notice = null;
 
     addWarning(message: string) {
         this.warning = { message };
