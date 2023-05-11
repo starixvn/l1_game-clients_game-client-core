@@ -4,6 +4,7 @@ export * as Connection from "./connection";
 export * as GameConfigs from "./game-configs";
 export * as HideGame from "./hide-game";
 export * as JoinGame from "./join-game";
+export * as Notice from "./notice";
 export * as Orientation from "./orientation";
 export * as RoundHistories from "./round-histories";
 export * as Rounds from "./rounds";
