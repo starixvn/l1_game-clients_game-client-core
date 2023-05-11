@@ -4,7 +4,7 @@ const { ccclass, property } = _decorator;
 @ccclass
 export class WarningCmp extends Component {
     @property(Label)
-    message: Label = null;
+    lblMessage: Label = null;
 
     onEnable() {
         this.autoDisappear();
@@ -29,6 +29,6 @@ export class WarningCmp extends Component {
     }
 
     setData(message: string) {
-        this.message.string = message;
+        this.lblMessage.string = message;
     }
 }

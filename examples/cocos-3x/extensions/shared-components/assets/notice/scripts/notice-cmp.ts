@@ -1,4 +1,5 @@
-import { _decorator, Component, Label, Node } from "cc";
+import { _decorator, Label, Node } from "cc";
+import { Dialog } from "../../dialogs/dialog";
 const { ccclass, property } = _decorator;
 
 enum NoticeType {
@@ -7,12 +8,12 @@ enum NoticeType {
 }
 
 @ccclass()
-export class NoticeCmp extends Component {
+export class NoticeCmp extends Dialog {
     @property(Label)
-    title: Label = null;
+    lblTitle: Label = null;
 
     @property(Label)
-    message: Label = null;
+    lblMessage: Label = null;
 
     @property(Node)
     nodeInfo: Node = null;
@@ -23,8 +24,8 @@ export class NoticeCmp extends Component {
     onClose: () => void;
 
     setData(data: { title: string; message: string; type: NoticeType; onClose: () => void }) {
-        this.title.string = data.title;
-        this.message.string = data.message;
+        this.lblTitle.string = data.title;
+        this.lblMessage.string = data.message;
         this.onClose = data.onClose;
         this.updateDisplay(data.type);
     }
@@ -35,7 +36,11 @@ export class NoticeCmp extends Component {
         this.nodeError.active = !isInfo;
     }
 
-    protected onDestroy(): void {
+    onOkClick() {
+        this.hide();
+    }
+
+    onDestroy() {
         this.onClose && this.onClose();
     }
 }
