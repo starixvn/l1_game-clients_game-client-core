@@ -11,7 +11,7 @@
         "game-client-base": "file:../..",
         "inversify": "6.0.1",
         "mobx": "6.9.0",
-        "observer": "1.1.2"
+        "observer": "1.2.0"
     },
     "devDependencies": {
         "javascript-obfuscator": "4.0.2",

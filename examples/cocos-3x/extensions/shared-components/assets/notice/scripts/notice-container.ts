@@ -11,7 +11,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass("NoticeContainer")
 export class NoticeContainer extends NodeContainer {
-    @render(Notice.NoticeStore, (store) => store.notice)
+    @render(Notice.NoticeStore, (store) => store.notice, { fireImmediately: false })
     showNotice(notice: gc.Notice.Notice) {
         const node = this.createNode();
         const noticeCmp = node.getComponent(NoticeCmp);
