@@ -4,14 +4,25 @@ import Observer from "observer";
 import { NodeContainer } from "../../node-container/node-container";
 import { WarningCmp } from "./warning-cmp";
 
-const { observer, render, handle } = Observer;
+const { observer, render, handle, useObserver } = Observer;
 
 const { Notice } = gc;
 const { ccclass, property } = _decorator;
 
 @ccclass("WarningContainer")
-@observer("SeDie")
 export class WarningContainer extends NodeContainer {
+    @property
+    namespaceObserver = "default";
+
+    private dispose: any;
+    onLoad() {
+        this.dispose = useObserver(this, this.namespaceObserver);
+    }
+
+    onDestroy() {
+        this.dispose();
+    }
+
     @render(Notice.NoticeStore, (store) => store.warning, { fireImmediately: false })
     showWarning(warning) {
         if (warning.message) {
