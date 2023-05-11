@@ -1,5 +1,4 @@
 import {
-    AudioSource,
     Color,
     Component,
     Layout,
@@ -17,30 +16,25 @@ import {
     v3,
 } from "cc";
 import gc from "game-client-base";
-import * as _ from "lodash";
+import { random, round } from "lodash-es";
 import Observer from "observer";
+import { SlidingChipHandler } from "../handlers/sliding-chip-handler";
+import { SlidingChipStore } from "../stores/sliding-chip-store";
 import Chip, { ChipDisplayType } from "./chip";
 import { SnapScrollView } from "./snap-scroll-view";
 
-const { observer, render, handle } = Observer;
+const { observer, render, handle, useObserver } = Observer;
 const { Chips, GameConfigs, Player } = gc;
 
 const { ccclass, property } = _decorator;
 
 @ccclass
-@observer("SeDie")
 export default class SlidingChip extends Component {
+    @property
+    namespace = "game";
+
     @property(Node)
     chips: Node = null;
-
-    @property(AudioSource)
-    singleChipAudio: AudioSource = null;
-
-    @property(AudioSource)
-    multiChipAudio: AudioSource = null;
-
-    @property(AudioSource)
-    betChipClickAudio: AudioSource = null;
 
     @property(SpriteAtlas)
     chipAltas: SpriteAtlas = null;
@@ -75,20 +69,26 @@ export default class SlidingChip extends Component {
     public chipList: Node[] = [];
     private disabledBetChips = false;
     protected chipSetting: gc.Chips.TChipSetting;
+    dispose: Function;
 
     setDisabledBetChips(status: boolean) {
         this.disabledBetChips = status;
     }
 
-    @handle(Chips.SlidingChipHandler.OnLoad)
+    @handle(SlidingChipHandler.OnLoad)
     onLoad() {
+        this.dispose = useObserver(this, this.namespace);
         this.setLeftButtonStatus(false);
         this.snappedScrollView.actionScrollEnded = () => {
             this.updateSelectChip();
         };
     }
 
-    @handle(Chips.SlidingChipHandler.UpdateSelectChip)
+    protected onDestroy(): void {
+        this.dispose();
+    }
+
+    @handle(SlidingChipHandler.UpdateSelectChip)
     updateSelectChip() {
         return {
             displayMin: this.snappedScrollView.getMinDisplay(),
@@ -118,7 +118,7 @@ export default class SlidingChip extends Component {
         stakeLevel && this.updateChipsValue();
     }
 
-    @handle(Chips.SlidingChipHandler.UpdateCurrentBet)
+    @handle(SlidingChipHandler.UpdateCurrentBet)
     updateCurrentBet(bet: string) {
         return { bet };
     }
@@ -131,7 +131,7 @@ export default class SlidingChip extends Component {
         this.rightButton.active = isShowRightArrow && !this.disabledBetChips;
     }
 
-    @render(Chips.SlidingChipStore, (store) => store.currentBet)
+    @render(SlidingChipStore, (store) => store.currentBet)
     public setCurrentBet(currentBet: string) {
         this.updateSelectedBet(currentBet);
     }
@@ -158,20 +158,19 @@ export default class SlidingChip extends Component {
             .start();
     }
 
-    @handle(Chips.SlidingChipHandler.ClickPrev)
+    @handle(SlidingChipHandler.ClickArrow, (handler, payload: { chipMovingStep: number }) => handler.handlePrev(payload))
     public onPrevious() {
         // Audio Click
         return { chipMovingStep: this.movingStep };
     }
 
-    @handle(Chips.SlidingChipHandler.ClickNext)
+    @handle(SlidingChipHandler.ClickArrow, (handler, payload: { chipMovingStep: number }) => handler.handleNext(payload))
     public onNext() {
         // Audio Click
-
         return { chipMovingStep: this.movingStep };
     }
 
-    @render(Chips.SlidingChipStore, (store) => store.selectChip)
+    @render(SlidingChipStore, (store) => store.selectChip)
     scrollToSelectedIndex(selectChip: number) {
         this.updateArrowVisibility(selectChip);
 
@@ -217,7 +216,7 @@ export default class SlidingChip extends Component {
         return color;
     }
 
-    @handle(Chips.SlidingChipHandler.CreateChips)
+    @handle(SlidingChipHandler.CreateChips)
     createChips() {
         this.chipList.forEach((chip) => chip.destroy());
         this.chips.removeAllChildren();
@@ -257,7 +256,7 @@ export default class SlidingChip extends Component {
         this.setSelectChipAndScroll(bet);
     }
 
-    @handle(Chips.SlidingChipHandler.SetSelectChipAndScroll)
+    @handle(SlidingChipHandler.SetSelectChipAndScroll)
     protected setSelectChipAndScroll(bet: string) {
         let index = 0;
         for (; index < this.chipList.length; index++) {
@@ -269,27 +268,33 @@ export default class SlidingChip extends Component {
         return { selectedChip: index };
     }
 
-    @handle(Chips.SlidingChipHandler.UpdateChipsValue)
+    @handle(SlidingChipHandler.UpdateChipsValue)
     updateChipsValue() {}
 
-    @render(Chips.SlidingChipStore, (store) => store.isResetScrollViewOffset)
+    @render(SlidingChipStore, (store) => store.isResetScrollViewOffset)
     needResetScrollViewOffset() {
         this.snappedScrollView.scrollView.scrollToPercentHorizontal(0, 0.1, true);
     }
 
-    @render(Chips.SlidingChipStore, (store) => store.chipValues)
+    @render(SlidingChipStore, (store) => store.chipValues)
     updateChipValues(chipValues: number[]) {
         this.chipValues = chipValues;
         this.createChips();
         this.updateChips();
     }
 
-    @handle(Chips.SlidingChipHandler.UpdateChips)
+    @handle(SlidingChipHandler.UpdateChips)
     updateChips() {
         this.snappedScrollView.initCalculatedPercent();
     }
 
     updateScrollView() {}
+
+    @render(SlidingChipStore, (store) => store.betItem)
+    flyChip(betItem: any) {
+        const { node, bet } = betItem;
+        bet > 0 && this.placeChipToChipBox(bet, node, null, null);
+    }
 
     public placeChipToChipBox(bet: number, destNode: Node, startNode: Node, onComplete: () => void) {
         const isLoginUserPlaceBet = startNode == null;
@@ -312,11 +317,11 @@ export default class SlidingChip extends Component {
 
     private getRandomPositionChip(chip: Node, box: Node): Vec3 {
         const chipBoundingBox = chip.getComponent(UITransform).getBoundingBox();
-        const xDest = _.random(
+        const xDest = random(
             Math.floor(chip.getComponent(UITransform).width / 4),
             Math.floor(box.getComponent(UITransform).width - chipBoundingBox.width / 2) + 1
         );
-        const yDest = _.random(
+        const yDest = random(
             Math.floor(chip.getComponent(UITransform).height / 4),
             Math.floor(box.getComponent(UITransform).height - chipBoundingBox.height / 2) + 1
         );
@@ -326,7 +331,7 @@ export default class SlidingChip extends Component {
     protected createSmallChip(bet: number, scale = 0.29, showValue = false): Node {
         if (bet === 0) {
             const node = this.createLowValueChip();
-            node.rotation = _.random(0, 360);
+            node.rotation = random(0, 360);
             node.scale = v3(this.smallChipScale, this.smallChipScale, this.smallChipScale);
             return node;
         }
@@ -389,7 +394,7 @@ export default class SlidingChip extends Component {
         chipsBox.parent.addChild(cloneChipsBox);
 
         const destBoxInChipBoxSpacePosition = cloneChipsBox.getComponent(UITransform).convertToNodeSpaceAR(destBoxPosition);
-        const chipsCount = _.round(_.random(1, randomAmount));
+        const chipsCount = round(random(1, randomAmount));
 
         for (let i = 0; i < chipsCount; i++) {
             const chip = chipsBox.children[i];

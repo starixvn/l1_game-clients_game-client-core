@@ -1,15 +1,19 @@
-import { inject, injectable } from "inversify";
-import { makeAutoObservable } from "mobx";
-import { PlayerStore } from "../../players";
-import { GameConfigStore } from "../game-configs";
+import gc from "game-client-base";
+import inversify from "inversify";
+import mobx from "mobx";
+
+const { injectable, inject } = inversify;
 
 @injectable()
 export class SlidingChipStore {
-    constructor(
-        @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore,
-        @inject(PlayerStore) protected readonly playerStore: PlayerStore
-    ) {
-        makeAutoObservable(this);
+    @inject(gc.GameConfigs.GameConfigStore)
+    protected readonly gameConfigStore: gc.GameConfigs.GameConfigStore;
+
+    @inject(gc.Player.PlayerStore)
+    protected readonly playerStore: gc.Player.PlayerStore;
+
+    constructor() {
+        mobx.makeAutoObservable(this);
     }
 
     private _chipValues: number[] = [];
@@ -17,12 +21,23 @@ export class SlidingChipStore {
     isResetScrollViewOffset = false;
     private _currentBet = "";
     private _selectChip = 0;
+    private _betItem = {
+        node: null,
+        bet: 0,
+    };
 
     set selectChip(index: number) {
         this._selectChip = index;
     }
     get selectChip() {
         return this._selectChip;
+    }
+
+    set betItem(data: any) {
+        this._betItem = data;
+    }
+    get betItem() {
+        return this._betItem;
     }
 
     onLoad(minChipSelect: number) {

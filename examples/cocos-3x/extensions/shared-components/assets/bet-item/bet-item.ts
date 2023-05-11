@@ -1,10 +1,11 @@
-import { _decorator, Component, Label } from "cc";
+import { _decorator, Component, Label, Node } from "cc";
 import gc from "game-client-base";
 import Observer from "observer";
+import { SlidingChipHandler } from "../sliding-chip/scripts/handlers/sliding-chip-handler";
 
 const { observer, render, handle } = Observer;
 
-const { Rounds } = gc;
+const { Rounds, Chips } = gc;
 
 const { ccclass, property } = _decorator;
 
@@ -52,5 +53,17 @@ export default class BetItem extends Component {
         if (totalBets[choice]) {
             this.lblTotalBet.string = `${totalBets[choice]}`;
         }
+    }
+
+    @render(Chips.ChipStore, (store) => store.ownChip)
+    placeOwnChip(ownChip: gc.GameServiceMessage.OwnChip) {
+        const { betChoice, amount } = ownChip;
+        const choice = this.node.name;
+        betChoice === choice && this.handleFlyChip(this.node, amount);
+    }
+
+    @handle(SlidingChipHandler.HandleFlyChip)
+    handleFlyChip(betItem: Node, amount: number) {
+        return { betItem, amount };
     }
 }
