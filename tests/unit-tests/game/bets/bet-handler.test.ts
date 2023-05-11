@@ -1,22 +1,34 @@
-import { BetHandler } from "../../../../src/game/bets";
+import { BetHandler, BetStore } from "../../../../src/game/bets";
+import { NoticeStore } from "../../../../src/game/notice";
 import { PlayerStore } from "../../../../src/players";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
 import { gameSettings } from "../../container.test";
-import { BetStore } from "./../../../../src/game/bets/bet-store";
-import { ConnectionStore } from "./../../../../src/game/connection/connection-store";
-import { OrientationStore } from "./../../../../src/game/orientation/orientation-store";
+import { ConnectionStore } from "./../../../../src/game/connection";
+import { OrientationStore } from "./../../../../src/game/orientation";
 
-describe("BetHandler test", () => {
+describe("BetHandler it", () => {
     let connectionStore: ConnectionStore;
     let betStore: BetStore;
     let playerStore: PlayerStore;
     let orientationStore: OrientationStore;
+    let noticeStore: NoticeStore;
+    let betHandler: BetHandler;
+    let betChoice: string;
 
     beforeEach(() => {
         playerStore = new PlayerStore();
         connectionStore = new ConnectionStore(new Mediator(), gameSettings);
         betStore = new BetStore();
         orientationStore = new OrientationStore();
+        noticeStore = new NoticeStore();
+
+        betHandler = new BetHandler(connectionStore, betStore, playerStore, orientationStore, noticeStore);
+        betChoice = "even";
+        connectionStore.send = jest.fn();
+        noticeStore.addWarning = jest.fn();
+        playerStore.name = "player";
+        playerStore.balance = 100;
+        playerStore.scoin = 100;
     });
 
     afterEach(() => {
@@ -24,26 +36,52 @@ describe("BetHandler test", () => {
     });
 
     describe("handle", () => {
-        it("should call send bet data", () => {
+        it("should show error notice when amount is greater than balance", () => {
             // Arrange
-            const betHandler = new BetHandler(connectionStore, betStore, playerStore, orientationStore);
-            const betChoice = "even";
-            connectionStore.send = jest.fn();
+            playerStore.balance = 100;
+            betStore.amount = 200;
+            betStore.freebetEnabled = false;
 
             // Act
             betHandler.handle(betChoice);
 
             // Assert
-            const amount = betStore.amount;
-            const freeBet = betStore.freebetEnabled && amount <= playerStore.scoin;
-            const betData = {
+            expect(noticeStore.addWarning).toHaveBeenCalledWith("Your account has insufficient funds.");
+            expect(connectionStore.send).not.toHaveBeenCalled();
+        });
+
+        it("should show error notice when freebet is enabled and scoin is less than amount", () => {
+            // Arrange
+            playerStore.scoin = 100;
+            betStore.amount = 200;
+            betStore.freebetEnabled = true;
+
+            // Act
+            betHandler.handle(betChoice);
+
+            // Assert
+            expect(noticeStore.addWarning).toHaveBeenCalledWith("Not enough Scoin to place bet.");
+            expect(connectionStore.send).not.toHaveBeenCalled();
+        });
+
+        it("should send bet data to server when amount is less than scoin or balance ", () => {
+            // Arrange
+            playerStore.scoin = 100;
+            playerStore.balance = 100;
+            betStore.amount = 50;
+
+            // Act
+            betHandler.handle(betChoice);
+
+            // Assert
+            expect(noticeStore.addWarning).not.toBeCalled();
+            expect(connectionStore.send).toHaveBeenCalledWith(GameClientEmitMessage.Bet.eventName, {
                 m: orientationStore.m,
                 username: playerStore.name,
                 betChoice,
-                amount,
-                freeBet,
-            };
-            expect(connectionStore.send).toBeCalledWith(GameClientEmitMessage.Bet.eventName, betData);
+                amount: betStore.amount,
+                freeBet: betStore.freebetEnabled,
+            });
         });
     });
 });
