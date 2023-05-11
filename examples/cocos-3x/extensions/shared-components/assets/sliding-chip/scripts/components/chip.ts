@@ -29,7 +29,7 @@ export default class Chip extends Component {
     typeNodes: Node[] = [];
 
     @property(Label)
-    label: Label = null;
+    lblValue: Label = null;
 
     private _color = Color.WHITE;
     private _type = ChipDisplayType.Normal;
@@ -53,16 +53,16 @@ export default class Chip extends Component {
 
     private updateChip() {
         this.center.color = this._type === ChipDisplayType.VIP ? this._color : Color.WHITE;
-        this.label.color = this._type === ChipDisplayType.VIP ? Color.YELLOW : Color.WHITE;
+        this.lblValue.color = this._type === ChipDisplayType.VIP ? Color.YELLOW : Color.WHITE;
     }
 
     setValue(value: number) {
-        this.label.string = chipFormatter(value, 0);
+        this.lblValue.string = chipFormatter(value, 0);
         this.node.name = value.toString();
     }
 
     handleSmallChip(isSmall = false) {
-        this.label.node.active = isSmall;
+        this.lblValue.node.active = isSmall;
 
         const button = this.getComponent(Button);
         if (button) {

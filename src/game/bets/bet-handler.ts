@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
 
 import { PlayerStore } from "../../players";
-import { GameClientEmitMessage, IHandler } from "../../shared";
+import { GameClientEmitMessage } from "../../shared";
 import { ConnectionStore } from "../connection";
 import { NoticeStore } from "../notices";
 import { OrientationStore } from "../orientation";
 import { BetStore } from "./bet-store";
 
 @injectable()
-export class BetHandler implements IHandler<string> {
+export class BetHandler {
     constructor(
         @inject(ConnectionStore) private readonly connectionStore: ConnectionStore,
         @inject(BetStore) private readonly betStore: BetStore,
@@ -17,7 +17,7 @@ export class BetHandler implements IHandler<string> {
         @inject(NoticeStore) private readonly noticeStore: NoticeStore
     ) {}
 
-    handle(betChoice: string) {
+    onBet({ betChoice }) {
         const { amount, freebetEnabled } = this.betStore;
         const availableBalance = freebetEnabled ? this.playerStore.scoin : this.playerStore.balance;
 
@@ -40,4 +40,6 @@ export class BetHandler implements IHandler<string> {
         const message = freebetEnabled ? "Not enough Scoin to place bet." : "Your account has insufficient funds.";
         this.noticeStore.addWarning(message);
     }
+
+    clearBet() {}
 }

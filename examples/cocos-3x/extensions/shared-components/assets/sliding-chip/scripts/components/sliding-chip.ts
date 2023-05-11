@@ -19,12 +19,12 @@ import gc from "game-client-base";
 import { random, round } from "lodash-es";
 import Observer from "observer";
 import { SlidingChipHandler } from "../handlers/sliding-chip-handler";
-import { SlidingChipStore } from "../stores/sliding-chip-store";
+import { SlidingChipStore, TBetItem } from "../stores/sliding-chip-store";
 import Chip, { ChipDisplayType } from "./chip";
 import { SnapScrollView } from "./snap-scroll-view";
 
-const { observer, render, handle, useObserver } = Observer;
-const { Chips, GameConfigs, Player } = gc;
+const { render, handle, useObserver } = Observer;
+const { Chips, GameConfigs, Player, Rounds } = gc;
 
 const { ccclass, property } = _decorator;
 
@@ -78,6 +78,10 @@ export default class SlidingChip extends Component {
     @handle(SlidingChipHandler.OnLoad)
     onLoad() {
         this.dispose = useObserver(this, this.namespace);
+        this.handleFirstLoad();
+    }
+
+    handleFirstLoad() {
         this.setLeftButtonStatus(false);
         this.snappedScrollView.actionScrollEnded = () => {
             this.updateSelectChip();
@@ -291,9 +295,9 @@ export default class SlidingChip extends Component {
     updateScrollView() {}
 
     @render(SlidingChipStore, (store) => store.betItem)
-    flyChip(betItem: any) {
-        const { node, bet } = betItem;
-        bet > 0 && this.placeChipToChipBox(bet, node, null, null);
+    flyChip(betItem: TBetItem) {
+        const { chipBox, bet } = betItem;
+        bet > 0 && this.placeChipToChipBox(bet, chipBox, null, null);
     }
 
     public placeChipToChipBox(bet: number, destNode: Node, startNode: Node, onComplete: () => void) {
@@ -364,9 +368,8 @@ export default class SlidingChip extends Component {
                 const chips = this.chips.children.filter((child) => +child.name < bet).sort((b, a) => +a.name - +b.name);
                 chip = chips[0];
             }
-            worldPos = chip.parent
-                .getComponent(UITransform)
-                .convertToWorldSpaceAR(chip.position.add(v3(0, chip.getComponent(UITransform).height / 2)));
+            const localPosition = v3(0, chip.getComponent(UITransform).height / 2, 0).add(chip.position);
+            worldPos = chip.parent.getComponent(UITransform).convertToWorldSpaceAR(localPosition);
             node = this.node;
         }
 
@@ -379,7 +382,7 @@ export default class SlidingChip extends Component {
 
     moveChipTo(chipNode: Node, randomPosition: Vec3, flyingDuration: number, onComplete?: () => void) {
         tween(chipNode)
-            .to(flyingDuration, { position: v3(randomPosition.x, randomPosition.y) }, { easing: "sineOut" })
+            .to(flyingDuration, { position: v3(randomPosition.x, randomPosition.y, 0) }, { easing: "sineOut" })
             .call(() => {
                 onComplete && onComplete();
             })

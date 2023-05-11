@@ -1,9 +1,14 @@
+import { Node } from "cc";
 import gc from "game-client-base";
 import inversify from "inversify";
 import mobx from "mobx";
 
 const { injectable, inject } = inversify;
 
+export type TBetItem = {
+    chipBox: Node;
+    bet: number;
+};
 @injectable()
 export class SlidingChipStore {
     @inject(gc.GameConfigs.GameConfigStore)
@@ -19,10 +24,10 @@ export class SlidingChipStore {
     private _chipValues: number[] = [];
     chipsLength = 0;
     isResetScrollViewOffset = false;
-    private _currentBet = "";
+    private _currentBet = "0";
     private _selectChip = 0;
-    private _betItem = {
-        node: null,
+    private _betItem: TBetItem = {
+        chipBox: null,
         bet: 0,
     };
 
@@ -33,7 +38,7 @@ export class SlidingChipStore {
         return this._selectChip;
     }
 
-    set betItem(data: any) {
+    set betItem(data: TBetItem) {
         this._betItem = data;
     }
     get betItem() {
@@ -68,7 +73,7 @@ export class SlidingChipStore {
         return this._chipValues;
     }
 
-    setChipsByStakeLevel() {
+    setChipValuesByStakeLevel() {
         let minBet = this.gameConfigStore.minBet;
         let maxBet = this.gameConfigStore.maxBet;
 
@@ -87,5 +92,10 @@ export class SlidingChipStore {
         } else if (this.selectChip > disPlayMin + displaySize - 1) {
             this.selectChip = disPlayMin + displaySize - 1;
         }
+    }
+
+    resetBet() {
+        this.currentBet = "-1";
+        this.selectChip = -1;
     }
 }

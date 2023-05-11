@@ -32,14 +32,17 @@ export namespace SlidingChipHandler {
 
         async handle({ chipsLength }) {
             this.slidingChipStore.chipsLength = chipsLength;
+            this.slidingChipStore.resetBet();
         }
     }
 
     @injectable()
     export class UpdateChips implements gc.Shared.IHandler<void> {
         @inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore;
+        @inject(gc.Bet.BetStore) private readonly betStore: gc.Bet.BetStore;
 
         async handle() {
+            console.log("First currentBet", this.slidingChipStore.currentBet);
             const chipValues = this.slidingChipStore.chipValues;
             const currentBet =
                 chipValues.findIndex((value) => parseInt(value.toString()) === parseInt(this.slidingChipStore.currentBet)) !== -1
@@ -50,6 +53,10 @@ export namespace SlidingChipHandler {
             }
             this.slidingChipStore.isResetScrollViewOffset = currentBet !== this.slidingChipStore.currentBet;
             this.slidingChipStore.currentBet = currentBet;
+            this.slidingChipStore.selectChip = 0;
+
+            console.log("After currentBet", this.slidingChipStore.currentBet);
+            this.betStore.amount = +currentBet;
         }
     }
 
@@ -58,7 +65,7 @@ export namespace SlidingChipHandler {
         @inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore;
 
         async handle() {
-            this.slidingChipStore.setChipsByStakeLevel();
+            this.slidingChipStore.setChipValuesByStakeLevel();
         }
     }
 
@@ -83,18 +90,20 @@ export namespace SlidingChipHandler {
     @injectable()
     export class UpdateCurrentBet implements gc.Shared.IHandler<{ bet: string }> {
         @inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore;
+        @inject(gc.Bet.BetStore) private readonly betStore: gc.Bet.BetStore;
 
         async handle({ bet }) {
             this.slidingChipStore.currentBet = bet;
+            this.betStore.amount = +bet;
         }
     }
 
     @injectable()
-    export class HandleFlyChip implements gc.Shared.IHandler<{ betItem: Node; amount: number }> {
+    export class HandleFlyChip implements gc.Shared.IHandler<{ chipBox: Node; amount: number }> {
         @inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore;
 
-        async handle({ betItem, amount }) {
-            this.slidingChipStore.betItem = { node: betItem, bet: amount };
+        async handle({ chipBox, amount }) {
+            this.slidingChipStore.betItem = { chipBox, bet: amount };
         }
     }
 }

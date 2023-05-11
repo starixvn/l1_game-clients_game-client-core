@@ -12,6 +12,14 @@ export class BetStore {
         makeAutoObservable(this);
     }
 
-    amount = 1;
+    private _amount = 1;
     freebetEnabled = false;
+
+    get amount() {
+        return this._amount;
+    }
+
+    set amount(amount: number) {
+        this._amount = amount;
+    }
 }

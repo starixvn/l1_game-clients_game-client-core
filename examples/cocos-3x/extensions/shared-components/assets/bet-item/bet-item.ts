@@ -3,11 +3,11 @@ import gc from "game-client-base";
 import Observer from "observer";
 import { SlidingChipHandler } from "../sliding-chip/scripts/handlers/sliding-chip-handler";
 
-const { observer, render, handle } = Observer;
+const { render, handle } = Observer;
 
 const { Rounds, Chips } = gc;
 
-const { ccclass, property } = _decorator;
+const { property } = _decorator;
 
 export default class BetItem extends Component {
     @property(Label)
@@ -19,15 +19,18 @@ export default class BetItem extends Component {
     @property(Label)
     lblOdds: Label = null;
 
+    @property(Node)
+    chipBox: Node = null;
+
     onLoad() {
         this.lblOwnBet.string = "";
         this.lblTotalBet.string = "";
         this.lblOdds.string = "";
     }
 
-    @handle(gc.Bet.BetHandler)
+    @handle(gc.Bet.BetHandler, (handler, payload: { betChoice: string }) => handler.onBet(payload))
     onBet() {
-        return this.node.name;
+        return { betChoice: this.node.name };
     }
 
     @render(Rounds.RoundStore, (store) => store.roundOdds)
@@ -59,11 +62,24 @@ export default class BetItem extends Component {
     placeOwnChip(ownChip: gc.GameServiceMessage.OwnChip) {
         const { betChoice, amount } = ownChip;
         const choice = this.node.name;
-        betChoice === choice && this.handleFlyChip(this.node, amount);
+        betChoice === choice && this.handleFlyChip(this.chipBox, amount);
     }
 
     @handle(SlidingChipHandler.HandleFlyChip)
-    handleFlyChip(betItem: Node, amount: number) {
-        return { betItem, amount };
+    handleFlyChip(chipBox: Node, amount: number) {
+        return { chipBox, amount };
+    }
+
+    @render(Rounds.RoundTimeStore, (store) => store.roundState)
+    public clearBet(roundState: string) {
+        if (roundState === Rounds.ROUND_STATE.STARTING_ROUND) {
+            if (this.chipBox) {
+                this.clearChips();
+            }
+        }
+    }
+
+    protected clearChips() {
+        this.chipBox.destroyAllChildren();
     }
 }
