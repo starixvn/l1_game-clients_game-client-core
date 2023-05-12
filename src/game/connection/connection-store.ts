@@ -5,6 +5,7 @@ import { ISessionInfo } from "../../auth";
 import { GameClientEmitMessage, Mediator } from "../../shared";
 import { StorageManager, localStorageKeys } from "../../shared/utils";
 import { GameSetting } from "../game-configs";
+import { SocketManagerStore } from "../../notification";
 
 export const events = {
     connect: "connect",
@@ -16,7 +17,11 @@ export const events = {
 };
 @injectable()
 export class ConnectionStore {
-    constructor(@inject(Mediator) protected readonly mediator: Mediator, @inject(GameSetting) protected readonly gameSetting: GameSetting) {
+    constructor(
+        @inject(Mediator) protected readonly mediator: Mediator,
+        @inject(GameSetting) protected readonly gameSetting: GameSetting,
+        @inject(SocketManagerStore) protected readonly socketManagerStore: SocketManagerStore
+    ) {
         makeAutoObservable(this);
     }
 
@@ -40,6 +45,8 @@ export class ConnectionStore {
         this.isConnectFailed = false;
         this.connection.onAny(this.onHandleData.bind(this));
         this.signIn();
+
+        this.socketManagerStore.addSocket(this.connection);
     }
 
     onHandleData(event: string, value: any) {

@@ -15,7 +15,8 @@
         "nodemon": "2.0.22",
         "sc-base-database": "^1.9.2",
         "sc-common": "^1.8.1",
-        "socket.io": "4.6.1"
+        "socket.io": "4.6.1",
+        "socket.io-msgpack-parser": "^3.0.1"
     },
     "devDependencies": {
         "@types/cors": "^2.8.13",

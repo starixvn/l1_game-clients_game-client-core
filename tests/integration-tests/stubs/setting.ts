@@ -24,6 +24,7 @@ export const siteConfigs: SiteConfigs = {
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,
     userServiceUrlDev: "https://localhost:3000/user",
+    notificationServiceUrlDev: "https://localhost:3008",
     websocket: {
         proxyPath: "sedie",
         route: "",

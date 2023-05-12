@@ -198,10 +198,15 @@ export namespace GameServiceMessage {
     export const snr = "snr";
     export const epb = "epb";
 
-    export class UMInfo {
+    class UMInfo {
+        isUM: boolean;
+        operatorId: string;
         startTime: Date;
         endTime: Date;
-        operatorId: string;
+    }
+    export class UnderMaintenanceInfo {
+        message: string;
+        umInfo: UMInfo;
         static eventName = "kickedOut";
     }
 }

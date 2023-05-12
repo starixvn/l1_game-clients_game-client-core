@@ -20,6 +20,7 @@ const defaultConfig: gc.Configs.SiteConfigs = {
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,
     userServiceUrlDev: "http://localhost:3000/user",
+    notificationServiceUrlDev: "http://localhost:3008",
     websocket: {
         proxyPath: "sedie",
         route: "",
@@ -30,6 +31,7 @@ let configDev = {
     isDev: defaultConfig.isDev,
     userServiceUrlDev: defaultConfig.userServiceUrlDev,
     serverDomainMapper: defaultConfig.serverDomainMapper,
+    notificationServiceUrlDev: defaultConfig.notificationServiceUrlDev,
 };
 
 if (window.envConfig) {
@@ -37,6 +39,7 @@ if (window.envConfig) {
         isDev: undefined,
         userServiceUrlDev: undefined,
         serverDomainMapper: undefined,
+        notificationServiceUrlDev: undefined,
     };
 }
 

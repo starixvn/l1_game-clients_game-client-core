@@ -1,5 +1,7 @@
 import { AppStore } from "../../../src/app/app-store";
 import { AuthHandlers, AuthStore, UserService } from "../../../src/auth";
+import { SiteConfigs } from "../../../src/configs";
+import { NotificationHandlers } from "../../../src/notification/notification-handlers";
 import { PlayerStore } from "../../../src/players";
 
 import NameGenerator from "../../../src/shared/utils/name-generator";
@@ -34,7 +36,15 @@ describe("AuthHandlers tests", () => {
                 const appStore = new AppStore();
                 appStore.setUM = jest.fn();
                 const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
-                const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
+                const notificationServiceHandler = new NotificationHandlers(appStore, new SiteConfigs());
+                const handler = new AuthHandlers.Authorize(
+                    authStore,
+                    appStore,
+                    playerStore,
+                    userService,
+                    signOutHandler,
+                    notificationServiceHandler
+                );
 
                 // act
                 await handler.handle({});
@@ -50,7 +60,15 @@ describe("AuthHandlers tests", () => {
                 const appStore = new AppStore();
                 appStore.setUM = jest.fn();
                 const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
-                const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
+                const notificationServiceHandler = new NotificationHandlers(appStore, new SiteConfigs());
+                const handler = new AuthHandlers.Authorize(
+                    authStore,
+                    appStore,
+                    playerStore,
+                    userService,
+                    signOutHandler,
+                    notificationServiceHandler
+                );
 
                 // act
                 await handler.handle({ session: "1", username: "name" });
@@ -67,7 +85,15 @@ describe("AuthHandlers tests", () => {
                 const appStore = new AppStore();
                 appStore.setUM = jest.fn();
                 const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
-                const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
+                const notificationServiceHandler = new NotificationHandlers(appStore, new SiteConfigs());
+                const handler = new AuthHandlers.Authorize(
+                    authStore,
+                    appStore,
+                    playerStore,
+                    userService,
+                    signOutHandler,
+                    notificationServiceHandler
+                );
 
                 // act
                 await handler.handle({});
@@ -90,7 +116,15 @@ describe("AuthHandlers tests", () => {
                 const appStore = new AppStore();
                 const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
                 signOutHandler.handle = jest.fn();
-                const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
+                const notificationServiceHandler = new NotificationHandlers(appStore, new SiteConfigs());
+                const handler = new AuthHandlers.Authorize(
+                    authStore,
+                    appStore,
+                    playerStore,
+                    userService,
+                    signOutHandler,
+                    notificationServiceHandler
+                );
 
                 // act
                 await handler.handle({ session: "session", username: "username" });
@@ -112,7 +146,15 @@ describe("AuthHandlers tests", () => {
                     userService.authorize.mockReturnValueOnce(response);
                     const playerStore = new PlayerStore();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
-                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
+                    const notificationServiceHandler = new NotificationHandlers(appStore, new SiteConfigs());
+                    const handler = new AuthHandlers.Authorize(
+                        authStore,
+                        appStore,
+                        playerStore,
+                        userService,
+                        signOutHandler,
+                        notificationServiceHandler
+                    );
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -128,7 +170,15 @@ describe("AuthHandlers tests", () => {
                     const playerStore = new PlayerStore();
                     playerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
-                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
+                    const notificationServiceHandler = new NotificationHandlers(appStore, new SiteConfigs());
+                    const handler = new AuthHandlers.Authorize(
+                        authStore,
+                        appStore,
+                        playerStore,
+                        userService,
+                        signOutHandler,
+                        notificationServiceHandler
+                    );
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -144,7 +194,15 @@ describe("AuthHandlers tests", () => {
                     const playerStore = new PlayerStore();
                     playerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
-                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
+                    const notificationServiceHandler = new NotificationHandlers(appStore, new SiteConfigs());
+                    const handler = new AuthHandlers.Authorize(
+                        authStore,
+                        appStore,
+                        playerStore,
+                        userService,
+                        signOutHandler,
+                        notificationServiceHandler
+                    );
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -170,7 +228,15 @@ describe("AuthHandlers tests", () => {
                     const playerStore = new PlayerStore();
                     playerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
-                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
+                    const notificationServiceHandler = new NotificationHandlers(appStore, new SiteConfigs());
+                    const handler = new AuthHandlers.Authorize(
+                        authStore,
+                        appStore,
+                        playerStore,
+                        userService,
+                        signOutHandler,
+                        notificationServiceHandler
+                    );
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -190,7 +256,15 @@ describe("AuthHandlers tests", () => {
                     const playerStore = new PlayerStore();
                     playerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
-                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
+                    const notificationServiceHandler = new NotificationHandlers(appStore, new SiteConfigs());
+                    const handler = new AuthHandlers.Authorize(
+                        authStore,
+                        appStore,
+                        playerStore,
+                        userService,
+                        signOutHandler,
+                        notificationServiceHandler
+                    );
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -210,7 +284,15 @@ describe("AuthHandlers tests", () => {
                     const playerStore = new PlayerStore();
                     playerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
-                    const handler = new AuthHandlers.Authorize(authStore, appStore, playerStore, userService, signOutHandler);
+                    const notificationServiceHandler = new NotificationHandlers(appStore, new SiteConfigs());
+                    const handler = new AuthHandlers.Authorize(
+                        authStore,
+                        appStore,
+                        playerStore,
+                        userService,
+                        signOutHandler,
+                        notificationServiceHandler
+                    );
 
                     // act
                     await handler.handle({ session: "session", username: "username" });
@@ -239,6 +321,7 @@ describe("AuthHandlers tests", () => {
             enableMsgpackParserAllGames: false,
             enableMsgpackParserOnNotification: false,
             userServiceUrlDev: "http://localhost:3000/user",
+            notificationServiceUrlDev: "https://localhost:3008",
             websocket: {
                 proxyPath: "sedie",
                 route: "",
