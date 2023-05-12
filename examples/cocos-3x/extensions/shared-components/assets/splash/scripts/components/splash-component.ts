@@ -4,7 +4,7 @@ import Observer from "observer";
 
 const { ccclass, property } = _decorator;
 const { observer, handle, render } = Observer;
-const { Auth, Shared, App } = gc;
+const { Auth, Shared, App, Chips } = gc;
 
 export const AppTypes = {
     Club: 1,
@@ -31,6 +31,7 @@ export default class Splash extends Component {
     @render(Auth.AuthStore, (store) => store.isAuthorized)
     openGame(isAuthorized: boolean) {
         if (isAuthorized) {
+            this.getChipSetting();
             this.triggerRecheckIn();
             this.loadSceneGame();
         }
@@ -64,4 +65,7 @@ export default class Splash extends Component {
 
     @handle(Auth.AuthHandlers.TriggerRecheckIn)
     triggerRecheckIn() {}
+
+    @handle(Chips.ChipSettingHandler)
+    getChipSetting() {}
 }

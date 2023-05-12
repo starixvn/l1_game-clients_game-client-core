@@ -1,12 +1,10 @@
 import { inject, injectable } from "inversify";
 import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
-import { SettingResponse } from "sc-user-service-client/dist/setting";
 import { PlayerStore } from "../players";
 import { GameServiceMessage, IHandler } from "../shared";
 import NameGenerator from "../shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
 import { AppStore } from "./../app/app-store";
-import { ChipSettingStore } from "./../game/chips/chip-setting-store";
 import { AuthStore, ISessionInfo } from "./auth-store";
 import { UserService } from "./user-service";
 
@@ -38,8 +36,7 @@ export namespace AuthHandlers {
             @inject(AppStore) private readonly appStore: AppStore,
             @inject(PlayerStore) private readonly playerStore: PlayerStore,
             @inject(UserService) private readonly userService: UserService,
-            @inject(SignOut) private readonly signOutHandler: SignOut,
-            @inject(ChipSettingStore) private readonly chipSettingStore: ChipSettingStore
+            @inject(SignOut) private readonly signOutHandler: SignOut
         ) {}
 
         async handle({ session = "", username = "" }) {
@@ -65,19 +62,12 @@ export namespace AuthHandlers {
                 response.user && this.playerStore.setAuthorizeStore(response.user);
                 this.authStore.isAuthorized = response.authorized;
             }
-
-            await this.getChipSetting();
         }
 
         private async autoGenerateName() {
             const name = NameGenerator.generateName();
             const response = await this.userService.signName(this.session, this.username, name);
             await this.handleAuthorizedResponse(response as IAuthorizeResponse);
-        }
-
-        private async getChipSetting() {
-            const response = (await this.userService.getChipSetting(this.session, this.username)) as SettingResponse;
-            this.chipSettingStore.updateChipColor(response?.chips || []);
         }
     }
 

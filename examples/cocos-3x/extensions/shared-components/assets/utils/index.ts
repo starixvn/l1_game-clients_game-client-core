@@ -1,1 +1,1 @@
-export * from "./number-helper";
+export * from "./number-utils";

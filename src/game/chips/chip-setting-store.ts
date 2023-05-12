@@ -38,6 +38,4 @@ export class ChipSettingStore {
             this._chipSetting[item.value] = item.color;
         });
     }
-
-    getChipSetting(value: number) {}
 }

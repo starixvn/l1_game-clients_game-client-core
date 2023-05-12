@@ -24,7 +24,7 @@ export class SlidingChipStore {
     private _chipValues: number[] = [];
     chipsLength = 0;
     isResetScrollViewOffset = false;
-    private _currentBet = "0";
+    private _currentChip = "0";
     private _selectChip = 0;
     private _betItem: TBetItem = {
         chipBox: null,
@@ -57,12 +57,12 @@ export class SlidingChipStore {
         this._selectChip -= step;
     }
 
-    set currentBet(value: string) {
-        this._currentBet = value;
+    set currentChip(value: string) {
+        this._currentChip = value;
     }
 
-    get currentBet() {
-        return this._currentBet;
+    get currentChip() {
+        return this._currentChip;
     }
 
     set chipValues(chips: number[]) {
@@ -95,7 +95,7 @@ export class SlidingChipStore {
     }
 
     resetBet() {
-        this.currentBet = "-1";
-        this.selectChip = -1;
+        this.currentChip = "0";
+        this.selectChip = 0;
     }
 }

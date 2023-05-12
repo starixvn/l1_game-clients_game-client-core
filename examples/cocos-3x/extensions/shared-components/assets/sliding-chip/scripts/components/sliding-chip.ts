@@ -20,11 +20,12 @@ import { random, round } from "lodash-es";
 import Observer from "observer";
 import { SlidingChipHandler } from "../handlers/sliding-chip-handler";
 import { SlidingChipStore, TBetItem } from "../stores/sliding-chip-store";
+import * as actions from "./actions";
 import Chip, { ChipDisplayType } from "./chip";
 import { SnapScrollView } from "./snap-scroll-view";
 
 const { render, handle, useObserver } = Observer;
-const { Chips, GameConfigs, Player, Rounds } = gc;
+const { Chips, GameConfigs, Player } = gc;
 
 const { ccclass, property } = _decorator;
 
@@ -61,9 +62,7 @@ export default class SlidingChip extends Component {
     lowValueChipSprite: SpriteFrame = null;
 
     public chipValues: number[] = [];
-    public readonly chipFlyingTime: number = 0.8;
-    public readonly loginUserChipFlyingTime: number = 0.5;
-    public readonly chipDelayFlyingTime: number = 1.25;
+    public readonly chipDelayFlyingTime = 1.25;
     public smallChipScale = 0.29;
     public enableStakeLevel = true;
     public chipList: Node[] = [];
@@ -75,7 +74,6 @@ export default class SlidingChip extends Component {
         this.disabledBetChips = status;
     }
 
-    @handle(SlidingChipHandler.OnLoad)
     onLoad() {
         this.dispose = useObserver(this, this.namespace);
         this.handleFirstLoad();
@@ -111,15 +109,15 @@ export default class SlidingChip extends Component {
         }
     }
 
-    @render(GameConfigs.GameConfigStore, (store) => store.chips)
-    setChipValues(chips: number[]) {
+    @render(GameConfigs.GameConfigStore, (store) => store.chips, { fireImmediately: false })
+    setChipValues() {
         // init
-        chips && this.updateChipsValue();
+        this.updateChipsValue();
     }
 
-    @render(Player.PlayerStore, (store) => store.stakeLevel)
+    @render(Player.PlayerStore, (store) => store.stakeLevel, { fireImmediately: false })
     updateUserStaleLevel(stakeLevel: gc.Player.IStakeLevel) {
-        stakeLevel && this.updateChipsValue();
+        this.updateChipsValue();
     }
 
     @handle(SlidingChipHandler.UpdateCurrentBet)
@@ -135,13 +133,13 @@ export default class SlidingChip extends Component {
         this.rightButton.active = isShowRightArrow && !this.disabledBetChips;
     }
 
-    @render(SlidingChipStore, (store) => store.currentBet)
+    @render(SlidingChipStore, (store) => store.currentChip, { fireImmediately: false })
     public setCurrentBet(currentBet: string) {
         this.updateSelectedBet(currentBet);
     }
 
     protected updateSelectedBet(targetName: string) {
-        this.chips.children.forEach((chip) => {
+        this.chipList.forEach((chip) => {
             Tween.stopAllByTarget(chip);
             const highlight = chip.name === targetName;
             this.highlightChip(chip, highlight);
@@ -151,7 +149,7 @@ export default class SlidingChip extends Component {
     protected highlightChip(chip: Node, highlight: boolean) {
         const activeNode = chip.getChildByName("active");
         activeNode.active = highlight;
-        chip.setSiblingIndex(highlight ? 1 : 0);
+        chip.setSiblingIndex(highlight ? this.chipList.length + 1 : 0);
         const scaleChip = highlight ? 1.15 : 1;
         const posY = highlight ? 12 : 0;
         tween(chip)
@@ -192,7 +190,7 @@ export default class SlidingChip extends Component {
         if (this.chipList.length === 0) {
             return;
         }
-        const bet = this.chipList[selectChip].name;
+        const bet = this.chipList[selectChip]?.name;
         if (bet) {
             this.updateCurrentBet(bet);
         }
@@ -221,7 +219,7 @@ export default class SlidingChip extends Component {
     }
 
     @handle(SlidingChipHandler.CreateChips)
-    createChips() {
+    async createChips() {
         this.chipList.forEach((chip) => chip.destroy());
         this.chips.removeAllChildren();
         this.chipList = [];
@@ -244,7 +242,7 @@ export default class SlidingChip extends Component {
         return this.createBigChip(value);
     }
 
-    protected createBigChip(value: number): Node {
+    public createBigChip(value: number): Node {
         const chipNode = instantiate(this.chipPrefab);
         const chip = chipNode.getComponent(Chip);
         chip.setColor(this.getChipColor(value));
@@ -255,8 +253,8 @@ export default class SlidingChip extends Component {
     }
 
     public onClickBet(target: Component) {
-        const bet = target.node.name;
         // Audio Click
+        const bet = target.node.name;
         this.setSelectChipAndScroll(bet);
     }
 
@@ -280,7 +278,7 @@ export default class SlidingChip extends Component {
         this.snappedScrollView.scrollView.scrollToPercentHorizontal(0, 0.1, true);
     }
 
-    @render(SlidingChipStore, (store) => store.chipValues)
+    @render(SlidingChipStore, (store) => store.chipValues, { fireImmediately: true })
     updateChipValues(chipValues: number[]) {
         this.chipValues = chipValues;
         this.createChips();
@@ -292,47 +290,13 @@ export default class SlidingChip extends Component {
         this.snappedScrollView.initCalculatedPercent();
     }
 
-    updateScrollView() {}
-
     @render(SlidingChipStore, (store) => store.betItem)
     flyChip(betItem: TBetItem) {
         const { chipBox, bet } = betItem;
-        bet > 0 && this.placeChipToChipBox(bet, chipBox, null, null);
+        bet > 0 && actions.placeChipToChipBox(this, bet, chipBox, null, null);
     }
 
-    public placeChipToChipBox(bet: number, destNode: Node, startNode: Node, onComplete: () => void) {
-        const isLoginUserPlaceBet = startNode == null;
-        const flyingDuration = isLoginUserPlaceBet ? this.loginUserChipFlyingTime : this.chipFlyingTime;
-
-        // Audio Chip Fly
-
-        const chipPosition = destNode.getComponent(UITransform).convertToNodeSpaceAR(this.createStartNodeInfo(startNode, bet).worldPos);
-        const chipNode = this.createSmallChip(bet);
-        chipNode.position = chipPosition;
-        const randomPosition = this.getRandomPositionChip(chipNode, destNode);
-        destNode.addChild(chipNode);
-
-        if (!chipNode.activeInHierarchy) {
-            chipNode.position = randomPosition;
-        } else {
-            this.moveChipTo(chipNode, randomPosition, flyingDuration, onComplete);
-        }
-    }
-
-    private getRandomPositionChip(chip: Node, box: Node): Vec3 {
-        const chipBoundingBox = chip.getComponent(UITransform).getBoundingBox();
-        const xDest = random(
-            Math.floor(chip.getComponent(UITransform).width / 4),
-            Math.floor(box.getComponent(UITransform).width - chipBoundingBox.width / 2) + 1
-        );
-        const yDest = random(
-            Math.floor(chip.getComponent(UITransform).height / 4),
-            Math.floor(box.getComponent(UITransform).height - chipBoundingBox.height / 2) + 1
-        );
-        return v3(xDest, yDest);
-    }
-
-    protected createSmallChip(bet: number, scale = 0.29, showValue = false): Node {
+    public createSmallChip(bet: number, scale = 0.29, showValue = false): Node {
         if (bet === 0) {
             const node = this.createLowValueChip();
             node.rotation = random(0, 360);
@@ -357,7 +321,7 @@ export default class SlidingChip extends Component {
         return node;
     }
 
-    private createStartNodeInfo(startNode: Node, bet: number) {
+    public createStartNodeInfo(startNode: Node, bet: number) {
         let worldPos: Vec3;
         let node = startNode;
         if (startNode) {
@@ -376,17 +340,8 @@ export default class SlidingChip extends Component {
         return { node, worldPos };
     }
 
-    protected getChipNode(bet: number): Node {
+    public getChipNode(bet: number): Node {
         return this.chips.children.find((child) => child.name === bet.toString());
-    }
-
-    moveChipTo(chipNode: Node, randomPosition: Vec3, flyingDuration: number, onComplete?: () => void) {
-        tween(chipNode)
-            .to(flyingDuration, { position: v3(randomPosition.x, randomPosition.y, 0) }, { easing: "sineOut" })
-            .call(() => {
-                onComplete && onComplete();
-            })
-            .start();
     }
 
     public moveChipsWithRandomAmount(chipsBox: Node, destBox: Node, flyTime: number) {
@@ -419,7 +374,7 @@ export default class SlidingChip extends Component {
     private moveChipThenDestroy(chip: Node, destBoxInChipBoxSpacePosition: Vec3, flyTime: number) {
         tween(chip)
             .call(() => {
-                this.moveChipTo(chip, destBoxInChipBoxSpacePosition, flyTime);
+                actions.moveChipTo(chip, destBoxInChipBoxSpacePosition, flyTime);
             })
             .delay(0.5 * flyTime)
             .call(() => chip.destroy())

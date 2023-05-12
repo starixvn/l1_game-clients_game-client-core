@@ -19,15 +19,9 @@ export class GameConfigStore {
     }
 
     setGameConfigs(gameConfigs: GameServiceMessage.GameConfigs) {
-        this.minBet = gameConfigs.minBet;
-        this.maxBet = gameConfigs.maxBet;
-        this.maxBetPerChoices = gameConfigs.maxBetPerChoices;
-        this.stakeLevels = gameConfigs.stakeLevels;
-        this.odds = gameConfigs.odds;
-        this.enableFreeBet = gameConfigs.enableFreeBet;
-        this.originalOdds = gameConfigs.originalOdds;
-        this.boostedChoices = gameConfigs.boostedChoices;
-        this.chips = gameConfigs.chips;
-        console.log("gameConfigs----", gameConfigs);
+        if (gameConfigs.enableFreeBet === undefined) {
+            gameConfigs.enableFreeBet = false;
+        }
+        Object.assign(this, gameConfigs);
     }
 }
