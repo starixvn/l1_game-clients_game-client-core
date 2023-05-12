@@ -18,7 +18,11 @@ export class BetHandler {
     ) {}
 
     handle(betChoice: string) {
-        const { amount, freebetEnabled } = this.betStore;
+        const { amount, freebetEnabled, isProcessingBet } = this.betStore;
+        if (isProcessingBet) {
+            this.showWarningProcessingBet();
+            return;
+        }
         const availableBalance = freebetEnabled ? this.playerStore.scoin : this.playerStore.balance;
 
         if (amount > availableBalance) {
@@ -26,6 +30,7 @@ export class BetHandler {
             return;
         }
 
+        this.betStore.isProcessingBet = true;
         const betData = {
             m: this.orientationStore.m,
             username: this.playerStore.name,
@@ -42,4 +47,8 @@ export class BetHandler {
     }
 
     clearBet() {}
+
+    showWarningProcessingBet() {
+        this.noticeStore.addWarning("Data are being processed. Please wait...");
+    }
 }

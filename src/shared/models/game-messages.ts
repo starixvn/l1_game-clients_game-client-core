@@ -148,6 +148,7 @@ export namespace GameServiceMessage {
 
         static eventName = "player";
     }
+
     export class ResultHash {
         rawValue?: string;
         extraInfos?: any;
@@ -155,7 +156,10 @@ export namespace GameServiceMessage {
 
         static eventName = "resultHash";
     }
-    export const endBet = "endBet";
+
+    export class BetResponse {
+        static eventName = "endBet";
+    }
     export const betChoice = "betChoice";
     export const freeBet = "freeBet";
     export type WinningByChoices = Odds;

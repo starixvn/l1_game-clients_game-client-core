@@ -22,4 +22,7 @@ export class BetStore {
     set amount(amount: number) {
         this._amount = amount;
     }
+
+    lastReceivedBet = 0;
+    isProcessingBet = false;
 }
