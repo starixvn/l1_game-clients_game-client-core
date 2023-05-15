@@ -168,16 +168,11 @@ export namespace GameServiceMessage {
         maxBet?: number;
         gameRoundId?: number;
         gameTypeId?: number;
+        isPlaceBetFailed?: boolean;
         static eventName = "notice";
     }
 
-    export class ApiError {
-        errorCode: string;
-        gameTypeId: number;
-        isPlaceBetFailed: boolean;
-        gameRoundId: number;
-        minBet: number;
-        maxBet: number;
+    export class ApiError extends Notice {
         static eventName = "apiError";
     }
 
