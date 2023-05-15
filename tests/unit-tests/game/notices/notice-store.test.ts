@@ -1,4 +1,4 @@
-import { NoticeStore } from "../../../../src/game/notice/notice-store";
+import { NoticeStore } from "../../../../src/game/notices";
 
 describe("NoticeStore test", () => {
     let store: NoticeStore;

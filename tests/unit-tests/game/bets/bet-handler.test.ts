@@ -1,5 +1,5 @@
 import { BetHandler, BetStore } from "../../../../src/game/bets";
-import { NoticeStore } from "../../../../src/game/notice";
+import { NoticeStore } from "../../../../src/game/notices";
 import { PlayerStore } from "../../../../src/players";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
 import { gameSettings } from "../../container.test";
