@@ -31,7 +31,7 @@ describe("GameConfigStore", () => {
             expect(store.chips).toEqual([]);
             expect(store.stakeLevels).toEqual([]);
             expect(store.odds).toEqual({});
-            expect(store.enableFreeBet).toBeUndefined();
+            expect(store.enableFreeBet).toBe(false);
             expect(store.originalOdds).toBeNull();
             expect(store.boostedChoices).toBeNull();
         });

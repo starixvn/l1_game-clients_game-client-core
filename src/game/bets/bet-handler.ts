@@ -17,7 +17,7 @@ export class BetHandler {
         @inject(NoticeStore) private readonly noticeStore: NoticeStore
     ) {}
 
-    onBet({ betChoice }) {
+    handle(betChoice: string) {
         const { amount, freebetEnabled } = this.betStore;
         const availableBalance = freebetEnabled ? this.playerStore.scoin : this.playerStore.balance;
 

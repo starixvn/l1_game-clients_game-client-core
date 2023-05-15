@@ -52,7 +52,7 @@ export class SnapScrollView extends Component {
     public initCalculatedPercent() {
         const count = this.contentItemCount();
         const contentWidth = this.scrollContentWidth();
-        const maxOffset = contentWidth - this.scrollView.node.getComponent(UITransform).width;
+        const maxOffset = contentWidth - this.scrollView?.node?.getComponent(UITransform)?.width;
         const haftSpacing = this.spacing / 2;
         for (let i = 0; i < count; i++) {
             let offset = (this.itemSize + this.spacing) * i + (this.enableHalfSpacing ? haftSpacing : 0);
@@ -67,15 +67,15 @@ export class SnapScrollView extends Component {
 
     private contentItemCount() {
         return this.isHorizontalLayout
-            ? this.scrollView.content.children.length
-            : Math.round(this.scrollView.content.getComponent(UITransform).width / (this.itemSize + this.spacing));
+            ? this.scrollView?.content?.children?.length
+            : Math.round(this.scrollView?.content?.getComponent(UITransform)?.width / (this.itemSize + this.spacing));
     }
 
     private scrollContentWidth() {
         const count = this.contentItemCount();
         return this.isHorizontalLayout
             ? count * this.itemSize + (count + 1) * this.spacing
-            : this.scrollView.content.getComponent(UITransform).width;
+            : this.scrollView?.content?.getComponent(UITransform)?.width;
     }
 
     public onScrollView(scrollView: ScrollView, eventType: number) {
@@ -91,11 +91,11 @@ export class SnapScrollView extends Component {
     }
 
     private getPercent(): number {
-        const offset = -this.scrollView.getScrollOffset().x;
+        const offset = -this.scrollView?.getScrollOffset()?.x;
         if (offset < 0) {
             return 0;
         }
-        const percent = offset / this.scrollView.getMaxScrollOffset().x;
+        const percent = offset / this.scrollView?.getMaxScrollOffset()?.x;
         if (percent > 1) {
             return 1;
         }
@@ -125,7 +125,7 @@ export class SnapScrollView extends Component {
 
     public scrollTo(index: number) {
         this._minDisplay = index;
-        this.scrollView.scrollToPercentHorizontal(this._calculatedPercent[index], 0.3, true);
+        this.scrollView?.scrollToPercentHorizontal(this._calculatedPercent[index], 0.3, true);
     }
 
     public actionScrollEnded = () => {};

@@ -116,7 +116,7 @@ export default class SlidingChip extends Component {
     }
 
     @render(Player.PlayerStore, (store) => store.stakeLevel, { fireImmediately: false })
-    updateUserStaleLevel(stakeLevel: gc.Player.IStakeLevel) {
+    updateUserStaleLevel() {
         this.updateChipsValue();
     }
 
@@ -139,7 +139,7 @@ export default class SlidingChip extends Component {
     }
 
     protected updateSelectedBet(targetName: string) {
-        this.chipList.forEach((chip) => {
+        this.chipList?.forEach((chip) => {
             Tween.stopAllByTarget(chip);
             const highlight = chip.name === targetName;
             this.highlightChip(chip, highlight);
@@ -147,17 +147,19 @@ export default class SlidingChip extends Component {
     }
 
     protected highlightChip(chip: Node, highlight: boolean) {
-        const activeNode = chip.getChildByName("active");
-        activeNode.active = highlight;
-        chip.setSiblingIndex(highlight ? this.chipList.length + 1 : 0);
-        const scaleChip = highlight ? 1.15 : 1;
-        const posY = highlight ? 12 : 0;
-        tween(chip)
-            .to(0.2, {
-                scale: v3(scaleChip, scaleChip, scaleChip),
-                position: v3(chip.position.x, posY),
-            })
-            .start();
+        if (chip) {
+            const activeNode = chip.getChildByName("active");
+            activeNode.active = highlight;
+            chip.setSiblingIndex(highlight ? this.chipList.length + 1 : 0);
+            const scaleChip = highlight ? 1.15 : 1;
+            const posY = highlight ? 12 : 0;
+            tween(chip)
+                .to(0.2, {
+                    scale: v3(scaleChip, scaleChip, scaleChip),
+                    position: v3(chip.position.x, posY),
+                })
+                .start();
+        }
     }
 
     @handle(SlidingChipHandler.ClickArrow, (handler, payload: { chipMovingStep: number }) => handler.handlePrev(payload))
@@ -225,9 +227,11 @@ export default class SlidingChip extends Component {
         this.chipList = [];
         this.chipValues.forEach((value) => {
             const node = this.createChipNode(value);
-            this.chips.addChild(node);
-            node.on("click", this.onClickBet.bind(this));
-            this.chipList.push(node);
+            if (node) {
+                this.chips.addChild(node);
+                node.on("click", this.onClickBet.bind(this));
+                this.chipList.push(node);
+            }
         });
 
         const layout = this.chips.getComponent(Layout);
@@ -244,12 +248,16 @@ export default class SlidingChip extends Component {
 
     public createBigChip(value: number): Node {
         const chipNode = instantiate(this.chipPrefab);
-        const chip = chipNode.getComponent(Chip);
-        chip.setColor(this.getChipColor(value));
-        chip.setValue(value);
-        const index = this.chipValues.findIndex((chipValue) => chipValue === value);
-        chip.setType(this.getChipDisplayType(index));
-        return chipNode;
+        if (chipNode) {
+            const chip = chipNode.getComponent(Chip);
+            chip.setColor(this.getChipColor(value));
+            chip.setValue(value);
+            const index = this.chipValues.findIndex((chipValue) => chipValue === value);
+            chip.setType(this.getChipDisplayType(index));
+            return chipNode;
+        }
+
+        return null;
     }
 
     public onClickBet(target: Component) {
@@ -304,9 +312,11 @@ export default class SlidingChip extends Component {
             return node;
         }
         const chip = this.createBigChip(bet);
-        const chipView = chip.getComponent(Chip);
-        chipView.handleSmallChip(showValue);
-        chip.scale = v3(scale, scale, scale);
+        if (chip) {
+            const chipView = chip.getComponent(Chip);
+            chipView.handleSmallChip(showValue);
+            chip.scale = v3(scale, scale, scale);
+        }
 
         return chip;
     }
@@ -341,43 +351,48 @@ export default class SlidingChip extends Component {
     }
 
     public getChipNode(bet: number): Node {
-        return this.chips.children.find((child) => child.name === bet.toString());
+        return this.chips?.children?.find((child) => child.name === bet.toString());
     }
 
     public moveChipsWithRandomAmount(chipsBox: Node, destBox: Node, flyTime: number) {
-        const randomAmount = 3;
-        const destBoxPosition = destBox.parent.getComponent(UITransform).convertToWorldSpaceAR(destBox.position);
-        const cloneChipsBox = instantiate(chipsBox);
-        cloneChipsBox.destroyAllChildren();
-        chipsBox.parent.addChild(cloneChipsBox);
+        if (chipsBox && destBox) {
+            const randomAmount = 3;
+            const destBoxPosition = destBox.parent.getComponent(UITransform).convertToWorldSpaceAR(destBox.position);
+            const cloneChipsBox = instantiate(chipsBox);
+            if (cloneChipsBox) {
+                cloneChipsBox.destroyAllChildren();
+                chipsBox.parent.addChild(cloneChipsBox);
 
-        const destBoxInChipBoxSpacePosition = cloneChipsBox.getComponent(UITransform).convertToNodeSpaceAR(destBoxPosition);
-        const chipsCount = round(random(1, randomAmount));
+                const destBoxInChipBoxSpacePosition = cloneChipsBox.getComponent(UITransform).convertToNodeSpaceAR(destBoxPosition);
+                const chipsCount = round(random(1, randomAmount));
 
-        for (let i = 0; i < chipsCount; i++) {
-            const chip = chipsBox.children[i];
+                for (let i = 0; i < chipsCount; i++) {
+                    const chip = chipsBox.children[i];
 
-            if (chip) {
-                const cloneChip = instantiate(chip);
-                cloneChipsBox.addChild(cloneChip);
-                this.moveChipThenDestroy(cloneChip, destBoxInChipBoxSpacePosition, flyTime);
+                    if (chip) {
+                        const cloneChip = instantiate(chip);
+                        cloneChipsBox.addChild(cloneChip);
+                        this.moveChipThenDestroy(cloneChip, destBoxInChipBoxSpacePosition, flyTime);
+                    }
+                }
+
+                tween(this.node)
+                    .delay(flyTime * 1.5)
+                    .call(() => {
+                        cloneChipsBox.destroy();
+                    });
             }
         }
-
-        tween(this.node)
-            .delay(flyTime * 1.5)
-            .call(() => {
-                cloneChipsBox.destroy();
-            });
     }
 
     private moveChipThenDestroy(chip: Node, destBoxInChipBoxSpacePosition: Vec3, flyTime: number) {
-        tween(chip)
-            .call(() => {
-                actions.moveChipTo(chip, destBoxInChipBoxSpacePosition, flyTime);
-            })
-            .delay(0.5 * flyTime)
-            .call(() => chip.destroy())
-            .start();
+        chip &&
+            tween(chip)
+                .call(() => {
+                    actions.moveChipTo(chip, destBoxInChipBoxSpacePosition, flyTime);
+                })
+                .delay(0.5 * flyTime)
+                .call(() => chip.destroy())
+                .start();
     }
 }

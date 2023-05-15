@@ -3,7 +3,7 @@ export namespace FormatUtils {
         return fractional ? `${numberWithCommas(+value - 1, 2)}:1` : `1:${value}`;
     };
 
-    const formatCommasReg = /\B(?=(\d{3})+(?!\d))/g;
+    const formatCommasReg = /(?<=(\d{3})+?)\B/g;
     export const numberWithCommas = (number, toFixed = 1, noZeroSuffix = true) => {
         if (number) {
             let trimZeroNumber;

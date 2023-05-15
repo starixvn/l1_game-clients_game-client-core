@@ -1,5 +1,4 @@
 import { inject, injectable } from "inversify";
-import { SettingResponse } from "sc-user-service-client/dist/setting";
 import { AuthStore, UserService } from "../../auth";
 import { IHandler } from "../../shared/mediator";
 import { ChipSettingStore } from "./chip-setting-store";
@@ -13,7 +12,7 @@ export class ChipSettingHandler implements IHandler<void> {
     ) {}
 
     async handle() {
-        const response = (await this.userService.getChipSetting(this.authStore.session, this.authStore.username)) as SettingResponse;
+        const response = await this.userService.getChipSetting(this.authStore.session, this.authStore.username);
         this.chipSettingStore.updateChipColor(response?.chips || []);
     }
 }

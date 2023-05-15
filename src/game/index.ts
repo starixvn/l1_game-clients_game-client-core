@@ -1,5 +1,4 @@
 export * as Bet from "./bets";
-export * as Audios from "./audios";
 export * as Chips from "./chips";
 export * as Connection from "./connection";
 export * as GameConfigs from "./game-configs";

@@ -28,9 +28,9 @@ export default class BetItem extends Component {
         this.lblOdds.string = "";
     }
 
-    @handle(gc.Bet.BetHandler, (handler, payload: { betChoice: string }) => handler.onBet(payload))
+    @handle(gc.Bet.BetHandler, (handler, payload: string) => handler.handle(payload))
     onBet() {
-        return { betChoice: this.node.name };
+        return this.node.name;
     }
 
     @render(Rounds.RoundStore, (store) => store.roundOdds)
