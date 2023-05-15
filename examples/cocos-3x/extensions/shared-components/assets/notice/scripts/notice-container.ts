@@ -6,7 +6,7 @@ import { NoticeCmp } from "./notice-cmp";
 
 const { observer, render, handle, useObserver } = Observer;
 
-const { Notice } = gc;
+const { Notices } = gc;
 const { ccclass, property } = _decorator;
 
 @ccclass("NoticeContainer")
@@ -23,8 +23,8 @@ export class NoticeContainer extends NodeContainer {
         this.dispose();
     }
 
-    @render(Notice.NoticeStore, (store) => store.notice, { fireImmediately: false })
-    showNotice(notice: gc.Notice.Notice) {
+    @render(Notices.NoticeStore, (store) => store.notice, { fireImmediately: false })
+    showNotice(notice: gc.Notices.Notice) {
         console.log("renderNotice", notice);
         const node = this.createNode();
         const noticeCmp = node.getComponent(NoticeCmp);

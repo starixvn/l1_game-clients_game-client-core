@@ -1,5 +1,7 @@
 import { _decorator, Component, Node } from "cc";
-import { bounceIn, bounceOut, fadeIn, fadeOut } from "../utils/utils";
+import { AnimationUtils } from "../utils/utils";
+
+const { bounceIn, bounceOut, fadeIn, fadeOut } = AnimationUtils;
 const { ccclass, property } = _decorator;
 
 @ccclass("Dialog")
@@ -26,7 +28,7 @@ export class Dialog extends Component {
         fadeOut(this.nodeFadeBackground, this.appearDuration);
         fadeOut(this.nodeBody, this.appearDuration);
         bounceOut(this.nodeBody, this.appearDuration).then(() => {
-            this.node.destroy();
+            this.node?.destroy();
         });
     }
 }

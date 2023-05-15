@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import { PlayerStore } from "../../players";
 import { GameClientEmitMessage, IHandler } from "../../shared";
 import { ConnectionStore } from "../connection";
-import { NoticeStore } from "../notice";
+import { NoticeStore } from "../notices";
 import { OrientationStore } from "../orientation";
 import { BetStore } from "./bet-store";
 

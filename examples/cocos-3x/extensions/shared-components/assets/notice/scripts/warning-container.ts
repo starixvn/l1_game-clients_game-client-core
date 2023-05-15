@@ -6,7 +6,7 @@ import { WarningCmp } from "./warning-cmp";
 
 const { observer, render, handle, useObserver } = Observer;
 
-const { Notice } = gc;
+const { Notices } = gc;
 const { ccclass, property } = _decorator;
 
 @ccclass("WarningContainer")
@@ -23,7 +23,7 @@ export class WarningContainer extends NodeContainer {
         this.dispose();
     }
 
-    @render(Notice.NoticeStore, (store) => store.warning, { fireImmediately: false })
+    @render(Notices.NoticeStore, (store) => store.warning, { fireImmediately: false })
     showWarning(warning) {
         const node = this.createNode();
         const warningCmp = node.getComponent(WarningCmp);
