@@ -19,9 +19,11 @@ export class GameConfigStore {
     }
 
     setGameConfigs(gameConfigs: GameServiceMessage.GameConfigs) {
-        if (gameConfigs.enableFreeBet === undefined) {
-            gameConfigs.enableFreeBet = false;
+        if (gameConfigs) {
+            if (gameConfigs.enableFreeBet === undefined) {
+                gameConfigs.enableFreeBet = false;
+            }
+            Object.assign(this, gameConfigs);
         }
-        Object.assign(this, gameConfigs);
     }
 }

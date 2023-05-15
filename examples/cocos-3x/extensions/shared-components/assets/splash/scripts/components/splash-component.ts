@@ -31,7 +31,7 @@ export default class Splash extends Component {
     @render(Auth.AuthStore, (store) => store.isAuthorized)
     openGame(isAuthorized: boolean) {
         if (isAuthorized) {
-            this.getChipSetting();
+            this.loadChipSetting();
             this.triggerRecheckIn();
             this.loadSceneGame();
         }
@@ -67,5 +67,5 @@ export default class Splash extends Component {
     triggerRecheckIn() {}
 
     @handle(Chips.ChipSettingHandler)
-    getChipSetting() {}
+    loadChipSetting() {}
 }

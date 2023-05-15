@@ -47,7 +47,7 @@ export namespace SlidingChipHandler {
     }
 
     @injectable()
-    export class UpdateChipsValue implements gc.Shared.IHandler<void> {
+    export class SetChipValues implements gc.Shared.IHandler<void> {
         @inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore;
 
         async handle() {
@@ -86,7 +86,7 @@ export namespace SlidingChipHandler {
     }
 
     @injectable()
-    export class HandleFlyChip implements gc.Shared.IHandler<{ chipBox: Node; amount: number }> {
+    export class FlyChip implements gc.Shared.IHandler<{ chipBox: Node; amount: number }> {
         @inject(SlidingChipStore) private readonly slidingChipStore: SlidingChipStore;
 
         async handle({ chipBox, amount }) {

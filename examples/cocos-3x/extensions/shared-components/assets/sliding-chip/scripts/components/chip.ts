@@ -1,5 +1,5 @@
 import { Button, Color, Component, Label, Node, Sprite, SpriteFrame, _decorator } from "cc";
-import { chipFormatter } from "../../../utils";
+import { NumberUtils } from "./../../../utils";
 
 const { ccclass, property } = _decorator;
 
@@ -57,7 +57,7 @@ export default class Chip extends Component {
     }
 
     setValue(value: number) {
-        this.lblValue.string = chipFormatter(value, 0);
+        this.lblValue.string = NumberUtils.getChipFormatter(value, 0);
         this.node.name = value.toString();
     }
 

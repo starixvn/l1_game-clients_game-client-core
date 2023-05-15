@@ -33,9 +33,9 @@ export class ChipSettingStore {
         return this._chipSetting;
     }
 
-    updateChipColor(data: ChipInfo[]) {
-        data.forEach((item) => {
-            this._chipSetting[item.value] = item.color;
+    updateChipColor(chips: ChipInfo[]) {
+        chips.forEach((chip) => {
+            this._chipSetting[chip.value] = chip.color;
         });
     }
 }

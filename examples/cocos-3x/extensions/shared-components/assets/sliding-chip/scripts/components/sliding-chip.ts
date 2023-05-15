@@ -110,14 +110,14 @@ export default class SlidingChip extends Component {
     }
 
     @render(GameConfigs.GameConfigStore, (store) => store.chips, { fireImmediately: false })
-    setChipValues() {
+    setChips() {
         // init
-        this.updateChipsValue();
+        this.setChipValues();
     }
 
     @render(Player.PlayerStore, (store) => store.stakeLevel, { fireImmediately: false })
-    updateUserStaleLevel() {
-        this.updateChipsValue();
+    updateChipsByUserStaleLevel() {
+        this.setChipValues();
     }
 
     @handle(SlidingChipHandler.UpdateCurrentBet)
@@ -278,8 +278,8 @@ export default class SlidingChip extends Component {
         return { selectedChip: index };
     }
 
-    @handle(SlidingChipHandler.UpdateChipsValue)
-    updateChipsValue() {}
+    @handle(SlidingChipHandler.SetChipValues)
+    setChipValues() {}
 
     @render(SlidingChipStore, (store) => store.isResetScrollViewOffset)
     needResetScrollViewOffset() {
@@ -395,4 +395,5 @@ export default class SlidingChip extends Component {
                 .call(() => chip.destroy())
                 .start();
     }
+    //
 }

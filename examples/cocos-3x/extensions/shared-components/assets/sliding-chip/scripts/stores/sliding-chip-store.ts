@@ -85,12 +85,12 @@ export class SlidingChipStore {
         this.chipValues = result;
     }
 
-    handleSelectChip(disPlayMin: number, displaySize: number) {
-        if (this.selectChip < disPlayMin) {
-            const selectedIndex = disPlayMin;
+    handleSelectChip(displayMin: number, displaySize: number) {
+        if (this.selectChip < displayMin) {
+            const selectedIndex = displayMin;
             this.selectChip = Math.min(selectedIndex, this.chipsLength - displaySize);
-        } else if (this.selectChip > disPlayMin + displaySize - 1) {
-            this.selectChip = disPlayMin + displaySize - 1;
+        } else if (this.selectChip > displayMin + displaySize - 1) {
+            this.selectChip = displayMin + displaySize - 1;
         }
     }
 

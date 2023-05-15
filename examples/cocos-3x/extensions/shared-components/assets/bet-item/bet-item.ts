@@ -62,20 +62,18 @@ export default class BetItem extends Component {
     placeOwnChip(ownChip: gc.GameServiceMessage.OwnChip) {
         const { betChoice, amount } = ownChip;
         const choice = this.node.name;
-        betChoice === choice && this.handleFlyChip(this.chipBox, amount);
+        betChoice === choice && this.flyChip(this.chipBox, amount);
     }
 
-    @handle(SlidingChipHandler.HandleFlyChip)
-    handleFlyChip(chipBox: Node, amount: number) {
+    @handle(SlidingChipHandler.FlyChip)
+    flyChip(chipBox: Node, amount: number) {
         return { chipBox, amount };
     }
 
-    @render(Rounds.RoundTimeStore, (store) => store.roundState)
-    public clearBet(roundState: string) {
-        if (roundState === Rounds.ROUND_STATE.STARTING_ROUND) {
-            if (this.chipBox) {
-                this.clearChips();
-            }
+    @render(Rounds.RoundTimeStore, (store) => store.isStartingRound)
+    public clearBet(isStartingRound: boolean) {
+        if (isStartingRound && this.chipBox) {
+            this.clearChips();
         }
     }
 
