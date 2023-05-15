@@ -160,6 +160,27 @@ export namespace GameServiceMessage {
     export class BetResponse {
         static eventName = "endBet";
     }
+
+    export class Notice {
+        errorCode: string;
+        hedgeBetGroup?: string[];
+        minBet?: number;
+        maxBet?: number;
+        gameRoundId?: number;
+        gameTypeId?: number;
+        static eventName = "notice";
+    }
+
+    export class ApiError {
+        errorCode: string;
+        gameTypeId: number;
+        isPlaceBetFailed: boolean;
+        gameRoundId: number;
+        minBet: number;
+        maxBet: number;
+        static eventName = "apiError";
+    }
+
     export const betChoice = "betChoice";
     export const freeBet = "freeBet";
     export type WinningByChoices = Odds;
