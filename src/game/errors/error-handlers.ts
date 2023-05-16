@@ -3,9 +3,9 @@ import { AppStore } from "../../app";
 import { AuthHandlers } from "../../auth";
 import { PlayerStore } from "../../players";
 import { GameServiceMessage, IMultipleHandlers, utils } from "../../shared";
-import { NoticeStore, NoticeType, NoticeUtils } from "../notices";
+import { NoticeStore, NoticeType } from "../notices/notice-store";
+import { NoticeUtils } from "../notices/notice-utils";
 import { RoundStore } from "../rounds/round-store";
-const { getErrorMessage } = NoticeUtils;
 
 const { LocalizedUtils } = utils;
 const isSessionTimeoutError = (errorCode: string): boolean => {
@@ -61,7 +61,7 @@ export class ErrorHandlers implements IMultipleHandlers {
             this.playerStore.stakeLevel.maxBet = maxBet;
         }
 
-        const text = getErrorMessage(apiError);
+        const text = NoticeUtils.getErrorMessage(apiError);
         this.noticeStore.addNotice({
             message: text,
             title: LocalizedUtils.getLocalizedText("Notice"),

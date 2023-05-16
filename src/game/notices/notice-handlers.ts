@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { NoticeStore, NoticeUtils } from "../notices";
 import { RoundStore } from "../rounds/round-store";
-const { getErrorMessage } = NoticeUtils;
+import { NoticeStore } from "./notice-store";
+import { NoticeUtils } from "./notice-utils";
 
 @injectable()
 export class NoticeHandlers implements IMultipleHandlers {
@@ -19,7 +19,7 @@ export class NoticeHandlers implements IMultipleHandlers {
             return;
         }
 
-        const text = getErrorMessage(notice);
+        const text = NoticeUtils.getErrorMessage(notice);
         this.noticeStore.addWarning(text);
     }
 
