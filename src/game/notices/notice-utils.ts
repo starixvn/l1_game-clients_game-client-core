@@ -105,7 +105,7 @@ export namespace NoticeUtils {
         "networkError",
     ];
 
-    const parseErrorCode = (errorCode: string, isPlaceBet = false) => {
+    export const parseErrorCode = (errorCode: string, isPlaceBet = false) => {
         if (!ErrorCodeDictionary[errorCode]) {
             console.error(`not found error code ${errorCode}`);
             return "messages.errorOccurred";
