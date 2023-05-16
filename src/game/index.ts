@@ -1,6 +1,7 @@
 export * as Bet from "./bets";
 export * as Chips from "./chips";
 export * as Connection from "./connection";
+export * as Error from "./errors";
 export * as GameConfigs from "./game-configs";
 export * as HideGame from "./hide-game";
 export * as JoinGame from "./join-game";
