@@ -264,7 +264,7 @@ export namespace AuthHandlers {
             if (sessionInfo && sessionInfo.ssoTime) {
                 const now: Date = new Date();
                 const lastRecheckIn: Date = new Date(sessionInfo.ssoTime);
-                const differenceInMinutes = Math.abs(now.getMinutes() - lastRecheckIn.getMinutes());
+                const differenceInMinutes = Math.abs(now.getTime() - lastRecheckIn.getTime()) / (1000 * 60);
 
                 if (differenceInMinutes <= SESSION_EXPIRED_TIMEOUT_MINUTES) {
                     isSessionExpired = false;
