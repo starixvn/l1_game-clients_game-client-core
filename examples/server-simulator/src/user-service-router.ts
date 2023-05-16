@@ -37,7 +37,7 @@ userRouter.get("/auth/sso", (req, res) => {
 
 userRouter.post("/auth/authorize", (req, res) => {
     const data = {
-        authorized: true,
+        authorized: false,
         isUM: false,
         umInfo: null,
         user: null,
@@ -80,6 +80,19 @@ userRouter.post("/auth/signName", (req, res) => {
             isDisplayPlayerCurrency: true,
             offerGames: [{ gameId: 2 }, { gameId: 7 }],
         },
+    };
+    res.send(data);
+});
+
+userRouter.post("/auth/balance", (req, res) => {
+    const data = {
+        isSuccessful: true,
+        isUM: false,
+        errorCode: "0",
+        message: "",
+        balance: 2000,
+        scoins: 0,
+        availableSpins: 0,
     };
     res.send(data);
 });

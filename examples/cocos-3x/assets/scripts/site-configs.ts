@@ -7,22 +7,36 @@ declare global {
 }
 
 const defaultConfig: gc.Configs.SiteConfigs = {
-    isDev: true, // if this property is true, then you should add token=anything into the querytring to sso to the game http://localhost:7456/?token=anything
-    systemType: "SC1",
-    ssl: false,
+    // isDev: true, // if this property is true, then you should add token=anything into the querytring to sso to the game http://localhost:7456/?token=anything
+    // systemType: "SC1",
+    // ssl: false,
     serverDomainMapper: {
-        localhost: "localhost:5002",
+        localhost: "lumigame.com",
+        // localhost: "localhost:5002",
     },
-    subDomain: "",
+    // subDomain: "",
+    // env: "LOCAL",
+    // subGuideDomain: "l1-guide",
+    // SGConnectSubDomain: "connectsite",
+    // enableMsgpackParserAllGames: false,
+    // enableMsgpackParserOnNotification: false,
+    // userServiceUrlDev: "http://localhost:3000/user",
+    // websocket: {
+    //     proxyPath: "sedie",
+    //     route: "",
+    // },
+    systemType: "SC1",
+    ssl: true,
+    subDomain: "l1-proxy",
     env: "LOCAL",
+    // sentry: "https://2af29bdacdbf4d9ba2db6600b450541f@sentry.lumigame.com/28",
     subGuideDomain: "l1-guide",
     SGConnectSubDomain: "connectsite",
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,
-    userServiceUrlDev: "http://localhost:3000/user",
     websocket: {
         proxyPath: "sedie",
-        route: "",
+        route: "sedie",
     },
 };
 

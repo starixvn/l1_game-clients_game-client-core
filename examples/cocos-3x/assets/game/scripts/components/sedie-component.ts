@@ -1,116 +1,39 @@
-import { Component, Game, Label, _decorator, game } from "cc";
-import GameClient from "game-client-base";
+import { _decorator, tween } from "cc";
+import GameComponent from "db://shared-components/game/scripts/components/game-component";
 import Observer from "observer";
 import { settings } from "../sedie-settings";
+import SediePlate from "./sedie-plate";
 
-const { Player, Rounds, GameConfigs, Connection, HideGame, JoinGame } = GameClient;
 const { ccclass, property } = _decorator;
-const { observer, render, handle } = Observer;
+const { observer } = Observer;
 
 @ccclass
 @observer(settings.name)
-export default class Sedie extends Component {
-    @property(Label)
-    roundTime: Label = null;
+export default class Sedie extends GameComponent {
+    @property(SediePlate)
+    thePlate: SediePlate = null;
 
-    @property(Label)
-    player: Label = null;
-
-    @property(Label)
-    gameName: Label = null;
-
-    @property(Label)
-    roundId: Label = null;
-
-    @property(Label)
-    roundState: Label = null;
-
-    @property(Label)
-    minMaxBet: Label = null;
-
-    @property(Label)
-    odds: Label = null;
-
-    @property(Label)
-    remaining: Label = null;
-
-    @property(Label)
-    countdownTimer: Label = null;
-
-    protected onLoad(): void {
-        game.on(Game.EVENT_HIDE, this.onHideGame, this);
-        game.on(Game.EVENT_SHOW, this.onJoinGame, this);
-    }
-    protected onDestroy(): void {
-        game.off(Game.EVENT_HIDE, this.onHideGame, this);
-        game.off(Game.EVENT_SHOW, this.onJoinGame, this);
+    showResult(result: any, hasAnimation: boolean) {
+        if (result) {
+            this.thePlate.setDots(result);
+            this.thePlate.openBowl(hasAnimation);
+            if (hasAnimation) {
+                tween(this.node)
+                    .delay(this.thePlate.openPlateDuration)
+                    .call(() => {
+                        this.finishShowResult();
+                        this.payChips();
+                    })
+                    .start();
+            }
+        }
     }
 
-    @handle(HideGame.HideGameHandler)
-    onHideGame() {
-        console.log("onGameHide");
-    }
-
-    @handle(JoinGame.JoinGameHandler)
-    onJoinGame() {
-        console.log("onGameShow");
-    }
-
-    @render(Connection.ConnectionStore, (store) => store.signedIn)
-    onSignedIn(signedIn: boolean) {
-        signedIn && this.inGame();
-    }
-
-    @handle(Connection.ConnectionHandlers.InGameHandler)
-    inGame() {}
-
-    @render(Rounds.RoundTimeStore, (store) => store.roundTime)
-    renderRoundTime(roundTime: number) {
-        this.updateLabelValue(this.roundTime, roundTime.toString());
-    }
-
-    @render(Player.PlayerStore, (store) => store.name)
-    renderPlayer(player: string) {
-        this.updateLabelValue(this.player, player);
-    }
-
-    @render(GameConfigs.GameSetting, (store) => store.name)
-    renderGameName(gameName: string) {
-        this.updateLabelValue(this.gameName, gameName);
-    }
-
-    @render(Rounds.RoundStore, (store) => store.roundId)
-    renderRoundId(roundId: number) {
-        this.updateLabelValue(this.roundId, roundId.toString());
-    }
-
-    @render(Rounds.RoundTimeStore, (store) => store.roundState)
-    renderRoundState(state: string) {
-        this.updateLabelValue(this.roundState, state);
-    }
-
-    @render(Rounds.RoundStore, (store) => ({ minBet: store.minBet, maxBet: store.maxBet }))
-    renderMinMaxBet({ minBet, maxBet }) {
-        this.updateLabelValue(this.minMaxBet, `min: ${minBet} max: ${maxBet}`);
-    }
-
-    @render(GameConfigs.GameConfigStore, (store) => store.odds)
-    renderOdds(odds: any) {
-        this.updateLabelValue(this.odds, JSON.stringify(odds));
-    }
-
-    @render(Rounds.RoundTimeStore, (store) => store.remaining)
-    renderRemaining(remaining: number) {
-        this.updateLabelValue(this.remaining, remaining.toString());
-    }
-    @render(Rounds.RoundTimeStore, (store) => store.countdownTimer)
-    renderCountdownTimer(countdownTimer: number) {
-        this.updateLabelValue(this.countdownTimer, countdownTimer.toString());
-    }
-
-    updateLabelValue(label: Label, value: string) {
-        if (label) {
-            label.string = `${label.node.name}: ${value}`;
+    startGenerateResult(isStartGenerateResult: boolean) {
+        if (isStartGenerateResult) {
+            super.startGenerateResult(isStartGenerateResult);
+            this.thePlate.closeBowl(true);
+            this.thePlate.shakePlate();
         }
     }
 }

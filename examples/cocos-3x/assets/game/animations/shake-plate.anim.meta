@@ -2,12 +2,12 @@
   "ver": "2.0.3",
   "importer": "animation-clip",
   "imported": true,
-  "uuid": "1e533f43-3a6b-48f6-baa7-1e5a12d05385",
+  "uuid": "2cfc1271-16e3-4805-bf7b-eab3d0c708ed",
   "files": [
     ".cconb"
   ],
   "subMetas": {},
   "userData": {
-    "name": "XocDia"
+    "name": "shake-plate"
   }
 }

@@ -225,15 +225,19 @@ export namespace AuthHandlers {
     }
 
     @injectable()
-    export class GetBalance implements IHandler<{ session: string; username: string }> {
+    export class GetBalance implements IHandler<void> {
         constructor(
             @inject(AuthStore) private readonly authStore: AuthStore,
             @inject(PlayerStore) private readonly playerStore: PlayerStore,
             @inject(UserService) private readonly userService: UserService
         ) {}
 
-        async handle({ session = "", username = "" }) {
-            const response = await this.userService.getBalance(session, username);
+        async handle() {
+            const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
+            const response = await this.userService.getBalance(
+                this.authStore.session || sessionInfo?.session,
+                this.authStore.username || sessionInfo?.username
+            );
             if (response.isSuccessful) {
                 this.playerStore.setBalance(response.balance, response.scoins, response.availableSpins);
             } else {

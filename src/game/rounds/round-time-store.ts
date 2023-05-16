@@ -44,6 +44,7 @@ export class RoundTimeStore {
     endRound = false;
     startPlacingBet = false;
     endPlacingBet = false;
+    joinGameState = "";
 
     constructor(@inject(GameSetting) gameSetting: GameSetting) {
         makeAutoObservable(this);
@@ -88,6 +89,10 @@ export class RoundTimeStore {
             this._roundTime > this.placingBet + this.startRound &&
             this.wholeRound !== 0
         );
+    }
+
+    get isStartGenerateResult() {
+        return this._roundTime === this.placingBet + this.genResult;
     }
 
     get isStartingRound() {
@@ -164,46 +169,72 @@ export class RoundTimeStore {
     }
 
     calculateRoundStatus() {
+        this._roundState = this.getCurrentRoundState();
         if (this._roundTime < 0) {
-            this._roundState = ROUND_STATE.WAITING;
             return;
         }
 
         this.calculateBeginStatus();
 
         if (this.isWaiting) {
-            this._roundState = ROUND_STATE.WAITING;
             this._remaining = this._roundTime - this.placingBet;
         }
 
         if (this.isShowAnimationResult) {
-            this._roundState = ROUND_STATE.SHOW_ANIMATION_RESULT;
             this._remaining = this.genResult;
         }
 
         if (this.isShowResult) {
-            this._roundState = ROUND_STATE.SHOW_RESULT;
             const duration = this._roundTime - this.placingBet - this.genResult;
             this._remaining = duration;
             this._countdownTimer = duration;
         }
 
         if (this.isStartingRound) {
-            this._roundState = ROUND_STATE.STARTING_ROUND;
             this._remaining = this.startRound;
         }
 
         if (this.isPlacingBet) {
-            this._roundState = ROUND_STATE.PLACING_BET;
             this._remaining = this._roundTime - this.lockingBet;
             this._countdownTimer = this._roundTime;
         }
 
         if (this.isLocking) {
-            this._roundState = ROUND_STATE.LOCKING_BET;
             this._remaining = this._roundTime;
             this._countdownTimer = this._roundTime;
         }
+    }
+
+    getCurrentRoundState(): string {
+        if (this._roundTime < 0) {
+            return ROUND_STATE.WAITING;
+        }
+
+        let currentState = "";
+        if (this.isWaiting) {
+            currentState = ROUND_STATE.WAITING;
+        }
+
+        if (this.isShowAnimationResult) {
+            currentState = ROUND_STATE.SHOW_ANIMATION_RESULT;
+        }
+
+        if (this.isShowResult) {
+            currentState = ROUND_STATE.SHOW_RESULT;
+        }
+
+        if (this.isStartingRound) {
+            currentState = ROUND_STATE.STARTING_ROUND;
+        }
+
+        if (this.isPlacingBet) {
+            currentState = ROUND_STATE.PLACING_BET;
+        }
+
+        if (this.isLocking) {
+            currentState = ROUND_STATE.LOCKING_BET;
+        }
+        return currentState;
     }
 
     start() {

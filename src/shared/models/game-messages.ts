@@ -158,17 +158,19 @@ export namespace GameServiceMessage {
     export const endBet = "endBet";
     export const betChoice = "betChoice";
     export const freeBet = "freeBet";
+    export type WinningByChoices = Odds;
+
     export class Status {
-        winningByChoices: any;
+        winningByChoices: WinningByChoices;
         win: boolean;
         bet: number;
 
         static eventName = "status";
     }
     export class Finish {
-        result: any;
-        settlementResult: any;
-        roundId: number;
+        result?: any;
+        settlementResult?: any;
+        roundId?: number;
 
         static eventName = "finish";
     }

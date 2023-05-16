@@ -8,3 +8,4 @@ export * as Notices from "./notices";
 export * as Orientation from "./orientation";
 export * as RoundHistories from "./round-histories";
 export * as Rounds from "./rounds";
+export * as Settlements from "./settlements";
