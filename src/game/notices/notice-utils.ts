@@ -1,7 +1,6 @@
 import { GameServiceMessage, utils } from "../../shared";
 
 export namespace NoticeUtils {
-
     const ErrorCodeDictionary = {
         "1000": "errorOccurred",
         "1001": "sessionTimeout",
@@ -106,7 +105,7 @@ export namespace NoticeUtils {
         "networkError",
     ];
 
-    export const parseErrorCode = (errorCode: string, isPlaceBet = false) => {
+    const parseErrorCode = (errorCode: string, isPlaceBet = false) => {
         if (!ErrorCodeDictionary[errorCode]) {
             console.error(`not found error code ${errorCode}`);
             return "messages.errorOccurred";
