@@ -48,7 +48,7 @@ export class ErrorHandlers implements IMultipleHandlers {
     handleApiError(apiError: GameServiceMessage.ApiError) {
         const { minBet, maxBet, errorCode } = apiError;
 
-        if (isSessionTimeoutError(errorCode)) {
+        if (isSessionTimeoutError(`${errorCode}`)) {
             this.showMessageForExpiredToken(errorCode);
             return;
         }
