@@ -3,6 +3,7 @@ import { makeAutoObservable } from "mobx";
 
 import { PlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared";
+import { FormatUtils } from "../../shared/utils";
 import { GameConfigStore } from "../game-configs";
 
 export type Bets = {
@@ -25,7 +26,7 @@ export class RoundStore {
 
     roundId = 0;
     ownBets: GameServiceMessage.OwnBets = {};
-    totalBets: GameServiceMessage.TotalBets = {};
+    private _totalBets: GameServiceMessage.TotalBets = {};
     resultHash: GameServiceMessage.ResultHash = {};
 
     get minBet() {
@@ -43,9 +44,20 @@ export class RoundStore {
         };
     }
 
+    set totalBets(totalBets: GameServiceMessage.TotalBets) {
+        this._totalBets = totalBets;
+    }
+
+    get totalBets() {
+        return Object.keys(this._totalBets).reduce((total, betChoice) => {
+            total[betChoice] = FormatUtils.numberWithCommas(this._totalBets[betChoice] * this.playerStore.rate);
+            return total;
+        }, {});
+    }
+
     resetForNewRound() {
         this.ownBets = {};
-        this.totalBets = {};
+        this._totalBets = {};
     }
 
     resetRoundStore() {

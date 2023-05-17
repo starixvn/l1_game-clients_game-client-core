@@ -52,6 +52,18 @@ describe("RoundStore", () => {
         expect(roundStore.maxBet).toEqual(Math.min(gameConfigStore.maxBet, playerStore.stakeLevel.maxBet));
     });
 
+    it("total bets should be converted rate", () => {
+        // arrange
+        playerStore.rate = 0.5;
+        roundStore.totalBets = { even: 10, red4: 20, red3: 5 };
+
+        // act
+        const actual = roundStore.totalBets;
+
+        // assert
+        expect(actual).toEqual({ even: "5", red4: "10", red3: "2.5" });
+    });
+
     it("resetForNewRound() should reset ownBets and totalBets", () => {
         // Arrange
         roundStore.ownBets = { "option A": 10, "option B": 20 };
