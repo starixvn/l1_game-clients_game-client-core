@@ -1,6 +1,8 @@
-import { GameServiceMessage, utils } from "../../shared";
+import { GameServiceMessage } from "../models";
+import { FormatUtils } from "./format-utils";
+import { LocalizedUtils } from "./localized-utils";
 
-export namespace NoticeUtils {
+export namespace ErrorUtils {
     const ErrorCodeDictionary = {
         "1000": "errorOccurred",
         "1001": "sessionTimeout",
@@ -123,19 +125,19 @@ export namespace NoticeUtils {
         const option = {};
         const { errorCode, hedgeBetGroup, gameRoundId } = notice;
         hedgeBetGroup?.forEach((choice, index) => {
-            option[`betChoice${index + 1}`] = utils.LocalizedUtils.getBetChoiceString(choice);
+            option[`betChoice${index + 1}`] = LocalizedUtils.getBetChoiceString(choice);
         });
 
         if (!!notice.gameTypeId) {
-            Object.assign(option, { gameName: utils.LocalizedUtils.getGameNameString(notice.gameTypeId) });
+            Object.assign(option, { gameName: LocalizedUtils.getGameNameString(notice.gameTypeId) });
         }
 
         if (!!notice.minBet) {
-            Object.assign(option, { minBet: utils.FormatUtils.numberWithCommas(notice.minBet) });
+            Object.assign(option, { minBet: FormatUtils.numberWithCommas(notice.minBet) });
         }
 
         if (!!notice.maxBet) {
-            Object.assign(option, { maxBet: utils.FormatUtils.numberWithCommas(notice.maxBet) });
+            Object.assign(option, { maxBet: FormatUtils.numberWithCommas(notice.maxBet) });
         }
 
         if (!!gameRoundId) {
@@ -143,6 +145,6 @@ export namespace NoticeUtils {
         }
 
         const key = parseErrorCode(errorCode, !!notice.isPlaceBetFailed);
-        return utils.LocalizedUtils.getLocalizedText(key, option);
+        return LocalizedUtils.getLocalizedText(key, option);
     };
 }
