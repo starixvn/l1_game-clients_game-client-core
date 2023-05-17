@@ -11,15 +11,15 @@ const { observer } = Observer;
 @observer(settings.name)
 export default class Sedie extends GameComponent {
     @property(SediePlate)
-    thePlate: SediePlate = null;
+    cpnThePlate: SediePlate = null;
 
     showResult(result: any, hasAnimation: boolean) {
         if (result) {
-            this.thePlate.setDots(result);
-            this.thePlate.openBowl(hasAnimation);
+            this.cpnThePlate.setDots(result);
+            this.cpnThePlate.openBowl(hasAnimation);
             if (hasAnimation) {
                 tween(this.node)
-                    .delay(this.thePlate.openPlateDuration)
+                    .delay(this.cpnThePlate.openPlateDuration)
                     .call(() => {
                         this.finishShowResult();
                         this.payChips();
@@ -32,8 +32,8 @@ export default class Sedie extends GameComponent {
     startGenerateResult(isStartGenerateResult: boolean) {
         if (isStartGenerateResult) {
             super.startGenerateResult(isStartGenerateResult);
-            this.thePlate.closeBowl(true);
-            this.thePlate.shakePlate();
+            this.cpnThePlate.closeBowl(true);
+            this.cpnThePlate.shakePlate();
         }
     }
 }

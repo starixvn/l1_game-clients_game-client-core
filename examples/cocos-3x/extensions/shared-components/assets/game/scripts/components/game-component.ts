@@ -12,13 +12,13 @@ const { render, handle } = Observer;
 @ccclass
 export default class GameComponent extends Component {
     @property(Label)
-    roundIdLbl: Label = null;
+    lblRoundId: Label = null;
 
     @property(Label)
-    minBetLbl: Label = null;
+    lblMinBet: Label = null;
 
     @property(Label)
-    maxBetLbl: Label = null;
+    lblMaxBet: Label = null;
 
     @property(UserProfile)
     userProfile: UserProfile = null;
@@ -87,13 +87,13 @@ export default class GameComponent extends Component {
 
     @render(Rounds.RoundStore, (store) => store.roundId)
     renderRoundId(roundId: number) {
-        this.roundIdLbl && (this.roundIdLbl.string = `#${roundId}`);
+        this.lblRoundId && (this.lblRoundId.string = `#${roundId}`);
     }
 
     @render(Rounds.RoundStore, (store) => ({ minBet: store.minBet, maxBet: store.maxBet }))
     renderMinMaxBet({ minBet, maxBet }: { minBet: number; maxBet: number }) {
-        this.minBetLbl && (this.minBetLbl.string = FormatUtils.numberWithCommas(minBet));
-        this.maxBetLbl && (this.maxBetLbl.string = FormatUtils.numberWithCommas(maxBet));
+        this.lblMinBet && (this.lblMinBet.string = FormatUtils.numberWithCommas(minBet));
+        this.lblMaxBet && (this.lblMaxBet.string = FormatUtils.numberWithCommas(maxBet));
     }
 
     @render(RoundHistories.RoundHistoryStore, (store) => store.histories)

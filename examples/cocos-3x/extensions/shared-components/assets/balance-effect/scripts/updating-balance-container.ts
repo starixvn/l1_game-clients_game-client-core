@@ -11,16 +11,16 @@ export class UpdatingBalanceContainer extends NodeContainer {
     duration: number = 3;
 
     @property(BitmapFont)
-    increaseBalanceFont: BitmapFont = null;
+    fontIncreaseBalance: BitmapFont = null;
 
     @property(BitmapFont)
-    decreaseBalanceFont: BitmapFont = null;
+    fontDecreaseBalance: BitmapFont = null;
 
     updateBalance(playerNode: Node, win: boolean, value: number, startY = 80, destY = 10): void {
         const balanceEffectNode = this.createNode();
         const lblBalance = balanceEffectNode.getComponent(Label);
         lblBalance.string = `${win ? "+" : "-"}${FormatUtils.numberWithCommas(value, 2)}`;
-        lblBalance.font = win ? this.increaseBalanceFont : this.decreaseBalanceFont;
+        lblBalance.font = win ? this.fontIncreaseBalance : this.fontDecreaseBalance;
         lblBalance.node.position = v3(0, startY, 0);
         playerNode.addChild(balanceEffectNode);
         tween(balanceEffectNode)

@@ -382,15 +382,15 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "roundIdLbl": {
+    "lblRoundId": {
       "__id__": 10
     },
-    "minBetLbl": null,
-    "maxBetLbl": null,
+    "lblMinBet": null,
+    "lblMaxBet": null,
     "userProfile": null,
     "winningEffectContainer": null,
     "updatingBalanceContainer": null,
-    "thePlate": null,
+    "cpnThePlate": null,
     "_id": "4dADpxq0ZCBZwQS2NFSNgi"
   },
   {
@@ -2857,13 +2857,35 @@
     },
     "sourceInfo": null,
     "propertyPath": [
+      "cpnThePlate"
+    ],
+    "target": {
+      "__id__": 24
+    },
+    "targetInfo": {
+      "__id__": 133
+    }
+  },
+  {
+    "__type__": "cc.TargetInfo",
+    "localID": [
+      "84t0L7epZORYORN8HSNWlo"
+    ]
+  },
+  {
+    "__type__": "cc.TargetOverrideInfo",
+    "source": {
+      "__id__": 9
+    },
+    "sourceInfo": null,
+    "propertyPath": [
       "userProfile"
     ],
     "target": {
       "__id__": 60
     },
     "targetInfo": {
-      "__id__": 133
+      "__id__": 135
     }
   },
   {
@@ -2885,7 +2907,7 @@
       "__id__": 68
     },
     "targetInfo": {
-      "__id__": 135
+      "__id__": 137
     }
   },
   {
@@ -2907,35 +2929,13 @@
       "__id__": 88
     },
     "targetInfo": {
-      "__id__": 137
-    }
-  },
-  {
-    "__type__": "cc.TargetInfo",
-    "localID": [
-      "64M2STt9VEI60E3RxkNLFS"
-    ]
-  },
-  {
-    "__type__": "cc.TargetOverrideInfo",
-    "source": {
-      "__id__": 9
-    },
-    "sourceInfo": null,
-    "propertyPath": [
-      "thePlate"
-    ],
-    "target": {
-      "__id__": 24
-    },
-    "targetInfo": {
       "__id__": 139
     }
   },
   {
     "__type__": "cc.TargetInfo",
     "localID": [
-      "84t0L7epZORYORN8HSNWlo"
+      "64M2STt9VEI60E3RxkNLFS"
     ]
   },
   {

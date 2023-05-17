@@ -101,11 +101,11 @@
       "__expectedType__": "cc.Prefab"
     },
     "duration": 3,
-    "increaseBalanceFont": {
+    "fontIncreaseBalance": {
       "__uuid__": "873a1741-b920-4f57-a218-c401a0e73a5c",
       "__expectedType__": "cc.BitmapFont"
     },
-    "decreaseBalanceFont": {
+    "fontDecreaseBalance": {
       "__uuid__": "01e2a2c7-4d15-4697-a7f2-9dec94f41cf6",
       "__expectedType__": "cc.BitmapFont"
     },

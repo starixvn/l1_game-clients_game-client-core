@@ -5,30 +5,30 @@ const { ccclass, property } = _decorator;
 @ccclass
 export default class SediePlate extends Component {
     @property(Animation)
-    shakePlateAnim: Animation = null;
+    animShakePlate: Animation = null;
 
     @property(Node)
-    theBowl: Node = null;
+    nodeTheBowl: Node = null;
 
     @property([Sprite])
-    dots: Sprite[] = [];
+    sprDots: Sprite[] = [];
 
     @property(SpriteFrame)
-    dotRed: SpriteFrame = null;
+    sprDotRed: SpriteFrame = null;
 
     @property(SpriteFrame)
-    dotWhite: SpriteFrame = null;
+    sprDotWhite: SpriteFrame = null;
 
     openPlateDuration = 0.5;
 
     setDots(result) {
         Object.keys(result).forEach((key, index) => {
-            this.dots[index].spriteFrame = result[key] ? this.dotRed : this.dotWhite;
+            this.sprDots[index].spriteFrame = result[key] ? this.sprDotRed : this.sprDotWhite;
         });
     }
 
     toggleDotsActive(show: boolean) {
-        this.dots.forEach((dot) => {
+        this.sprDots.forEach((dot) => {
             dot.node.active = show;
         });
     }
@@ -38,7 +38,7 @@ export default class SediePlate extends Component {
             .delay(0.5)
             .call(() => {
                 this.toggleDotsActive(false);
-                this.shakePlateAnim.play();
+                this.animShakePlate.play();
             })
             .start();
     }
@@ -48,27 +48,27 @@ export default class SediePlate extends Component {
         const platePos = v2(50, 100);
 
         if (animated) {
-            tween(this.theBowl)
+            tween(this.nodeTheBowl)
                 .to(this.openPlateDuration, { position: v3(platePos.x, platePos.y) }, { easing: "sineInOut" })
                 .start();
-            tween(this.theBowl.getComponent(UIOpacity)).delay(this.openPlateDuration).to(0.2, { opacity: 0 }).start();
+            tween(this.nodeTheBowl.getComponent(UIOpacity)).delay(this.openPlateDuration).to(0.2, { opacity: 0 }).start();
         } else {
-            this.theBowl.position = v3(platePos.x, platePos.y);
-            this.theBowl.getComponent(UIOpacity).opacity = 0;
+            this.nodeTheBowl.position = v3(platePos.x, platePos.y);
+            this.nodeTheBowl.getComponent(UIOpacity).opacity = 0;
         }
     }
 
     closeBowl(animated: boolean) {
         if (animated) {
             const platePos = v2(50, 100);
-            this.theBowl.position = v3(platePos.x, platePos.y);
-            tween(this.theBowl.getComponent(UIOpacity)).to(0, { opacity: 255 }).start();
-            tween(this.theBowl)
+            this.nodeTheBowl.position = v3(platePos.x, platePos.y);
+            tween(this.nodeTheBowl.getComponent(UIOpacity)).to(0, { opacity: 255 }).start();
+            tween(this.nodeTheBowl)
                 .to(0.5, { position: v3(0, 0) })
                 .start();
         } else {
-            this.theBowl.getComponent(UIOpacity).opacity = 255;
-            this.theBowl.position = v3(0, 0);
+            this.nodeTheBowl.getComponent(UIOpacity).opacity = 255;
+            this.nodeTheBowl.position = v3(0, 0);
         }
     }
 }

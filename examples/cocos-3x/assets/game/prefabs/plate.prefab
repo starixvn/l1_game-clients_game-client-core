@@ -1049,13 +1049,13 @@
     "__prefab": {
       "__id__": 49
     },
-    "shakePlateAnim": {
+    "animShakePlate": {
       "__id__": 46
     },
-    "theBowl": {
+    "nodeTheBowl": {
       "__id__": 36
     },
-    "dots": [
+    "sprDots": [
       {
         "__id__": 12
       },
@@ -1069,11 +1069,11 @@
         "__id__": 30
       }
     ],
-    "dotRed": {
+    "sprDotRed": {
       "__uuid__": "929196a9-c0af-47cc-9509-342b3a3f7786@1238c",
       "__expectedType__": "cc.SpriteFrame"
     },
-    "dotWhite": {
+    "sprDotWhite": {
       "__uuid__": "929196a9-c0af-47cc-9509-342b3a3f7786@90c95",
       "__expectedType__": "cc.SpriteFrame"
     },
