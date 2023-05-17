@@ -9,7 +9,9 @@ const getSharedContainer = () => {
     const containerOptions: IContainerOptions = {
         onContainerCreated: (container) => {
             container.bind(SiteConfigs).toConstantValue(siteConfigs);
+            container.bind(GameSetting).toConstantValue(gameSettings);
         },
+
         enabledFeatures: [Player.FEATURE_NAME, Auth.FEATURE_NAME],
     };
 

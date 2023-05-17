@@ -7,7 +7,7 @@ import { StorageManager, localStorageKeys } from "../shared/utils/storage-manage
 import { AppStore } from "./../app/app-store";
 import { AuthStore, ISessionInfo } from "./auth-store";
 import { UserService } from "./user-service";
-import { NotificationHandlers } from "../notification/notification-handlers";
+import { NotificationHandlers } from "../notification";
 
 interface IAuthorizeResponse {
     errorCode?: string;
@@ -38,7 +38,7 @@ export namespace AuthHandlers {
             @inject(PlayerStore) private readonly playerStore: PlayerStore,
             @inject(UserService) private readonly userService: UserService,
             @inject(SignOut) private readonly signOutHandler: SignOut,
-            @inject(NotificationHandlers) private readonly notificationHandlers: NotificationHandlers
+            @inject(NotificationHandlers.SocketConnection) private readonly notificationSocket: NotificationHandlers.SocketConnection
         ) {}
 
         async handle({ session = "", username = "" }) {
@@ -53,8 +53,7 @@ export namespace AuthHandlers {
                     this.signOutHandler.handle();
                 } else {
                     await this.handleAuthorizedResponse(response);
-
-                    this.notificationHandlers.handle();
+                    this.notificationSocket.handle();
                 }
             }
         }

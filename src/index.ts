@@ -3,4 +3,4 @@ export * from "./exports";
 import * as Module from "./exports";
 
 export default Module;
-export * from "./notification";
+export * as Notification from "./notification";

@@ -1,29 +1,73 @@
-import { SocketManagerStore } from "../../../src";
 import { AppStore } from "../../../src/app/app-store";
-import { SiteConfigs } from "../../../src/configs";
+import { ConnectionStore } from "../../../src/game/connection";
+import { NotificationStore } from "../../../src/notification";
 import { NotificationHandlers } from "../../../src/notification/notification-handlers";
+import { Mediator } from "../../../src/shared";
+import { gameSettings, siteConfigs } from "../container.test";
 
 jest.mock("../../../src/shared/utils/storage-manager", () => ({
     StorageManager: {
-        get: jest.fn(),
+        get: jest.fn().mockReturnValue({
+            ss: "sessionInfo.session",
+            username: "username",
+        }),
         remove: jest.fn(),
     },
     localStorageKeys: { session: "session-key" },
 }));
+
+jest.mock("../../../src/shared/utils", () => ({
+    UrlUtils: {
+        buildUrl: jest.fn().mockReturnValue("https://notification.com"),
+    },
+}));
+
 describe("NotificationHandlers tests", () => {
     describe("handle", () => {
-        it("should call userService authorize with session and username from storage manager", async () => {
-            // arrange
-            // @ts-ignore
-            const appStore = new AppStore();
-            const socketManagerStore = new SocketManagerStore();
-            const siteConfigs = new SiteConfigs();
-            const notificationServiceHandler = new NotificationHandlers(appStore, socketManagerStore, siteConfigs);
+        describe("when on dev mode", () => {
+            it("connect correct socket uri ", () => {
+                // arrange
+                const notificationServiceUrlDev = "https://localhost:3008";
+                const cloneSiteConfigs = { ...siteConfigs };
+                cloneSiteConfigs.isDev = false;
+                cloneSiteConfigs.notificationServiceUrlDev = notificationServiceUrlDev;
 
-            // act
-            notificationServiceHandler.handle();
+                const handler = new NotificationHandlers.SocketConnection(
+                    new AppStore(),
+                    new ConnectionStore(new Mediator(), gameSettings),
+                    new NotificationStore(new Mediator()),
+                    siteConfigs
+                );
 
-            // assert
+                // act
+                handler.handle();
+
+                // assert
+                expect(handler.notificationStore.connection.io["uri"]).toEqual(notificationServiceUrlDev);
+                expect(handler.notificationStore.connection.io.opts["path"]).toEqual("/socket.io");
+            });
+        });
+
+        describe("when on deployed mode", () => {
+            it("connect correct socket uri ", () => {
+                // arrange
+                const cloneSiteConfigs = { ...siteConfigs };
+                cloneSiteConfigs.isDev = false;
+
+                const handler = new NotificationHandlers.SocketConnection(
+                    new AppStore(),
+                    new ConnectionStore(new Mediator(), gameSettings),
+                    new NotificationStore(new Mediator()),
+                    cloneSiteConfigs
+                );
+
+                // act
+                handler.handle();
+
+                // assert
+                expect(handler.notificationStore.connection.io["uri"]).toEqual("https://notification.com");
+                expect(handler.notificationStore.connection.io.opts["path"]).toEqual("/notification/socket.io");
+            });
         });
     });
 });

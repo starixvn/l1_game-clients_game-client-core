@@ -1,5 +1,5 @@
 {
-    "name": "server-simulator",
+    "name": "notification-service",
     "version": "1.0.0",
     "scripts": {
         "start": "nodemon src/server.ts ",

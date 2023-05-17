@@ -207,6 +207,6 @@ export namespace GameServiceMessage {
     export class UnderMaintenanceInfo {
         message: string;
         umInfo: UMInfo;
-        static eventName = "kickedOut";
+        static eventName = "notification-kickedOut";
     }
 }

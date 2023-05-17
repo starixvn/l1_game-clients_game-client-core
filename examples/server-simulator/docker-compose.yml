@@ -14,6 +14,18 @@ services:
   #     - ./cocos-3x/:/usr/src/app
   #     - /usr/src/app/node_modules
 
+  notification-service:
+    build:
+      dockerfile: notification-dockerfile
+      context: ../notification-service
+    ports:
+      - "3008:3008"
+    networks:
+      - mern-app
+    volumes:
+      - ./notification-service/:/usr/src/app
+      - /usr/src/app/node_modules
+
   user-service:
     build:
       dockerfile: Dockerfile

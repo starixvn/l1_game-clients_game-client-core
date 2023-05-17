@@ -145,6 +145,7 @@ describe("UrlUtils", () => {
                 enableMsgpackParserAllGames: false,
                 enableMsgpackParserOnNotification: false,
                 userServiceUrlDev: "http://localhost:3000/user",
+                notificationServiceUrlDev: "http://localhost:3008",
             };
             const result = UrlUtils.getProxyRoute(configs);
             expect(result).toBe("/socket.io");
@@ -170,6 +171,7 @@ describe("UrlUtils", () => {
                 enableMsgpackParserAllGames: false,
                 enableMsgpackParserOnNotification: false,
                 userServiceUrlDev: "http://localhost:3000/user",
+                notificationServiceUrlDev: "http://localhost:3008",
             };
 
             const result = UrlUtils.getProxyRoute(configs);
@@ -196,6 +198,7 @@ describe("UrlUtils", () => {
                 enableMsgpackParserAllGames: false,
                 enableMsgpackParserOnNotification: false,
                 userServiceUrlDev: "http://localhost:3000/user",
+                notificationServiceUrlDev: "http://localhost:3008",
             };
 
             const result = UrlUtils.getProxyRoute(configs);

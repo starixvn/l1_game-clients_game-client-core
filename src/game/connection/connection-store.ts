@@ -7,7 +7,7 @@ import { StorageManager, localStorageKeys } from "../../shared/utils";
 import { GameSetting } from "../game-configs";
 import { SocketEvents } from "../../constants/socket-event";
 
-const events = {
+export const events = {
     ...SocketEvents,
     ...{
         signedIn: "signedIn",
