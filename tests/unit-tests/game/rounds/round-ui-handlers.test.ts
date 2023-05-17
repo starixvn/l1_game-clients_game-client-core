@@ -21,17 +21,17 @@ describe("RoundUIHandlers tests", () => {
     });
 
     describe("GetCurrentRoundState", () => {
-        it("should call getCurrentRoundState in RoundTimeStore", () => {
+        it("should call setJoinGameState in RoundTimeStore", () => {
             // arrange
             const store = new RoundTimeStore(gameSettings);
-            store.getCurrentRoundState = jest.fn();
+            store.setJoinGameState = jest.fn();
             const handler = new RoundUIHandlers.GetCurrentRoundState(store);
 
             // act
             handler.handle();
 
             // assert
-            expect(store.getCurrentRoundState).toHaveBeenCalled();
+            expect(store.setJoinGameState).toHaveBeenCalled();
         });
     });
 

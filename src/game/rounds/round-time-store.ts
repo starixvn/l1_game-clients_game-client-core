@@ -237,6 +237,10 @@ export class RoundTimeStore {
         return currentState;
     }
 
+    setJoinGameState() {
+        this.joinGameState = this.getCurrentRoundState();
+    }
+
     start() {
         this._roundState = ROUND_STATE.START_GAME_LOOP;
     }

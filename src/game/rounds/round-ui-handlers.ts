@@ -16,7 +16,7 @@ export namespace RoundUIHandlers {
     export class GetCurrentRoundState implements IHandler<void> {
         constructor(@inject(RoundTimeStore) private readonly store: RoundTimeStore) {}
         handle() {
-            this.store.joinGameState = this.store.getCurrentRoundState();
+            this.store.setJoinGameState();
         }
     }
 
