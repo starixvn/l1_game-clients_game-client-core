@@ -6,14 +6,22 @@ import { GameServiceMessage } from "../shared";
 import { Socket, io } from "socket.io-client/dist/socket.io.js";
 import { ISessionInfo } from "../auth";
 import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
-import { SocketManagerStore } from "./socket-manager-store";
+import { ConnectionStore } from "../game/connection";
+import { SocketEvents } from "../constants/socket-event";
+
+const events = {
+    ...SocketEvents,
+    ...{
+        kickedOut: "kickedOut",
+    },
+};
 
 @injectable()
 export class NotificationHandlers {
     connection: Socket = null;
     constructor(
         @inject(AppStore) protected readonly appStore: AppStore,
-        @inject(SocketManagerStore) protected readonly socketManagerStore: SocketManagerStore,
+        @inject(ConnectionStore) protected readonly connectionStore: ConnectionStore,
         @inject(SiteConfigs) protected readonly siteConfigs: SiteConfigs
     ) {}
 
@@ -36,17 +44,12 @@ export class NotificationHandlers {
         };
 
         this.connection = io(options.socketUri, options);
-        this.connection.on(GameServiceMessage.UnderMaintenanceInfo.eventName, this.handleDataKickedOut.bind(this));
-
-        this.connection.on("connect", () => {
-            this.socketManagerStore.addSocket(this.connection);
-        });
-
-        this.connection.on("disconnect", () => {});
+        this.connection.on(events.kickedOut, this.handleDataKickedOut.bind(this));
     }
 
     handleDataKickedOut(underMaintenanceInfo: GameServiceMessage.UnderMaintenanceInfo) {
         this.appStore.setUM(underMaintenanceInfo.umInfo);
-        this.socketManagerStore.clearSockets();
+        this.connection.disconnect();
+        this.connectionStore.connection.disconnect();
     }
 }
