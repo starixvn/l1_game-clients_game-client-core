@@ -1,10 +1,17 @@
 {
-    "name": "cocos-3x",
     "uuid": "c276db36-9eca-406d-ab37-8c88b377139f",
     "creator": {
         "version": "3.7.2"
     },
+    "jestSonar": {
+        "reportPath": "reports",
+        "reportFile": "test-reporter.xml",
+        "indent": 4
+    },
+    "name": "cocos-3x",
     "scripts": {
+        "test": "jest",
+        "test-coverage": "jest",
         "obfuscator-config-file": "ts-node ./site-configs/site-config-obfuscator.ts"
     },
     "dependencies": {
@@ -17,6 +24,13 @@
     "devDependencies": {
         "javascript-obfuscator": "4.0.2",
         "ts-node": "10.9.1",
-        "typescript": "5.0.4"
+        "typescript": "5.0.4",
+        "@types/jest": "29.5.1",
+        "jest": "29.5.0",
+        "jest-environment-jsdom": "29.5.0",
+        "jest-junit": "16.0.0",
+        "jest-sonar-reporter": "2.0.0",
+        "reflect-metadata": "0.1.13",
+        "ts-jest": "29.1.0"
     }
 }
