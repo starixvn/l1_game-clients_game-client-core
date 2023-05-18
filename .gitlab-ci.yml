@@ -5,6 +5,7 @@ include:
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
+  GIT_STRATEGY: clone
   COCOS_VERSION: "3.7.2"
   NODEJS_INTEGRATION_TEST_IMAGE_VERSION: "hub.lumigame.com/docker-hub/library/node:18.1-alpine"
 
