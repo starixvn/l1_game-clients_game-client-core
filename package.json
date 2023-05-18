@@ -14,7 +14,8 @@
         "test": "jest unit-tests",
         "integration-test": "jest integration-tests/index.test.ts",
         "test-coverage": "jest unit-tests --collect-coverage",
-        "posttest-coverage": "npm run build && cd examples/cocos-3x && npm install && npm run test-coverage",
+        "posttest-coverage": "cd examples/cocos-3x && npm install && npm run test-coverage",
+        "posttest-coverage-with-cocos": "npm run build && cd examples/cocos-3x && npm install && npm run test-coverage",
         "test:watch": "jest --watch --verbose",
         "reg": "npm set registry http://npm.lumigame.com"
     },
