@@ -8,7 +8,7 @@
         "isolatedModules": true,
         "resolveJsonModule": true,
         "paths": {
-            "cc": ["./shared-components/tests/mocks/cc"],
+            "cc": ["./tests/cocos-testing/cc"],
             "db://shared-components/*": ["./extensions/shared-components/assets/*"]
         }
     }
