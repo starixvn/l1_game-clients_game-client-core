@@ -69,3 +69,35 @@ integration_test:
       when: never
   - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: "$CI_COMMIT_BRANCH"
+
+cocos_unit_test_js:
+  stage: test
+  image: "$NODEJS_IMAGE"
+  tags:
+  - docker
+  before_script:
+  - npm set registry http://npm.lumigame.com
+  - yarn global add jest@28.1.3
+  - echo $SRC_PATH
+  - cd "$SRC_PATH"
+  - yarn install
+  script:
+  - npm run posttest-coverage-with-cocos
+  allow_failure: true
+  cache:
+  - key:
+      files:
+      - package.json
+      - yarn.lock
+    paths:
+    - node_modules
+  extends: ".unit_test_js"
+  rules:
+  - - if: "$CI_COMMIT_TAG =~ /^deploy-/"
+      when: never
+    - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
+      when: never
+  - if: $ENABLE_TEST_JS != "true"
+    when: never
+  - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: "$CI_COMMIT_BRANCH"
