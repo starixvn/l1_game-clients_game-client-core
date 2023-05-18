@@ -1,6 +1,6 @@
 import { _decorator } from "cc";
-import BetItem from "db://shared-components/bet-item/bet-item";
 import Observer from "observer";
+import BetItem from "../../../../extensions/shared-components/assets/bets/scripts/components/bet-item";
 
 import { settings } from "../sedie-settings";
 

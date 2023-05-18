@@ -14,6 +14,7 @@ export class ChipSettingStore {
     private _chipSetting: TChipSetting = {
         0: "#9ec6d3",
         1: "#848484",
+        2: "#a335a7",
         5: "#2cb400",
         10: "#ff930d",
         20: "#962bfa",

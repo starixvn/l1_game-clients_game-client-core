@@ -9,4 +9,9 @@ startGame(settings.name, containerOptions);
 
 @_decorator.ccclass
 @Observer.observer(settings.name)
-export default class Startup extends StartupComponent {}
+export default class Startup extends StartupComponent {
+    onLoad() {
+        this.namespace = settings.name;
+        super.onLoad();
+    }
+}

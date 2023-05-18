@@ -112,6 +112,10 @@ export class RoundTimeStore {
         );
     }
 
+    get isStopGame() {
+        return this.roundState === ROUND_STATE.STOP_GAME_LOOP;
+    }
+
     setRoundTimeSetting(setting: RoundTimeSetting) {
         this.wholeRound = setting.wholeRound;
         this.placingBet = setting.placingBet;

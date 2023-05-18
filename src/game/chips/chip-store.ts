@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, toJS } from "mobx";
 import { GameServiceMessage } from "../../shared/models/game-messages";
 
 export type Chips = {
@@ -15,7 +15,7 @@ export class ChipStore {
         makeAutoObservable(this);
     }
 
-    chips: Chips = {};
+    private _chips: Chips = {};
     playerChip: GameServiceMessage.PlayerChip = null;
     private _ownChip: GameServiceMessage.OwnChip = { betChoice: "", amount: 0 };
 
@@ -25,5 +25,13 @@ export class ChipStore {
 
     set ownChip(data: GameServiceMessage.OwnChip) {
         this._ownChip = data;
+    }
+
+    get chips() {
+        return toJS(this._chips);
+    }
+
+    set chips(chips: Chips) {
+        this._chips = chips;
     }
 }

@@ -12,6 +12,7 @@ describe("ChipSettingStore", () => {
         expect(chipSettingStore.chipSetting).toEqual({
             0: "#9ec6d3",
             1: "#848484",
+            2: "#a335a7",
             5: "#2cb400",
             10: "#ff930d",
             20: "#962bfa",
@@ -43,6 +44,7 @@ describe("ChipSettingStore", () => {
         expect(chipSettingStore.chipSetting).toEqual({
             0: "#000000",
             1: "#848484",
+            2: "#a335a7",
             5: "#2cb400",
             10: "#ff930d",
             20: "#962bfa",
