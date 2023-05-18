@@ -7,10 +7,6 @@ import { NoticeStore, NoticeType } from "../notices";
 import { RoundStore } from "../rounds";
 
 const { LocalizedUtils, ErrorUtils } = utils;
-const isSessionTimeoutError = (errorCode: string): boolean => {
-    const expectedTokenErrorCodes = ["1001", "1002", "SB0002", "SB0011"];
-    return expectedTokenErrorCodes.includes(errorCode);
-};
 
 @injectable()
 export class ErrorHandlers implements IMultipleHandlers {
@@ -44,10 +40,15 @@ export class ErrorHandlers implements IMultipleHandlers {
         });
     }
 
+    isSessionTimeoutError(errorCode: string): boolean {
+        const expectedTokenErrorCodes = ["1001", "1002", "SB0002", "SB0011"];
+        return expectedTokenErrorCodes.includes(errorCode);
+    }
+
     handleApiError(apiError: GameServiceMessage.ApiError) {
         const { minBet, maxBet, errorCode } = apiError;
 
-        if (isSessionTimeoutError(`${errorCode}`)) {
+        if (this.isSessionTimeoutError(`${errorCode}`)) {
             this.showMessageForExpiredToken(errorCode);
             return;
         }
