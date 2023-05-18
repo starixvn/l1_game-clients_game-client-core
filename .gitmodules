@@ -1,4 +1,14 @@
 [submodule "examples/sedie-service"]
-	path = examples/sedie-service
-	url = ../../../game-services/sedie-service.git
-	branch = support-game-base-client
+path = examples/sedie-service
+url = ../../../game-services/sedie-service.git
+branch = support-game-base-client
+
+[submodule "examples/cocos-3x/extensions/shared-components"]
+path = examples/cocos-3x/extensions/shared-components
+url = ../shared-components.git
+branch = main
+
+[submodule "examples/cocos-3x/tests/cocos-testing"]
+path = examples/cocos-3x/tests/cocos-testing
+url = ../cocos-testing.git
+branch = main
