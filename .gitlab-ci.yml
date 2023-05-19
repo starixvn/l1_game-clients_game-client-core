@@ -54,6 +54,7 @@ integration_test:
     - npm install
   script:
   - npm run integration-test
+  allow_failure: false
   artifacts:
     when: always
     paths:
@@ -70,6 +71,9 @@ integration_test:
   - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: "$CI_COMMIT_BRANCH"
 
+unit_test_js:
+  allow_failure: false
+
 cocos_unit_test_js:
   stage: test
   image: "$NODEJS_IMAGE"
@@ -83,7 +87,7 @@ cocos_unit_test_js:
   - yarn install
   script:
   - npm run posttest-coverage-with-cocos
-  allow_failure: true
+  allow_failure: false
   cache:
   - key:
       files:
