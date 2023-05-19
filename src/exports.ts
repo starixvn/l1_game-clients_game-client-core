@@ -10,3 +10,6 @@ export * from "./shared/constants/app-type";
 export * from "./shared/models/game-messages";
 export * from "./shared/utils";
 export * as Undermaintenace from "./under-maintenance";
+export * as SocketConnection from "./socket-connection";
+export * as Notification from "./notification";
+export * as UnderMaintenance from "./under-maintenance";
