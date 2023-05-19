@@ -4,6 +4,7 @@ import * as SiteConfigs from "./configs";
 import * as Game from "./game";
 import * as Players from "./players";
 import * as Notification from "./notification";
+import * as UnderMaintenance from "./under-maintenance";
 import { FeatureLoader } from "./shared";
 
 export interface IContainerOptions {
@@ -43,7 +44,7 @@ export function getContainer(options: IContainerOptions = {}) {
         container: container,
         disabledFeatures: disabledFeatures,
         enabledFeatures: enabledFeatures,
-        features: [Auth, Players, SiteConfigs, Game, Notification],
+        features: [Auth, Players, SiteConfigs, Game, Notification, UnderMaintenance],
     };
 
     FeatureLoader.loadFeatures(featureLoaderOptions);

@@ -32,7 +32,7 @@ describe("NotificationHandlers tests", () => {
                 cloneSiteConfigs.isDev = false;
                 cloneSiteConfigs.notificationServiceUrlDev = notificationServiceUrlDev;
 
-                const handler = new NotificationHandlers.SocketConnection(
+                const handler = new NotificationHandlers(
                     new AppStore(),
                     new ConnectionStore(new Mediator(), gameSettings),
                     new NotificationStore(new Mediator()),
@@ -54,7 +54,7 @@ describe("NotificationHandlers tests", () => {
                 const cloneSiteConfigs = { ...siteConfigs };
                 cloneSiteConfigs.isDev = false;
 
-                const handler = new NotificationHandlers.SocketConnection(
+                const handler = new NotificationHandlers(
                     new AppStore(),
                     new ConnectionStore(new Mediator(), gameSettings),
                     new NotificationStore(new Mediator()),

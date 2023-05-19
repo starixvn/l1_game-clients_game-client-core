@@ -38,7 +38,7 @@ export namespace AuthHandlers {
             @inject(PlayerStore) private readonly playerStore: PlayerStore,
             @inject(UserService) private readonly userService: UserService,
             @inject(SignOut) private readonly signOutHandler: SignOut,
-            @inject(NotificationHandlers.SocketConnection) private readonly notificationSocket: NotificationHandlers.SocketConnection
+            @inject(NotificationHandlers) private readonly notificationHandlers: NotificationHandlers
         ) {}
 
         async handle({ session = "", username = "" }) {
@@ -53,7 +53,7 @@ export namespace AuthHandlers {
                     this.signOutHandler.handle();
                 } else {
                     await this.handleAuthorizedResponse(response);
-                    this.notificationSocket.handle();
+                    this.notificationHandlers.handle();
                 }
             }
         }

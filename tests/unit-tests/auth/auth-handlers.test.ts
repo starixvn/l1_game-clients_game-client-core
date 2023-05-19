@@ -22,11 +22,11 @@ jest.mock("../../../src/shared/utils/storage-manager", () => ({
     localStorageKeys: { session: "session-key" },
 }));
 
-let notificationServiceHandler: NotificationHandlers.SocketConnection;
+let notificationServiceHandler: NotificationHandlers;
 
 describe("AuthHandlers tests", () => {
     beforeEach(() => {
-        notificationServiceHandler = new NotificationHandlers.SocketConnection(
+        notificationServiceHandler = new NotificationHandlers(
             new AppStore(),
             new ConnectionStore(new Mediator(), gameSettings),
             new NotificationStore(new Mediator()),
