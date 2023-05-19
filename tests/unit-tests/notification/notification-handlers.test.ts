@@ -1,9 +1,7 @@
-import { AppStore } from "../../../src/app/app-store";
-import { ConnectionStore } from "../../../src/game/connection";
 import { NotificationStore } from "../../../src/notification";
 import { NotificationHandlers } from "../../../src/notification/notification-handlers";
 import { Mediator } from "../../../src/shared";
-import { gameSettings, siteConfigs } from "../container.test";
+import { siteConfigs } from "../container.test";
 
 jest.mock("../../../src/shared/utils/storage-manager", () => ({
     StorageManager: {
@@ -22,6 +20,16 @@ jest.mock("../../../src/shared/utils", () => ({
     },
 }));
 
+const fakeSession = {
+    isAuthenticated: true,
+    username: "username",
+    language: "En",
+    session: "abv",
+    system: 1,
+    ssoTime: new Date("May 19, 2023 03:24:00"),
+    memberName: "membername",
+};
+
 describe("NotificationHandlers tests", () => {
     describe("handle", () => {
         describe("when on dev mode", () => {
@@ -29,18 +37,13 @@ describe("NotificationHandlers tests", () => {
                 // arrange
                 const notificationServiceUrlDev = "https://localhost:3008";
                 const cloneSiteConfigs = { ...siteConfigs };
-                cloneSiteConfigs.isDev = false;
+                cloneSiteConfigs.isDev = true;
                 cloneSiteConfigs.notificationServiceUrlDev = notificationServiceUrlDev;
 
-                const handler = new NotificationHandlers(
-                    new AppStore(),
-                    new ConnectionStore(new Mediator(), gameSettings),
-                    new NotificationStore(new Mediator()),
-                    siteConfigs
-                );
+                const handler = new NotificationHandlers(new NotificationStore(new Mediator()), siteConfigs);
 
                 // act
-                handler.handle();
+                handler.handle(fakeSession);
 
                 // assert
                 expect(handler.notificationStore.connection.io["uri"]).toEqual(notificationServiceUrlDev);
@@ -54,15 +57,10 @@ describe("NotificationHandlers tests", () => {
                 const cloneSiteConfigs = { ...siteConfigs };
                 cloneSiteConfigs.isDev = false;
 
-                const handler = new NotificationHandlers(
-                    new AppStore(),
-                    new ConnectionStore(new Mediator(), gameSettings),
-                    new NotificationStore(new Mediator()),
-                    cloneSiteConfigs
-                );
+                const handler = new NotificationHandlers(new NotificationStore(new Mediator()), cloneSiteConfigs);
 
                 // act
-                handler.handle();
+                handler.handle(fakeSession);
 
                 // assert
                 expect(handler.notificationStore.connection.io["uri"]).toEqual("https://notification.com");

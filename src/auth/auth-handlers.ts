@@ -53,7 +53,7 @@ export namespace AuthHandlers {
                     this.signOutHandler.handle();
                 } else {
                     await this.handleAuthorizedResponse(response);
-                    this.notificationHandlers.handle();
+                    this.notificationHandlers.handle(sessionInfo);
                 }
             }
         }

@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { StorageManager, localStorageKeys } from "../shared/utils";
+import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
 import { GameServiceMessage, IHandler } from "../shared";
 import { AppStore } from "../app";
 import { ConnectionStore } from "../game/connection";

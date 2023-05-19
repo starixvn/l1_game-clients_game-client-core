@@ -1,7 +1,6 @@
 import { AppStore } from "../../../src/app/app-store";
 import { AuthHandlers, AuthStore, UserService } from "../../../src/auth";
 import { SiteConfigs } from "../../../src/configs";
-import { ConnectionStore } from "../../../src/game/connection";
 import { NotificationStore } from "../../../src/notification";
 import { NotificationHandlers } from "../../../src/notification/notification-handlers";
 import { PlayerStore } from "../../../src/players";
@@ -9,7 +8,7 @@ import { Mediator } from "../../../src/shared";
 
 import NameGenerator from "../../../src/shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
-import { gameSettings, siteConfigs } from "../container.test";
+import { siteConfigs } from "../container.test";
 jest.mock("../../../src/shared/utils/name-generator");
 jest.mock("../../../src/shared/utils/storage-manager", () => ({
     StorageManager: {
@@ -26,12 +25,7 @@ let notificationServiceHandler: NotificationHandlers;
 
 describe("AuthHandlers tests", () => {
     beforeEach(() => {
-        notificationServiceHandler = new NotificationHandlers(
-            new AppStore(),
-            new ConnectionStore(new Mediator(), gameSettings),
-            new NotificationStore(new Mediator()),
-            new SiteConfigs()
-        );
+        notificationServiceHandler = new NotificationHandlers(new NotificationStore(new Mediator()), new SiteConfigs());
     });
     describe("Authorize", () => {
         // arrange

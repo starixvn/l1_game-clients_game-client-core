@@ -1,0 +1,75 @@
+import { AppStore } from "../../../src/app/app-store";
+import { ConnectionStore } from "../../../src/game/connection";
+import { NotificationStore } from "../../../src/notification";
+import { GameServiceMessage, Mediator } from "../../../src/shared";
+import { UnderMaintenanceHandler } from "../../../src/under-maintenance";
+import { gameSettings, siteConfigs } from "../container.test";
+import { io } from "socket.io-client/dist/socket.io.js";
+import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
+
+jest.mock("mobx");
+jest.mock("socket.io-client/dist/socket.io.js", () => ({
+    io: jest.fn().mockReturnValue({ on: jest.fn(), connect: jest.fn(), disconnect: jest.fn() }),
+}));
+jest.mock("../../../src/shared/utils/storage-manager", () => ({
+    StorageManager: {
+        get: jest.fn(),
+        remove: jest.fn(),
+    },
+    localStorageKeys: { session: "session-key" },
+}));
+
+const fakeUmInfo: GameServiceMessage.UnderMaintenanceInfo = {
+    message: "Game đang được bảo trì, vui lòng quay lại sau 10 phút.",
+    umInfo: {
+        isUM: true,
+        startTime: new Date("2023-05-19"),
+        endTime: new Date("2023-05-20"),
+        operatorId: "2",
+    },
+};
+
+const appStore = new AppStore();
+appStore.setUM = jest.fn();
+
+const connectionStore = new ConnectionStore(new Mediator(), gameSettings);
+connectionStore.connection = io("");
+
+const notificationStore = new NotificationStore(new Mediator());
+notificationStore.connection = io("");
+
+let handler: UnderMaintenanceHandler;
+
+describe("UnderMaintenanceHandler tests", () => {
+    describe("handle", () => {
+        beforeAll(() => {
+            // arrange
+            handler = new UnderMaintenanceHandler(appStore, connectionStore, notificationStore, siteConfigs);
+
+            // act
+            handler.handle(fakeUmInfo);
+        });
+
+        describe("when under maintenance", () => {
+            it("should turn  UM mode on.", () => {
+                // assert
+                expect(appStore.setUM).toHaveBeenCalledWith(fakeUmInfo.umInfo);
+            });
+
+            it("should disconnect notification service. ", () => {
+                // assert
+                expect(notificationStore.connection.disconnect).toHaveBeenCalled();
+            });
+
+            it("should disconnect game service.", () => {
+                // assert
+                expect(connectionStore.connection.disconnect).toHaveBeenCalled();
+            });
+
+            it("should clear session.", () => {
+                // assert
+                expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.session);
+            });
+        });
+    });
+});
