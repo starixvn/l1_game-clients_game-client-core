@@ -4,11 +4,11 @@ import { BetStore } from "./bet-store";
 
 @injectable()
 export class BetResponseHandlers implements IMultipleHandlers {
-    @inject(BetStore) protected readonly store: BetStore;
+    constructor(@inject(BetStore) protected readonly betStore: BetStore) {}
 
     handleBetResponse(endBet: number) {
-        this.store.isProcessingBet = false;
-        this.store.lastReceivedBet = endBet;
+        this.betStore.isProcessingBet = false;
+        this.betStore.lastReceivedBet = endBet;
     }
 
     eventHandleList = [

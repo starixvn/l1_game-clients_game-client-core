@@ -47,6 +47,7 @@ describe("NoticeHandlers test", () => {
             // Arrange
             const data = stub<GameServiceMessage.Notice>({
                 hedgeBetGroup: [],
+                errorCode: "1001",
             });
             data.gameRoundId = 1;
             roundStore.roundId = 1;

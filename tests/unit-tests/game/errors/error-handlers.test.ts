@@ -2,10 +2,12 @@ import { stub } from "jest-auto-stub";
 import { AppStore } from "../../../../src/app";
 import { AuthHandlers } from "../../../../src/auth";
 import { ErrorHandlers } from "../../../../src/game/errors";
-import { NoticeStore } from "../../../../src/game/notices";
+import { NoticeStore, NoticeType } from "../../../../src/game/notices";
 import { RoundStore } from "../../../../src/game/rounds/round-store";
 import { PlayerStore } from "../../../../src/players";
 import { GameServiceMessage } from "../../../../src/shared";
+
+import { LocalizedUtils } from "../../../../src/shared/utils/localized-utils";
 
 describe("ErrorHandlers test", () => {
     let instance: ErrorHandlers;
@@ -48,6 +50,7 @@ describe("ErrorHandlers test", () => {
             // Arrange
             const data = stub<GameServiceMessage.ApiError>({
                 hedgeBetGroup: [],
+                errorCode: "1001",
             });
             instance.isSessionTimeoutError = jest.fn().mockReturnValue(false);
             delete data.minBet;
@@ -64,6 +67,7 @@ describe("ErrorHandlers test", () => {
             // Arrange
             const data = stub<GameServiceMessage.ApiError>({
                 hedgeBetGroup: [],
+                errorCode: "1001",
             });
             instance.isSessionTimeoutError = jest.fn().mockReturnValue(false);
             const minBet = 1;
@@ -102,6 +106,61 @@ describe("ErrorHandlers test", () => {
 
             // Assert
             expect(result).toBe(false);
+        });
+    });
+
+    describe("showMessageForExpiredToken", () => {
+        beforeEach(() => {
+            appStore.isApp = true;
+            noticeStore.addNotice = jest.fn();
+            signOutHandler.handle = jest.fn();
+            LocalizedUtils.getLocalizedText = (key, option) => key;
+            jest.useFakeTimers();
+            jest.spyOn(global, "setTimeout");
+        });
+
+        afterEach(() => {
+            jest.runOnlyPendingTimers();
+            jest.useRealTimers();
+        });
+
+        it("should call addNotice with messages.sessionExpired", () => {
+            // Arrange
+            const errorCode = "1001";
+            const text = appStore.isApp ? "messages.sessionExpired" : "messages.sessionTimeout";
+            const message = `${text} (${errorCode})`;
+
+            // Act
+            instance.showMessageForExpiredToken(errorCode);
+
+            // Assert
+            expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 10000);
+            expect(noticeStore.addNotice).toHaveBeenCalledWith({
+                message: message,
+                title: "Notice",
+                type: NoticeType.Error,
+                onClose: expect.any(Function),
+            });
+        });
+
+        it("should call addNotice with messages.sessionTimeout", () => {
+            // Arrange
+            appStore.isApp = false;
+            const errorCode = "1001";
+            const text = appStore.isApp ? "messages.sessionExpired" : "messages.sessionTimeout";
+            const message = `${text} (${errorCode})`;
+
+            // Act
+            instance.showMessageForExpiredToken(errorCode);
+
+            // Assert
+            expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 10000);
+            expect(noticeStore.addNotice).toHaveBeenCalledWith({
+                message: message,
+                title: "Notice",
+                type: NoticeType.Error,
+                onClose: expect.any(Function),
+            });
         });
     });
 });

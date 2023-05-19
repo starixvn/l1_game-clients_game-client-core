@@ -94,7 +94,7 @@ export namespace ErrorUtils {
         SB1939: "disallowHedgeBet",
     };
 
-    const CommonErrorCodeList = [
+    const CommonErrorList = [
         "errorOccurred",
         "sessionTimeout",
         "loginFailed",
@@ -109,24 +109,34 @@ export namespace ErrorUtils {
 
     export const parseErrorCode = (errorCode: string, isPlaceBet = false) => {
         if (!ErrorCodeDictionary[errorCode]) {
-            console.error(`not found error code ${errorCode}`);
+            console.warn(`NOT found error code ${errorCode}`);
             return "messages.errorOccurred";
         }
 
         let suffix = "";
-        const isCommonErrorCode = CommonErrorCodeList.includes(errorCode);
+        const errorKey = ErrorCodeDictionary[errorCode];
+        const isCommonErrorCode = CommonErrorList.includes(errorKey);
         if (isCommonErrorCode && isPlaceBet) {
             suffix = "PlaceBet";
         }
-        return `messages.${ErrorCodeDictionary[errorCode]}${suffix}`;
+        return `messages.${errorKey}${suffix}`;
+    };
+
+    export const createOptionForHedgeBetGroup = (hedgeBetGroup: string[]) => {
+        const option = {};
+        hedgeBetGroup?.forEach((choice, index) => {
+            option[`betChoice${index + 1}`] = LocalizedUtils.getBetChoiceString(choice);
+        });
+        return option;
     };
 
     export const getErrorMessage = (notice: GameServiceMessage.Notice) => {
         const option = {};
         const { errorCode, hedgeBetGroup, gameRoundId } = notice;
-        hedgeBetGroup?.forEach((choice, index) => {
-            option[`betChoice${index + 1}`] = LocalizedUtils.getBetChoiceString(choice);
-        });
+
+        if (!!hedgeBetGroup) {
+            Object.assign(option, createOptionForHedgeBetGroup(hedgeBetGroup));
+        }
 
         if (!!notice.gameTypeId) {
             Object.assign(option, { gameName: LocalizedUtils.getGameNameString(notice.gameTypeId) });

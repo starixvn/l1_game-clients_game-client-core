@@ -15,13 +15,15 @@ describe("BetHandler it", () => {
     let betHandler: BetHandler;
     let betChoice: string;
 
-    beforeEach(() => {
+    beforeAll(() => {
         playerStore = new PlayerStore();
         connectionStore = new ConnectionStore(new Mediator(), gameSettings);
         betStore = new BetStore();
         orientationStore = new OrientationStore();
         noticeStore = new NoticeStore();
+    });
 
+    beforeEach(() => {
         betHandler = new BetHandler(connectionStore, betStore, playerStore, orientationStore, noticeStore);
         betChoice = "even";
         connectionStore.send = jest.fn();
@@ -29,6 +31,7 @@ describe("BetHandler it", () => {
         playerStore.name = "player";
         playerStore.balance = 100;
         playerStore.scoin = 100;
+        betStore.isProcessingBet = false;
     });
 
     afterEach(() => {
@@ -36,6 +39,19 @@ describe("BetHandler it", () => {
     });
 
     describe("handle", () => {
+        it("should showWarningProcessingBet when isProcessingBet true", () => {
+            // Arrange
+            betStore.isProcessingBet = true;
+            const showWarningProcessingBet = jest.spyOn(betHandler, "showWarningProcessingBet");
+
+            // Act
+            betHandler.handle(betChoice);
+
+            // Assert
+            expect(showWarningProcessingBet).toBeCalled();
+            expect(connectionStore.send).not.toHaveBeenCalled();
+        });
+
         it("should show error notice when amount is greater than balance", () => {
             // Arrange
             playerStore.balance = 100;
@@ -82,6 +98,18 @@ describe("BetHandler it", () => {
                 amount: betStore.amount,
                 freeBet: betStore.freebetEnabled,
             });
+        });
+    });
+
+    describe("showWarningProcessingBet", () => {
+        it("should showWarningProcessingBet when isProcessingBet true", () => {
+            // Arrange
+            const text = "Data are being processed. Please wait...";
+            // Act
+            betHandler.showWarningProcessingBet();
+
+            // Assert
+            expect(noticeStore.addWarning).toHaveBeenCalledWith(text);
         });
     });
 });

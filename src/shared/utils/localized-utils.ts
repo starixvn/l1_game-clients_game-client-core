@@ -1,5 +1,11 @@
 export namespace LocalizedUtils {
-    export const getBetChoiceString = (choice: string) => choice;
-    export const getGameNameString = (gameName: number) => gameName.toString();
-    export const getLocalizedText = (key: string, option?: any) => key;
+    export function getBetChoiceString(choice: string) {
+        return choice;
+    }
+    export function getGameNameString(gameName: number) {
+        return gameName.toString();
+    }
+    export function getLocalizedText(key: string, option?: any) {
+        return key;
+    }
 }
