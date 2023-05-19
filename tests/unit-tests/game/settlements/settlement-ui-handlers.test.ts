@@ -5,14 +5,14 @@ describe("SettlementUIHandlers test", () => {
         it("should set finishedShowResult be qual true in settlementStore", () => {
             // arrange
             const store = new SettlementStore();
-            store.finishedShowResult = false;
+            store.isFinishedShowResult = false;
             const handler = new SettlementUIHandlers.FinishedShowResult(store);
 
             // act
             handler.handle();
 
             // assert
-            expect(store.finishedShowResult).toBe(true);
+            expect(store.isFinishedShowResult).toBe(true);
         });
     });
 
@@ -27,13 +27,13 @@ describe("SettlementUIHandlers test", () => {
         });
         it("should set finishedSettle true in SettlementStore", () => {
             // arrange
-            settlementStore.finishedSettle = false;
+            settlementStore.isFinishedSettle = false;
 
             // act
             handler.handle();
 
             // assert
-            expect(settlementStore.finishedSettle).toBe(true);
+            expect(settlementStore.isFinishedSettle).toBe(true);
         });
         it("should call resetSettlementStatus in settlementStatusStore", () => {
             // arrange

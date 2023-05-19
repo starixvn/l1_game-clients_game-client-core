@@ -22,7 +22,7 @@ export default class Sedie extends GameComponent {
                     .delay(this.cpnThePlate.openPlateDuration)
                     .call(() => {
                         this.finishShowResult();
-                        this.payChips();
+                        // this.payChips();
                     })
                     .start();
             }

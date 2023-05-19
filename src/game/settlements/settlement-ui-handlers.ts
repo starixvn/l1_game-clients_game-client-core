@@ -8,7 +8,7 @@ export namespace SettlementUIHandlers {
     export class FinishedShowResult implements IHandler<void> {
         constructor(@inject(SettlementStore) private readonly settlementStore: SettlementStore) {}
         handle() {
-            this.settlementStore.finishedShowResult = true;
+            this.settlementStore.isFinishedShowResult = true;
         }
     }
 
@@ -19,7 +19,7 @@ export namespace SettlementUIHandlers {
             @inject(SettlementStatusStore) private readonly settlementStatusStore: SettlementStatusStore
         ) {}
         handle() {
-            this.settlementStore.finishedSettle = true;
+            this.settlementStore.isFinishedSettle = true;
             this.settlementStatusStore.resetSettlementStatus();
         }
     }

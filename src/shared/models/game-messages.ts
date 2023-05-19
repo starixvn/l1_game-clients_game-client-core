@@ -188,12 +188,26 @@ export namespace GameServiceMessage {
         static eventName = "status";
     }
     export class Finish {
-        result?: any;
-        settlementResult?: any;
+        result?: TResult;
+        settlementResult?: TResult;
         roundId?: number;
+        winningPlayers?: TWinningPlayers;
 
         static eventName = "finish";
     }
+    export type TResult = {
+        [betChoice: string]: boolean;
+    };
+
+    export type TWinningPlayers = {
+        [playerId: number]: {
+            bet: number;
+            rate: number;
+            win: boolean;
+            winningByChoices: GameServiceMessage.Odds;
+        };
+    };
+
     export const spb = "spb";
     export const snr = "snr";
     export const epb = "epb";

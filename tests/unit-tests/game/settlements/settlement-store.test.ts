@@ -15,7 +15,9 @@ describe("SettlementStore tests", () => {
                 roundId: observable,
                 result: observable,
                 settlementResult: observable,
-                finishedShowResult: observable,
+                isFinishedShowResult: observable,
+                isFinishedSettle: observable,
+                winningPlayers: observable,
                 setSettlementStore: action,
             });
         });
@@ -30,13 +32,14 @@ describe("SettlementStore tests", () => {
             finish.result = result;
             const settlementResult = { odd: true, even: false, red2: false, red3: true, red4: false, white3: false, white4: false };
             finish.settlementResult = settlementResult;
+            finish.winningPlayers = {};
 
             // act
             store.setSettlementStore(finish);
 
             // assert
-            expect(store.finishedShowResult).toBe(false);
-            expect(store.finishedSettle).toBe(false);
+            expect(store.isFinishedShowResult).toBe(false);
+            expect(store.isFinishedSettle).toBe(false);
             expect(store.roundId).toBe(1);
             expect(store.result).toEqual(result);
             expect(store.settlementResult).toEqual(settlementResult);
