@@ -1,43 +1,29 @@
 import { inject, injectable } from "inversify";
-import { makeAutoObservable } from "mobx";
-import { Socket } from "socket.io-client/dist/socket.io.js";
 import { ISessionInfo } from "../../auth";
 import { GameClientEmitMessage, Mediator } from "../../shared";
 import { StorageManager, localStorageKeys } from "../../shared/utils";
 import { GameSetting } from "../game-configs";
-import { SocketEvents } from "../../constants/socket-event";
+import { SocketConnectionStore } from "../../socket-connection";
 
-export const events = {
-    ...SocketEvents,
-    ...{
-        signedIn: "signedIn",
-    },
+export const GameServiceEvent = {
+    signedIn: "signedIn",
 };
-
 @injectable()
-export class ConnectionStore {
+export class ConnectionStore extends SocketConnectionStore {
     constructor(@inject(Mediator) protected readonly mediator: Mediator, @inject(GameSetting) protected readonly gameSetting: GameSetting) {
-        makeAutoObservable(this);
+        super(mediator);
     }
-
-    connection: Socket = null;
-    isConnected = false;
-    isConnectFailed = false;
     signedIn = false;
 
     initBaseListener() {
         if (this.connection) {
-            this.connection.on(events.connect, this.onConnected.bind(this));
-            this.connection.on(events.signedIn, this.onSignedIn.bind(this));
-            this.connection.on(events.connectError, this.onConnectFailed.bind(this));
-            this.connection.on(events.connectFailed, this.onConnectFailed.bind(this));
-            this.connection.on(events.disconnect, this.onDisconnected.bind(this));
+            super.initBaseListener();
+            this.connection.on(GameServiceEvent.signedIn, this.onSignedIn.bind(this));
         }
     }
 
     onConnected() {
-        this.isConnected = true;
-        this.isConnectFailed = false;
+        super.onConnected();
         this.connection.onAny(this.onHandleData.bind(this));
         this.signIn();
     }
@@ -65,17 +51,6 @@ export class ConnectionStore {
 
     onSignedIn() {
         this.signedIn = true;
-    }
-
-    onConnectFailed() {
-        this.isConnectFailed = true;
-        this.onDisconnected();
-    }
-
-    onDisconnected() {
-        this.isConnected = false;
-        this.signedIn = false;
-        this.connection.disconnect();
     }
 
     send(eventName: string, data: any) {
