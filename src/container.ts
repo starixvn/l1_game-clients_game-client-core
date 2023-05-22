@@ -2,10 +2,10 @@ import { Container } from "inversify";
 import * as Auth from "./auth";
 import * as SiteConfigs from "./configs";
 import * as Game from "./game";
-import * as Players from "./players";
 import * as Notification from "./notification";
-import * as UnderMaintenance from "./under-maintenance";
+import * as Players from "./players";
 import { FeatureLoader } from "./shared";
+import * as UnderMaintenance from "./under-maintenance";
 
 export interface IContainerOptions {
     onContainerCreated?: (container: Container) => void;
@@ -50,4 +50,10 @@ export function getContainer(options: IContainerOptions = {}) {
     FeatureLoader.loadFeatures(featureLoaderOptions);
 
     return container;
+}
+
+export function buildObserverContainer(container: Container) {
+    return {
+        resolve: container.get,
+    };
 }

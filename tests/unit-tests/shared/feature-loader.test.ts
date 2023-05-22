@@ -1,4 +1,4 @@
-import { isMultipleHandlers, isSingleHandler } from "../../../src/shared/feature-loader";
+import { isMultipleHandlers, isSingleHandler, search } from "../../../src/shared/feature-loader";
 
 describe(isMultipleHandlers.name, () => {
     describe("when the handler instance has the eventHandleList property", () => {
@@ -41,5 +41,67 @@ describe(isSingleHandler.name, () => {
             // Assert
             expect(actual).toBeFalsy();
         });
+    });
+});
+
+describe(search.name, () => {
+    const roots = [
+        {
+            name: "Foo",
+            age: 10,
+            children: [
+                {
+                    name: "Foo1",
+                    age: 15,
+                },
+            ],
+        },
+        {
+            name: "Bar",
+            age: 20,
+        },
+    ];
+
+    it("should return an empty array when no objects match the condition", () => {
+        // Arrange
+        const condition = (object) => object.age === 30;
+
+        // Act
+        const result = search(roots, condition);
+
+        // Assert
+        expect(result).toEqual([]);
+    });
+
+    it("should return an array with the objects that match the condition", () => {
+        // Arrange
+        const condition = (object) => object.age === 20;
+
+        // Act
+        const result = search(roots, condition);
+
+        // Assert
+        expect(result).toEqual([
+            {
+                name: "Bar",
+                age: 20,
+            },
+        ]);
+    });
+
+    it("should recurse into objects to find matching objects", () => {
+        // Arrange
+        const condition = (object) => object.age === 15;
+
+        // Act
+        const result = search(roots, condition);
+
+        // Assert
+        expect(result).toEqual([
+            {
+                name: "Foo1",
+                age: 15,
+            },
+        ]);
     });
 });
