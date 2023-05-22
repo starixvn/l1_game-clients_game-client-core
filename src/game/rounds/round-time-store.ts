@@ -146,6 +146,10 @@ export class RoundTimeStore {
         return this._roundState;
     }
 
+    set roundState(value: string) {
+        this._roundState = value;
+    }
+
     get beginState() {
         return this._beginState;
     }

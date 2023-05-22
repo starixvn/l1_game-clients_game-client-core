@@ -5,6 +5,7 @@ import { GameClientEmitMessage } from "../../shared";
 import { ConnectionStore } from "../connection";
 import { NoticeStore } from "../notices";
 import { OrientationStore } from "../orientation";
+import { ROUND_STATE, RoundTimeStore } from "../rounds";
 import { BetStore } from "./bet-store";
 
 @injectable()
@@ -14,10 +15,15 @@ export class BetHandler {
         @inject(BetStore) private readonly betStore: BetStore,
         @inject(PlayerStore) private readonly playerStore: PlayerStore,
         @inject(OrientationStore) private readonly orientationStore: OrientationStore,
+        @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
         @inject(NoticeStore) private readonly noticeStore: NoticeStore
     ) {}
 
     handle(betChoice: string) {
+        if (this.isInPhasePreventBet()) {
+            return;
+        }
+
         const { amount, freebetEnabled, isProcessingBet } = this.betStore;
         if (isProcessingBet) {
             this.showWarningProcessingBet();
@@ -50,5 +56,19 @@ export class BetHandler {
 
     showWarningProcessingBet() {
         this.noticeStore.addWarning("Data are being processed. Please wait...");
+    }
+
+    isInPhasePreventBet() {
+        const isBetPhase = [ROUND_STATE.BEGIN_PLACING_BET, ROUND_STATE.PLACING_BET].includes(this.roundTimeStore.roundState);
+        if (!isBetPhase) {
+            const warningMsg =
+                this.roundTimeStore.roundState === ROUND_STATE.BEGIN_STARTING_ROUND ||
+                this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND
+                    ? "Cannot bet at the moment. Please wait for a few seconds."
+                    : "Please wait for the next round.";
+
+            this.noticeStore.addWarning(warningMsg);
+        }
+        return !isBetPhase;
     }
 }

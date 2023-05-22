@@ -1,19 +1,21 @@
 import { BetHandler, BetStore } from "../../../../src/game/bets";
 import { NoticeStore } from "../../../../src/game/notices";
+import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
 import { PlayerStore } from "../../../../src/players";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
 import { gameSettings } from "../../container.test";
 import { ConnectionStore } from "./../../../../src/game/connection";
 import { OrientationStore } from "./../../../../src/game/orientation";
-
 describe("BetHandler it", () => {
     let connectionStore: ConnectionStore;
     let betStore: BetStore;
     let playerStore: PlayerStore;
     let orientationStore: OrientationStore;
+    let roundTimeStore: RoundTimeStore;
     let noticeStore: NoticeStore;
     let betHandler: BetHandler;
     let betChoice: string;
+    let showWarningProcessingBet;
 
     beforeAll(() => {
         playerStore = new PlayerStore();
@@ -21,10 +23,13 @@ describe("BetHandler it", () => {
         betStore = new BetStore();
         orientationStore = new OrientationStore();
         noticeStore = new NoticeStore();
+        roundTimeStore = new RoundTimeStore(gameSettings);
     });
 
     beforeEach(() => {
-        betHandler = new BetHandler(connectionStore, betStore, playerStore, orientationStore, noticeStore);
+        betHandler = new BetHandler(connectionStore, betStore, playerStore, orientationStore, roundTimeStore, noticeStore);
+        showWarningProcessingBet = jest.spyOn(betHandler, "showWarningProcessingBet");
+
         betChoice = "even";
         connectionStore.send = jest.fn();
         noticeStore.addWarning = jest.fn();
@@ -32,6 +37,7 @@ describe("BetHandler it", () => {
         playerStore.balance = 100;
         playerStore.scoin = 100;
         betStore.isProcessingBet = false;
+        roundTimeStore.roundState = ROUND_STATE.PLACING_BET;
     });
 
     afterEach(() => {
@@ -39,17 +45,42 @@ describe("BetHandler it", () => {
     });
 
     describe("handle", () => {
+        it("should show warning, please bet next round, when locking bet", () => {
+            // Arrange
+            roundTimeStore.roundState = ROUND_STATE.LOCKING_BET;
+
+            // Act
+            betHandler.handle(betChoice);
+
+            // Assert
+            expect(noticeStore.addWarning).toBeCalledWith("Please wait for the next round.");
+            expect(showWarningProcessingBet).not.toBeCalled();
+            expect(connectionStore.send).not.toBeCalled();
+        });
+
+        it("should show warning, can not bet at the moment, when starting round", () => {
+            // Arrange
+            roundTimeStore.roundState = ROUND_STATE.STARTING_ROUND;
+
+            // Act
+            betHandler.handle(betChoice);
+
+            // Assert
+            expect(noticeStore.addWarning).toBeCalledWith("Cannot bet at the moment. Please wait for a few seconds.");
+            expect(showWarningProcessingBet).not.toBeCalled();
+            expect(connectionStore.send).not.toBeCalled();
+        });
+
         it("should showWarningProcessingBet when isProcessingBet true", () => {
             // Arrange
             betStore.isProcessingBet = true;
-            const showWarningProcessingBet = jest.spyOn(betHandler, "showWarningProcessingBet");
 
             // Act
             betHandler.handle(betChoice);
 
             // Assert
             expect(showWarningProcessingBet).toBeCalled();
-            expect(connectionStore.send).not.toHaveBeenCalled();
+            expect(connectionStore.send).not.toBeCalled();
         });
 
         it("should show error notice when amount is greater than balance", () => {
@@ -62,8 +93,8 @@ describe("BetHandler it", () => {
             betHandler.handle(betChoice);
 
             // Assert
-            expect(noticeStore.addWarning).toHaveBeenCalledWith("Your account has insufficient funds.");
-            expect(connectionStore.send).not.toHaveBeenCalled();
+            expect(noticeStore.addWarning).toBeCalledWith("Your account has insufficient funds.");
+            expect(connectionStore.send).not.toBeCalled();
         });
 
         it("should show error notice when freebet is enabled and scoin is less than amount", () => {
@@ -76,8 +107,8 @@ describe("BetHandler it", () => {
             betHandler.handle(betChoice);
 
             // Assert
-            expect(noticeStore.addWarning).toHaveBeenCalledWith("Not enough Scoin to place bet.");
-            expect(connectionStore.send).not.toHaveBeenCalled();
+            expect(noticeStore.addWarning).toBeCalledWith("Not enough Scoin to place bet.");
+            expect(connectionStore.send).not.toBeCalled();
         });
 
         it("should send bet data to server when amount is less than scoin or balance ", () => {
@@ -91,7 +122,7 @@ describe("BetHandler it", () => {
 
             // Assert
             expect(noticeStore.addWarning).not.toBeCalled();
-            expect(connectionStore.send).toHaveBeenCalledWith(GameClientEmitMessage.Bet.eventName, {
+            expect(connectionStore.send).toBeCalledWith(GameClientEmitMessage.Bet.eventName, {
                 m: orientationStore.m,
                 username: playerStore.name,
                 betChoice,
@@ -105,11 +136,36 @@ describe("BetHandler it", () => {
         it("should showWarningProcessingBet when isProcessingBet true", () => {
             // Arrange
             const text = "Data are being processed. Please wait...";
+
             // Act
             betHandler.showWarningProcessingBet();
 
             // Assert
-            expect(noticeStore.addWarning).toHaveBeenCalledWith(text);
+            expect(noticeStore.addWarning).toBeCalledWith(text);
+        });
+    });
+
+    describe("isInPhasePreventBet", () => {
+        it("should return false when round state is placing bet", () => {
+            // Arrange
+            roundTimeStore.roundState = ROUND_STATE.PLACING_BET;
+
+            // Act
+            const value = betHandler.isInPhasePreventBet();
+
+            // Assert
+            expect(value).toEqual(false);
+        });
+
+        it("should return true when round state is locking bet", () => {
+            // Arrange
+            roundTimeStore.roundState = ROUND_STATE.LOCKING_BET;
+
+            // Act
+            const value = betHandler.isInPhasePreventBet();
+
+            // Assert
+            expect(value).toEqual(true);
         });
     });
 });
