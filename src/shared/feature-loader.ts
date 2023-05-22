@@ -1,5 +1,6 @@
 import { Container } from "inversify";
 import { IHandler, IMultipleHandlers, Mediator } from "./mediator";
+import { isInjectable } from "./reflect-utils";
 
 export function isMultipleHandlers(handler: IMultipleHandlers) {
     return !!handler?.eventHandleList;
@@ -42,9 +43,9 @@ export function getAllFeatures(...roots: Object[]) {
 }
 
 export function getAllConstructors(...roots: Object[]) {
-    const isConstructor = (object: Function) => typeof object === "function" && "prototype" in object;
+    const isConstructorAndInjectable = (object: Function) => typeof object === "function" && "prototype" in object && isInjectable(object);
 
-    return search(roots, isConstructor);
+    return search(roots, isConstructorAndInjectable);
 }
 
 export function loadFeature(feature: Record<string, unknown>, container: Container) {
