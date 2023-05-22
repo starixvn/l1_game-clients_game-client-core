@@ -15,6 +15,6 @@ export class HideGameHandler implements IHandler<void> {
     async handle() {
         this.roundRunning.stopRunner();
         this.roundTimeStore.stop();
-        this.connectStore.onDisconnected();
+        this.connectStore.socketConnectionStore.onDisconnected();
     }
 }
