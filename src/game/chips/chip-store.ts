@@ -1,6 +1,7 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { makeAutoObservable, toJS } from "mobx";
 import { GameServiceMessage } from "../../shared/models/game-messages";
+import { RoundTimeStore } from "../rounds";
 
 export type Chips = {
     [rate: string]: {
@@ -11,7 +12,7 @@ export type Chips = {
 };
 @injectable()
 export class ChipStore {
-    constructor() {
+    constructor(@inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore) {
         makeAutoObservable(this);
     }
 
@@ -33,5 +34,9 @@ export class ChipStore {
 
     set chips(chips: Chips) {
         this._chips = chips;
+    }
+
+    resetChips() {
+        this.chips = {};
     }
 }

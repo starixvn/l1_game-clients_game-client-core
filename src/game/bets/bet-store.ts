@@ -23,6 +23,14 @@ export class BetStore {
         this._amount = amount;
     }
 
-    lastReceivedBet = 0;
+    private _lastReceivedBet = 0;
     isProcessingBet = false;
+
+    get lastReceivedBet() {
+        return this._lastReceivedBet;
+    }
+
+    set lastReceivedBet(lastReceivedBet: number) {
+        this._lastReceivedBet = lastReceivedBet;
+    }
 }
