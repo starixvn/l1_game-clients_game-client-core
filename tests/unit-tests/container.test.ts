@@ -1,5 +1,5 @@
 import { SiteConfigs } from "../../src/configs/site-configs";
-import { IContainerOptions, getContainer } from "../../src/container";
+import { IContainerOptions, buildObserverContainer, getContainer } from "../../src/container";
 import { GameSetting } from "../../src/game/game-configs";
 
 export const gameSettings = {
@@ -44,3 +44,18 @@ const makeObservable = jest.fn();
 container.bind("makeObservable").toFunction(makeObservable);
 
 export default container;
+
+describe(buildObserverContainer.name, () => {
+    describe("when called", () => {
+        it("should build a container as expected", () => {
+            // Arrange
+            const container = { get: jest.fn() };
+
+            // Act
+            const actual = buildObserverContainer(container as any);
+
+            // Assert
+            expect(actual).toStrictEqual({ resolve: container.get });
+        });
+    });
+});

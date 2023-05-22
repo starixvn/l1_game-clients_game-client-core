@@ -1,4 +1,25 @@
-import { isMultipleHandlers, isSingleHandler, search } from "../../../src/shared/feature-loader";
+import { Container, injectable } from "inversify";
+import {
+    getAllConstructors,
+    getAllFeatures,
+    isMultipleHandlers,
+    isSingleHandler,
+    loadFeature,
+    search,
+} from "../../../src/shared/feature-loader";
+import { Mediator } from "../../../src/shared/mediator";
+
+@injectable()
+class MockSingleHandler {
+    name = "name";
+
+    handle() {}
+}
+
+@injectable()
+class MockMultipleHandlers {
+    eventHandleList = [];
+}
 
 describe(isMultipleHandlers.name, () => {
     describe("when the handler instance has the eventHandleList property", () => {
@@ -103,5 +124,94 @@ describe(search.name, () => {
                 age: 15,
             },
         ]);
+    });
+});
+
+describe(getAllFeatures.name, () => {
+    const roots = [
+        {
+            name: "Foo",
+            age: 10,
+        },
+        {
+            FEATURE_NAME: "Bar",
+            name: "Bar",
+            age: 20,
+        },
+    ];
+
+    it("should return objects that have FEATURE_NAME property", () => {
+        // Act
+        const actual = getAllFeatures(roots);
+
+        // Assert
+        expect(actual).toStrictEqual([
+            {
+                FEATURE_NAME: "Bar",
+                name: "Bar",
+                age: 20,
+            },
+        ]);
+    });
+});
+
+describe(getAllConstructors.name, () => {
+    const roots = [
+        {
+            name: "Foo",
+            age: 10,
+        },
+        {
+            FEATURE_NAME: "Bar",
+            single: MockSingleHandler,
+            multiple: MockMultipleHandlers,
+        },
+    ];
+
+    it("should return classes that are injectable", () => {
+        // Act
+        const actual = getAllConstructors(roots);
+
+        // Assert
+        expect(actual).toStrictEqual([MockSingleHandler, MockMultipleHandlers]);
+    });
+});
+
+describe(loadFeature.name, () => {
+    const feature = {
+        FEATURE_NAME: "Bar",
+        MockSingleHandler,
+        MockMultipleHandlers,
+    };
+    let container: Container;
+    let mediator: Mediator;
+
+    beforeEach(() => {
+        container = new Container({ defaultScope: "Singleton" });
+
+        container.bind(Mediator).to(Mediator);
+        container.bind(MockSingleHandler).to(MockSingleHandler);
+        container.bind(MockMultipleHandlers).to(MockMultipleHandlers);
+
+        mediator = container.get(Mediator);
+
+        jest.spyOn(mediator, "registerHandler");
+        jest.spyOn(mediator, "registerHandlers");
+    });
+
+    it("should register all single handlers", () => {
+        // Act
+        loadFeature(feature, container);
+
+        // Assert
+        expect(mediator.registerHandler).toBeCalled();
+    });
+
+    it("should register all multiple handlers", () => {
+        // Act
+        loadFeature(feature, container);
+
+        // Assert
+        expect(mediator.registerHandlers).toBeCalled();
     });
 });
