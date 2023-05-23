@@ -5,6 +5,7 @@ import {
     isMultipleHandlers,
     isSingleHandler,
     loadFeature,
+    loadFeatures,
     search,
 } from "../../../src/shared/feature-loader";
 import { Mediator } from "../../../src/shared/mediator";
@@ -213,5 +214,53 @@ describe(loadFeature.name, () => {
 
         // Assert
         expect(mediator.registerHandlers).toBeCalled();
+    });
+});
+
+describe(loadFeatures.name, () => {
+    const features = [
+        {
+            FEATURE_NAME: "Foo",
+            MockSingleHandler,
+        },
+        {
+            FEATURE_NAME: "Bar",
+            MockMultipleHandlers,
+        },
+    ];
+    let container: Container;
+    let mediator: Mediator;
+
+    beforeEach(() => {
+        container = new Container({ defaultScope: "Singleton" });
+
+        container.bind(Mediator).to(Mediator);
+        container.bind(MockSingleHandler).to(MockSingleHandler);
+        container.bind(MockMultipleHandlers).to(MockMultipleHandlers);
+
+        mediator = container.get(Mediator);
+
+        jest.spyOn(mediator, "registerHandler");
+        jest.spyOn(mediator, "registerHandlers");
+    });
+
+    describe("when define enabledFeatures property", () => {
+        it("should load enabled features", () => {
+            // Act
+            loadFeatures({ container, enabledFeatures: ["Foo"], features, disabledFeatures: [] });
+
+            // Assert
+            expect(mediator.registerHandler).toBeCalled();
+        });
+    });
+
+    describe("when enabledFeatures property is not defined", () => {
+        it("should load all features exclude disabledFeatures", () => {
+            // Act
+            loadFeatures({ container, disabledFeatures: ["Foo"], features, enabledFeatures: [] });
+
+            // Assert
+            expect(mediator.registerHandlers).toBeCalled();
+        });
     });
 });
