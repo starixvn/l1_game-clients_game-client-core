@@ -12,18 +12,18 @@
       "startScene": "506af2b4-22ed-4607-bd2e-39cef771c97e",
       "scenes": [
         {
-          "url": "db://assets/session-timeout/views/session-timeout.scene",
+          "url": "db://assets/session-timeout/session-timeout.scene",
           "uuid": "70cd195b-5957-439b-a580-e9172ae383f4",
           "inBundle": false
         },
         {
-          "url": "db://assets/splash/views/splash.scene",
-          "uuid": "88533b39-c866-4217-bbf2-9413f6a00b7c",
+          "url": "db://assets/game/game.scene",
+          "uuid": "4229fd91-1ded-407f-b130-7b678b820c27",
           "inBundle": false
         },
         {
-          "url": "db://assets/games/sedie/views/sedie.scene",
-          "uuid": "4229fd91-1ded-407f-b130-7b678b820c27",
+          "url": "db://assets/splash/splash.scene",
+          "uuid": "506af2b4-22ed-4607-bd2e-39cef771c97e",
           "inBundle": false
         }
       ]

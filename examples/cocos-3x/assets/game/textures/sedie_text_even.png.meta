@@ -2,7 +2,7 @@
   "ver": "1.0.25",
   "importer": "image",
   "imported": true,
-  "uuid": "5085cf95-068c-43b0-8b80-62b3e069efb3",
+  "uuid": "09046465-7b15-433d-b3be-66474c3cff54",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "5085cf95-068c-43b0-8b80-62b3e069efb3@6c48a",
+      "uuid": "09046465-7b15-433d-b3be-66474c3cff54@6c48a",
       "displayName": "sedie_text_even",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "5085cf95-068c-43b0-8b80-62b3e069efb3",
+        "imageUuidOrDatabaseUri": "09046465-7b15-433d-b3be-66474c3cff54",
         "isUuid": true,
         "visible": false,
         "minfilter": "linear",
@@ -34,7 +34,7 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "5085cf95-068c-43b0-8b80-62b3e069efb3@f9941",
+      "uuid": "09046465-7b15-433d-b3be-66474c3cff54@f9941",
       "displayName": "sedie_text_even",
       "id": "f9941",
       "name": "spriteFrame",
@@ -114,7 +114,7 @@
           ]
         },
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "5085cf95-068c-43b0-8b80-62b3e069efb3@6c48a",
+        "imageUuidOrDatabaseUri": "09046465-7b15-433d-b3be-66474c3cff54@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.11",
@@ -129,6 +129,6 @@
     "type": "sprite-frame",
     "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": true,
-    "redirect": "5085cf95-068c-43b0-8b80-62b3e069efb3@f9941"
+    "redirect": "09046465-7b15-433d-b3be-66474c3cff54@f9941"
   }
 }

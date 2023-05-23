@@ -21,6 +21,7 @@ variables:
     - npm install
     - npm run build
     - npm install --prefix examples/cocos-3x
+    - npm install --prefix examples/cocos-3x/extensions/localization-editor
     - /Applications/CocosCreator/Creator/$COCOS_VERSION/CocosCreator.app/Contents/MacOS/CocosCreator --project ./examples/cocos-3x --build "platform=web-mobile;debug=false;webOrientation=landscape;md5Cache=true;replaceSplashScreen=true"
   tags:
     - cocos-new
