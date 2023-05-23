@@ -97,4 +97,5 @@ export class StorageManager {
 export const localStorageKeys = {
     session: "ss",
     directMode: "direct-mode",
+    returnUrl: "rurl",
 };

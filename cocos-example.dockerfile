@@ -11,5 +11,5 @@ RUN touch /var/run/nginx.pid && \
 # Switch to non-root user
 USER nginx
 
-COPY ./examples/cocos-3x/.nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY ./examples/cocos-3x/.nginx/game.conf /etc/nginx/conf.d/default.conf
 COPY ./examples/cocos-3x/build/web-mobile/ /usr/share/nginx/html

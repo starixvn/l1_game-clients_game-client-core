@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { SSOResponse } from "sc-user-service-client/dist/auth";
+import { URLParams } from "../shared/constants/url-params";
 import { StorageManager, localStorageKeys } from "../shared/utils";
 
 export interface ISessionInfo {
@@ -9,8 +10,8 @@ export interface ISessionInfo {
     language: string;
     session: string;
     system: number;
-    memberName: string;
-    ssoTime: Date;
+    memberName?: string;
+    ssoTime?: Date;
 }
 
 @injectable()
@@ -60,12 +61,23 @@ export class AuthStore {
         this.setAuthStore(response);
     }
 
-    setAuthStore(response: ISessionInfo | SSOResponse) {
+    setAuthStoreFromUrlParam(urlParams: URLSearchParams) {
+        const sessionInfo: ISessionInfo = {
+            isAuthenticated: true,
+            session: urlParams.get(URLParams.session),
+            username: urlParams.get(URLParams.username),
+            language: urlParams.get(URLParams.language),
+            system: +urlParams.get(URLParams.appType),
+        };
+        this.setAuthStoreFromStorage(sessionInfo);
+    }
+
+    private setAuthStore(response: ISessionInfo | SSOResponse) {
         this.isAuthenticated = response.isAuthenticated;
         this.username = response.username;
         this.language = response.language;
         this.system = +response.system;
-        this.memberName = response.memberName;
+        response.memberName && (this.memberName = response.memberName);
         this.ssoTime = new Date();
     }
 }

@@ -1,13 +1,16 @@
 import { inject, injectable } from "inversify";
 import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
+import { NotificationHandlers } from "../notification";
 import { PlayerStore } from "../players";
 import { GameServiceMessage, IHandler } from "../shared";
+import { AppTypes } from "../shared/constants/app-type";
+import { GameUtils } from "../shared/utils/game-utils";
 import NameGenerator from "../shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
 import { AppStore } from "./../app/app-store";
+import { URLParams } from "./../shared/constants/url-params";
 import { AuthStore, ISessionInfo } from "./auth-store";
 import { UserService } from "./user-service";
-import { NotificationHandlers } from "../notification";
 
 interface IAuthorizeResponse {
     errorCode?: string;
@@ -59,12 +62,16 @@ export namespace AuthHandlers {
         }
 
         private async handleAuthorizedResponse(response: IAuthorizeResponse) {
-            if (!response.authorized && this.appStore.isDirectMode) {
+            if (this.needAutoGenerateNickname(response.authorized)) {
                 await this.autoGenerateName();
             } else {
                 response.user && this.playerStore.setAuthorizeStore(response.user);
                 this.authStore.isAuthorized = response.authorized;
             }
+        }
+
+        private needAutoGenerateNickname(isAuthorized: boolean) {
+            return !isAuthorized && (this.appStore.isDirectMode || this.appStore.isPlayForFun);
         }
 
         private async autoGenerateName() {
@@ -75,7 +82,7 @@ export namespace AuthHandlers {
     }
 
     @injectable()
-    export class SSO implements IHandler<{ urlParams: URLSearchParams; system: number }> {
+    export class SSO implements IHandler<URLSearchParams> {
         constructor(
             @inject(AuthStore) private readonly authStore: AuthStore,
             @inject(AppStore) private readonly appStore: AppStore,
@@ -84,18 +91,18 @@ export namespace AuthHandlers {
             @inject(SignOut) private readonly signOutHandler: SignOut
         ) {}
 
-        async handle({ urlParams, system }: { urlParams: URLSearchParams; system: number }) {
+        async handle(urlParams: URLSearchParams) {
             if (!this.isValidSessionStorage(urlParams)) {
                 return;
             }
 
-            await this.handleAuthorizeWithURLParams(urlParams, system);
+            await this.handleAuthorizeWithURLParams(urlParams);
         }
 
         private isValidSessionStorage(urlParams: URLSearchParams) {
             const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
             const isSessionExpired = verifySession(sessionInfo);
-            if (isSessionExpired && !urlParams.has("token")) {
+            if (isSessionExpired && !(urlParams?.has(URLParams.token) || urlParams?.has(URLParams.params))) {
                 this.signOutHandler.handle();
                 return false;
             }
@@ -103,17 +110,23 @@ export namespace AuthHandlers {
             return true;
         }
 
-        private async handleAuthorizeWithURLParams(urlParams: URLSearchParams, system: number) {
-            if (urlParams.has("token")) {
+        private async handleAuthorizeWithURLParams(urlParams: URLSearchParams) {
+            if (urlParams?.has(URLParams.token)) {
                 this.appStore.setURLStore(urlParams);
                 this.appStore.isDirectMode = true; // will remove
-                const token = urlParams.get("token");
-                this.clearParamsOnUrl();
+                const token = urlParams.get(URLParams.token);
+                const system = +urlParams.get(URLParams.appType) || AppTypes.Club;
                 await this.handleSSOAndAuthorize(token, system);
             } else {
-                this.appStore.loadDirectMode();
-                await this.handleAuthorize();
+                if (urlParams?.has(URLParams.params)) {
+                    this.handleAuthorizeFromMainClient(urlParams);
+                } else {
+                    this.appStore.loadReturnUrl();
+                    this.appStore.loadDirectMode();
+                    await this.handleAuthorize();
+                }
             }
+            this.clearParamsOnUrl();
         }
 
         private async handleSSOAndAuthorize(token: string, system: number) {
@@ -124,12 +137,28 @@ export namespace AuthHandlers {
             }
             if (response.isAuthenticated) {
                 this.authStore.setAuthSSOStore(response);
-                StorageManager.set(localStorageKeys.session, this.authStore.getSessionInfo());
-                if (this.appStore.isDirectMode) {
-                    this.appStore.saveDirectModeInfo();
-                }
+                this.saveDataInStorage();
                 await this.handleAuthorize(response.ss, response.username);
             }
+        }
+
+        private async handleAuthorizeFromMainClient(urlParams: URLSearchParams) {
+            const params = GameUtils.base64Decode(urlParams.get(URLParams.params));
+            const urlSearchParams = new URLSearchParams(params);
+            this.authStore.setAuthStoreFromUrlParam(urlSearchParams);
+            this.appStore.setURLStore(urlSearchParams);
+            this.saveDataInStorage();
+            const session = urlSearchParams.get(URLParams.session);
+            const username = urlSearchParams.get(URLParams.username);
+            await this.handleAuthorize(session, username);
+        }
+
+        private saveDataInStorage() {
+            StorageManager.set(localStorageKeys.session, this.authStore.getSessionInfo());
+            if (this.appStore.isDirectMode) {
+                this.appStore.saveDirectModeInfo();
+            }
+            this.appStore.saveReturnUrl();
         }
 
         private async handleAuthorize(session?: string, username?: string) {

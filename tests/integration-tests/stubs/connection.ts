@@ -50,4 +50,8 @@ const onAny = (event: string, value: any[]) => {
     const connectStore = container.resolve(ConnectionStore);
     connectStore.onHandleData(event, value[0]);
 };
-export { socket, socketClient };
+
+export const EmitEventToGameClient = (data, event = gameSettings.name.toLowerCase()) => {
+    socket.emit(event, data);
+};
+export { socket as socketService, socketClient };

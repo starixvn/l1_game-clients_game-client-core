@@ -9,4 +9,11 @@ export class GameUtils {
         }
         return GameUtils.base64.decode(data);
     }
+
+    public static base64Encode(data: string): string {
+        if (!GameUtils.base64) {
+            GameUtils.base64 = new Base64();
+        }
+        return GameUtils.base64.encode(data);
+    }
 }

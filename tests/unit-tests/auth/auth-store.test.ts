@@ -1,5 +1,5 @@
 import { SSOResponse } from "sc-user-service-client/dist/auth";
-import { AuthStore } from "../../../src/auth";
+import { AuthStore, ISessionInfo } from "../../../src/auth";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 
 const now = new Date("2023-01-01");
@@ -97,6 +97,60 @@ describe("AuthStore tests", () => {
 
             // assert
             expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.session);
+        });
+    });
+
+    describe("setAuthStoreFromStorage", () => {
+        it("should set store", () => {
+            // arrange
+            const store = new AuthStore();
+            const info: ISessionInfo = {
+                isAuthenticated: true,
+                username: "user",
+                language: "vi-VN",
+                session: "session",
+                system: 1,
+                memberName: "name",
+            };
+
+            // act
+            store.setAuthStoreFromStorage(info);
+
+            // assert
+            expect(store.isAuthenticated).toBe(info.isAuthenticated);
+            expect(store.username).toBe(info.username);
+            expect(store.language).toBe(info.language);
+            expect(store.session).toBe(info.session);
+            expect(store.system).toBe(info.system);
+            expect(store.memberName).toBe(info.memberName);
+            expect(store.ssoTime).toEqual(now);
+        });
+    });
+
+    describe("setAuthStoreFromUrlParam", () => {
+        it("should set store", () => {
+            // arrange
+            const store = new AuthStore();
+            const params = {
+                ss: "session",
+                uname: "username",
+                lang: "vi-VN",
+                appType: 1,
+            };
+            const searchParams = new URLSearchParams();
+            Object.keys(params).forEach((key) => params[key] && searchParams.append(key, params[key]));
+
+            // act
+            store.setAuthStoreFromUrlParam(searchParams);
+
+            // assert
+            expect(store.isAuthenticated).toBe(true);
+            expect(store.username).toBe(params.uname);
+            expect(store.language).toBe(params.lang);
+            expect(store.session).toBe(params.ss);
+            expect(store.system).toBe(params.appType);
+            expect(store.memberName).toBe("");
+            expect(store.ssoTime).toEqual(now);
         });
     });
 });

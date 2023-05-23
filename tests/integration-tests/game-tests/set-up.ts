@@ -5,9 +5,9 @@ import { container } from "../stubs/container";
 import { normalPlayer } from "../stubs/player";
 
 export const sso = async () => {
-    const urlParams = new URLSearchParams({ token: normalPlayer.token });
+    const urlParams = new URLSearchParams(`token=${normalPlayer}&appType=1`);
     const ssoHandler = container.resolve(AuthHandlers.SSO);
-    await ssoHandler.handle({ urlParams, system: 1 });
+    await ssoHandler.handle(urlParams);
 };
 
 export const connectToService = () => {

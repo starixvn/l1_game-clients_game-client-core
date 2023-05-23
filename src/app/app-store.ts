@@ -3,12 +3,12 @@ import { makeAutoObservable } from "mobx";
 import { UMInfo } from "sc-user-service-client/dist/auth";
 import { ISessionInfo } from "../auth/auth-store";
 import { AppTypes } from "../shared/constants/app-type";
+import { URLParams } from "../shared/constants/url-params";
 import { StorageManager, localStorageKeys } from "../shared/utils";
 
 interface IUrlInfo {
     returnUrl?: string;
     ref?: string;
-    directGameId?: string;
 }
 
 interface IDirectMode {
@@ -24,6 +24,7 @@ export class AppStore {
     isSessionTimeout = false;
     isDirectMode = false;
     isApp = false;
+    isPlayForFun = false;
     urlInfo: IUrlInfo = {};
 
     constructor() {
@@ -36,34 +37,33 @@ export class AppStore {
     }
 
     setURLStore(urlParams: URLSearchParams) {
-        const queryStrings = {
-            ref: "ref",
-            gameId: "gameId",
-            returnUrl: "rurl",
-            app: "appType",
-        };
-
-        if (urlParams.has(queryStrings.ref) && urlParams.has(queryStrings.gameId) && urlParams.get(queryStrings.gameId) !== "0") {
-            const gameId = urlParams.get(queryStrings.gameId);
-            const refData = urlParams.get(queryStrings.ref);
-            if (this.validateRefData(refData)) {
+        if (urlParams.has(URLParams.ref)) {
+            const refData = urlParams.get(URLParams.ref);
+            if (this.isOpenDirectly(refData)) {
                 this.isDirectMode = true;
-
                 this.urlInfo.ref = refData;
-                this.urlInfo.directGameId = gameId;
-                if (urlParams.has(queryStrings.returnUrl) && urlParams.get(queryStrings.returnUrl) !== "") {
-                    this.urlInfo.returnUrl = urlParams.get(queryStrings.returnUrl);
-                }
+            }
+            if (this.isPlayForFunMode(refData)) {
+                this.isPlayForFun = true;
+                this.urlInfo.ref = refData;
             }
         }
+        if (urlParams.has(URLParams.returnUrl) && urlParams.get(URLParams.returnUrl) !== "") {
+            this.urlInfo.returnUrl = urlParams.get(URLParams.returnUrl);
+        }
 
-        if (urlParams.has(queryStrings.app) && urlParams.get(queryStrings.app) === AppTypes.App.toString()) {
+        if (urlParams.has(URLParams.appType) && urlParams.get(URLParams.appType) === AppTypes.App.toString()) {
             this.isApp = true;
         }
     }
 
-    validateRefData(refData) {
-        const directRef = ["d_direct", "m_direct", "d_operator_opendirectly", "m_operator_opendirectly"];
+    private isPlayForFunMode(refData: string) {
+        const directRef = ["d_operator_opendirectly", "m_operator_opendirectly"];
+        return directRef.some((data) => data === refData);
+    }
+
+    private isOpenDirectly(refData: string) {
+        const directRef = ["d_direct", "m_direct"];
         return directRef.some((data) => data === refData);
     }
 
@@ -77,6 +77,10 @@ export class AppStore {
         StorageManager.set(localStorageKeys.directMode, data);
     }
 
+    saveReturnUrl() {
+        this.urlInfo.returnUrl && StorageManager.set(localStorageKeys.returnUrl, this.urlInfo.returnUrl);
+    }
+
     loadDirectMode() {
         const data = StorageManager.get(localStorageKeys.directMode) as IDirectMode;
         if (data) {
@@ -86,5 +90,9 @@ export class AppStore {
                 this.urlInfo = data.urlInfo;
             }
         }
+    }
+
+    loadReturnUrl() {
+        this.urlInfo.returnUrl = StorageManager.get(localStorageKeys.returnUrl)?.toString();
     }
 }

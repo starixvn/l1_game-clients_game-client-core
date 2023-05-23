@@ -1,3 +1,4 @@
+import { stub } from "jest-auto-stub";
 import { AppStore } from "../../../src/app/app-store";
 import { AuthHandlers, AuthStore, UserService } from "../../../src/auth";
 import { SiteConfigs } from "../../../src/configs";
@@ -6,16 +7,17 @@ import { NotificationHandlers } from "../../../src/notification/notification-han
 import { PlayerStore } from "../../../src/players";
 import { Mediator } from "../../../src/shared";
 
+import { GameUtils } from "../../../src/shared/utils/game-utils";
 import NameGenerator from "../../../src/shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 import { siteConfigs } from "../container.test";
+
+jest.mock("../../../src/shared/utils/game-utils");
 jest.mock("../../../src/shared/utils/name-generator");
 jest.mock("../../../src/shared/utils/storage-manager", () => ({
     StorageManager: {
-        get: jest.fn().mockReturnValue({
-            ss: "sessionInfo.session",
-            username: "username",
-        }),
+        get: jest.fn(),
+        set: jest.fn(),
         remove: jest.fn(),
     },
     localStorageKeys: { session: "session-key" },
@@ -144,6 +146,13 @@ describe("AuthHandlers tests", () => {
         });
 
         describe("when authorize successfully", () => {
+            beforeEach(() => {
+                // @ts-ignore
+                StorageManager.get.mockReturnValueOnce({
+                    ss: "sessionInfo.session",
+                    username: "username",
+                });
+            });
             describe("when auth store isDirectMode false", () => {
                 const authStore = new AuthStore();
                 const appStore = new AppStore();
@@ -371,6 +380,259 @@ describe("AuthHandlers tests", () => {
 
             expect(clearIntervalSpy).toHaveBeenCalledTimes(1);
             expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.session);
+        });
+    });
+
+    describe("SSO", () => {
+        let authStore: AuthStore;
+        let appStore: AppStore;
+        let userService: UserService;
+        let authorizeHandler: AuthHandlers.Authorize;
+        let signOutHandler: AuthHandlers.SignOut;
+        let ssoHandler: AuthHandlers.SSO;
+
+        beforeEach(() => {
+            authStore = stub<AuthStore>();
+            appStore = stub<AppStore>();
+            userService = stub<UserService>();
+            authorizeHandler = stub<AuthHandlers.Authorize>();
+            signOutHandler = stub<AuthHandlers.SignOut>();
+            ssoHandler = new AuthHandlers.SSO(authStore, appStore, userService, authorizeHandler, signOutHandler);
+        });
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
+        describe("when invalid session", () => {
+            it("should sign out when expired session", async () => {
+                // arrange
+                // @ts-ignore
+                StorageManager.get.mockReturnValueOnce(undefined);
+
+                // act
+                await ssoHandler.handle(new URLSearchParams());
+
+                // assert
+                expect(signOutHandler.handle).toBeCalled();
+            });
+
+            it("should sign out when urlParams not has token or params", async () => {
+                // arrange
+                const urlParams = new URLSearchParams("param=1");
+                const date = new Date();
+                // @ts-ignore
+                StorageManager.get.mockReturnValueOnce({ ssoTime: date.setMinutes(date.getMinutes - 30) });
+
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(signOutHandler.handle).toBeCalled();
+            });
+        });
+
+        describe("when url params has token", () => {
+            beforeEach(() => {
+                // @ts-ignore
+                StorageManager.get.mockReturnValueOnce(undefined);
+            });
+            const urlParams = new URLSearchParams("token=a&appType=1");
+            it("should set UM into appStore when UM", async () => {
+                // arrange
+                // @ts-ignore
+                userService.sso.mockReturnValueOnce({ isUM: true, umInfo: {} });
+
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(userService.sso).toHaveBeenCalledWith("a", 1);
+                expect(appStore.setUM).toHaveBeenCalledWith({});
+            });
+
+            describe("when isAuthenticated true", () => {
+                const response = {
+                    isAuthenticated: true,
+                    ss: "session",
+                    username: "username",
+                    language: "language",
+                    system: 1,
+                    memberName: "",
+                    isUM: false,
+                };
+                beforeEach(() => {
+                    // @ts-ignore
+                    userService.sso.mockReturnValueOnce(response);
+                    // @ts-ignore
+                    authStore.getSessionInfo.mockReturnValueOnce({ session: response.ss });
+                });
+                it("should set store into authStore", async () => {
+                    // act
+                    await ssoHandler.handle(urlParams);
+
+                    // assert
+                    expect(authStore.setAuthSSOStore).toHaveBeenCalledWith(response);
+                });
+
+                it("should save session info in storage", async () => {
+                    // act
+                    await ssoHandler.handle(urlParams);
+
+                    // assert
+                    expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.session, { session: response.ss });
+                });
+
+                it("should save direct mode info in storage", async () => {
+                    // arrange
+                    appStore.isDirectMode = true;
+
+                    // act
+                    await ssoHandler.handle(urlParams);
+
+                    // assert
+                    expect(appStore.saveDirectModeInfo).toHaveBeenCalled();
+                });
+
+                it("should save return url in storage", async () => {
+                    // act
+                    await ssoHandler.handle(urlParams);
+
+                    // assert
+                    expect(appStore.saveReturnUrl).toHaveBeenCalled();
+                });
+
+                it("should call authorize handler", async () => {
+                    // act
+                    await ssoHandler.handle(urlParams);
+
+                    // assert
+                    expect(authorizeHandler.handle).toHaveBeenCalledWith({ session: response.ss, username: response.username });
+                });
+            });
+        });
+
+        describe("when url params has params", () => {
+            const urlParams = new URLSearchParams("params=test");
+            beforeEach(() => {
+                // @ts-ignore
+                StorageManager.get.mockReturnValueOnce(undefined);
+                // @ts-ignore
+                GameUtils.base64Decode.mockReturnValueOnce("ss=session&uname=username");
+                // @ts-ignore
+                authStore.getSessionInfo.mockReturnValueOnce({ session: "session" });
+            });
+
+            it("should set store into auth store from url params", async () => {
+                // arrange
+                const urlSearchParams = new URLSearchParams("ss=session&uname=username");
+
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(authStore.setAuthStoreFromUrlParam).toHaveBeenCalledWith(urlSearchParams);
+            });
+
+            it("should set url store into app store", async () => {
+                // arrange
+                const urlSearchParams = new URLSearchParams("ss=session&uname=username");
+
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(appStore.setURLStore).toHaveBeenCalledWith(urlSearchParams);
+            });
+
+            it("should save session info in storage", async () => {
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.session, { session: "session" });
+            });
+
+            it("should save direct mode info in storage", async () => {
+                // arrange
+                appStore.isDirectMode = true;
+
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(appStore.saveDirectModeInfo).toHaveBeenCalled();
+            });
+
+            it("should save return url in storage", async () => {
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(appStore.saveReturnUrl).toHaveBeenCalled();
+            });
+
+            it("should call authorize handler", async () => {
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(authorizeHandler.handle).toHaveBeenCalledWith({ session: "session", username: "username" });
+            });
+        });
+
+        describe("when url params empty", () => {
+            const urlParams = new URLSearchParams();
+            beforeEach(() => {
+                // @ts-ignore
+                StorageManager.get.mockReturnValueOnce({ ssoTime: new Date() });
+            });
+            it("should load return url in storage", async () => {
+                // arrange
+                // @ts-ignore
+                StorageManager.get.mockReturnValueOnce(undefined);
+
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(appStore.loadReturnUrl).toHaveBeenCalled();
+            });
+
+            it("should load direct mode info in storage", async () => {
+                // arrange
+                // @ts-ignore
+                StorageManager.get.mockReturnValueOnce(undefined);
+
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(appStore.loadDirectMode).toHaveBeenCalled();
+            });
+
+            it("should sign out when session info not exist", async () => {
+                // arrange
+                // @ts-ignore
+                StorageManager.get.mockReturnValueOnce(undefined);
+
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(signOutHandler.handle).toHaveBeenCalled();
+            });
+
+            it("should call authorize when session info exist", async () => {
+                // arrange
+                // @ts-ignore
+                StorageManager.get.mockReturnValueOnce({ session: "session", username: "username" });
+
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(authorizeHandler.handle).toHaveBeenCalledWith({ session: "session", username: "username" });
+            });
         });
     });
 });
