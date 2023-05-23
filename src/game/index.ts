@@ -1,3 +1,4 @@
+export * as Audios from "./audios";
 export * as Bet from "./bets";
 export * as Chips from "./chips";
 export * as Connection from "./connection";
@@ -10,3 +11,4 @@ export * as Orientation from "./orientation";
 export * as RoundHistories from "./round-histories";
 export * as Rounds from "./rounds";
 export * as Settlements from "./settlements";
+export * as UserSettings from "./user-settings";
