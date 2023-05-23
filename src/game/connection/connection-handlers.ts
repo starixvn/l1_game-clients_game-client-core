@@ -38,8 +38,8 @@ export namespace ConnectionHandlers {
                 parser: this.siteConfigs.enableMsgpackParserAllGames,
             };
             const options = { ...optionsDefault, ...customizeOptions };
-            this.store.initConnection(io(options.socketUri, options));
-            // this.store.initBaseListener();
+            this.store.connection = io(options.socketUri, options);
+            this.store.initBaseListener();
         }
     }
 

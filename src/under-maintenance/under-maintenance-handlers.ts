@@ -18,8 +18,8 @@ export class UnderMaintenanceHandler implements IHandler<GameServiceMessage.Unde
 
     handle(underMaintenanceInfo: GameServiceMessage.UnderMaintenanceInfo) {
         this.appStore.setUM(underMaintenanceInfo.umInfo);
-        this.notificationStore.socketConnectionStore.connection.disconnect();
-        this.connectionStore.socketConnectionStore.connection.disconnect();
+        this.notificationStore.connection.disconnect();
+        this.connectionStore.connection.disconnect();
         StorageManager.remove(localStorageKeys.session);
     }
 }

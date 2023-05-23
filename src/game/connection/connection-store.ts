@@ -1,42 +1,48 @@
 import { inject, injectable } from "inversify";
+import { makeAutoObservable } from "mobx";
+import { Socket } from "socket.io-client/dist/socket.io.js";
 import { ISessionInfo } from "../../auth";
 import { GameClientEmitMessage, Mediator } from "../../shared";
 import { StorageManager, localStorageKeys } from "../../shared/utils";
 import { GameSetting } from "../game-configs";
-import { SocketConnectionStore } from "../../socket-connection";
-import { Socket } from "socket.io-client";
-import { makeAutoObservable } from "mobx";
+import { SocketEvents } from "../../shared/constants/socket-event";
 
-export const GameServiceEvent = {
-    signedIn: "signedIn",
+export const events = {
+    ...SocketEvents,
+    ...{
+        signedIn: "signedIn",
+    },
 };
+
 @injectable()
 export class ConnectionStore {
-    socketConnectionStore: SocketConnectionStore = null;
-    constructor(
-        @inject(SocketConnectionStore) protected readonly socketConnectionStoreInject: SocketConnectionStore,
-        @inject(Mediator) protected readonly mediator: Mediator,
-        @inject(GameSetting) protected readonly gameSetting: GameSetting
-    ) {
+    constructor(@inject(Mediator) protected readonly mediator: Mediator, @inject(GameSetting) protected readonly gameSetting: GameSetting) {
         makeAutoObservable(this);
-        this.socketConnectionStore = socketConnectionStoreInject;
     }
+
+    connection: Socket = null;
+    isConnected = false;
+    isConnectFailed = false;
     signedIn = false;
 
-    initConnection(connection: Socket) {
-        this.socketConnectionStore.connection = connection;
-        this.socketConnectionStore.initBaseListener();
-        this.socketConnectionStore.connection.on("connect", this.onConnected.bind(this));
+    initBaseListener() {
+        if (this.connection) {
+            this.connection.on(events.connect, this.onConnected.bind(this));
+            this.connection.on(events.signedIn, this.onSignedIn.bind(this));
+            this.connection.on(events.connectError, this.onConnectFailed.bind(this));
+            this.connection.on(events.connectFailed, this.onConnectFailed.bind(this));
+            this.connection.on(events.disconnect, this.onDisconnected.bind(this));
+        }
     }
 
     onConnected() {
-        this.socketConnectionStore.connection.on(GameServiceEvent.signedIn, this.onSignedIn.bind(this));
-        this.socketConnectionStore.connection.onAny(this.onHandleData.bind(this));
+        this.isConnected = true;
+        this.isConnectFailed = false;
+        this.connection.onAny(this.onHandleData.bind(this));
         this.signIn();
     }
 
     onHandleData(event: string, value: any) {
-        console.log(event);
         if (event?.toLocaleLowerCase() === this.gameSetting?.name.toLocaleLowerCase() || event?.toLocaleLowerCase() === "message") {
             Object.entries(value).forEach((entry) => {
                 const [key, value] = entry;
@@ -61,7 +67,18 @@ export class ConnectionStore {
         this.signedIn = true;
     }
 
+    onConnectFailed() {
+        this.isConnectFailed = true;
+        this.onDisconnected();
+    }
+
+    onDisconnected() {
+        this.isConnected = false;
+        this.signedIn = false;
+        this.connection.disconnect();
+    }
+
     send(eventName: string, data: any) {
-        this.socketConnectionStore.connection?.emit(eventName, data);
+        this.connection?.emit(eventName, data);
     }
 }

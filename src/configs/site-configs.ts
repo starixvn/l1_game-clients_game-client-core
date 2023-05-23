@@ -16,5 +16,5 @@ export class SiteConfigs {
     isDev?: boolean;
     userServiceUrlDev?: string;
     SGConnectSubDomain?: string;
-    notificationServiceUrlDev: string;
+    notificationServiceUrlDev?: string;
 }

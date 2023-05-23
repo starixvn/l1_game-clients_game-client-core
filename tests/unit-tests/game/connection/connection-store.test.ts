@@ -1,9 +1,10 @@
-import { io } from "socket.io-client/dist/socket.io.js";
-import { ConnectionStore, GameServiceEvent } from "../../../../src/game/connection";
-import { Mediator } from "../../../../src/shared";
+import { io } from "socket.io-client";
+import { ConnectionStore, events } from "../../../../src/game/connection";
+import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
+import { StorageManager, localStorageKeys } from "../../../../src/shared/utils";
 import { gameSettings } from "../../container.test";
 
-jest.mock("socket.io-client/dist/socket.io.js", () => ({
+jest.mock("socket.io-client", () => ({
     io: jest.fn().mockReturnValue({ on: jest.fn() }),
 }));
 jest.mock("mobx");
@@ -14,6 +15,15 @@ describe("ConnectionStore tests", () => {
             const store = new ConnectionStore(new Mediator(), gameSettings);
             store.connection = io("", {});
             store.connection.on = jest.fn();
+            it("should init listeners onConnected", () => {
+                // act
+                store.initBaseListener();
+
+                // assert
+                expect(store.connection.on).toHaveBeenCalled();
+                expect(store.connection.on.mock.calls[0][0]).toBe(events.connect);
+                expect(store.connection.on.mock.calls[0][1].toString()).toBe(store.onConnected.bind(store).toString());
+            });
 
             it("should init listeners onSignedIn", () => {
                 // act
@@ -21,9 +31,104 @@ describe("ConnectionStore tests", () => {
 
                 // assert
                 expect(store.connection.on).toHaveBeenCalled();
-                expect(store.connection.on.mock.calls[4][0]).toBe(GameServiceEvent.signedIn);
-                expect(store.connection.on.mock.calls[4][1].toString()).toBe(store.onSignedIn.bind(store).toString());
+                expect(store.connection.on.mock.calls[1][0]).toBe(events.signedIn);
+                expect(store.connection.on.mock.calls[1][1].toString()).toBe(store.onSignedIn.bind(store).toString());
             });
+
+            it("should init listeners onConnectFailed and event is connect_error", () => {
+                // act
+                store.initBaseListener();
+
+                // assert
+                expect(store.connection.on).toHaveBeenCalled();
+                expect(store.connection.on.mock.calls[2][0]).toBe(events.connectError);
+                expect(store.connection.on.mock.calls[2][1].toString()).toBe(store.onConnectFailed.bind(store).toString());
+            });
+
+            it("should init listeners onConnectFailed and event is connect_failed", () => {
+                // act
+                store.initBaseListener();
+
+                // assert
+                expect(store.connection.on).toHaveBeenCalled();
+                expect(store.connection.on.mock.calls[3][0]).toBe(events.connectFailed);
+                expect(store.connection.on.mock.calls[3][1].toString()).toBe(store.onConnectFailed.bind(store).toString());
+            });
+            it("should init listeners onDisconnected and event is disconnect", () => {
+                // act
+                store.initBaseListener();
+
+                // assert
+                expect(store.connection.on).toHaveBeenCalled();
+                expect(store.connection.on.mock.calls[4][0]).toBe(events.disconnect);
+                expect(store.connection.on.mock.calls[4][1].toString()).toBe(store.onDisconnected.bind(store).toString());
+            });
+        });
+    });
+
+    describe("onConnected", () => {
+        const sessionInfo = { session: "session", username: "username", system: 1 };
+        StorageManager.set(localStorageKeys.session, sessionInfo);
+
+        it("should set isConnected true", () => {
+            // arrange
+            const store = new ConnectionStore(new Mediator(), gameSettings);
+            store.connection = io("", {});
+            store.connection.onAny = jest.fn();
+            store.connection.emit = jest.fn();
+
+            // act
+            store.onConnected();
+
+            // assert
+            expect(store.isConnected).toBe(true);
+        });
+
+        it("should set isConnectFailed false", () => {
+            // arrange
+            const store = new ConnectionStore(new Mediator(), gameSettings);
+            store.connection = io("", {});
+            store.connection.onAny = jest.fn();
+            store.connection.emit = jest.fn();
+
+            // act
+            store.onConnected();
+
+            // assert
+            expect(store.isConnectFailed).toBe(false);
+        });
+
+        it("should call connection onAny", () => {
+            // arrange
+            const store = new ConnectionStore(new Mediator(), gameSettings);
+            store.connection = io("", {});
+            store.connection.onAny = jest.fn();
+            store.connection.emit = jest.fn();
+
+            // act
+            store.onConnected();
+
+            // assert
+            expect(store.connection.onAny.mock.calls[0][0].toString()).toBe(store.onHandleData.bind(store).toString());
+        });
+
+        it("should call signin", () => {
+            // arrange
+            const store = new ConnectionStore(new Mediator(), gameSettings);
+            store.connection = io("", {});
+            store.connection.onAny = jest.fn();
+            store.connection.emit = jest.fn();
+
+            const payload = new GameClientEmitMessage.Signin();
+            payload.ss = sessionInfo?.session;
+            payload.username = sessionInfo?.username;
+            payload.system = sessionInfo?.system;
+
+            // act
+            store.onConnected();
+
+            // assert
+            expect(store.connection.emit).toHaveBeenCalledWith(GameClientEmitMessage.Signin.eventName, payload);
         });
     });
 
@@ -88,6 +193,101 @@ describe("ConnectionStore tests", () => {
 
             // assert
             expect(store.signedIn).toBe(true);
+        });
+    });
+
+    describe("onConnectFailed", () => {
+        it("should set isConnectFailed is true", () => {
+            // arrange
+            const store = new ConnectionStore(new Mediator(), gameSettings);
+            store.connection = io("");
+            store.connection.disconnect = jest.fn();
+
+            // act
+            store.onConnectFailed();
+
+            // assert
+            expect(store.isConnectFailed).toBe(true);
+        });
+
+        it("should set isConnected is false", () => {
+            // arrange
+            const store = new ConnectionStore(new Mediator(), gameSettings);
+            store.connection = io("");
+            store.connection.disconnect = jest.fn();
+
+            // act
+            store.onConnectFailed();
+
+            // assert
+            expect(store.isConnected).toBe(false);
+        });
+
+        it("should set signedIn is false", () => {
+            // arrange
+            const store = new ConnectionStore(new Mediator(), gameSettings);
+            store.connection = io("");
+            store.connection.disconnect = jest.fn();
+
+            // act
+            store.onConnectFailed();
+
+            // assert
+            expect(store.signedIn).toBe(false);
+        });
+
+        it("should call connection disconnect", () => {
+            // arrange
+            const store = new ConnectionStore(new Mediator(), gameSettings);
+            store.connection = io("");
+            store.connection.disconnect = jest.fn();
+
+            // act
+            store.onConnectFailed();
+
+            // assert
+            expect(store.connection.disconnect).toHaveBeenCalled();
+        });
+    });
+
+    describe("onDisconnected", () => {
+        it("should set isConnected is false", () => {
+            // arrange
+            const store = new ConnectionStore(new Mediator(), gameSettings);
+            store.connection = io("");
+            store.connection.disconnect = jest.fn();
+
+            // act
+            store.onDisconnected();
+
+            // assert
+            expect(store.isConnected).toBe(false);
+        });
+
+        it("should set signedIn is false", () => {
+            // arrange
+            const store = new ConnectionStore(new Mediator(), gameSettings);
+            store.connection = io("");
+            store.connection.disconnect = jest.fn();
+
+            // act
+            store.onDisconnected();
+
+            // assert
+            expect(store.signedIn).toBe(false);
+        });
+
+        it("should call connection disconnect", () => {
+            // arrange
+            const store = new ConnectionStore(new Mediator(), gameSettings);
+            store.connection = io("");
+            store.connection.disconnect = jest.fn();
+
+            // act
+            store.onDisconnected();
+
+            // assert
+            expect(store.connection.disconnect).toHaveBeenCalled();
         });
     });
 });

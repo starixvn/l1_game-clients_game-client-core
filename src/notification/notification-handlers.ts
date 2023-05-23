@@ -28,7 +28,7 @@ export class NotificationHandlers {
                 username: sessionInfo.username,
             },
         };
-        this.notificationStore.initConnection(io(options.socketUri, options));
-        // this.notificationStore.initBaseListener();
+        this.notificationStore.connection = io(options.socketUri, options);
+        this.notificationStore.initListener();
     }
 }
