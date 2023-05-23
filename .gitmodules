@@ -12,3 +12,7 @@ branch = main
 path = examples/cocos-3x/tests/cocos-testing
 url = ../cocos-testing.git
 branch = main
+[submodule "examples/cocos-3x/extensions/localization-editor"]
+	path = examples/cocos-3x/extensions/localization-editor
+	url = git@git3.nexdev.net:l1/game-clients/game-client-packages/localization-editor.git
+	branch = main
