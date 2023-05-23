@@ -55,7 +55,7 @@ describe(buildObserverContainer.name, () => {
             const actual = buildObserverContainer(container as any);
 
             // Assert
-            expect(actual).toStrictEqual({ resolve: container.get });
+            expect(actual).toStrictEqual({ resolve: expect.any(Function) });
         });
     });
 });

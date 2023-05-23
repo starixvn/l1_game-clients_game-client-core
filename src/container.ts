@@ -4,6 +4,7 @@ import * as SiteConfigs from "./configs";
 import * as Game from "./game";
 import * as Notification from "./notification";
 import * as Players from "./players";
+import type { AnyConstructor } from "./shared";
 import { FeatureLoader } from "./shared";
 import * as UnderMaintenance from "./under-maintenance";
 
@@ -54,6 +55,6 @@ export function getContainer(options: IContainerOptions = {}) {
 
 export function buildObserverContainer(container: Container) {
     return {
-        resolve: container.get,
+        resolve: (ctor: AnyConstructor) => container.get(ctor),
     };
 }
