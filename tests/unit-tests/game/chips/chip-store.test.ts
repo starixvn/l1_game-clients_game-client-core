@@ -29,4 +29,21 @@ describe("ChipStore", () => {
         // Assert
         expect(chipStore.ownChip).toEqual(newOwnChip);
     });
+
+    test("should reset chips", () => {
+        // Add some initial chips to the store
+        chipStore.chips = {
+            1: {
+                red: {
+                    "1": 1,
+                },
+            },
+        };
+
+        // Reset the chips
+        chipStore.resetChips();
+
+        // Assert that the chips object is empty
+        expect(chipStore.chips).toEqual({});
+    });
 });

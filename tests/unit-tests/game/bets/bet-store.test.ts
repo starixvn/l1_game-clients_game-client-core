@@ -27,4 +27,11 @@ describe("BetStore test", () => {
             expect(betStore.freebetEnabled).toEqual(false);
         });
     });
+
+    test("should set and get the lastReceivedBet value correctly", () => {
+        const betStore = new BetStore();
+        const bet = 100;
+        betStore.lastReceivedBet = bet;
+        expect(betStore.lastReceivedBet).toBe(bet);
+    });
 });
