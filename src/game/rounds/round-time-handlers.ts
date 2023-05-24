@@ -10,6 +10,7 @@ export class RoundTimeHandlers implements IMultipleHandlers {
         if (remainingTime > 0) {
             this.store.roundTime = remainingTime;
             this.store.start();
+            this.store.setJoinGameState();
         }
     }
 

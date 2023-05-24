@@ -2416,7 +2416,7 @@
     "propertyPath": [
       "_name"
     ],
-    "value": "other-users"
+    "value": "other-players"
   },
   {
     "__type__": "cc.TargetInfo",
@@ -2616,7 +2616,6 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "namespace": "SeDie",
     "dealerChipBox": {
       "__id__": 108
     },

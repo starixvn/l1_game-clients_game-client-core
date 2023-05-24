@@ -18,6 +18,6 @@ export class HideGameHandler implements IHandler<void> {
         this.roundRunning.stopRunner();
         this.roundTimeStore.stop();
         this.connectStore.onDisconnected();
-        this.roundHistoryStore.isJoinRoom = true;
+        this.roundHistoryStore.isJoinRoom = false;
     }
 }

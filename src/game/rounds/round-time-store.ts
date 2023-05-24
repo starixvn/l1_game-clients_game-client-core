@@ -46,6 +46,8 @@ export class RoundTimeStore {
     endPlacingBet = false;
     joinGameState = "";
 
+    isFirstLoad = true;
+
     constructor(@inject(GameSetting) gameSetting: GameSetting) {
         makeAutoObservable(this);
         this.setRoundTimeSetting(gameSetting.durations as RoundTimeSetting);
@@ -140,10 +142,6 @@ export class RoundTimeStore {
 
     set roundTime(roundTime: number) {
         this._roundTime = roundTime;
-    }
-
-    get remaining() {
-        return this._remaining;
     }
 
     get roundState() {
@@ -245,16 +243,20 @@ export class RoundTimeStore {
         return currentState;
     }
 
-    setJoinGameState() {
-        this.joinGameState = this.getCurrentRoundState();
-    }
-
     start() {
         this._roundState = ROUND_STATE.START_GAME_LOOP;
+    }
+
+    setJoinGameState() {
+        if (this.isFirstLoad) {
+            this.isFirstLoad = false;
+            this.joinGameState = this.getCurrentRoundState();
+        }
     }
 
     stop() {
         this._roundState = ROUND_STATE.STOP_GAME_LOOP;
         this.joinGameState = "";
+        this.isFirstLoad = true;
     }
 }

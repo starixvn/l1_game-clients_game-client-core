@@ -1,17 +1,15 @@
 import { stub } from "jest-auto-stub";
 import { RoundHistory, RoundHistoryHandlers, RoundHistoryStore } from "../../../../src/game/round-histories";
-import { RoundTimeStore } from "../../../../src/game/rounds";
 import { GameServiceMessage } from "../../../../src/shared";
 
 // Create a stub for RoundHistoryStore and RoundTimeStore using ts-auto-mock
 const roundHistoryStoreStub = stub<RoundHistoryStore>();
-const roundTimeStoreStub = stub<RoundTimeStore>();
 
 describe("RoundHistoryHandlers", () => {
     let roundHistoryHandlers: RoundHistoryHandlers;
 
     beforeEach(() => {
-        roundHistoryHandlers = new RoundHistoryHandlers(roundHistoryStoreStub, roundTimeStoreStub);
+        roundHistoryHandlers = new RoundHistoryHandlers(roundHistoryStoreStub);
     });
 
     test("handleRoundHistory should update roundHistoryStore and roundTimeStore correctly", () => {
@@ -42,9 +40,6 @@ describe("RoundHistoryHandlers", () => {
 
         // Assert that roundHistoryStore.histories is updated correctly
         expect(roundHistoryStoreStub.histories).toEqual(roundHistories);
-
-        // Assert that roundTimeStore.setJoinGameState() is called
-        expect(roundTimeStoreStub.setJoinGameState).toHaveBeenCalled();
     });
 
     test("eventHandleList should contain handleRoundHistory for GameServiceMessage.roundHistory event", () => {

@@ -51,6 +51,58 @@ describe("RoundTimeStore Unit Tests", () => {
         expect(roundTimeStore.roundTime).toEqual(roundTimeStore.wholeRound - 1);
     });
 
+    describe("countdown", () => {
+        it("should set roundTime to 0 if it is less than or equal to 1", () => {
+            // Arrange
+            roundTimeStore.roundTime = 1;
+
+            // Act
+            roundTimeStore.countdown();
+
+            // Assert
+            expect(roundTimeStore.roundTime).toBe(0);
+        });
+
+        it("should decrement roundTime by 1 if it is greater than 1", () => {
+            // Arrange
+            roundTimeStore.roundTime = 5;
+
+            // Act
+            roundTimeStore.countdown();
+
+            // Assert
+            expect(roundTimeStore.roundTime).toBe(4);
+        });
+
+        it("should call calculateRoundStatus method", () => {
+            // Arrange
+            roundTimeStore.roundTime = 5;
+
+            roundTimeStore.calculateRoundStatus = jest.fn();
+
+            // Act
+            roundTimeStore.countdown();
+
+            // Assert
+            expect(roundTimeStore.calculateRoundStatus).toHaveBeenCalled();
+        });
+    });
+
+    describe("roundState", () => {
+        it("should return the value of _roundState", () => {
+            // Arrange
+            const expectedState = "START_GAME_LOOP";
+
+            roundTimeStore.roundState = expectedState;
+
+            // Act
+            const result = roundTimeStore.roundState;
+
+            // Assert
+            expect(result).toBe(expectedState);
+        });
+    });
+
     describe("isWaiting", () => {
         it("should return true if roundTime is greater than placingBet and wholeRound is not equal to 0", () => {
             // Arrange
@@ -237,6 +289,33 @@ describe("RoundTimeStore Unit Tests", () => {
         });
     });
 
+    describe("isStartGenerateResult", () => {
+        it("should return true if roundTime equals placingBet plus genResult", () => {
+            // Arrange
+            roundTimeStore.roundTime = 32;
+            roundTimeStore.placingBet = 30;
+            roundTimeStore.genResult = 2;
+
+            // Act
+            const result = roundTimeStore.isStartGenerateResult;
+
+            // Assert
+            expect(result).toBe(true);
+        });
+
+        it("should return false if roundTime does not equal placingBet plus genResult", () => {
+            // Arrange
+            roundTimeStore.roundTime = 31;
+            roundTimeStore.placingBet = 30;
+            roundTimeStore.genResult = 2;
+
+            const result = roundTimeStore.isStartGenerateResult;
+
+            // Assert
+            expect(result).toBe(false);
+        });
+    });
+
     describe("isStartingRound", () => {
         it("should return true if roundTime is equal to placingBet + startRound", () => {
             // Arrange
@@ -270,6 +349,76 @@ describe("RoundTimeStore Unit Tests", () => {
 
             // Act
             const result = roundTimeStore.isStartingRound;
+
+            // Assert
+            expect(result).toBe(false);
+        });
+    });
+
+    describe("isTimeOut", () => {
+        it("should return true if roundTime is 0", () => {
+            // Arrange
+            roundTimeStore.roundTime = 0;
+
+            // Act
+            const result = roundTimeStore.isTimeOut;
+
+            // Assert
+            expect(result).toBe(true);
+        });
+
+        it("should return false if roundTime is not 0", () => {
+            // Arrange
+            roundTimeStore.roundTime = 10;
+
+            // Act
+            const result = roundTimeStore.isTimeOut;
+
+            // Assert
+            expect(result).toBe(false);
+        });
+    });
+
+    describe("isInRoundTime", () => {
+        const testCases = [
+            { roundState: ROUND_STATE.BEGIN_PLACING_BET, expected: true },
+            { roundState: ROUND_STATE.PLACING_BET, expected: true },
+            { roundState: ROUND_STATE.BEGIN_LOCKING_BET, expected: true },
+            { roundState: ROUND_STATE.LOCKING_BET, expected: true },
+            { roundState: ROUND_STATE.SHOW_RESULT, expected: false },
+            { roundState: ROUND_STATE.STARTING_ROUND, expected: false },
+        ];
+
+        it.each(testCases)("should return %p when roundState is %p", ({ roundState, expected }) => {
+            // Arrange
+            roundTimeStore.roundState = roundState;
+
+            // Act
+            const result = roundTimeStore.isInRoundTime;
+
+            // Assert
+            expect(result).toBe(expected);
+        });
+    });
+
+    describe("isStopGame", () => {
+        it("should return true if roundState is STOP_GAME_LOOP", () => {
+            // Arrange
+            roundTimeStore.roundState = ROUND_STATE.STOP_GAME_LOOP;
+
+            // Act
+            const result = roundTimeStore.isStopGame;
+
+            // Assert
+            expect(result).toBe(true);
+        });
+
+        it("should return false if roundState is not STOP_GAME_LOOP", () => {
+            // Arrange
+            roundTimeStore.roundState = ROUND_STATE.BEGIN_WAITING;
+
+            // Act
+            const result = roundTimeStore.isStopGame;
 
             // Assert
             expect(result).toBe(false);
@@ -458,6 +607,20 @@ describe("RoundTimeStore Unit Tests", () => {
             roundTimeStore.stop();
 
             expect(roundTimeStore.joinGameState).toBe("");
+        });
+    });
+
+    describe("start", () => {
+        it("should set roundState to START_GAME_LOOP", () => {
+            // Arrange
+
+            roundTimeStore.roundState = ROUND_STATE.BEGIN_STARTING_ROUND;
+
+            // Act
+            roundTimeStore.start();
+
+            // Assert
+            expect(roundTimeStore.roundState).toBe(ROUND_STATE.START_GAME_LOOP);
         });
     });
 });

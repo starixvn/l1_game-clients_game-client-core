@@ -18,7 +18,7 @@ export interface IJoinRoomShowResult extends IJoinRoom {
 }
 
 export interface TJoinRoomHighLight extends IJoinRoom {
-    isShowHighLight: boolean;
+    isHighLightBetWon: boolean;
 }
 
 @injectable()
@@ -57,22 +57,22 @@ export class RoundHistoryStore {
     }
 
     get joinRoomHighLight(): TJoinRoomHighLight {
-        let isShowHighLight = false;
+        let isHighLightBetWon = false;
         if (
             this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
             this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_RESULT ||
             this.roundTimeStore.joinGameState === ROUND_STATE.PLACING_BET
         ) {
-            isShowHighLight = true;
+            isHighLightBetWon = true;
         }
 
         if (this.roundTimeStore.joinGameState === ROUND_STATE.BEGIN_LOCKING_BET) {
-            isShowHighLight = false;
+            isHighLightBetWon = false;
         }
 
         return {
             isJoinRoom: this.isJoinRoom,
-            isShowHighLight,
+            isHighLightBetWon,
             roundHistory: this.histories[0],
         };
     }
