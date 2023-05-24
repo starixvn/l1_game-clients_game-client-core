@@ -2,7 +2,8 @@ import { stub } from "jest-auto-stub";
 import { ConnectionStore } from "../../../../src/game/connection";
 import { GameSetting } from "../../../../src/game/game-configs";
 import { HideGameHandler } from "../../../../src/game/hide-game";
-import { RoundRunningHandlers, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
+import { RoundHistoryStore } from "../../../../src/game/round-histories";
+import { RoundRunningHandlers, RoundTimeStore } from "../../../../src/game/rounds";
 import { Mediator } from "../../../../src/shared";
 import { gameSettings } from "../../container.test";
 
@@ -12,17 +13,17 @@ describe("HideGameHandler", () => {
     let roundTimeStore: RoundTimeStore;
     let handler: HideGameHandler;
     let gameSetting: GameSetting;
-    let roundStore: RoundStore;
+    let roundHistoryStore: RoundHistoryStore;
 
     beforeEach(() => {
         gameSetting = new GameSetting();
         gameSetting.name = gameSettings.name;
         gameSetting.durations = gameSettings.durations;
         roundTimeStore = stub<RoundTimeStore>();
+        roundHistoryStore = stub<RoundHistoryStore>();
         connectStore = new ConnectionStore(new Mediator(), gameSetting);
         roundRunning = new RoundRunningHandlers(roundTimeStore, gameSetting);
-        roundStore = stub<RoundStore>();
-        handler = new HideGameHandler(roundRunning, connectStore, roundTimeStore, roundStore);
+        handler = new HideGameHandler(roundRunning, connectStore, roundTimeStore, roundHistoryStore);
     });
 
     afterEach(() => {

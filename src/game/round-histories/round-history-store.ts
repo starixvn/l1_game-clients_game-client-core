@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { RoundTimeStore } from "../rounds";
+import { ROUND_STATE, RoundStore, RoundTimeStore } from "../rounds";
 
 export interface RoundHistory {
     roundId: number;
@@ -8,31 +8,72 @@ export interface RoundHistory {
     settlementResult: any;
 }
 
-export type TJoinRoomInfo = {
-    roundHistory: RoundHistory;
-    joinGameState: string;
-};
+interface IJoinRoom {
+    isJoinRoom: boolean;
+    roundHistory: any;
+}
+
+export interface IJoinRoomShowResult extends IJoinRoom {
+    isShowResult: boolean;
+}
+
+export interface TJoinRoomHighLight extends IJoinRoom {
+    isShowHighLight: boolean;
+}
 
 @injectable()
 export class RoundHistoryStore {
-    constructor(@inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore) {
+    constructor(
+        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
+        @inject(RoundStore) protected readonly roundStore: RoundStore
+    ) {
         makeAutoObservable(this);
     }
 
     histories: RoundHistory[] = [];
+    isJoinRoom = false;
 
-    get joinRoomInfo(): TJoinRoomInfo {
-        const roundHistory = this?.histories[0];
-        if (roundHistory) {
-            return {
-                roundHistory: roundHistory,
-                joinGameState: this.roundTimeStore.joinGameState,
-            };
-        } else {
-            return {
-                roundHistory: undefined,
-                joinGameState: this.roundTimeStore.joinGameState,
-            };
+    get joinRoomShowResult(): IJoinRoomShowResult {
+        let isShowResult = false;
+        if (
+            this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
+            this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_RESULT
+        ) {
+            isShowResult = true;
         }
+
+        if (
+            this.roundTimeStore.joinGameState === ROUND_STATE.PLACING_BET ||
+            this.roundTimeStore.joinGameState === ROUND_STATE.BEGIN_LOCKING_BET
+        ) {
+            isShowResult = false;
+        }
+
+        return {
+            isJoinRoom: this.isJoinRoom,
+            isShowResult,
+            roundHistory: this.histories[0],
+        };
+    }
+
+    get joinRoomHighLight(): TJoinRoomHighLight {
+        let isShowHighLight = false;
+        if (
+            this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
+            this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_RESULT ||
+            this.roundTimeStore.joinGameState === ROUND_STATE.PLACING_BET
+        ) {
+            isShowHighLight = true;
+        }
+
+        if (this.roundTimeStore.joinGameState === ROUND_STATE.BEGIN_LOCKING_BET) {
+            isShowHighLight = false;
+        }
+
+        return {
+            isJoinRoom: this.isJoinRoom,
+            isShowHighLight,
+            roundHistory: this.histories[0],
+        };
     }
 }

@@ -35,4 +35,8 @@ export default class Sedie extends GameComponent {
             this.cpnThePlate.shakePlate();
         }
     }
+
+    resetAnimationResult() {
+        this.cpnThePlate.closeBowl(false);
+    }
 }

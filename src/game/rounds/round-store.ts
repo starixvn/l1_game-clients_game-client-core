@@ -28,7 +28,7 @@ export class RoundStore {
     ownBets: GameServiceMessage.OwnBets = {};
     private _totalBets: GameServiceMessage.TotalBets = {};
     resultHash: GameServiceMessage.ResultHash = {};
-    isEnableGame = false;
+   
 
     get minBet() {
         return Math.max(this.gameConfigStore.minBet, this.playerStore.stakeLevel.minBet);
@@ -64,6 +64,5 @@ export class RoundStore {
     resetRoundStore() {
         this.resetForNewRound();
         this.resultHash = {};
-        this.isEnableGame = true;
     }
 }

@@ -2,7 +2,6 @@ import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 
 import { GameSetting } from "../game-configs";
-import { RoundHistory } from "../round-histories";
 
 export type RoundTimeSetting = {
     wholeRound: number;
@@ -27,11 +26,6 @@ export const ROUND_STATE = {
     SHOW_RESULT: "showResult",
     CHANGE_REMAINING_TIME: "changeRemainingTime",
     STOP_GAME_LOOP: "stopGameLoop",
-};
-
-export type TJoinRoomInfo = {
-    roundHistory: RoundHistory;
-    joinGameState: string;
 };
 
 @injectable()
@@ -261,5 +255,6 @@ export class RoundTimeStore {
 
     stop() {
         this._roundState = ROUND_STATE.STOP_GAME_LOOP;
+        this.joinGameState = "";
     }
 }

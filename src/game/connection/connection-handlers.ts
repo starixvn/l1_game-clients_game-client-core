@@ -4,6 +4,7 @@ import { SiteConfigs } from "../../configs";
 import { GameClientEmitMessage, IHandler } from "../../shared";
 import { UrlUtils } from "../../shared/utils";
 import { GameSetting } from "../game-configs";
+import { RoundHistoryStore } from "../round-histories";
 import { ConnectionStore } from "./connection-store";
 
 interface ISocketOption {
@@ -45,10 +46,14 @@ export namespace ConnectionHandlers {
 
     @injectable()
     export class InGameHandler implements IHandler<void> {
-        constructor(@inject(ConnectionStore) private readonly connectionStore: ConnectionStore) {}
+        constructor(
+            @inject(ConnectionStore) private readonly connectionStore: ConnectionStore,
+            @inject(RoundHistoryStore) private readonly roundHistoryStore: RoundHistoryStore
+        ) {}
 
         handle() {
             this.connectionStore.send(GameClientEmitMessage.inGame, null);
+            this.roundHistoryStore.isJoinRoom = true;
         }
     }
 }

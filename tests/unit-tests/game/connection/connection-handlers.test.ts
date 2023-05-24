@@ -1,5 +1,7 @@
+import { stub } from "jest-auto-stub";
 import { io } from "socket.io-client/dist/socket.io.js";
 import { ConnectionHandlers, ConnectionStore } from "../../../../src/game/connection";
+import { RoundHistoryStore } from "../../../../src/game/round-histories";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
 import { UrlUtils } from "../../../../src/shared/utils";
 import { gameSettings, siteConfigs } from "../../container.test";
@@ -92,7 +94,8 @@ describe("Connection Handlers tests", () => {
             // arrange
             const connectionStore = new ConnectionStore(new Mediator(), gameSettings);
             connectionStore.send = jest.fn();
-            const handler = new ConnectionHandlers.InGameHandler(connectionStore);
+            const roundHistoryStore = stub<RoundHistoryStore>();
+            const handler = new ConnectionHandlers.InGameHandler(connectionStore, roundHistoryStore);
 
             // act
             handler.handle();

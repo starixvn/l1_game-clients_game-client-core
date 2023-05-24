@@ -1,3 +1,4 @@
+import { stub } from "jest-auto-stub";
 import { ConnectionHandlers, ConnectionStore } from "../../../../src/game/connection";
 import { GameConfigStore, GameSetting } from "../../../../src/game/game-configs";
 import { JoinGameHandler } from "../../../../src/game/join-game";
@@ -18,12 +19,13 @@ describe("JoinGameHandler", () => {
     let connection: ConnectionHandlers.ConnectHandler;
 
     beforeEach(() => {
+        roundTimeStore = stub<RoundTimeStore>();
         roundRunning = new RoundRunningHandlers(roundTimeStore, gameSetting);
         connectStore = new ConnectionStore(new Mediator(), gameSetting);
         connectStore.initBaseListener = jest.fn();
         connection = new ConnectionHandlers.ConnectHandler(connectStore, siteConfigs, gameSettings);
         roundStore = new RoundStore(gameConfigStore, playerStore);
-        handler = new JoinGameHandler(connection, roundStore);
+        handler = new JoinGameHandler(connection, roundStore, roundTimeStore);
     });
 
     afterEach(() => {

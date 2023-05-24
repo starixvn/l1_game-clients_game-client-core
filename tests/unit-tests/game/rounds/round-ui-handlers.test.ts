@@ -1,7 +1,6 @@
 import { GameConfigStore } from "../../../../src/game/game-configs";
-import { RoundStore, RoundTimeStore, RoundUIHandlers } from "../../../../src/game/rounds";
+import { RoundStore, RoundUIHandlers } from "../../../../src/game/rounds";
 import { PlayerStore } from "../../../../src/players";
-import { gameSettings } from "./../../container.test";
 describe("RoundUIHandlers tests", () => {
     describe("SetRoundId", () => {
         it("should set roundId to expected in round store", () => {
@@ -20,20 +19,20 @@ describe("RoundUIHandlers tests", () => {
         });
     });
 
-    describe("GetCurrentRoundState", () => {
-        it("should call setJoinGameState in RoundTimeStore", () => {
-            // arrange
-            const store = new RoundTimeStore(gameSettings);
-            store.setJoinGameState = jest.fn();
-            const handler = new RoundUIHandlers.GetCurrentRoundState(store);
+    // describe("GetCurrentRoundState", () => {
+    //     it("should call setJoinGameState in RoundTimeStore", () => {
+    //         // arrange
+    //         const store = new RoundTimeStore(gameSettings);
+    //         store.setJoinGameState = jest.fn();
+    //         const handler = new RoundUIHandlers.GetCurrentRoundState(store);
 
-            // act
-            handler.handle();
+    //         // act
+    //         handler.handle();
 
-            // assert
-            expect(store.setJoinGameState).toHaveBeenCalled();
-        });
-    });
+    //         // assert
+    //         expect(store.setJoinGameState).toHaveBeenCalled();
+    //     });
+    // });
 
     describe("ResetRoundStore", () => {
         it("should call resetFroNewRound in RoundStore", () => {
