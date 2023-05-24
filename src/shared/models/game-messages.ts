@@ -225,10 +225,16 @@ export namespace NotificationServiceMessage {
         startTime: Date;
         endTime: Date;
     }
+
     export class UnderMaintenanceInfo {
         message: string;
         umInfo: UMInfo;
         static eventName = "notifyKickedOut";
+    }
+
+    export class DisableGame {
+        um_message: Array<string> = [];
+        static eventName = "message";
     }
     export const sessionTimeoutEventName = "notifyTimeout";
 }
