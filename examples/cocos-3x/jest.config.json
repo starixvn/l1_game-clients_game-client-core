@@ -3,6 +3,7 @@
     "collectCoverage": true,
     "coverageDirectory": "coverage",
     "collectCoverageFrom": ["**/assets/**/*.ts", "!**/engine/*.ts"],
+    "coveragePathIgnorePatterns": ["localization-editor"],
     "transform": {
         "^.+\\.tsx?$": ["ts-jest", { "tsconfig": "tsconfig.test.json" }]
     },
