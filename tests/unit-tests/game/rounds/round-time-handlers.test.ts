@@ -8,7 +8,7 @@ describe("RoundTimeHandlers", () => {
     let roundTimeStore: RoundTimeStore;
     let roundTimeHandler: RoundTimeHandlers;
     let gameSetting: GameSetting;
-    
+
     beforeEach(() => {
         gameSetting = new GameSetting();
         gameSetting.name = gameSettings.name;
@@ -30,7 +30,6 @@ describe("RoundTimeHandlers", () => {
 
             // Assert
             expect(roundTimeStore.roundTime).toBe(5);
-            expect(roundTimeStore.start).toHaveBeenCalled();
         });
 
         it("should not update store round time and start store when remaining time is 0", () => {

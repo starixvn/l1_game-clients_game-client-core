@@ -47,7 +47,6 @@ describe("RoundHistoryStore", () => {
 
         const result = roundHistoryStore.joinRoomShowResult;
 
-        expect(result.isJoinRoom).toBe(roundHistoryStore.isJoinRoom);
         expect(result.isShowResult).toBe(expectedIsShowResult);
         expect(result.roundHistory).toEqual(roundHistoryStore.histories[0]);
     });
@@ -63,8 +62,7 @@ describe("RoundHistoryStore", () => {
 
         const result = roundHistoryStore.joinRoomHighLight;
 
-        expect(result.isJoinRoom).toBe(roundHistoryStore.isJoinRoom);
-        expect(result.isHighLightBetWon).toBe(expectedIsShowHighLight);
+        expect(result.isHighLightWithoutAnim).toBe(expectedIsShowHighLight);
         expect(result.roundHistory).toEqual(roundHistoryStore.histories[0]);
     });
 });

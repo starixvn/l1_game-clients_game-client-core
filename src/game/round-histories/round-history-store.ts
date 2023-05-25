@@ -1,16 +1,16 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+import { GameServiceMessage } from "../../shared";
 import { ROUND_STATE, RoundStore, RoundTimeStore } from "../rounds";
 
 export interface RoundHistory {
     roundId: number;
-    result: any;
-    settlementResult: any;
+    result: GameServiceMessage.TResult;
+    settlementResult: GameServiceMessage.TSettlementResult;
 }
 
 interface IJoinRoom {
-    isJoinRoom: boolean;
-    roundHistory: any;
+    roundHistory: RoundHistory;
 }
 
 export interface IJoinRoomShowResult extends IJoinRoom {
@@ -18,7 +18,7 @@ export interface IJoinRoomShowResult extends IJoinRoom {
 }
 
 export interface TJoinRoomHighLight extends IJoinRoom {
-    isHighLightBetWon: boolean;
+    isHighLightWithoutAnim: boolean;
 }
 
 @injectable()
@@ -31,7 +31,10 @@ export class RoundHistoryStore {
     }
 
     histories: RoundHistory[] = [];
-    isJoinRoom = false;
+
+    getLastRound() {
+        return this.histories?.[0];
+    }
 
     get joinRoomShowResult(): IJoinRoomShowResult {
         let isShowResult = false;
@@ -42,38 +45,26 @@ export class RoundHistoryStore {
             isShowResult = true;
         }
 
-        if (
-            this.roundTimeStore.joinGameState === ROUND_STATE.PLACING_BET ||
-            this.roundTimeStore.joinGameState === ROUND_STATE.BEGIN_LOCKING_BET
-        ) {
-            isShowResult = false;
-        }
-
         return {
-            isJoinRoom: this.isJoinRoom,
             isShowResult,
-            roundHistory: this.histories[0],
+            roundHistory: this.getLastRound(),
         };
     }
 
     get joinRoomHighLight(): TJoinRoomHighLight {
-        let isHighLightBetWon = false;
+        let isHighLightWithoutAnim = false;
         if (
             this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
             this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_RESULT ||
+            this.roundTimeStore.joinGameState === ROUND_STATE.STARTING_ROUND ||
             this.roundTimeStore.joinGameState === ROUND_STATE.PLACING_BET
         ) {
-            isHighLightBetWon = true;
-        }
-
-        if (this.roundTimeStore.joinGameState === ROUND_STATE.BEGIN_LOCKING_BET) {
-            isHighLightBetWon = false;
+            isHighLightWithoutAnim = true;
         }
 
         return {
-            isJoinRoom: this.isJoinRoom,
-            isHighLightBetWon,
-            roundHistory: this.histories[0],
+            isHighLightWithoutAnim,
+            roundHistory: this.getLastRound(),
         };
     }
 }

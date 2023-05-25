@@ -189,13 +189,18 @@ export namespace GameServiceMessage {
     }
     export class Finish {
         result?: TResult;
-        settlementResult?: TResult;
+        settlementResult?: TSettlementResult;
         roundId?: number;
         winningPlayers?: TWinningPlayers;
 
         static eventName = "finish";
     }
+
     export type TResult = {
+        [betChoice: string]: unknown;
+    };
+
+    export type TSettlementResult = {
         [betChoice: string]: boolean;
     };
 

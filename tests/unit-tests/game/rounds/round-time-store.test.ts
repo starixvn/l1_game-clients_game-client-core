@@ -601,10 +601,10 @@ describe("RoundTimeStore Unit Tests", () => {
             expect(roundTimeStore.joinGameState).toBe(ROUND_STATE.WAITING);
         });
 
-        test("should reset join game state when stop is called", () => {
+        test("should reset join game state when resetRoundTimeStore is called", () => {
             roundTimeStore.joinGameState = ROUND_STATE.SHOW_RESULT;
 
-            roundTimeStore.stop();
+            roundTimeStore.resetRoundTimeStore();
 
             expect(roundTimeStore.joinGameState).toBe("");
         });

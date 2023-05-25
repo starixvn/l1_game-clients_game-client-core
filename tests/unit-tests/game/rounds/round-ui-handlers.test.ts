@@ -19,21 +19,6 @@ describe("RoundUIHandlers tests", () => {
         });
     });
 
-    // describe("GetCurrentRoundState", () => {
-    //     it("should call setJoinGameState in RoundTimeStore", () => {
-    //         // arrange
-    //         const store = new RoundTimeStore(gameSettings);
-    //         store.setJoinGameState = jest.fn();
-    //         const handler = new RoundUIHandlers.GetCurrentRoundState(store);
-
-    //         // act
-    //         handler.handle();
-
-    //         // assert
-    //         expect(store.setJoinGameState).toHaveBeenCalled();
-    //     });
-    // });
-
     describe("ResetRoundStore", () => {
         it("should call resetFroNewRound in RoundStore", () => {
             // arrange

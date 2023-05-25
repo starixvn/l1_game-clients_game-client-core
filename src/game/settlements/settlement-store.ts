@@ -6,7 +6,7 @@ import { GameServiceMessage } from "../../shared";
 export class SettlementStore {
     roundId = 0;
     result: GameServiceMessage.TResult = null;
-    settlementResult: GameServiceMessage.TResult = null;
+    settlementResult: GameServiceMessage.TSettlementResult = null;
     isFinishedShowResult = false;
     isFinishedSettle = false;
     winningPlayers: GameServiceMessage.TWinningPlayers = null;
