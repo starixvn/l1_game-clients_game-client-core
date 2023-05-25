@@ -1,0 +1,18 @@
+{
+    "click": {
+        "bundle": "shared-bundle",
+        "path": "click"
+    },
+    "bgm-song1": {
+        "bundle": "resources",
+        "type": "music"
+    },
+    "bgm-song2": {
+        "bundle": "resources",
+        "type": "music"
+    },
+    "bgm-song3": {
+        "bundle": "resources",
+        "type": "music"
+    }
+}

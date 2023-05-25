@@ -28,7 +28,7 @@ export class UserSettingHandlers {
     }
 
     handleAudioChanged(type: AudioType, enable: boolean) {
-        if (type === AudioType.Music) {
+        if (type === AudioType.MUSIC) {
             this.setMusicEnable(enable);
         } else if (type === AudioType.SFX) {
             this.setSfxEnable(enable);
