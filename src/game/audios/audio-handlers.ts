@@ -15,7 +15,7 @@ export class AudioHandler {
         }
     }
 
-    stopMusic(audioId) {
+    stopMusic(audioId: string) {
         this.audioStore.music = { id: audioId, action: AudioAction.STOP };
     }
 
@@ -25,7 +25,7 @@ export class AudioHandler {
         }
     }
 
-    stopSFX(audioId) {
+    stopSFX(audioId: string) {
         this.audioStore.sfx = { id: audioId, action: AudioAction.STOP };
     }
 
