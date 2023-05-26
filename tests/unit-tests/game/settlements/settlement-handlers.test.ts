@@ -1,3 +1,5 @@
+import { stub } from "jest-auto-stub";
+import { RoundHistoryStore } from "../../../../src/game/round-histories";
 import { SettlementHandlers, SettlementStatusStore, SettlementStore } from "../../../../src/game/settlements";
 import { GameServiceMessage } from "../../../../src/shared";
 
@@ -5,15 +7,18 @@ describe("SettlementHandlers tests", () => {
     let settlementStore: SettlementStore;
     let statusStore: SettlementStatusStore;
     let settlementHandlers: SettlementHandlers;
+    let roundHistoryStore: RoundHistoryStore;
     beforeEach(() => {
         settlementStore = new SettlementStore();
         statusStore = new SettlementStatusStore();
-        settlementHandlers = new SettlementHandlers(settlementStore, statusStore);
+        roundHistoryStore = stub<RoundHistoryStore>();
+        settlementHandlers = new SettlementHandlers(settlementStore, statusStore, roundHistoryStore);
     });
     describe("handleFinish", () => {
         it("should call setSettlementStore in settlementStore", () => {
             // arrange
             settlementStore.setSettlementStore = jest.fn();
+            roundHistoryStore.updateHistories = jest.fn();
             const finish = new GameServiceMessage.Finish();
 
             // act
@@ -21,6 +26,7 @@ describe("SettlementHandlers tests", () => {
 
             // assert
             expect(settlementStore.setSettlementStore).toHaveBeenCalledWith(finish);
+            expect(roundHistoryStore.updateHistories).toHaveBeenCalledWith(finish);
         });
     });
 

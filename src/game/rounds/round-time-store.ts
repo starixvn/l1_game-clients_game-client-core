@@ -176,7 +176,7 @@ export class RoundTimeStore {
     }
 
     calculateRoundStatus() {
-        this._roundState = this.getCurrentRoundState();
+        this.roundState = this.getCurrentRoundState();
         if (this.roundTime < 0) {
             return;
         }
@@ -245,17 +245,17 @@ export class RoundTimeStore {
     }
 
     start() {
-        this._roundState = ROUND_STATE.START_GAME_LOOP;
+        this.roundState = ROUND_STATE.START_GAME_LOOP;
     }
 
     setJoinGameState() {
         if (!this.joinGameState) {
-            this.joinGameState = this._roundState;
+            this.joinGameState = this.roundState;
         }
     }
 
     resetRoundTimeStore() {
-        this._roundState = ROUND_STATE.STOP_GAME_LOOP;
+        this.roundState = ROUND_STATE.STOP_GAME_LOOP;
         this.joinGameState = "";
     }
 }

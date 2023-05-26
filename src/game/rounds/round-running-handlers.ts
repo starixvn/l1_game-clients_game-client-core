@@ -21,6 +21,7 @@ export class RoundRunningHandlers implements IMultipleHandlers {
 
     stopRunner() {
         clearInterval(this.runnerId);
+        this.roundTimeStore.resetRoundTimeStore();
     }
 
     eventHandleList = [

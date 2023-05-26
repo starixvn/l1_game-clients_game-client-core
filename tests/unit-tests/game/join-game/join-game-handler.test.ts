@@ -25,7 +25,7 @@ describe("JoinGameHandler", () => {
         connectStore.initBaseListener = jest.fn();
         connection = new ConnectionHandlers.ConnectHandler(connectStore, siteConfigs, gameSettings);
         roundStore = new RoundStore(gameConfigStore, playerStore);
-        handler = new JoinGameHandler(connection, roundStore, roundTimeStore);
+        handler = new JoinGameHandler(connection, roundStore);
     });
 
     afterEach(() => {

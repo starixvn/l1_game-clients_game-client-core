@@ -30,8 +30,8 @@ describe("BetStore test", () => {
 
     test("should set and get the lastReceivedBet value correctly", () => {
         const betStore = new BetStore();
-        const bet = 100;
+        const bet = { value: 100 };
         betStore.lastReceivedBet = bet;
-        expect(betStore.lastReceivedBet).toBe(bet);
+        expect(betStore.lastReceivedBet).toStrictEqual(bet);
     });
 });

@@ -6,6 +6,10 @@ export interface IStakeLevel {
     maxBet: number;
 }
 
+export interface ILastReceivedBet {
+    value: number;
+}
+
 @injectable()
 export class BetStore {
     constructor() {
@@ -23,14 +27,14 @@ export class BetStore {
         this._amount = amount;
     }
 
-    private _lastReceivedBet = 0;
+    private _lastReceivedBet: ILastReceivedBet = null;
     isProcessingBet = false;
 
     get lastReceivedBet() {
         return this._lastReceivedBet;
     }
 
-    set lastReceivedBet(lastReceivedBet: number) {
+    set lastReceivedBet(lastReceivedBet: ILastReceivedBet) {
         this._lastReceivedBet = lastReceivedBet;
     }
 }

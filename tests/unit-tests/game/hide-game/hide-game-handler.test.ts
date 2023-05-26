@@ -20,7 +20,7 @@ describe("HideGameHandler", () => {
         roundTimeStore = stub<RoundTimeStore>();
         connectStore = new ConnectionStore(new Mediator(), gameSetting);
         roundRunning = new RoundRunningHandlers(roundTimeStore, gameSetting);
-        handler = new HideGameHandler(roundRunning, connectStore, roundTimeStore);
+        handler = new HideGameHandler(roundRunning, connectStore);
     });
 
     afterEach(() => {
@@ -31,7 +31,6 @@ describe("HideGameHandler", () => {
         it("should resetRoundTimeStore the round runner, round time store and disconnect store", async () => {
             // Arrange
             roundRunning.stopRunner = jest.fn();
-            roundTimeStore.resetRoundTimeStore = jest.fn();
             connectStore.onDisconnected = jest.fn();
 
             // Act
@@ -39,7 +38,6 @@ describe("HideGameHandler", () => {
 
             // Assert
             expect(roundRunning.stopRunner).toHaveBeenCalledTimes(1);
-            expect(roundTimeStore.resetRoundTimeStore).toHaveBeenCalledTimes(1);
             expect(connectStore.onDisconnected).toHaveBeenCalledTimes(1);
         });
     });

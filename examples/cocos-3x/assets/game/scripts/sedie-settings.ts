@@ -12,6 +12,7 @@ export const settings = {
         generatingResult: 2,
         startRound: 1,
     },
+    numberOfRoundHistory: 100,
 };
 
 export const containerOptions: gc.IContainerOptions = {

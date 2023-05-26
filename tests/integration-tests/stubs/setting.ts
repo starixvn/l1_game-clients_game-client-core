@@ -8,6 +8,7 @@ export const gameSettings = {
         lockingBet: 5,
         placingBet: 30,
     },
+    numberOfRoundHistory: 100,
 };
 export const servicePort = 5002;
 

@@ -1,3 +1,4 @@
+import { stub } from "jest-auto-stub";
 import { GameSetting } from "../../../../src/game/game-configs";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
 import { GameServiceMessage } from "../../../../src/shared";
@@ -13,6 +14,7 @@ describe("RoundRunningHandlers", () => {
         gameSetting = new GameSetting();
         gameSetting.name = gameSettings.name;
         gameSetting.durations = gameSettings.durations;
+        roundTimeStore = stub<RoundTimeStore>();
         roundRunningHandlers = new RoundRunningHandlers(roundTimeStore, gameSetting);
     });
 
@@ -66,7 +68,6 @@ describe("RoundRunningHandlers", () => {
 
         it("should call countdown every second", () => {
             // Arrange
-            roundTimeStore = new RoundTimeStore(gameSetting);
             roundTimeStore.calculateRoundStatus = jest.fn();
             jest.spyOn(roundTimeStore, "countdown");
 
@@ -90,6 +91,7 @@ describe("RoundRunningHandlers", () => {
 
         // Assert
         expect(window.clearInterval).toHaveBeenCalledWith(roundRunningHandlers.runnerId);
+        expect(roundTimeStore.resetRoundTimeStore).toHaveBeenCalled();
     });
 
     describe("eventHandleList", () => {

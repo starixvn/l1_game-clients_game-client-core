@@ -8,7 +8,7 @@ export class BetResponseHandlers implements IMultipleHandlers {
 
     handleBetResponse(endBet: number) {
         this.betStore.isProcessingBet = false;
-        this.betStore.lastReceivedBet = endBet;
+        this.betStore.lastReceivedBet = { value: endBet };
     }
 
     eventHandleList = [
