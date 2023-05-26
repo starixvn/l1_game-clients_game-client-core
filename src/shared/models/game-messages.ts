@@ -63,16 +63,7 @@ export namespace GameServiceMessage {
     }
     export const remainingTime = "remainingTime";
     export const um = "um";
-    export class UmMessage {
-        "vi-VN": string;
-        "en-US": string;
-        "zh-CN": string;
-        "zh-TW": string;
-        "th-TH": string;
-        "id-ID": string;
 
-        static eventName = "um_message";
-    }
     export const roundId = "roundId";
     export type Odds = {
         [betChoice: string]: number;
@@ -232,9 +223,15 @@ export namespace NotificationServiceMessage {
         static eventName = "notifyKickedOut";
     }
 
-    export class DisableGame {
-        um_message: Array<string> = [];
-        static eventName = "message";
+    export class DisabledGameInfo {
+        "vi-VN": string;
+        "en-US": string;
+        "zh-CN": string;
+        "zh-TW": string;
+        "th-TH": string;
+        "id-ID": string;
+
+        static eventName = "um_message";
     }
     export const sessionTimeoutEventName = "notifyTimeout";
 }

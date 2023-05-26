@@ -5,23 +5,30 @@ import { StorageManager, localStorageKeys } from "../../shared/utils/storage-man
 import { ISessionInfo } from "../../auth";
 import { LocalizedUtils } from "../../shared/utils/localized-utils";
 import { AppHandlers } from "../../app/app-handlers";
+import { DisabledGameStore } from "./disabled-game-store";
 
 @injectable()
-export class DisableGameHandlers implements IHandler<GameServiceMessage.DisableGame> {
-    name = GameServiceMessage.DisableGame.eventName;
+export class DisableGameHandlers implements IHandler<GameServiceMessage.DisabledGameInfo> {
+    name = GameServiceMessage.DisabledGameInfo.eventName;
     constructor(
-        @inject(NoticeStore) protected readonly store: NoticeStore,
+        @inject(DisabledGameStore) protected readonly disabledGameStore: DisabledGameStore,
+        @inject(NoticeStore) protected readonly noticeStore: NoticeStore,
         @inject(AppHandlers.BackToOperatorLobby) protected readonly backToOperatorLobby: AppHandlers.BackToOperatorLobby
     ) {}
 
-    handle(disabledGameInfo: GameServiceMessage.DisableGame) {
+    handle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
+        if (this.disabledGameStore.disabled) {
+            return;
+        }
+
+        this.disabledGameStore.setGameStatus(true);
         const lang = (StorageManager.get(localStorageKeys.session) as ISessionInfo).language;
-        const message = disabledGameInfo?.um_message[lang] || "Under maintenance, please back later after 10 seconds";
-        this.store.addNotice({
+        const message = disabledGameInfo[lang] ?? "Under maintenance, please back later after 10 seconds";
+        this.noticeStore.addNotice({
             message,
             title: LocalizedUtils.getLocalizedText("Notice"),
             type: NoticeType.Error,
-            onClose: this.backToOperatorLobby.handle,
+            onClose: () => {}, //TO DO : this.backToOperatorLobby.handle,
         });
     }
 }

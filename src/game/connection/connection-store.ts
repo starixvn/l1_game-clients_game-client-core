@@ -44,19 +44,11 @@ export class ConnectionStore {
 
     onHandleData(event: string, data: any) {
         if (event?.toLocaleLowerCase() === this.gameSetting?.name.toLocaleLowerCase() || event?.toLocaleLowerCase() === "message") {
-            console.log(`event: ${event}, data: ${JSON.stringify(data)}`);
-            if (event?.toLocaleLowerCase() === "message" && data.um) {
-                this.mediator.emit(event, data);
-                return;
-            }
-
             Object.entries(data).forEach((entry) => {
                 const [key, value] = entry;
-                console.log(`event: ${key}`);
                 this.mediator.emit(key, value);
             });
         } else {
-            console.log(`event: ${event}`);
             this.mediator.emit(event, data);
         }
     }
