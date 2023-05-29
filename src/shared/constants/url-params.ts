@@ -7,4 +7,6 @@ export const URLParams = {
     appType: "appType",
     returnUrl: "rurl",
     ref: "ref",
+    musicEnable: "musicEnable",
+    sfxEnable: "sfxEnable",
 };

@@ -1,11 +1,11 @@
+import { io } from "socket.io-client/dist/socket.io.js";
 import { AppStore } from "../../../src/app/app-store";
 import { ConnectionStore } from "../../../src/game/connection";
 import { NotificationStore } from "../../../src/notification";
-import { GameServiceMessage, Mediator } from "../../../src/shared";
+import { Mediator, NotificationServiceMessage } from "../../../src/shared";
+import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 import { UnderMaintenanceHandler } from "../../../src/under-maintenance";
 import { gameSettings, siteConfigs } from "../container.test";
-import { io } from "socket.io-client/dist/socket.io.js";
-import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 
 jest.mock("mobx");
 jest.mock("socket.io-client/dist/socket.io.js", () => ({
@@ -19,7 +19,7 @@ jest.mock("../../../src/shared/utils/storage-manager", () => ({
     localStorageKeys: { session: "session-key" },
 }));
 
-const fakeUmInfo: GameServiceMessage.UnderMaintenanceInfo = {
+const fakeUmInfo: NotificationServiceMessage.UnderMaintenanceInfo = {
     message: "Game đang được bảo trì, vui lòng quay lại sau 10 phút.",
     umInfo: {
         isUM: true,

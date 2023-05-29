@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
-import { GameServiceMessage, Mediator } from "../../../src/shared";
 import { NotificationStore, events } from "../../../src/notification";
+import { Mediator, NotificationServiceMessage } from "../../../src/shared";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils";
 
 jest.mock("mobx");
@@ -129,10 +129,17 @@ describe("NotificationStore tests", () => {
     });
 
     describe("onHandleKickedOut", () => {
-        it("should call mediator emit with keys of payload when event equal game name", () => {
-            // arrange
+        it("should call  mediator emit with notification service session timeout when data is true", () => {
+            // assert
+            store.onHandleKickedOut(true);
 
-            const fakeUmInfo: GameServiceMessage.UnderMaintenanceInfo = {
+            // assert
+            expect(mediator.emit).toHaveBeenCalledWith(NotificationServiceMessage.sessionTimeoutEventName);
+        });
+
+        it("should call mediator emit with notification service um when data not type boolean", () => {
+            // arrange
+            const fakeUmInfo: NotificationServiceMessage.UnderMaintenanceInfo = {
                 message: "Game đang được bảo trì, vui lòng quay lại sau 10 phút.",
                 umInfo: {
                     isUM: true,
@@ -146,7 +153,7 @@ describe("NotificationStore tests", () => {
             store.onHandleKickedOut(fakeUmInfo);
 
             // assert
-            expect(mediator.emit).toHaveBeenCalledWith(GameServiceMessage.UnderMaintenanceInfo.eventName, fakeUmInfo);
+            expect(mediator.emit).toHaveBeenCalledWith(NotificationServiceMessage.UnderMaintenanceInfo.eventName, fakeUmInfo);
         });
     });
 });

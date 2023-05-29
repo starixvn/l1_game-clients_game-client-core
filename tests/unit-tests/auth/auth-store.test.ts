@@ -6,7 +6,7 @@ const now = new Date("2023-01-01");
 jest.useFakeTimers().setSystemTime(now);
 jest.mock("../../../src/shared/utils/storage-manager", () => ({
     StorageManager: {},
-    localStorageKeys: { session: "session-key" },
+    localStorageKeys: { session: "session-key", directMode: "direct", returnUrl: "rurl" },
 }));
 
 describe("AuthStore tests", () => {
@@ -68,11 +68,13 @@ describe("AuthStore tests", () => {
     });
 
     describe("signOut", () => {
+        let store: AuthStore;
+        beforeEach(() => {
+            StorageManager.remove = jest.fn();
+            store = new AuthStore();
+        });
         it("should set reset username, session, isAuthenticated and set session timeout", () => {
             // arrange
-            // @ts-ignore
-            StorageManager.remove = jest.fn();
-            const store = new AuthStore();
             store.isAuthenticated = true;
             store.username = "username";
             store.session = "session";
@@ -87,11 +89,6 @@ describe("AuthStore tests", () => {
         });
 
         it("should call remove StorageManager", async () => {
-            // arrange
-            // @ts-ignore
-            StorageManager.remove = jest.fn();
-            const store = new AuthStore();
-
             // act
             store.signOut();
 

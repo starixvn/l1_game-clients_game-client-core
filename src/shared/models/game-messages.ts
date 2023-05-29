@@ -216,7 +216,9 @@ export namespace GameServiceMessage {
     export const spb = "spb";
     export const snr = "snr";
     export const epb = "epb";
+}
 
+export namespace NotificationServiceMessage {
     class UMInfo {
         isUM: boolean;
         operatorId: string;
@@ -226,6 +228,7 @@ export namespace GameServiceMessage {
     export class UnderMaintenanceInfo {
         message: string;
         umInfo: UMInfo;
-        static eventName = "kickedOut";
+        static eventName = "notifyKickedOut";
     }
+    export const sessionTimeoutEventName = "notifyTimeout";
 }

@@ -20,7 +20,7 @@ jest.mock("../../../src/shared/utils/storage-manager", () => ({
         set: jest.fn(),
         remove: jest.fn(),
     },
-    localStorageKeys: { session: "session-key" },
+    localStorageKeys: { session: "session-key", soundSetting: "sound-key" },
 }));
 
 let notificationServiceHandler: NotificationHandlers;
@@ -322,10 +322,8 @@ describe("AuthHandlers tests", () => {
         });
     });
 
-    describe("SessionTimeout", () => {
+    describe("ClearRecheckInInterval", () => {
         let reCheckIn: AuthHandlers.ReCheckIn;
-        const mockSession = "mockSession";
-        const mockUsername = "mockUsername";
         const siteConfigs = {
             isDev: true,
             systemType: "SC1",
@@ -350,7 +348,7 @@ describe("AuthHandlers tests", () => {
         let triggerRecheckIn: AuthHandlers.TriggerRecheckIn;
         let userService: UserService;
         let player: PlayerStore;
-        let sessionTimeout: AuthHandlers.SessionTimeout;
+        let handler: AuthHandlers.ClearRecheckInInterval;
         let signOut: AuthHandlers.SignOut;
         let appStore: AppStore;
 
@@ -362,7 +360,7 @@ describe("AuthHandlers tests", () => {
             signOut = new AuthHandlers.SignOut(appStore, authStore);
             reCheckIn = new AuthHandlers.ReCheckIn(authStore, player, userService, signOut);
             triggerRecheckIn = new AuthHandlers.TriggerRecheckIn(reCheckIn, signOut);
-            sessionTimeout = new AuthHandlers.SessionTimeout(triggerRecheckIn);
+            handler = new AuthHandlers.ClearRecheckInInterval(triggerRecheckIn);
         });
 
         afterEach(() => {
@@ -376,7 +374,7 @@ describe("AuthHandlers tests", () => {
         test("handle clears interval and removes session from local storage", () => {
             const clearIntervalSpy = jest.spyOn(AuthHandlers.TriggerRecheckIn.prototype, "clearInterval");
             StorageManager.remove = jest.fn();
-            sessionTimeout.handle();
+            handler.handle();
 
             expect(clearIntervalSpy).toHaveBeenCalledTimes(1);
             expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.session);
@@ -513,18 +511,19 @@ describe("AuthHandlers tests", () => {
 
         describe("when url params has params", () => {
             const urlParams = new URLSearchParams("params=test");
+            const decodedParams = "ss=session&uname=username&sfxEnable=false";
             beforeEach(() => {
                 // @ts-ignore
                 StorageManager.get.mockReturnValueOnce(undefined);
                 // @ts-ignore
-                GameUtils.base64Decode.mockReturnValueOnce("ss=session&uname=username");
+                GameUtils.base64Decode.mockReturnValueOnce(decodedParams);
                 // @ts-ignore
                 authStore.getSessionInfo.mockReturnValueOnce({ session: "session" });
             });
 
             it("should set store into auth store from url params", async () => {
                 // arrange
-                const urlSearchParams = new URLSearchParams("ss=session&uname=username");
+                const urlSearchParams = new URLSearchParams(decodedParams);
 
                 // act
                 await ssoHandler.handle(urlParams);
@@ -535,7 +534,7 @@ describe("AuthHandlers tests", () => {
 
             it("should set url store into app store", async () => {
                 // arrange
-                const urlSearchParams = new URLSearchParams("ss=session&uname=username");
+                const urlSearchParams = new URLSearchParams(decodedParams);
 
                 // act
                 await ssoHandler.handle(urlParams);
@@ -569,6 +568,14 @@ describe("AuthHandlers tests", () => {
 
                 // assert
                 expect(appStore.saveReturnUrl).toHaveBeenCalled();
+            });
+
+            it("should save sound settings in storage", async () => {
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.soundSetting, { musicEnable: true, sfxEnable: false });
             });
 
             it("should call authorize handler", async () => {

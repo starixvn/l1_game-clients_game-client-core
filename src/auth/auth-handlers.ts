@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
-import { NotificationHandlers } from "../notification";
+import { NotificationHandlers } from "../notification/notification-handlers";
 import { PlayerStore } from "../players";
 import { GameServiceMessage, IHandler } from "../shared";
 import { AppTypes } from "../shared/constants/app-type";
@@ -147,18 +147,25 @@ export namespace AuthHandlers {
             const urlSearchParams = new URLSearchParams(params);
             this.authStore.setAuthStoreFromUrlParam(urlSearchParams);
             this.appStore.setURLStore(urlSearchParams);
-            this.saveDataInStorage();
+            this.saveDataInStorage(urlSearchParams);
             const session = urlSearchParams.get(URLParams.session);
             const username = urlSearchParams.get(URLParams.username);
             await this.handleAuthorize(session, username);
         }
 
-        private saveDataInStorage() {
+        private saveDataInStorage(urlParams?: URLSearchParams) {
             StorageManager.set(localStorageKeys.session, this.authStore.getSessionInfo());
             if (this.appStore.isDirectMode) {
                 this.appStore.saveDirectModeInfo();
             }
             this.appStore.saveReturnUrl();
+            if (urlParams) {
+                const soundSetting = {
+                    musicEnable: urlParams.has(URLParams.musicEnable) ? urlParams.get(URLParams.musicEnable) === "true" : true,
+                    sfxEnable: urlParams.has(URLParams.sfxEnable) ? urlParams.get(URLParams.sfxEnable) === "true" : true,
+                };
+                StorageManager.set(localStorageKeys.soundSetting, soundSetting);
+            }
         }
 
         private async handleAuthorize(session?: string, username?: string) {
@@ -279,7 +286,7 @@ export namespace AuthHandlers {
     }
 
     @injectable()
-    export class SessionTimeout implements IHandler<void> {
+    export class ClearRecheckInInterval implements IHandler<void> {
         constructor(@inject(TriggerRecheckIn) private readonly triggerRecheckIn: TriggerRecheckIn) {}
 
         handle() {

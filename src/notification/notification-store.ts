@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { Socket } from "socket.io-client/dist/socket.io.js";
-import { GameServiceMessage, Mediator } from "../shared";
+import { Mediator, NotificationServiceMessage } from "../shared";
 import { SocketEvents } from "../shared/constants/socket-event";
 
 export const events = {
@@ -37,8 +37,12 @@ export class NotificationStore {
         this.connection.on(events.kickedOut, this.onHandleKickedOut.bind(this));
     }
 
-    onHandleKickedOut(data: GameServiceMessage.UnderMaintenanceInfo) {
-        this.mediator.emit(GameServiceMessage.UnderMaintenanceInfo.eventName, data);
+    onHandleKickedOut(data: boolean | NotificationServiceMessage.UnderMaintenanceInfo) {
+        if (typeof data === "boolean") {
+            data && this.mediator.emit(NotificationServiceMessage.sessionTimeoutEventName);
+        } else {
+            this.mediator.emit(NotificationServiceMessage.UnderMaintenanceInfo.eventName, data);
+        }
     }
 
     onConnectFailed() {

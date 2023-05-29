@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
-import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
-import { GameServiceMessage, IHandler } from "../shared";
 import { AppStore } from "../app";
+import { SiteConfigs } from "../configs";
 import { ConnectionStore } from "../game/connection";
 import { NotificationStore } from "../notification";
-import { SiteConfigs } from "../configs";
+import { IHandler, NotificationServiceMessage } from "../shared";
+import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
 
 @injectable()
-export class UnderMaintenanceHandler implements IHandler<GameServiceMessage.UnderMaintenanceInfo> {
-    name = GameServiceMessage.UnderMaintenanceInfo.eventName;
+export class UnderMaintenanceHandler implements IHandler<NotificationServiceMessage.UnderMaintenanceInfo> {
+    name = NotificationServiceMessage.UnderMaintenanceInfo.eventName;
     constructor(
         @inject(AppStore) protected readonly appStore: AppStore,
         @inject(ConnectionStore) protected readonly connectionStore: ConnectionStore,
@@ -16,7 +16,7 @@ export class UnderMaintenanceHandler implements IHandler<GameServiceMessage.Unde
         @inject(SiteConfigs) protected readonly siteConfigs: SiteConfigs
     ) {}
 
-    handle(underMaintenanceInfo: GameServiceMessage.UnderMaintenanceInfo) {
+    handle(underMaintenanceInfo: NotificationServiceMessage.UnderMaintenanceInfo) {
         this.appStore.setUM(underMaintenanceInfo.umInfo);
         this.notificationStore.connection.disconnect();
         this.connectionStore.connection.disconnect();
