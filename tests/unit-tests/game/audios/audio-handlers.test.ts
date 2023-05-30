@@ -1,5 +1,7 @@
+import lodash from "lodash";
 import { AudioAction, AudioHandler, AudioStore, MusicState } from "./../../../../src/game/audios";
 import { UserSettingStore } from "./../../../../src/game/user-settings";
+jest.unmock("lodash");
 describe("AudioHandler", () => {
     let audioStore: AudioStore;
     let userSettingsStore: UserSettingStore;
@@ -117,6 +119,60 @@ describe("AudioHandler", () => {
 
             // Assert
             expect(audioStore.startMusicPlayer).toEqual(userSettingsStore.musicEnable);
+        });
+    });
+
+    describe("playRandomMusic", () => {
+        beforeEach(() => {
+            audioHandler.playMusic = jest.fn();
+        });
+
+        it("should do nothing if musicIds array is empty", () => {
+            // Arrange
+            audioStore.musicIds = [];
+
+            // Act
+            audioHandler.playRandomMusic();
+
+            // Assert
+            expect(audioHandler.playMusic).not.toHaveBeenCalled();
+        });
+
+        it("should call playMusic with the only available music id", () => {
+            // Arrange
+            audioStore.musicIds = ["id1"];
+
+            // Act
+            audioHandler.playRandomMusic();
+
+            // Assert
+            expect(audioHandler.playMusic).toHaveBeenCalledWith("id1");
+        });
+
+        it("should call playMusic with a random music id", () => {
+            // Arrange
+            audioStore.musicIds = ["id1", "id2"];
+            const randomValue = 1;
+            lodash.random = jest.fn(() => randomValue);
+
+            // Act
+            audioHandler.playRandomMusic();
+
+            // Assert
+            expect(audioHandler.playMusic).toHaveBeenCalledWith(audioStore.musicIds[randomValue]);
+        });
+
+        it("should call  random with correct param", () => {
+            // Arrange
+            audioStore.musicIds = ["id1", "id2", "id3", "id4"];
+            const randomValue = 1;
+            lodash.random = jest.fn().mockImplementation(() => randomValue);
+
+            // Act
+            audioHandler.playRandomMusic();
+
+            // Assert
+            expect(lodash.random).toHaveBeenCalledWith(audioStore.musicIds.length - 1);
         });
     });
 });
