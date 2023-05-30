@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { IHandler, NotificationServiceMessage } from "../../shared";
+import { GameServiceMessage, IHandler } from "../../shared";
 import { NoticeStore, NoticeType } from "../notices";
 import { AuthStore } from "../../auth";
 import { LocalizedUtils } from "../../shared/utils/localized-utils";
@@ -10,8 +10,8 @@ import { ConnectionStore } from "../connection/connection-store";
 
 export const defaultDisabledMessage = "Under maintenance, please back later after 10 seconds";
 @injectable()
-export class DisableGameHandlers implements IHandler<NotificationServiceMessage.DisabledGameInfo> {
-    name = NotificationServiceMessage.DisabledGameInfo.eventName;
+export class DisableGameHandlers implements IHandler<GameServiceMessage.DisabledGameInfo> {
+    name = GameServiceMessage.DisabledGameInfo.eventName;
 
     constructor(
         @inject(ConnectionStore) protected readonly connectionStore: ConnectionStore,
@@ -25,11 +25,11 @@ export class DisableGameHandlers implements IHandler<NotificationServiceMessage.
     }
 
     onClosedHandle() {
-        this.connectionStore.connection.disconnect();
+        this.connectionStore.onDisconnected();
         this.backToOperatorLobby.handle();
     }
 
-    handle(disabledGameInfo: NotificationServiceMessage.DisabledGameInfo) {
+    handle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
         if (!this.disabledGameStore.disabled && this.roundTimeStore.isShowDisabledGameMessage) {
             this.disabledGameStore.setGameStatus(true);
             this.noticeStore.addNotice({

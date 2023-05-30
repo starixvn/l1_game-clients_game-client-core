@@ -207,6 +207,17 @@ export namespace GameServiceMessage {
     export const spb = "spb";
     export const snr = "snr";
     export const epb = "epb";
+
+    export class DisabledGameInfo {
+        "vi-VN": string;
+        "en-US": string;
+        "zh-CN": string;
+        "zh-TW": string;
+        "th-TH": string;
+        "id-ID": string;
+
+        static eventName = "um_message";
+    }
 }
 
 export namespace NotificationServiceMessage {
@@ -223,15 +234,5 @@ export namespace NotificationServiceMessage {
         static eventName = "notifyKickedOut";
     }
 
-    export class DisabledGameInfo {
-        "vi-VN": string;
-        "en-US": string;
-        "zh-CN": string;
-        "zh-TW": string;
-        "th-TH": string;
-        "id-ID": string;
-
-        static eventName = "um_message";
-    }
     export const sessionTimeoutEventName = "notifyTimeout";
 }

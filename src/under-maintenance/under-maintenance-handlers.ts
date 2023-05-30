@@ -18,8 +18,8 @@ export class UnderMaintenanceHandler implements IHandler<NotificationServiceMess
 
     handle(underMaintenanceInfo: NotificationServiceMessage.UnderMaintenanceInfo) {
         this.appStore.setUM(underMaintenanceInfo.umInfo);
-        this.notificationStore.connection.disconnect();
-        this.connectionStore.connection.disconnect();
+        this.notificationStore.onDisconnected();
+        this.connectionStore.onDisconnected();
         StorageManager.remove(localStorageKeys.session);
     }
 }

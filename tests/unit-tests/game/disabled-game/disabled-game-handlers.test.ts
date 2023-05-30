@@ -1,5 +1,5 @@
 import { AppStore } from "../../../../src/app/app-store";
-import { Mediator, NotificationServiceMessage } from "../../../../src/shared";
+import { GameServiceMessage, Mediator } from "../../../../src/shared";
 import { DisableGameHandlers, DisabledGameStore, defaultDisabledMessage } from "../../../../src/game/disabled-game";
 import { NoticeStore, NoticeType } from "../../../../src/game/notices";
 import { AppHandlers } from "../../../../src/app";
@@ -7,13 +7,6 @@ import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
 import { gameSettings } from "../../container.test";
 import { AuthStore } from "../../../../src/auth/auth-store";
 import { ConnectionStore } from "../../../../src/game/connection";
-import { io } from "socket.io-client";
-
-jest.mock("mobx");
-
-jest.mock("socket.io-client", () => ({
-    io: jest.fn().mockReturnValue({ on: jest.fn() }),
-}));
 
 jest.mock("../../../../src/shared/utils/localized-utils", () => {
     return {
@@ -24,7 +17,7 @@ jest.mock("../../../../src/shared/utils/localized-utils", () => {
 });
 
 describe("DisableGameHandlers tests", () => {
-    const fakeDisabledGameInfo: NotificationServiceMessage.DisabledGameInfo = {
+    const fakeDisabledGameInfo: GameServiceMessage.DisabledGameInfo = {
         "vi-VN": "",
         "en-US": "Fake disabled game message",
         "zh-CN": "",
@@ -58,11 +51,9 @@ describe("DisableGameHandlers tests", () => {
     describe("onClosedHandle", () => {
         describe("when already disable game", () => {
             it("should disconnect socket and back to lobby", () => {
-                // arrange
-                connectionStore.connection = io("", {});
-                connectionStore.connection.disconnect = jest.fn();
-
+                connectionStore.onDisconnected = jest.fn();
                 backToOperatorLobby.handle = jest.fn();
+
                 handler = new DisableGameHandlers(
                     connectionStore,
                     authStore,
@@ -76,7 +67,7 @@ describe("DisableGameHandlers tests", () => {
                 handler.onClosedHandle();
 
                 // assert
-                expect(connectionStore.connection.disconnect).toBeCalledTimes(1);
+                expect(connectionStore.onDisconnected).toBeCalledTimes(1);
                 expect(backToOperatorLobby.handle).toBeCalledTimes(1);
             });
         });

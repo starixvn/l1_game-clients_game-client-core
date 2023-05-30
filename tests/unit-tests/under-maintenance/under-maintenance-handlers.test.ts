@@ -1,4 +1,3 @@
-import { io } from "socket.io-client/dist/socket.io.js";
 import { AppStore } from "../../../src/app/app-store";
 import { ConnectionStore } from "../../../src/game/connection";
 import { NotificationStore } from "../../../src/notification";
@@ -7,10 +6,6 @@ import { StorageManager, localStorageKeys } from "../../../src/shared/utils/stor
 import { UnderMaintenanceHandler } from "../../../src/under-maintenance";
 import { gameSettings, siteConfigs } from "../container.test";
 
-jest.mock("mobx");
-jest.mock("socket.io-client/dist/socket.io.js", () => ({
-    io: jest.fn().mockReturnValue({ on: jest.fn(), connect: jest.fn(), disconnect: jest.fn() }),
-}));
 jest.mock("../../../src/shared/utils/storage-manager", () => ({
     StorageManager: {
         get: jest.fn(),
@@ -33,10 +28,10 @@ const appStore = new AppStore();
 appStore.setUM = jest.fn();
 
 const connectionStore = new ConnectionStore(new Mediator(), gameSettings);
-connectionStore.connection = io("");
+connectionStore.onDisconnected = jest.fn();
 
 const notificationStore = new NotificationStore(new Mediator());
-notificationStore.connection = io("");
+notificationStore.onDisconnected = jest.fn();
 
 let handler: UnderMaintenanceHandler;
 
@@ -58,12 +53,12 @@ describe("UnderMaintenanceHandler tests", () => {
 
             it("should disconnect notification service. ", () => {
                 // assert
-                expect(notificationStore.connection.disconnect).toHaveBeenCalled();
+                expect(notificationStore.onDisconnected).toHaveBeenCalled();
             });
 
             it("should disconnect game service.", () => {
                 // assert
-                expect(connectionStore.connection.disconnect).toHaveBeenCalled();
+                expect(connectionStore.onDisconnected).toHaveBeenCalled();
             });
 
             it("should clear session.", () => {

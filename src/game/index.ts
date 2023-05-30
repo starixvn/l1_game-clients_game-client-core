@@ -11,5 +11,5 @@ export * as Orientation from "./orientation";
 export * as RoundHistories from "./round-histories";
 export * as Rounds from "./rounds";
 export * as Settlements from "./settlements";
-export * as DisadbledGame from "./disabled-game";
+export * as DisabledGame from "./disabled-game";
 export * as UserSettings from "./user-settings";
