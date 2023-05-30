@@ -116,6 +116,14 @@ export class RoundTimeStore {
         return this.roundState === ROUND_STATE.STOP_GAME_LOOP;
     }
 
+    get isShowDisabledGameMessage() {
+        return this._roundTime <= this.placingBet;
+    }
+
+    resetRoundTime() {
+        this._roundTime = this.wholeRound;
+    }
+
     setRoundTimeSetting(setting: RoundTimeSetting) {
         this.wholeRound = setting.wholeRound;
         this.placingBet = setting.placingBet;

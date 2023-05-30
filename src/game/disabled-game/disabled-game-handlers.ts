@@ -1,34 +1,43 @@
 import { inject, injectable } from "inversify";
-import { GameServiceMessage, IHandler } from "../../shared";
+import { IHandler, NotificationServiceMessage } from "../../shared";
 import { NoticeStore, NoticeType } from "../notices";
-import { StorageManager, localStorageKeys } from "../../shared/utils/storage-manager";
-import { ISessionInfo } from "../../auth";
+import { AuthStore } from "../../auth";
 import { LocalizedUtils } from "../../shared/utils/localized-utils";
 import { AppHandlers } from "../../app/app-handlers";
 import { DisabledGameStore } from "./disabled-game-store";
+import { RoundTimeStore } from "../rounds/round-time-store";
+import { ConnectionStore } from "../connection/connection-store";
 
+export const defaultDisabledMessage = "Under maintenance, please back later after 10 seconds";
 @injectable()
-export class DisableGameHandlers implements IHandler<GameServiceMessage.DisabledGameInfo> {
-    name = GameServiceMessage.DisabledGameInfo.eventName;
+export class DisableGameHandlers implements IHandler<NotificationServiceMessage.DisabledGameInfo> {
+    name = NotificationServiceMessage.DisabledGameInfo.eventName;
+
     constructor(
+        @inject(ConnectionStore) protected readonly connectionStore: ConnectionStore,
+        @inject(AuthStore) protected readonly authStore: AuthStore,
+        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(DisabledGameStore) protected readonly disabledGameStore: DisabledGameStore,
         @inject(NoticeStore) protected readonly noticeStore: NoticeStore,
         @inject(AppHandlers.BackToOperatorLobby) protected readonly backToOperatorLobby: AppHandlers.BackToOperatorLobby
-    ) {}
+    ) {
+        this.onClosedHandle = this.onClosedHandle.bind(this);
+    }
 
-    handle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
-        if (this.disabledGameStore.disabled) {
-            return;
+    onClosedHandle() {
+        this.connectionStore.connection.disconnect();
+        this.backToOperatorLobby.handle();
+    }
+
+    handle(disabledGameInfo: NotificationServiceMessage.DisabledGameInfo) {
+        if (!this.disabledGameStore.disabled && this.roundTimeStore.isShowDisabledGameMessage) {
+            this.disabledGameStore.setGameStatus(true);
+            this.noticeStore.addNotice({
+                message: disabledGameInfo[this.authStore.language] ?? defaultDisabledMessage,
+                title: LocalizedUtils.getLocalizedText("Notice"),
+                type: NoticeType.Error,
+                onClose: this.onClosedHandle,
+            });
         }
-
-        this.disabledGameStore.setGameStatus(true);
-        const lang = (StorageManager.get(localStorageKeys.session) as ISessionInfo).language;
-        const message = disabledGameInfo[lang] ?? "Under maintenance, please back later after 10 seconds";
-        this.noticeStore.addNotice({
-            message,
-            title: LocalizedUtils.getLocalizedText("Notice"),
-            type: NoticeType.Error,
-            onClose: () => {}, //TO DO : this.backToOperatorLobby.handle,
-        });
     }
 }
