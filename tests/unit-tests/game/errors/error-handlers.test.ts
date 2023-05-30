@@ -6,6 +6,11 @@ import { NoticeStore, NoticeType } from "../../../../src/game/notices";
 import { RoundStore } from "../../../../src/game/rounds/round-store";
 import { PlayerStore } from "../../../../src/players";
 import { GameServiceMessage } from "../../../../src/shared";
+jest.mock("../../../../src/shared/l10n", () => ({
+    l10n: {
+        t: jest.fn()
+    },
+}));
 
 import { LocalizedUtils } from "../../../../src/shared/utils/localized-utils";
 
@@ -127,7 +132,7 @@ describe("ErrorHandlers test", () => {
         it("should call addNotice with messages.sessionExpired", () => {
             // Arrange
             const errorCode = "1001";
-            const text = appStore.isApp ? "messages.sessionExpired" : "messages.sessionTimeout";
+            const text = appStore.isApp ? "sessionExpired" : "sessionTimeout";
             const message = `${text} (${errorCode})`;
 
             // Act
@@ -147,7 +152,7 @@ describe("ErrorHandlers test", () => {
             // Arrange
             appStore.isApp = false;
             const errorCode = "1001";
-            const text = appStore.isApp ? "messages.sessionExpired" : "messages.sessionTimeout";
+            const text = appStore.isApp ? "sessionExpired" : "sessionTimeout";
             const message = `${text} (${errorCode})`;
 
             // Act

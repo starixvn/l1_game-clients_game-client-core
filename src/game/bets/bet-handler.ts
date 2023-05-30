@@ -7,7 +7,7 @@ import { NoticeStore } from "../notices";
 import { OrientationStore } from "../orientation";
 import { ROUND_STATE, RoundTimeStore } from "../rounds";
 import { BetStore } from "./bet-store";
-import { l10n } from "../../shared";
+import { l10n } from "../../shared/l10n";
 
 @injectable()
 export class BetHandler {

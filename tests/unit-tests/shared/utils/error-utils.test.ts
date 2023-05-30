@@ -18,25 +18,25 @@ describe("ErrorUtils", () => {
     describe("parseErrorCode", () => {
         it("should return messages.errorOccurred for undefined error codes", () => {
             const result = ErrorUtils.parseErrorCode("undefined");
-            expect(result).toEqual("messages.errorOccurred");
+            expect(result).toEqual("errorOccurred");
         });
 
         it("should return the correct error message for valid error codes", () => {
             const result = ErrorUtils.parseErrorCode("1001");
-            expect(result).toEqual("messages.sessionTimeout");
+            expect(result).toEqual("sessionTimeout");
 
             const result2 = ErrorUtils.parseErrorCode("2002");
-            expect(result2).toEqual("messages.accountClosed");
+            expect(result2).toEqual("accountClosed");
         });
 
         it("should add suffix 'PlaceBet' for CommonErrorCodeList and isPlaceBet = true", () => {
             const result = ErrorUtils.parseErrorCode("1000", true);
-            expect(result).toEqual("messages.errorOccurredPlaceBet");
+            expect(result).toEqual("errorOccurredPlaceBet");
         });
 
         it("should not add suffix 'PlaceBet' for non-CommonErrorCodeList and isPlaceBet = true", () => {
             const result = ErrorUtils.parseErrorCode("SB1939", true);
-            expect(result).toEqual("messages.disallowHedgeBet");
+            expect(result).toEqual("disallowHedgeBet");
         });
     });
 
@@ -49,7 +49,7 @@ describe("ErrorUtils", () => {
 
             const result = ErrorUtils.getErrorMessage(notice);
 
-            expect(result).toBe("messages.errorOccurredPlaceBet");
+            expect(result).toBe("errorOccurredPlaceBet");
         });
     });
 

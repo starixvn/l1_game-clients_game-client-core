@@ -2,6 +2,11 @@ import { stub } from "jest-auto-stub";
 import { NoticeHandlers, NoticeStore } from "../../../../src/game/notices";
 import { RoundStore } from "../../../../src/game/rounds/round-store";
 import { GameServiceMessage } from "../../../../src/shared";
+jest.mock("../../../../src/shared/l10n", () => ({
+    l10n: {
+        t: jest.fn()
+    },
+}));
 
 describe("NoticeHandlers test", () => {
     let instance: NoticeHandlers;
