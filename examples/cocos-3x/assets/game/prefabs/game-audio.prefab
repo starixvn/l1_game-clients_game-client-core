@@ -187,7 +187,7 @@
     "propertyPath": [
       "namespaceObserver"
     ],
-    "value": "default"
+    "value": "SeDie"
   },
   {
     "__type__": "cc.TargetInfo",
@@ -203,7 +203,10 @@
     "propertyPath": [
       "audioConfig"
     ],
-    "value": null
+    "value": {
+      "__uuid__": "99851487-efe5-428b-ae71-bf1dd4b90cb7",
+      "__expectedType__": "cc.JsonAsset"
+    }
   },
   {
     "__type__": "CCPropertyOverrideInfo",
@@ -304,6 +307,7 @@
       "__id__": 0
     },
     "fileId": "c46/YsCPVOJYA4mWEpNYRx",
+    "instance": null,
     "targetOverrides": [
       {
         "__id__": 19
