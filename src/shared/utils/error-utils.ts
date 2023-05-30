@@ -110,7 +110,7 @@ export namespace ErrorUtils {
     export const parseErrorCode = (errorCode: string, isPlaceBet = false) => {
         if (!ErrorCodeDictionary[errorCode]) {
             console.warn(`NOT found error code ${errorCode}`);
-            return "messages.errorOccurred";
+            return "errorOccurred";
         }
 
         let suffix = "";
@@ -119,7 +119,7 @@ export namespace ErrorUtils {
         if (isCommonErrorCode && isPlaceBet) {
             suffix = "PlaceBet";
         }
-        return `messages.${errorKey}${suffix}`;
+        return `${errorKey}${suffix}`;
     };
 
     export const createOptionForHedgeBetGroup = (hedgeBetGroup: string[]) => {

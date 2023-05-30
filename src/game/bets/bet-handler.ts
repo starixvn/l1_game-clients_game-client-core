@@ -7,6 +7,7 @@ import { NoticeStore } from "../notices";
 import { OrientationStore } from "../orientation";
 import { ROUND_STATE, RoundTimeStore } from "../rounds";
 import { BetStore } from "./bet-store";
+import { l10n } from "../../shared";
 
 @injectable()
 export class BetHandler {
@@ -48,14 +49,14 @@ export class BetHandler {
     }
 
     showNoticePlaceBetFailure(freebetEnabled: boolean) {
-        const message = freebetEnabled ? "Not enough Scoin to place bet." : "Your account has insufficient funds.";
+        const message = freebetEnabled ? l10n.t("notEnoughScoin") : l10n.t("userInsufficientFund");
         this.noticeStore.addWarning(message);
     }
 
     clearBet() {}
 
     showWarningProcessingBet() {
-        this.noticeStore.addWarning("Data are being processed. Please wait...");
+        this.noticeStore.addWarning(l10n.t("dataProcessing"));
     }
 
     isInPhasePreventBet() {
@@ -64,11 +65,12 @@ export class BetHandler {
             const warningMsg =
                 this.roundTimeStore.roundState === ROUND_STATE.BEGIN_STARTING_ROUND ||
                 this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND
-                    ? "Cannot bet at the moment. Please wait for a few seconds."
-                    : "Please wait for the next round.";
+                    ? l10n.t("cannotPlaceBet")
+                    : l10n.t("placeBetNextRound");
 
-            this.noticeStore.addWarning(warningMsg);
+            this.noticeStore.addWarning(warningMsg);            
         }
+
         return !isBetPhase;
     }
 }

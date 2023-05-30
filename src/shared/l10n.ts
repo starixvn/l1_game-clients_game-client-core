@@ -4,7 +4,7 @@ declare global {
 }
 
 export const l10n = {
-    t: (key: string) => {
-        return window.l10n.t(key);
+    t: (key: string, option?: any) => {
+        return window.l10n.t(key, option);
     }
 }

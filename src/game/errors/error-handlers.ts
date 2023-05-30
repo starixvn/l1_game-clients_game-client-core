@@ -24,7 +24,7 @@ export class ErrorHandlers implements IMultipleHandlers {
     ) {}
 
     showMessageForExpiredToken(errorCode: string) {
-        const key = this.appStore.isApp ? "messages.sessionExpired" : "messages.sessionTimeout";
+        const key = this.appStore.isApp ? "sessionExpired" : "sessionTimeout";
         const text = LocalizedUtils.getLocalizedText(key);
         const message = `${text} (${errorCode})`;
 
