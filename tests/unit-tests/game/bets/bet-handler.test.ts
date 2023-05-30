@@ -6,7 +6,7 @@ import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
 import { gameSettings } from "../../container.test";
 import { ConnectionStore } from "./../../../../src/game/connection";
 import { OrientationStore } from "./../../../../src/game/orientation";
-describe("BetHandler it", () => {
+describe("BetHandler", () => {
     let connectionStore: ConnectionStore;
     let betStore: BetStore;
     let playerStore: PlayerStore;
