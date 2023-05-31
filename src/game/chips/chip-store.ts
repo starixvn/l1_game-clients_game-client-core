@@ -37,5 +37,7 @@ export class ChipStore {
 
     resetChips() {
         this.chips = {};
+        this.playerChip = null;
+        this.ownChip = { betChoice: "", amount: 0 };
     }
 }

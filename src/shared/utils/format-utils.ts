@@ -4,17 +4,19 @@ export namespace FormatUtils {
     };
 
     const formatCommasReg = /\B(?=(\d{3})+(?!\d))/g;
-    export const numberWithCommas = (number, toFixed = 1, noZeroSuffix = true) => {
-        if (number) {
-            let trimZeroNumber;
-            if (noZeroSuffix) {
-                trimZeroNumber = `${+(+number).toFixed(toFixed)}`;
-            } else {
-                trimZeroNumber = (+number).toFixed(toFixed);
-            }
-            return trimZeroNumber.replace(formatCommasReg, ",");
+
+    export const numberWithCommas = (number: number, toFixed = 1, noZeroSuffix = true): string => {
+        if (!number) {
+            return "";
         }
 
-        return "0";
+        let trimZeroNumber: string;
+        if (noZeroSuffix) {
+            trimZeroNumber = (+number).toFixed(toFixed).replace(/\.0+$/, "");
+        } else {
+            trimZeroNumber = (+number).toFixed(toFixed);
+        }
+
+        return trimZeroNumber.replace(formatCommasReg, ",");
     };
 }

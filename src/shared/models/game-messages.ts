@@ -117,7 +117,7 @@ export namespace GameServiceMessage {
 
         static eventName = "ownChip";
     }
-    export class Outgame {
+    export class OutGame {
         playerId: string;
 
         static eventName = "outgame";
@@ -138,6 +138,12 @@ export namespace GameServiceMessage {
         type: boolean;
 
         static eventName = "player";
+    }
+
+    export class Players {
+        [playerId: string]: Player;
+
+        static eventName = "players";
     }
 
     export class ResultHash {
