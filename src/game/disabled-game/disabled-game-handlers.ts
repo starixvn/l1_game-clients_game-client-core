@@ -29,15 +29,32 @@ export class DisableGameHandlers implements IHandler<GameServiceMessage.Disabled
         this.backToOperatorLobby.handle();
     }
 
-    handle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
-        if (!this.disabledGameStore.disabled && this.roundTimeStore.isShowDisabledGameMessage) {
+    showPopupHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
+        this.disabledGameStore.setShowPopup(true);
+        this.noticeStore.addNotice({
+            message: disabledGameInfo[this.authStore.language] ?? defaultDisabledMessage,
+            title: LocalizedUtils.getLocalizedText("Notice"),
+            type: NoticeType.Error,
+            onClose: this.onClosedHandle,
+        });
+    }
+
+    inGameHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
+        if (this.disabledGameStore.disabled) {
+            if (!this.disabledGameStore.showPopup && this.roundTimeStore.isShowDisabledGameMessage) {
+                this.showPopupHandle(disabledGameInfo);
+            }
+        } else {
             this.disabledGameStore.setGameStatus(true);
-            this.noticeStore.addNotice({
-                message: disabledGameInfo[this.authStore.language] ?? defaultDisabledMessage,
-                title: LocalizedUtils.getLocalizedText("Notice"),
-                type: NoticeType.Error,
-                onClose: this.onClosedHandle,
-            });
+            this.roundTimeStore.resetRoundTime();
         }
+    }
+
+    joinGameHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
+        this.showPopupHandle(disabledGameInfo);
+    }
+
+    handle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
+        this.roundTimeStore.endRound ? this.inGameHandle(disabledGameInfo) : this.joinGameHandle(disabledGameInfo);
     }
 }

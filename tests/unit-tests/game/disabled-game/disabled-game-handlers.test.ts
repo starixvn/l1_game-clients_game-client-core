@@ -40,28 +40,26 @@ describe("DisableGameHandlers tests", () => {
         authStore = new AuthStore();
         disabledGameStore = new DisabledGameStore();
         disabledGameStore.setGameStatus = jest.fn();
+        disabledGameStore.setShowPopup = jest.fn();
 
         noticeStore = new NoticeStore();
         noticeStore.addNotice = jest.fn();
 
         roundTimeStore = new RoundTimeStore(gameSettings);
+        roundTimeStore.resetRoundTime = jest.fn();
+        roundTimeStore.startNewRound = true;
+
         backToOperatorLobby = new AppHandlers.BackToOperatorLobby(new AppStore());
+
+        handler = new DisableGameHandlers(connectionStore, authStore, roundTimeStore, disabledGameStore, noticeStore, backToOperatorLobby);
     });
 
     describe("onClosedHandle", () => {
         describe("when already disable game", () => {
             it("should disconnect socket and back to lobby", () => {
+                // arrange
                 connectionStore.onDisconnected = jest.fn();
                 backToOperatorLobby.handle = jest.fn();
-
-                handler = new DisableGameHandlers(
-                    connectionStore,
-                    authStore,
-                    roundTimeStore,
-                    disabledGameStore,
-                    noticeStore,
-                    backToOperatorLobby
-                );
 
                 // act
                 handler.onClosedHandle();
@@ -73,86 +71,133 @@ describe("DisableGameHandlers tests", () => {
         });
     });
 
-    describe("handle", () => {
-        describe("when already disable game", () => {
-            it("should not call stores", () => {
-                // arrange
-                disabledGameStore.disabled = true;
-                handler = new DisableGameHandlers(
-                    connectionStore,
-                    authStore,
-                    roundTimeStore,
-                    disabledGameStore,
-                    noticeStore,
-                    backToOperatorLobby
-                );
+    describe("showPopupHandle", () => {
+        const authStoreLangs = [
+            ["en-US", fakeDisabledGameInfo["en-US"]],
+            ["abc", defaultDisabledMessage],
+        ];
+        test.each(authStoreLangs)("should set disable game true and open popup.", (authStoreLang, expectedDisabledMessages) => {
+            // arrange
+            disabledGameStore.disabled = true;
+            authStore.language = authStoreLang;
 
-                // act
-                handler.handle(fakeDisabledGameInfo);
+            // act
+            handler.showPopupHandle(fakeDisabledGameInfo);
 
-                // assert
-                expect(disabledGameStore.setGameStatus).not.toHaveBeenCalled();
-                expect(noticeStore.addNotice).not.toHaveBeenCalled();
+            // assert
+            expect(disabledGameStore.setShowPopup).toBeCalledWith(true);
+            expect(noticeStore.addNotice).toHaveBeenCalledWith({
+                message: expectedDisabledMessages,
+                title: "Notice",
+                type: NoticeType.Error,
+                onClose: expect.any(Function),
+            });
+        });
+    });
+
+    describe("inGameHandle", () => {
+        describe("when game is already disabled ", () => {
+            describe("when popup is not show and run to next round", () => {
+                it("should show popup", () => {
+                    // arrange
+                    disabledGameStore.disabled = true;
+                    disabledGameStore.showPopup = false;
+                    roundTimeStore.placingBet = 36;
+                    roundTimeStore.roundTime = 33;
+
+                    handler.showPopupHandle = jest.fn();
+
+                    // act
+                    handler.inGameHandle(fakeDisabledGameInfo);
+
+                    // assert
+                    expect(handler.showPopupHandle).toHaveBeenCalled();
+                });
+            });
+
+            describe("when popup is already show  and run to next round", () => {
+                it("should not show popup", () => {
+                    // arrange
+                    disabledGameStore.disabled = true;
+                    disabledGameStore.showPopup = true;
+                    roundTimeStore.placingBet = 36;
+                    roundTimeStore.roundTime = 33;
+
+                    handler.showPopupHandle = jest.fn();
+
+                    // act
+                    handler.inGameHandle(fakeDisabledGameInfo);
+
+                    // assert
+                    expect(handler.showPopupHandle).not.toHaveBeenCalled();
+                });
+            });
+
+            describe("when  popup is not show  adnnot run to next round ", () => {
+                it("should not show popup", () => {
+                    // arrange
+                    disabledGameStore.disabled = true;
+                    disabledGameStore.showPopup = false;
+                    roundTimeStore.placingBet = 36;
+                    roundTimeStore.roundTime = 39;
+
+                    handler.showPopupHandle = jest.fn();
+
+                    // act
+                    handler.inGameHandle(fakeDisabledGameInfo);
+
+                    // assert
+                    expect(handler.showPopupHandle).not.toHaveBeenCalled();
+                });
             });
         });
 
-        describe("when ticket is still running in current round", () => {
-            it("should not call stores", () => {
-                // arrange
-                disabledGameStore.disabled = true;
-                roundTimeStore.placingBet = 36;
-                roundTimeStore.roundTime = 39;
-
-                handler = new DisableGameHandlers(
-                    connectionStore,
-                    authStore,
-                    roundTimeStore,
-                    disabledGameStore,
-                    noticeStore,
-                    backToOperatorLobby
-                );
-
-                // act
-                handler.handle(fakeDisabledGameInfo);
-
-                // assert
-                expect(disabledGameStore.setGameStatus).not.toHaveBeenCalled();
-                expect(noticeStore.addNotice).not.toHaveBeenCalled();
-            });
-        });
-
-        describe("when game runs to next round", () => {
-            const authStoreLangs = [
-                ["en-US", fakeDisabledGameInfo["en-US"]],
-                ["abc", defaultDisabledMessage],
-            ];
-            test.each(authStoreLangs)("should set disable game true and open popup.", (authStoreLang, expectedDisabledMessages) => {
+        describe("when game is enable ", () => {
+            it("should call stores", () => {
                 // arrange
                 disabledGameStore.disabled = false;
                 roundTimeStore.placingBet = 36;
-                roundTimeStore.roundTime = 33;
-                authStore.language = authStoreLang;
-                handler = new DisableGameHandlers(
-                    connectionStore,
-                    authStore,
-                    roundTimeStore,
-                    disabledGameStore,
-                    noticeStore,
-                    backToOperatorLobby
-                );
+                roundTimeStore.roundTime = 39;
 
                 // act
-                handler.handle(fakeDisabledGameInfo);
+                handler.inGameHandle(fakeDisabledGameInfo);
 
                 // assert
-                expect(disabledGameStore.setGameStatus).toBeCalledWith(true);
-                expect(noticeStore.addNotice).toHaveBeenCalledWith({
-                    message: expectedDisabledMessages,
-                    title: "Notice",
-                    type: NoticeType.Error,
-                    onClose: expect.any(Function),
-                });
+                expect(disabledGameStore.setGameStatus).toBeCalledTimes(1);
+                expect(roundTimeStore.resetRoundTime).toBeCalledTimes(1);
             });
+        });
+    });
+
+    describe("joinGameHandle", () => {
+        it("should show popup", () => {
+            // arrange
+            handler.showPopupHandle = jest.fn();
+
+            // act
+            handler.joinGameHandle(fakeDisabledGameInfo);
+
+            // assert
+            expect(handler.showPopupHandle).toHaveBeenCalled();
+        });
+    });
+
+    describe("handle", () => {
+        test.each([
+            [true, 1, 0],
+            [false, 0, 1],
+        ])("should call in game and join game handle correctly.", (endRound, expectedNumerousInGameCall, expectedNumerousJoinGameCall) => {
+            // arrange
+            roundTimeStore.endRound = endRound;
+            handler.inGameHandle = jest.fn();
+            handler.joinGameHandle = jest.fn();
+
+            // act
+            handler.handle(fakeDisabledGameInfo);
+
+            // assert
+            expect(handler.inGameHandle).toBeCalledTimes(expectedNumerousInGameCall);
+            expect(handler.joinGameHandle).toBeCalledTimes(expectedNumerousJoinGameCall);
         });
     });
 });
