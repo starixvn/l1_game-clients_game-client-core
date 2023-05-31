@@ -20,7 +20,7 @@ jest.mock("../../../src/shared/utils/storage-manager", () => ({
         set: jest.fn(),
         remove: jest.fn(),
     },
-    localStorageKeys: { session: "session-key", soundSetting: "sound-key" },
+    localStorageKeys: { session: "session-key", playerSetting: "setting-key" },
 }));
 
 let notificationServiceHandler: NotificationHandlers;
@@ -575,7 +575,7 @@ describe("AuthHandlers tests", () => {
                 await ssoHandler.handle(urlParams);
 
                 // assert
-                expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.soundSetting, { musicEnable: true, sfxEnable: false });
+                expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.playerSetting, { musicEnable: true, sfxEnable: false });
             });
 
             it("should call authorize handler", async () => {

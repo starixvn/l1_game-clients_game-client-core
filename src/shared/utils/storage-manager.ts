@@ -98,5 +98,5 @@ export const localStorageKeys = {
     session: "ss",
     directMode: "direct-mode",
     returnUrl: "rurl",
-    soundSetting: "sound-setting",
+    playerSetting: "player-setting",
 };

@@ -3,7 +3,7 @@ window.envConfig = {
     ssl: true,
     subDomain: "l1-proxy",
     env: "LOCAL",
-    sentry: "https://2af29bdacdbf4d9ba2db6600b450541f@sentry.lumigame.com/28",
+    sentryUrl: "https://2af29bdacdbf4d9ba2db6600b450541f@sentry.lumigame.com/28",
     subGuideDomain: "l1-guide",
     enableMsgpackParserAllGames: false,
     enableMsgpackParserOnNotification: false,

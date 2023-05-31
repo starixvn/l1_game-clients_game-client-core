@@ -1,10 +1,12 @@
 import { inject, injectable } from "inversify";
 import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
+import { UserSettingData } from "../game/user-settings/user-setting-store";
 import { NotificationHandlers } from "../notification/notification-handlers";
 import { PlayerStore } from "../players";
 import { GameServiceMessage, IHandler } from "../shared";
 import { AppTypes } from "../shared/constants/app-type";
 import { GameUtils } from "../shared/utils/game-utils";
+import { sentryLogger } from "../shared/utils/logger";
 import NameGenerator from "../shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
 import { AppStore } from "./../app/app-store";
@@ -45,19 +47,23 @@ export namespace AuthHandlers {
         ) {}
 
         async handle({ session = "", username = "" }) {
-            const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
-            this.session = session || sessionInfo?.session;
-            this.username = username || sessionInfo?.username;
-            const response = (await this.userService.authorize(this.session, this.username)) as IAuthorizeResponse;
-            if (response.isUM) {
-                this.appStore.setUM(response.umInfo);
-            } else {
-                if (response.isSuccessful !== undefined && !response.isSuccessful) {
-                    this.signOutHandler.handle();
+            try {
+                const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
+                this.session = session || sessionInfo?.session;
+                this.username = username || sessionInfo?.username;
+                const response = (await this.userService.authorize(this.session, this.username)) as IAuthorizeResponse;
+                if (response.isUM) {
+                    this.appStore.setUM(response.umInfo);
                 } else {
-                    await this.handleAuthorizedResponse(response);
-                    this.notificationHandlers.handle(sessionInfo);
+                    if (response.isSuccessful !== undefined && !response.isSuccessful) {
+                        this.signOutHandler.handle();
+                    } else {
+                        await this.handleAuthorizedResponse(response);
+                        this.notificationHandlers.handle(sessionInfo);
+                    }
                 }
+            } catch (err) {
+                sentryLogger.logError(err);
             }
         }
 
@@ -92,11 +98,15 @@ export namespace AuthHandlers {
         ) {}
 
         async handle(urlParams: URLSearchParams) {
-            if (!this.isValidSessionStorage(urlParams)) {
-                return;
-            }
+            try {
+                if (!this.isValidSessionStorage(urlParams)) {
+                    return;
+                }
 
-            await this.handleAuthorizeWithURLParams(urlParams);
+                await this.handleAuthorizeWithURLParams(urlParams);
+            } catch (err) {
+                sentryLogger.logError(err);
+            }
         }
 
         private isValidSessionStorage(urlParams: URLSearchParams) {
@@ -160,11 +170,11 @@ export namespace AuthHandlers {
             }
             this.appStore.saveReturnUrl();
             if (urlParams) {
-                const soundSetting = {
+                const playerSetting: UserSettingData = {
                     musicEnable: urlParams.has(URLParams.musicEnable) ? urlParams.get(URLParams.musicEnable) === "true" : true,
                     sfxEnable: urlParams.has(URLParams.sfxEnable) ? urlParams.get(URLParams.sfxEnable) === "true" : true,
                 };
-                StorageManager.set(localStorageKeys.soundSetting, soundSetting);
+                StorageManager.set(localStorageKeys.playerSetting, playerSetting);
             }
         }
 
@@ -248,13 +258,17 @@ export namespace AuthHandlers {
         }
 
         private async handleRecheckIn() {
-            const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
-            const isSessionExpired = verifySession(sessionInfo);
+            try {
+                const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
+                const isSessionExpired = verifySession(sessionInfo);
 
-            if (isSessionExpired) {
-                this.signOutHandler.handle();
-            } else {
-                await this.reCheckIn.handle({ sessionInfo });
+                if (isSessionExpired) {
+                    this.signOutHandler.handle();
+                } else {
+                    await this.reCheckIn.handle({ sessionInfo });
+                }
+            } catch (error) {
+                sentryLogger.logError(error);
             }
         }
 
@@ -310,6 +324,7 @@ export namespace AuthHandlers {
                 }
             }
         } catch (ex) {
+            sentryLogger.logError(ex);
             console.log(ex);
         }
 

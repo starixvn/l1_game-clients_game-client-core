@@ -1,14 +1,13 @@
 import { inject, injectable } from "inversify";
-import { StorageManager } from "../../shared/utils";
+import { StorageManager, localStorageKeys } from "../../shared/utils";
 import { AudioType } from "../audios";
 import { UserSettingData, UserSettingStore } from "./user-setting-store";
 @injectable()
 export class UserSettingHandlers {
     constructor(@inject(UserSettingStore) private readonly userSettingStore: UserSettingStore) {}
 
-    private readonly userSettingsKey = "user-setting";
     loadStorages() {
-        const settings = StorageManager.get(this.userSettingsKey);
+        const settings = StorageManager.get(localStorageKeys.playerSetting);
         if (!settings) {
             return;
         }
@@ -24,7 +23,7 @@ export class UserSettingHandlers {
 
     saveStorages() {
         const data = this.userSettingStore as UserSettingData;
-        StorageManager.set(this.userSettingsKey, data);
+        StorageManager.set(localStorageKeys.playerSetting, data);
     }
 
     handleAudioChanged(type: AudioType, enable: boolean) {

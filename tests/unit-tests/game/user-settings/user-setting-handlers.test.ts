@@ -1,12 +1,11 @@
 import { AudioType } from "../../../../src/game/audios";
 import { UserSettingHandlers } from "../../../../src/game/user-settings/user-setting-handlers";
 import { UserSettingStore } from "../../../../src/game/user-settings/user-setting-store";
-import { StorageManager } from "../../../../src/shared/utils";
+import { StorageManager, localStorageKeys } from "../../../../src/shared/utils";
 
 describe("UserSettingHandlers", () => {
     let userSettingHandlers: UserSettingHandlers;
     let userSettingStore: UserSettingStore;
-    const userSettingStorageKey = "user-setting";
 
     beforeAll(() => {
         userSettingStore = new UserSettingStore();
@@ -30,7 +29,7 @@ describe("UserSettingHandlers", () => {
             userSettingHandlers.loadStorages();
 
             // Assert
-            expect(StorageManager.get).toHaveBeenCalledWith(userSettingStorageKey);
+            expect(StorageManager.get).toHaveBeenCalledWith(localStorageKeys.playerSetting);
             expect(userSettingStore).toEqual(settingsData);
         });
 
@@ -63,7 +62,7 @@ describe("UserSettingHandlers", () => {
             userSettingHandlers.saveStorages();
 
             // Assert
-            expect(StorageManager.set).toHaveBeenCalledWith(userSettingStorageKey, userSettingStore);
+            expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.playerSetting, userSettingStore);
         });
     });
 
