@@ -3,9 +3,9 @@ import { makeAutoObservable } from "mobx";
 import { Socket } from "socket.io-client/dist/socket.io.js";
 import { ISessionInfo } from "../../auth";
 import { GameClientEmitMessage, Mediator } from "../../shared";
-import { StorageManager, localStorageKeys } from "../../shared/utils";
-import { GameSetting } from "../game-configs";
 import { SocketEvents } from "../../shared/constants/socket-event";
+import { StorageManager, localStorageKeys, sentryLogger } from "../../shared/utils";
+import { GameSetting } from "../game-configs";
 
 export const events = {
     ...SocketEvents,
@@ -67,15 +67,17 @@ export class ConnectionStore {
         this.signedIn = true;
     }
 
-    onConnectFailed() {
+    onConnectFailed(error?: Error) {
         this.isConnectFailed = true;
         this.onDisconnected();
+        error && sentryLogger.logError(error);
     }
 
-    onDisconnected() {
+    onDisconnected(reason = "") {
         this.isConnected = false;
         this.signedIn = false;
         this.connection.disconnect();
+        reason && sentryLogger.logError(reason);
     }
 
     send(eventName: string, data: any) {

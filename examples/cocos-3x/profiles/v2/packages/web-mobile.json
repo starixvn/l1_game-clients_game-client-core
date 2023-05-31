@@ -9,7 +9,7 @@
       "useSplashScreen": false,
       "skipCompressTexture": false,
       "mainBundleIsRemote": false,
-      "startScene": "506af2b4-22ed-4607-bd2e-39cef771c97e",
+      "startScene": "77134ae0-6a21-45c4-a01e-5ea25dfe88ac",
       "scenes": [
         {
           "url": "db://assets/session-timeout/session-timeout.scene",
@@ -22,8 +22,8 @@
           "inBundle": false
         },
         {
-          "url": "db://assets/splash/splash.scene",
-          "uuid": "506af2b4-22ed-4607-bd2e-39cef771c97e",
+          "url": "db://shared-components/splash/prefabs/splash.scene",
+          "uuid": "77134ae0-6a21-45c4-a01e-5ea25dfe88ac",
           "inBundle": false
         }
       ]

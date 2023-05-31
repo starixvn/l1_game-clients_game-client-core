@@ -2,8 +2,12 @@ import { io } from "socket.io-client";
 import { NotificationStore, events } from "../../../src/notification";
 import { Mediator, NotificationServiceMessage } from "../../../src/shared";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils";
+import { sentryLogger } from "../../../src/shared/utils/logger";
 
 jest.mock("mobx");
+jest.mock("../../../src/shared/utils/logger", () => ({
+    sentryLogger: { logError: jest.fn() },
+}));
 
 jest.mock("socket.io-client", () => ({
     io: jest.fn().mockReturnValue({ on: jest.fn() }),
@@ -85,12 +89,14 @@ describe("NotificationStore tests", () => {
     });
 
     describe("onConnectFailed", () => {
+        const error = new Error("error");
+
         beforeAll(() => {
             // arrange
             store.connection.disconnect = jest.fn();
 
             // act
-            store.onConnectFailed();
+            store.onConnectFailed(error);
         });
 
         it("should set isConnectFailed is true", () => {
@@ -107,15 +113,21 @@ describe("NotificationStore tests", () => {
             // assert
             expect(store.connection.disconnect).toHaveBeenCalled();
         });
+
+        it("should log error", () => {
+            // assert
+            expect(sentryLogger.logError).toHaveBeenCalledWith(error);
+        });
     });
 
     describe("onDisconnected", () => {
+        const reason = "disconnect";
         beforeAll(() => {
             // arrange
             store.connection.disconnect = jest.fn();
 
             // act
-            store.onDisconnected();
+            store.onDisconnected(reason);
         });
         it("should set isConnected is false", () => {
             // assert
@@ -125,6 +137,11 @@ describe("NotificationStore tests", () => {
         it("should call connection disconnect", () => {
             // assert
             expect(store.connection.disconnect).toHaveBeenCalled();
+        });
+
+        it("should log reason", () => {
+            // assert
+            expect(sentryLogger.logError).toHaveBeenCalledWith(reason);
         });
     });
 

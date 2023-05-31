@@ -1,9 +1,14 @@
 import { io } from "socket.io-client";
 import { ConnectionStore, events } from "../../../../src/game/connection";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
-import { StorageManager, localStorageKeys } from "../../../../src/shared/utils";
+import { StorageManager, sentryLogger } from "../../../../src/shared/utils";
 import { gameSettings } from "../../container.test";
 
+jest.mock("../../../../src/shared/utils", () => ({
+    StorageManager: { get: jest.fn() },
+    localStorageKeys: { session: "" },
+    sentryLogger: { logError: jest.fn() },
+}));
 jest.mock("socket.io-client", () => ({
     io: jest.fn().mockReturnValue({ on: jest.fn() }),
 }));
@@ -68,7 +73,9 @@ describe("ConnectionStore tests", () => {
 
     describe("onConnected", () => {
         const sessionInfo = { session: "session", username: "username", system: 1 };
-        StorageManager.set(localStorageKeys.session, sessionInfo);
+        beforeAll(() => {
+            (StorageManager.get as jest.Mock).mockReturnValue(sessionInfo);
+        });
 
         it("should set isConnected true", () => {
             // arrange
@@ -197,12 +204,13 @@ describe("ConnectionStore tests", () => {
     });
 
     describe("onConnectFailed", () => {
-        it("should set isConnectFailed is true", () => {
-            // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
+        let store: ConnectionStore;
+        beforeEach(() => {
+            store = new ConnectionStore(new Mediator(), gameSettings);
             store.connection = io("");
             store.connection.disconnect = jest.fn();
-
+        });
+        it("should set isConnectFailed is true", () => {
             // act
             store.onConnectFailed();
 
@@ -211,11 +219,6 @@ describe("ConnectionStore tests", () => {
         });
 
         it("should set isConnected is false", () => {
-            // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("");
-            store.connection.disconnect = jest.fn();
-
             // act
             store.onConnectFailed();
 
@@ -224,11 +227,6 @@ describe("ConnectionStore tests", () => {
         });
 
         it("should set signedIn is false", () => {
-            // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("");
-            store.connection.disconnect = jest.fn();
-
             // act
             store.onConnectFailed();
 
@@ -237,26 +235,34 @@ describe("ConnectionStore tests", () => {
         });
 
         it("should call connection disconnect", () => {
-            // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("");
-            store.connection.disconnect = jest.fn();
-
             // act
             store.onConnectFailed();
 
             // assert
             expect(store.connection.disconnect).toHaveBeenCalled();
+        });
+
+        it("should log error", () => {
+            // arrange
+            const error = new Error("error");
+
+            // act
+            store.onConnectFailed(error);
+
+            // assert
+            expect(sentryLogger.logError).toHaveBeenCalledWith(error);
         });
     });
 
     describe("onDisconnected", () => {
-        it("should set isConnected is false", () => {
-            // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
+        let store: ConnectionStore;
+        beforeEach(() => {
+            store = new ConnectionStore(new Mediator(), gameSettings);
             store.connection = io("");
             store.connection.disconnect = jest.fn();
+        });
 
+        it("should set isConnected is false", () => {
             // act
             store.onDisconnected();
 
@@ -265,11 +271,6 @@ describe("ConnectionStore tests", () => {
         });
 
         it("should set signedIn is false", () => {
-            // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("");
-            store.connection.disconnect = jest.fn();
-
             // act
             store.onDisconnected();
 
@@ -278,16 +279,22 @@ describe("ConnectionStore tests", () => {
         });
 
         it("should call connection disconnect", () => {
-            // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("");
-            store.connection.disconnect = jest.fn();
-
             // act
             store.onDisconnected();
 
             // assert
             expect(store.connection.disconnect).toHaveBeenCalled();
+        });
+
+        it("should log error", () => {
+            // arrange
+            const reason = "io server disconnect";
+
+            // act
+            store.onDisconnected(reason);
+
+            // assert
+            expect(sentryLogger.logError).toHaveBeenCalledWith(reason);
         });
     });
 });
