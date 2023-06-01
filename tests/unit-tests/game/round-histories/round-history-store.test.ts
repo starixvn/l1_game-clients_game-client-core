@@ -1,4 +1,5 @@
 import { stub } from "jest-auto-stub";
+import { RoundHistories } from "../../../../src/game";
 import { GameSetting } from "../../../../src/game/game-configs";
 import { RoundHistory, RoundHistoryStore } from "../../../../src/game/round-histories";
 import { ROUND_STATE, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
@@ -41,18 +42,16 @@ describe("RoundHistoryStore", () => {
     });
     describe("get joinRoomShowResult", () => {
         test.each([
-            [ROUND_STATE.SHOW_ANIMATION_RESULT, true],
-            [ROUND_STATE.SHOW_RESULT, true],
-            [ROUND_STATE.PLACING_BET, false],
-            [ROUND_STATE.BEGIN_LOCKING_BET, false],
-        ])("should return the correct value for joinGameState: %s", (joinGameState, expectedIsShowResult) => {
+            [ROUND_STATE.SHOW_ANIMATION_RESULT, mockHistories],
+            [ROUND_STATE.SHOW_RESULT, mockHistories],
+            [ROUND_STATE.LOCKING_BET, null],
+            [ROUND_STATE.SHOW_ANIMATION_RESULT, null],
+        ])("should return %s when joinGameState is %s", (joinGameState: string, expected: RoundHistories.RoundHistory[] | null) => {
+            const round = expected?.[0] || null;
+            roundHistoryStore.lastRoundWhenJoinGame = round;
             roundTimeStoreMock.joinGameState = joinGameState;
-            roundHistoryStore.histories = mockHistories;
 
-            const result = roundHistoryStore.joinRoomShowResult;
-
-            expect(result.isShowResult).toBe(expectedIsShowResult);
-            expect(result.roundHistory).toEqual(roundHistoryStore.histories[0]);
+            expect(roundHistoryStore.joinRoomShowResult).toEqual(round);
         });
     });
 

@@ -11,12 +11,8 @@ export interface RoundHistory {
     winningPlayers?: GameServiceMessage.TWinningPlayers;
 }
 
-interface IRoundHistoryInfo {
+export interface IRoundHistoryInfo {
     roundHistory: RoundHistory;
-}
-
-export interface IJoinRoomShowResult extends IRoundHistoryInfo {
-    isShowResult: boolean;
 }
 
 export interface THighLightInfo extends IRoundHistoryInfo {
@@ -34,8 +30,23 @@ export class RoundHistoryStore {
         makeAutoObservable(this);
     }
 
-    histories: RoundHistory[] = [];
-    isShowResult = false;
+    private _histories: RoundHistory[] = [];
+    private _lastRoundWhenJoinGame: RoundHistory | null = null;
+
+    get histories() {
+        return this._histories;
+    }
+
+    set lastRoundWhenJoinGame(lastRoundWhenJoinGame: RoundHistory | null) {
+        this._lastRoundWhenJoinGame = lastRoundWhenJoinGame;
+    }
+
+    set histories(histories: RoundHistory[]) {
+        this._histories = histories;
+        if (!this._lastRoundWhenJoinGame) {
+            this._lastRoundWhenJoinGame = this.histories?.[0];
+        }
+    }
 
     getLastRound() {
         return this.histories?.[0];
@@ -52,20 +63,19 @@ export class RoundHistoryStore {
         this.histories = cloneHistories;
     }
 
-    get joinRoomShowResult(): IJoinRoomShowResult {
-        let isShowResult = false;
-
-        if (
-            this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
-            this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_RESULT
-        ) {
-            isShowResult = true;
+    get joinRoomShowResult(): IRoundHistoryInfo | null {
+        if (this._lastRoundWhenJoinGame) {
+            if (
+                this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
+                this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_RESULT
+            ) {
+                return {
+                    roundHistory: this._lastRoundWhenJoinGame,
+                };
+            }
         }
 
-        return {
-            isShowResult,
-            roundHistory: this.getLastRound(),
-        };
+        return null;
     }
 
     get highLightInfo(): THighLightInfo {
@@ -104,5 +114,10 @@ export class RoundHistoryStore {
         }
 
         return isReset;
+    }
+
+    resetRoundHistoryStore() {
+        this.histories = [];
+        this._lastRoundWhenJoinGame = null;
     }
 }

@@ -3,6 +3,7 @@ import { ChipStore } from "../../../../src/game/chips";
 import { ConnectionHandlers, ConnectionStore } from "../../../../src/game/connection";
 import { GameConfigStore, GameSetting } from "../../../../src/game/game-configs";
 import { JoinGameHandler } from "../../../../src/game/join-game";
+import { RoundHistoryStore } from "../../../../src/game/round-histories";
 import { RoundRunningHandlers, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
 import { OtherPlayersStore, PlayerStore } from "../../../../src/players";
 import { Mediator } from "../../../../src/shared";
@@ -20,17 +21,19 @@ describe("JoinGameHandler", () => {
     let connection: ConnectionHandlers.ConnectHandler;
     let chipStore: ChipStore;
     let otherPlayersStore: OtherPlayersStore;
+    let roundHistoryStore: RoundHistoryStore;
 
     beforeEach(() => {
         roundTimeStore = stub<RoundTimeStore>();
         chipStore = stub<ChipStore>();
         otherPlayersStore = stub<OtherPlayersStore>();
+        roundHistoryStore = stub<RoundHistoryStore>();
         roundRunning = new RoundRunningHandlers(roundTimeStore, gameSetting);
         connectStore = new ConnectionStore(new Mediator(), gameSetting);
         connectStore.initBaseListener = jest.fn();
         connection = new ConnectionHandlers.ConnectHandler(connectStore, siteConfigs, gameSettings);
         roundStore = new RoundStore(gameConfigStore, playerStore);
-        handler = new JoinGameHandler(connection, roundStore, chipStore, otherPlayersStore);
+        handler = new JoinGameHandler(connection, roundStore, chipStore, otherPlayersStore, roundHistoryStore);
     });
 
     afterEach(() => {
@@ -41,6 +44,9 @@ describe("JoinGameHandler", () => {
         it("should stop the round runner, round time store and disconnect store", async () => {
             // Arrange
             roundStore.resetRoundStore = jest.fn();
+            chipStore.resetChips = jest.fn();
+            otherPlayersStore.resetOtherPlayersStore = jest.fn();
+            roundHistoryStore.resetRoundHistoryStore = jest.fn();
             connection.handle = jest.fn();
 
             // Act
@@ -48,6 +54,9 @@ describe("JoinGameHandler", () => {
 
             // Assert
             expect(roundStore.resetRoundStore).toHaveBeenCalledTimes(1);
+            expect(chipStore.resetChips).toHaveBeenCalledTimes(1);
+            expect(otherPlayersStore.resetOtherPlayersStore).toHaveBeenCalledTimes(1);
+            expect(roundHistoryStore.resetRoundHistoryStore).toHaveBeenCalledTimes(1);
             expect(connection.handle).toHaveBeenCalledTimes(1);
         });
     });
