@@ -224,6 +224,10 @@ export namespace GameServiceMessage {
 
         static eventName = "um_message";
     }
+
+    export class BetHistory {
+        static eventName = "history";
+    }
 }
 
 export namespace NotificationServiceMessage {

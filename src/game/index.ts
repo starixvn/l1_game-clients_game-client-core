@@ -15,3 +15,4 @@ export * as RoundHistories from "./round-histories";
 export * as Rounds from "./rounds";
 export * as Settlements from "./settlements";
 export * as UserSettings from "./user-settings";
+export * as BetHistory from "./bet-history";
