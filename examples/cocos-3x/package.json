@@ -17,7 +17,7 @@
     "name": "cocos-3x",
     "scripts": {
         "test": "jest",
-        "test-coverage": "jest",
+        "test-coverage": "jest --collect-coverage",
         "obfuscator-config-file": "ts-node ./site-configs/site-config-obfuscator.ts"
     },
     "dependencies": {
@@ -28,15 +28,15 @@
         "observer": "1.2.0"
     },
     "devDependencies": {
-        "javascript-obfuscator": "4.0.2",
-        "ts-node": "10.9.1",
-        "typescript": "5.0.4",
         "@types/jest": "29.5.1",
-        "jest": "29.5.0",
+        "javascript-obfuscator": "4.0.2",
+        "jest": "^29.5.0",
         "jest-environment-jsdom": "29.5.0",
         "jest-junit": "16.0.0",
         "jest-sonar-reporter": "2.0.0",
         "reflect-metadata": "0.1.13",
-        "ts-jest": "29.1.0"
+        "ts-jest": "29.1.0",
+        "ts-node": "10.9.1",
+        "typescript": "5.0.4"
     }
 }

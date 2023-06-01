@@ -1,6 +1,5 @@
 {
     "testEnvironment": "jsdom",
-    "collectCoverage": true,
     "coverageDirectory": "coverage",
     "collectCoverageFrom": ["**/assets/**/*.ts", "!**/engine/*.ts"],
     "coveragePathIgnorePatterns": ["localization-editor"],
@@ -8,6 +7,7 @@
         "^.+\\.tsx?$": ["ts-jest", { "tsconfig": "tsconfig.test.json" }]
     },
     "testPathIgnorePatterns": ["/node_modules/"],
+    "testMatch": ["**/?(*.)+(spec|test).+(ts)"],
     "testResultsProcessor": "jest-sonar-reporter",
     "coverageReporters": ["cobertura", "text-summary", "text", "lcov"],
     "setupFiles": ["<rootDir>/tests/cocos-testing/reflect-metadata.ts"],
