@@ -7,6 +7,7 @@ import { AppHandlers } from "../../app/app-handlers";
 import { DisabledGameStore } from "./disabled-game-store";
 import { RoundTimeStore } from "../rounds/round-time-store";
 import { ConnectionStore } from "../connection/connection-store";
+import { RoundRunningHandlers } from "../rounds";
 
 export const defaultDisabledMessage = "Under maintenance, please back later after 10 seconds";
 @injectable()
@@ -19,7 +20,8 @@ export class DisableGameHandlers implements IHandler<GameServiceMessage.Disabled
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(DisabledGameStore) protected readonly disabledGameStore: DisabledGameStore,
         @inject(NoticeStore) protected readonly noticeStore: NoticeStore,
-        @inject(AppHandlers.BackToOperatorLobby) protected readonly backToOperatorLobby: AppHandlers.BackToOperatorLobby
+        @inject(AppHandlers.BackToOperatorLobby) protected readonly backToOperatorLobby: AppHandlers.BackToOperatorLobby,
+        @inject(RoundRunningHandlers) protected readonly roundRunningHandlers: RoundRunningHandlers
     ) {
         this.onClosedHandle = this.onClosedHandle.bind(this);
     }
@@ -43,6 +45,7 @@ export class DisableGameHandlers implements IHandler<GameServiceMessage.Disabled
         if (this.disabledGameStore.disabled) {
             if (!this.disabledGameStore.showPopup && this.roundTimeStore.isShowDisabledGameMessage) {
                 this.showPopupHandle(disabledGameInfo);
+                this.roundRunningHandlers.stopRunner();
             }
         } else {
             this.disabledGameStore.setGameStatus(true);

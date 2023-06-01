@@ -7,6 +7,7 @@ import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
 import { gameSettings } from "../../container.test";
 import { AuthStore } from "../../../../src/auth/auth-store";
 import { ConnectionStore } from "../../../../src/game/connection";
+import { RoundRunningHandlers } from "../../../../src/game/rounds";
 
 jest.mock("../../../../src/shared/utils/localized-utils", () => {
     return {
@@ -32,7 +33,8 @@ describe("DisableGameHandlers tests", () => {
         noticeStore: NoticeStore,
         roundTimeStore: RoundTimeStore,
         backToOperatorLobby: AppHandlers.BackToOperatorLobby,
-        handler: DisableGameHandlers;
+        handler: DisableGameHandlers,
+        roundRunningHandlers: RoundRunningHandlers;
 
     beforeAll(() => {
         // arrange
@@ -49,9 +51,19 @@ describe("DisableGameHandlers tests", () => {
         roundTimeStore.resetRoundTime = jest.fn();
         roundTimeStore.startNewRound = true;
 
+        roundRunningHandlers = new RoundRunningHandlers(roundTimeStore, gameSettings);
+
         backToOperatorLobby = new AppHandlers.BackToOperatorLobby(new AppStore());
 
-        handler = new DisableGameHandlers(connectionStore, authStore, roundTimeStore, disabledGameStore, noticeStore, backToOperatorLobby);
+        handler = new DisableGameHandlers(
+            connectionStore,
+            authStore,
+            roundTimeStore,
+            disabledGameStore,
+            noticeStore,
+            backToOperatorLobby,
+            roundRunningHandlers
+        );
     });
 
     describe("onClosedHandle", () => {
@@ -98,7 +110,7 @@ describe("DisableGameHandlers tests", () => {
     describe("inGameHandle", () => {
         describe("when game is already disabled ", () => {
             describe("when popup is not show and run to next round", () => {
-                it("should show popup", () => {
+                it("should show popup and clear round running", () => {
                     // arrange
                     disabledGameStore.disabled = true;
                     disabledGameStore.showPopup = false;
@@ -106,17 +118,19 @@ describe("DisableGameHandlers tests", () => {
                     roundTimeStore.roundTime = 33;
 
                     handler.showPopupHandle = jest.fn();
+                    roundRunningHandlers.stopRunner = jest.fn();
 
                     // act
                     handler.inGameHandle(fakeDisabledGameInfo);
 
                     // assert
                     expect(handler.showPopupHandle).toHaveBeenCalled();
+                    expect(roundRunningHandlers.stopRunner).toHaveBeenCalled();
                 });
             });
 
             describe("when popup is already show  and run to next round", () => {
-                it("should not show popup", () => {
+                it("should not show popup and not touch to round running", () => {
                     // arrange
                     disabledGameStore.disabled = true;
                     disabledGameStore.showPopup = true;
@@ -124,12 +138,14 @@ describe("DisableGameHandlers tests", () => {
                     roundTimeStore.roundTime = 33;
 
                     handler.showPopupHandle = jest.fn();
+                    roundRunningHandlers.stopRunner = jest.fn();
 
                     // act
                     handler.inGameHandle(fakeDisabledGameInfo);
 
                     // assert
                     expect(handler.showPopupHandle).not.toHaveBeenCalled();
+                    expect(roundRunningHandlers.stopRunner).not.toHaveBeenCalled();
                 });
             });
 
