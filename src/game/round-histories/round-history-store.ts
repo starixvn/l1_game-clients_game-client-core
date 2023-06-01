@@ -37,15 +37,19 @@ export class RoundHistoryStore {
         return this._histories;
     }
 
-    set lastRoundWhenJoinGame(lastRoundWhenJoinGame: RoundHistory | null) {
-        this._lastRoundWhenJoinGame = lastRoundWhenJoinGame;
-    }
-
     set histories(histories: RoundHistory[]) {
         this._histories = histories;
-        if (!this._lastRoundWhenJoinGame) {
-            this._lastRoundWhenJoinGame = this.histories?.[0];
+        if (!this.lastRoundWhenJoinGame) {
+            this.lastRoundWhenJoinGame = this.histories?.[0];
         }
+    }
+
+    get lastRoundWhenJoinGame() {
+        return this._lastRoundWhenJoinGame;
+    }
+
+    set lastRoundWhenJoinGame(lastRoundWhenJoinGame: RoundHistory | null) {
+        this._lastRoundWhenJoinGame = lastRoundWhenJoinGame;
     }
 
     getLastRound() {
@@ -64,13 +68,13 @@ export class RoundHistoryStore {
     }
 
     get joinRoomShowResult(): IRoundHistoryInfo | null {
-        if (this._lastRoundWhenJoinGame) {
+        if (this.lastRoundWhenJoinGame) {
             if (
                 this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
                 this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_RESULT
             ) {
                 return {
-                    roundHistory: this._lastRoundWhenJoinGame,
+                    roundHistory: this.lastRoundWhenJoinGame,
                 };
             }
         }
