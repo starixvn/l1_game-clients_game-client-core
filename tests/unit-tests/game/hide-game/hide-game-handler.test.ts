@@ -24,7 +24,7 @@ describe("HideGameHandler", () => {
     });
 
     afterEach(() => {
-        jest.resetAllMocks();
+        jest.clearAllMocks();
     });
 
     describe("handle", () => {

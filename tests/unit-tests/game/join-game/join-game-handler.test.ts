@@ -29,7 +29,7 @@ describe("JoinGameHandler", () => {
     });
 
     afterEach(() => {
-        jest.resetAllMocks();
+        jest.clearAllMocks();
     });
 
     describe("handle", () => {

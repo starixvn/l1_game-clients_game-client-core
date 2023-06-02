@@ -368,7 +368,7 @@ describe("AuthHandlers tests", () => {
         });
 
         afterEach(() => {
-            jest.resetAllMocks();
+            jest.clearAllMocks();
         });
 
         test("handle clears interval and removes session from local storage", () => {
