@@ -8,7 +8,7 @@ export interface IStakeLevel {
 }
 
 @injectable()
-export class PlayerStore {
+export class MainPlayerStore {
     constructor() {
         makeAutoObservable(this);
     }

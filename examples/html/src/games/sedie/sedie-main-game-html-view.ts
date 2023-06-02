@@ -42,7 +42,7 @@ export class SedieGameHtmlView extends HtmlViewEngine {
         this.setInnerHtml(this.gameNameComponent, gameName);
     }
 
-    @render(Player.PlayerStore, (store) => store.name)
+    @render(Player.MainPlayerStore, (store) => store.name)
     renderPlayer(playerName: string) {
         this.setInnerHtml(this.playerComponent, playerName);
     }

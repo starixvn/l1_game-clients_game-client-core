@@ -1,20 +1,20 @@
 import { inject, injectable } from "inversify";
 
-import { PlayerStore } from "../../players";
+import { MainPlayerStore } from "../../players";
 import { GameClientEmitMessage } from "../../shared";
+import { l10n } from "../../shared/l10n";
 import { ConnectionStore } from "../connection";
 import { NoticeStore } from "../notices";
 import { OrientationStore } from "../orientation";
 import { ROUND_STATE, RoundTimeStore } from "../rounds";
 import { BetStore } from "./bet-store";
-import { l10n } from "../../shared/l10n";
 
 @injectable()
 export class BetHandler {
     constructor(
         @inject(ConnectionStore) private readonly connectionStore: ConnectionStore,
         @inject(BetStore) private readonly betStore: BetStore,
-        @inject(PlayerStore) private readonly playerStore: PlayerStore,
+        @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
         @inject(OrientationStore) private readonly orientationStore: OrientationStore,
         @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
         @inject(NoticeStore) private readonly noticeStore: NoticeStore
@@ -30,7 +30,7 @@ export class BetHandler {
             this.showWarningProcessingBet();
             return;
         }
-        const availableBalance = freebetEnabled ? this.playerStore.scoin : this.playerStore.balance;
+        const availableBalance = freebetEnabled ? this.mainPlayerStore.scoin : this.mainPlayerStore.balance;
 
         if (amount > availableBalance) {
             this.showNoticePlaceBetFailure(freebetEnabled);
@@ -40,7 +40,7 @@ export class BetHandler {
         this.betStore.isProcessingBet = true;
         const betData = {
             m: this.orientationStore.m,
-            username: this.playerStore.name,
+            username: this.mainPlayerStore.name,
             betChoice,
             amount,
             freeBet: freebetEnabled,
@@ -68,7 +68,7 @@ export class BetHandler {
                     ? l10n.t("cannotPlaceBet")
                     : l10n.t("placeBetNextRound");
 
-            this.noticeStore.addWarning(warningMsg);            
+            this.noticeStore.addWarning(warningMsg);
         }
 
         return !isBetPhase;

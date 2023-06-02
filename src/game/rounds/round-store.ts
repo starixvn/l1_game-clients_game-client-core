@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 
-import { PlayerStore } from "../../players";
+import { MainPlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared";
 import { GameConfigStore } from "../game-configs";
 
@@ -18,7 +18,7 @@ export type RoundOdds = {
 export class RoundStore {
     constructor(
         @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore,
-        @inject(PlayerStore) protected readonly playerStore: PlayerStore
+        @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore
     ) {
         makeAutoObservable(this);
     }
@@ -29,17 +29,17 @@ export class RoundStore {
     resultHash: GameServiceMessage.ResultHash = {};
 
     get minBet() {
-        return Math.max(this.gameConfigStore.minBet, this.playerStore.stakeLevel.minBet);
+        return Math.max(this.gameConfigStore.minBet, this.mainPlayerStore.stakeLevel.minBet);
     }
 
     get maxBet() {
-        return Math.min(this.gameConfigStore.maxBet, this.playerStore.stakeLevel.maxBet);
+        return Math.min(this.gameConfigStore.maxBet, this.mainPlayerStore.stakeLevel.maxBet);
     }
 
     get roundOdds() {
         return {
             odds: this.gameConfigStore.odds,
-            fractional: this.playerStore.fractionalOddsFormat,
+            fractional: this.mainPlayerStore.fractionalOddsFormat,
         };
     }
 
@@ -49,7 +49,7 @@ export class RoundStore {
 
     get totalBets() {
         return Object.keys(this._totalBets).reduce((total, betChoice) => {
-            total[betChoice] = this._totalBets[betChoice] * this.playerStore.rate;
+            total[betChoice] = this._totalBets[betChoice] * this.mainPlayerStore.rate;
             return total;
         }, {});
     }

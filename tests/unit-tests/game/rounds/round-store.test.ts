@@ -1,6 +1,6 @@
 import { GameConfigStore } from "../../../../src/game/game-configs";
 import { RoundStore } from "../../../../src/game/rounds";
-import { PlayerStore } from "../../../../src/players";
+import { MainPlayerStore } from "../../../../src/players";
 
 const gameConfig = {
     minBet: 1,
@@ -30,13 +30,13 @@ const gameConfig = {
 describe("RoundStore", () => {
     let roundStore: RoundStore;
     let gameConfigStore: GameConfigStore;
-    let playerStore: PlayerStore;
+    let mainPlayerStore: MainPlayerStore;
 
     beforeEach(() => {
         gameConfigStore = new GameConfigStore();
         gameConfigStore.setGameConfigs(gameConfig);
-        playerStore = new PlayerStore();
-        roundStore = new RoundStore(gameConfigStore, playerStore);
+        mainPlayerStore = new MainPlayerStore();
+        roundStore = new RoundStore(gameConfigStore, mainPlayerStore);
     });
 
     it("should have initial values", () => {
@@ -47,14 +47,14 @@ describe("RoundStore", () => {
         expect(roundStore.resultHash).toEqual({});
     });
 
-    it("should have minBet and maxBet from gameConfigStore and playerStore", () => {
-        expect(roundStore.minBet).toEqual(Math.max(gameConfigStore.minBet, playerStore.stakeLevel.minBet));
-        expect(roundStore.maxBet).toEqual(Math.min(gameConfigStore.maxBet, playerStore.stakeLevel.maxBet));
+    it("should have minBet and maxBet from gameConfigStore and mainPlayerStore", () => {
+        expect(roundStore.minBet).toEqual(Math.max(gameConfigStore.minBet, mainPlayerStore.stakeLevel.minBet));
+        expect(roundStore.maxBet).toEqual(Math.min(gameConfigStore.maxBet, mainPlayerStore.stakeLevel.maxBet));
     });
 
     it("total bets should be converted rate", () => {
         // arrange
-        playerStore.rate = 0.5;
+        mainPlayerStore.rate = 0.5;
         roundStore.totalBets = { even: 10, red4: 20, red3: 5 };
 
         // act

@@ -1,7 +1,7 @@
 import { BetHandler, BetStore } from "../../../../src/game/bets";
 import { NoticeStore } from "../../../../src/game/notices";
 import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
-import { PlayerStore } from "../../../../src/players";
+import { MainPlayerStore } from "../../../../src/players";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
 import { gameSettings } from "../../container.test";
 import { ConnectionStore } from "./../../../../src/game/connection";
@@ -15,7 +15,7 @@ import { l10n } from "../../../../src/shared/l10n";
 describe("BetHandler", () => {
     let connectionStore: ConnectionStore;
     let betStore: BetStore;
-    let playerStore: PlayerStore;
+    let mainPlayerStore: MainPlayerStore;
     let orientationStore: OrientationStore;
     let roundTimeStore: RoundTimeStore;
     let noticeStore: NoticeStore;
@@ -24,7 +24,7 @@ describe("BetHandler", () => {
     let showWarningProcessingBet;
 
     beforeAll(() => {
-        playerStore = new PlayerStore();
+        mainPlayerStore = new MainPlayerStore();
         connectionStore = new ConnectionStore(new Mediator(), gameSettings);
         betStore = new BetStore();
         orientationStore = new OrientationStore();
@@ -33,15 +33,15 @@ describe("BetHandler", () => {
     });
 
     beforeEach(() => {
-        betHandler = new BetHandler(connectionStore, betStore, playerStore, orientationStore, roundTimeStore, noticeStore);
+        betHandler = new BetHandler(connectionStore, betStore, mainPlayerStore, orientationStore, roundTimeStore, noticeStore);
         showWarningProcessingBet = jest.spyOn(betHandler, "showWarningProcessingBet");
 
         betChoice = "even";
         connectionStore.send = jest.fn();
         noticeStore.addWarning = jest.fn();
-        playerStore.name = "player";
-        playerStore.balance = 100;
-        playerStore.scoin = 100;
+        mainPlayerStore.name = "player";
+        mainPlayerStore.balance = 100;
+        mainPlayerStore.scoin = 100;
         betStore.isProcessingBet = false;
         roundTimeStore.roundState = ROUND_STATE.PLACING_BET;
     });
@@ -94,7 +94,7 @@ describe("BetHandler", () => {
 
         it("should show error notice when amount is greater than balance", () => {
             // Arrange
-            playerStore.balance = 100;
+            mainPlayerStore.balance = 100;
             betStore.amount = 200;
             betStore.freebetEnabled = false;
             l10n.t = jest.fn(() => "Your account has insufficient funds.");
@@ -109,7 +109,7 @@ describe("BetHandler", () => {
 
         it("should show error notice when freebet is enabled and scoin is less than amount", () => {
             // Arrange
-            playerStore.scoin = 100;
+            mainPlayerStore.scoin = 100;
             betStore.amount = 200;
             betStore.freebetEnabled = true;
             l10n.t = jest.fn(() => "Not enough Scoin to place bet.");
@@ -124,8 +124,8 @@ describe("BetHandler", () => {
 
         it("should send bet data to server when amount is less than scoin or balance ", () => {
             // Arrange
-            playerStore.scoin = 100;
-            playerStore.balance = 100;
+            mainPlayerStore.scoin = 100;
+            mainPlayerStore.balance = 100;
             betStore.amount = 50;
 
             // Act
@@ -135,7 +135,7 @@ describe("BetHandler", () => {
             expect(noticeStore.addWarning).not.toBeCalled();
             expect(connectionStore.send).toBeCalledWith(GameClientEmitMessage.Bet.eventName, {
                 m: orientationStore.m,
-                username: playerStore.name,
+                username: mainPlayerStore.name,
                 betChoice,
                 amount: betStore.amount,
                 freeBet: betStore.freebetEnabled,

@@ -1,10 +1,10 @@
 import { inject, injectable } from "inversify";
 import { GameServiceMessage, IMultipleHandlers } from "../shared";
-import { PlayerStore } from "./player-store";
+import { MainPlayerStore } from "./main-player-store";
 
 @injectable()
-export class PlayerHandlers implements IMultipleHandlers {
-    constructor(@inject(PlayerStore) protected readonly store: PlayerStore) {}
+export class MainPlayerHandlers implements IMultipleHandlers {
+    constructor(@inject(MainPlayerStore) protected readonly store: MainPlayerStore) {}
 
     handleStakeLevel(stakeLevel: GameServiceMessage.UserStakeLevel) {
         this.store.setStakeLevel(stakeLevel);

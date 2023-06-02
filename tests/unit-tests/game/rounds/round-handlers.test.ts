@@ -1,20 +1,20 @@
 import { GameConfigStore } from "../../../../src/game/game-configs";
-import { PlayerStore } from "../../../../src/players";
+import { MainPlayerStore } from "../../../../src/players";
 import { GameServiceMessage } from "../../../../src/shared";
 import { RoundHandlers } from "./../../../../src/game/rounds/round-handlers";
 import { RoundStore } from "./../../../../src/game/rounds/round-store";
 
 describe("RoundHandlers test", () => {
-    let playerStore: PlayerStore;
+    let mainPlayerStore: MainPlayerStore;
     let configStore: GameConfigStore;
     let roundStore: RoundStore;
 
     beforeEach(() => {
-        playerStore = new PlayerStore();
+        mainPlayerStore = new MainPlayerStore();
         configStore = new GameConfigStore();
         configStore.setGameConfigs = jest.fn();
-        playerStore.setAuthorizeStore = jest.fn();
-        roundStore = new RoundStore(configStore, playerStore);
+        mainPlayerStore.setAuthorizeStore = jest.fn();
+        roundStore = new RoundStore(configStore, mainPlayerStore);
     });
 
     afterEach(() => {
@@ -36,7 +36,7 @@ describe("RoundHandlers test", () => {
 
         it("should call handleRoundId in RoundHandlers with roundID less than or equal 1", () => {
             // Arrange
-            roundStore = new RoundStore(configStore, playerStore);
+            roundStore = new RoundStore(configStore, mainPlayerStore);
             const roundHandler = new RoundHandlers(roundStore);
             const expectRoundId = -1;
 

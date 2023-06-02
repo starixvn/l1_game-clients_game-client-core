@@ -1,6 +1,6 @@
-export * from "./other-players-handlers";
-export * from "./other-players-store";
-export * from "./player-handlers";
-export * from "./player-store";
+export * from "./around-table-players-handlers";
+export * from "./around-table-players-store";
+export * from "./main-player-handlers";
+export * from "./main-player-store";
 
 export const FEATURE_NAME = "players";

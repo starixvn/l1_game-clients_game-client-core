@@ -4,7 +4,7 @@ import { AuthHandlers } from "../../../../src/auth";
 import { ErrorHandlers } from "../../../../src/game/errors";
 import { NoticeStore, NoticeType } from "../../../../src/game/notices";
 import { RoundStore } from "../../../../src/game/rounds/round-store";
-import { PlayerStore } from "../../../../src/players";
+import { MainPlayerStore } from "../../../../src/players";
 import { GameServiceMessage } from "../../../../src/shared";
 jest.mock("../../../../src/shared/l10n", () => ({
     l10n: {
@@ -18,19 +18,19 @@ describe("ErrorHandlers test", () => {
     let instance: ErrorHandlers;
     let roundStore: RoundStore;
     let noticeStore: NoticeStore;
-    let playerStore: PlayerStore;
+    let mainPlayerStore: MainPlayerStore;
     let appStore: AppStore;
     let signOutHandler: AuthHandlers.SignOut;
     beforeAll(() => {
         roundStore = stub<RoundStore>();
         noticeStore = stub<NoticeStore>();
-        playerStore = stub<PlayerStore>();
+        mainPlayerStore = stub<MainPlayerStore>();
         appStore = stub<AppStore>();
         signOutHandler = stub<AuthHandlers.SignOut>();
     });
 
     beforeEach(() => {
-        instance = new ErrorHandlers(roundStore, playerStore, appStore, noticeStore, signOutHandler);
+        instance = new ErrorHandlers(roundStore, mainPlayerStore, appStore, noticeStore, signOutHandler);
     });
 
     afterEach(() => {
@@ -85,8 +85,8 @@ describe("ErrorHandlers test", () => {
 
             // Assert
             expect(noticeStore.addNotice).toBeCalled();
-            expect(playerStore.stakeLevel.minBet).toEqual(minBet);
-            expect(playerStore.stakeLevel.maxBet).toEqual(maxBet);
+            expect(mainPlayerStore.stakeLevel.minBet).toEqual(minBet);
+            expect(mainPlayerStore.stakeLevel.maxBet).toEqual(maxBet);
         });
     });
 

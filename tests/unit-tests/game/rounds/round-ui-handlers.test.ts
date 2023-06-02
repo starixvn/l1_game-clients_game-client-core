@@ -1,13 +1,13 @@
 import { GameConfigStore } from "../../../../src/game/game-configs";
 import { RoundStore, RoundUIHandlers } from "../../../../src/game/rounds";
-import { PlayerStore } from "../../../../src/players";
+import { MainPlayerStore } from "../../../../src/players";
 describe("RoundUIHandlers tests", () => {
     describe("SetRoundId", () => {
         it("should set roundId to expected in round store", () => {
             // arrange
             const gameConfigStore = new GameConfigStore();
-            const playerStore = new PlayerStore();
-            const store = new RoundStore(gameConfigStore, playerStore);
+            const mainPlayerStore = new MainPlayerStore();
+            const store = new RoundStore(gameConfigStore, mainPlayerStore);
             store.roundId = 0;
             const handler = new RoundUIHandlers.SetRoundId(store);
 
@@ -23,8 +23,8 @@ describe("RoundUIHandlers tests", () => {
         it("should call resetFroNewRound in RoundStore", () => {
             // arrange
             const gameConfigStore = new GameConfigStore();
-            const playerStore = new PlayerStore();
-            const store = new RoundStore(gameConfigStore, playerStore);
+            const mainPlayerStore = new MainPlayerStore();
+            const store = new RoundStore(gameConfigStore, mainPlayerStore);
             store.resetForNewRound = jest.fn();
             const handler = new RoundUIHandlers.ResetRoundStore(store);
 

@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { AppStore } from "../../app";
 import { AuthHandlers } from "../../auth";
-import { PlayerStore } from "../../players";
+import { MainPlayerStore } from "../../players";
 import { GameServiceMessage, IMultipleHandlers, utils } from "../../shared";
 import { NoticeStore, NoticeType } from "../notices";
 import { RoundStore } from "../rounds";
@@ -13,8 +13,8 @@ export class ErrorHandlers implements IMultipleHandlers {
     constructor(
         @inject(RoundStore)
         protected readonly roundStore: RoundStore,
-        @inject(PlayerStore)
-        protected readonly playerStore: PlayerStore,
+        @inject(MainPlayerStore)
+        protected readonly mainPlayerStore: MainPlayerStore,
         @inject(AppStore)
         protected readonly appStore: AppStore,
         @inject(NoticeStore)
@@ -54,11 +54,11 @@ export class ErrorHandlers implements IMultipleHandlers {
         }
 
         if (!!minBet) {
-            this.playerStore.stakeLevel.minBet = minBet;
+            this.mainPlayerStore.stakeLevel.minBet = minBet;
         }
 
         if (!!maxBet) {
-            this.playerStore.stakeLevel.maxBet = maxBet;
+            this.mainPlayerStore.stakeLevel.maxBet = maxBet;
         }
 
         const text = ErrorUtils.getErrorMessage(apiError);

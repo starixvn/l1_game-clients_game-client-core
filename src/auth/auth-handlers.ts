@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
 import { UserSettingData } from "../game/user-settings/user-setting-store";
 import { NotificationHandlers } from "../notification/notification-handlers";
-import { PlayerStore } from "../players";
+import { MainPlayerStore } from "../players";
 import { GameServiceMessage, IHandler } from "../shared";
 import { AppTypes } from "../shared/constants/app-type";
 import { GameUtils } from "../shared/utils/game-utils";
@@ -40,7 +40,7 @@ export namespace AuthHandlers {
         constructor(
             @inject(AuthStore) private readonly authStore: AuthStore,
             @inject(AppStore) private readonly appStore: AppStore,
-            @inject(PlayerStore) private readonly playerStore: PlayerStore,
+            @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
             @inject(UserService) private readonly userService: UserService,
             @inject(SignOut) private readonly signOutHandler: SignOut,
             @inject(NotificationHandlers) private readonly notificationHandlers: NotificationHandlers
@@ -71,7 +71,7 @@ export namespace AuthHandlers {
             if (this.needAutoGenerateNickname(response.authorized)) {
                 await this.autoGenerateName();
             } else {
-                response.user && this.playerStore.setAuthorizeStore(response.user);
+                response.user && this.mainPlayerStore.setAuthorizeStore(response.user);
                 this.authStore.isAuthorized = response.authorized;
             }
         }
@@ -204,7 +204,7 @@ export namespace AuthHandlers {
     export class ReCheckIn implements IHandler<{ sessionInfo: ISessionInfo }> {
         constructor(
             @inject(AuthStore) private readonly authStore: AuthStore,
-            @inject(PlayerStore) private readonly playerStore: PlayerStore,
+            @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
             @inject(UserService) private readonly userService: UserService,
             @inject(SignOut) private readonly signOutHandler: SignOut
         ) {}
@@ -225,7 +225,7 @@ export namespace AuthHandlers {
             } else {
                 this.authStore.setAuthStoreFromStorage(sessionInfo);
                 StorageManager.set(localStorageKeys.session, this.authStore.getSessionInfo());
-                this.playerStore.setBalance(response.balance, response.scoins, response.availSpins);
+                this.mainPlayerStore.setBalance(response.balance, response.scoins, response.availSpins);
             }
         }
 
@@ -281,7 +281,7 @@ export namespace AuthHandlers {
     export class GetBalance implements IHandler<void> {
         constructor(
             @inject(AuthStore) private readonly authStore: AuthStore,
-            @inject(PlayerStore) private readonly playerStore: PlayerStore,
+            @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
             @inject(UserService) private readonly userService: UserService
         ) {}
 
@@ -292,7 +292,7 @@ export namespace AuthHandlers {
                 this.authStore.username || sessionInfo?.username
             );
             if (response.isSuccessful) {
-                this.playerStore.setBalance(response.balance, response.scoins, response.availableSpins);
+                this.mainPlayerStore.setBalance(response.balance, response.scoins, response.availableSpins);
             } else {
                 this.authStore.errorCode = response.errorCode;
             }

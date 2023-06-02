@@ -1,5 +1,5 @@
 import { AuthHandlers, AuthStore, ISessionInfo } from "../../src/auth";
-import { PlayerStore } from "../../src/players";
+import { MainPlayerStore } from "../../src/players";
 import { GameUtils, StorageManager, localStorageKeys } from "../../src/shared/utils";
 import { container } from "./stubs/container";
 import { normalPlayer } from "./stubs/player";
@@ -58,13 +58,13 @@ export const ssoTests = () => {
                     await ssoHandler.handle(urlParams);
 
                     // assert
-                    const playerStore = container.resolve(PlayerStore);
-                    expect(playerStore.UID).toBe(normalPlayer.UID);
-                    expect(playerStore.name).toBe(normalPlayer.name);
-                    expect(playerStore.balance).toBe(normalPlayer.red);
-                    expect(playerStore.currency).toBe(normalPlayer.currency);
-                    expect(playerStore.offerGames).not.toBeNull();
-                    expect(playerStore.offerGames).not.toBeUndefined();
+                    const mainPlayerStore = container.resolve(MainPlayerStore);
+                    expect(mainPlayerStore.UID).toBe(normalPlayer.UID);
+                    expect(mainPlayerStore.name).toBe(normalPlayer.name);
+                    expect(mainPlayerStore.balance).toBe(normalPlayer.red);
+                    expect(mainPlayerStore.currency).toBe(normalPlayer.currency);
+                    expect(mainPlayerStore.offerGames).not.toBeNull();
+                    expect(mainPlayerStore.offerGames).not.toBeUndefined();
                 });
 
                 it("Auth Store should has authorize equal true", async () => {
@@ -147,13 +147,13 @@ export const ssoTests = () => {
                     await ssoHandler.handle(urlParams);
 
                     // assert
-                    const playerStore = container.resolve(PlayerStore);
-                    expect(playerStore.UID).toBe(normalPlayer.UID);
-                    expect(playerStore.name).toBe(normalPlayer.name);
-                    expect(playerStore.balance).toBe(normalPlayer.red);
-                    expect(playerStore.currency).toBe(normalPlayer.currency);
-                    expect(playerStore.offerGames).not.toBeNull();
-                    expect(playerStore.offerGames).not.toBeUndefined();
+                    const mainPlayerStore = container.resolve(MainPlayerStore);
+                    expect(mainPlayerStore.UID).toBe(normalPlayer.UID);
+                    expect(mainPlayerStore.name).toBe(normalPlayer.name);
+                    expect(mainPlayerStore.balance).toBe(normalPlayer.red);
+                    expect(mainPlayerStore.currency).toBe(normalPlayer.currency);
+                    expect(mainPlayerStore.offerGames).not.toBeNull();
+                    expect(mainPlayerStore.offerGames).not.toBeUndefined();
                 });
 
                 it("Auth Store should has authorize equal true", async () => {

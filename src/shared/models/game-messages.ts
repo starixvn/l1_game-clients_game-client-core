@@ -130,7 +130,7 @@ export namespace GameServiceMessage {
 
         static eventName = "playerChip";
     }
-    export class Player {
+    export class AroundTablePlayer {
         id: string;
         name: string;
         red: number;
@@ -140,8 +140,8 @@ export namespace GameServiceMessage {
         static eventName = "player";
     }
 
-    export class Players {
-        [playerId: string]: Player;
+    export class AroundTablePlayers {
+        [playerId: string]: AroundTablePlayer;
 
         static eventName = "players";
     }
