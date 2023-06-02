@@ -7,11 +7,11 @@ export class OtherPlayerHandlers implements IMultipleHandlers {
     constructor(@inject(OtherPlayersStore) protected readonly otherPlayersStore: OtherPlayersStore) {}
 
     handlePlayer(player: GameServiceMessage.Player) {
-        player && this.otherPlayersStore.updatePlayer(player);
+        this.otherPlayersStore.updatePlayer(player);
     }
 
     handlePlayers(players: GameServiceMessage.Players) {
-        players && (this.otherPlayersStore.players = players);
+        this.otherPlayersStore.players = players;
     }
 
     handlePlayerOutGame(playerOutGame: GameServiceMessage.OutGame) {

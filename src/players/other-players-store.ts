@@ -8,16 +8,22 @@ export class OtherPlayersStore {
         makeAutoObservable(this);
     }
 
-    player: GameServiceMessage.Player = null;
-    players: GameServiceMessage.Players = null;
+    player: GameServiceMessage.Player | null = null;
+    players: GameServiceMessage.Players = {};
 
     updatePlayer(player: GameServiceMessage.Player) {
-        this.player = player;
-        this.players[player.id] = player;
+        const { id } = player ?? {};
+
+        if (id) {
+            this.player = player;
+            this.players[id] = player;
+        }
     }
 
     removePlayer(player: GameServiceMessage.OutGame) {
-        delete this.players[player.playerId];
+        if (player?.playerId) {
+            delete this.players?.[player.playerId];
+        }
     }
 
     resetOtherPlayersStore() {
