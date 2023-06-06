@@ -1,11 +1,38 @@
-import { injectable } from "inversify";
-import { GameServiceMessage, IHandler } from "../../shared";
+import { inject, injectable } from "inversify";
+import { GameServiceMessage, IHandler, IMultipleHandlers } from "../../shared";
+import { ConnectionStore } from "../connection";
+import { BetHistoryModel, BetHistoryStore } from "./bet-history-store";
+import { NoticeStore } from "../notices";
 
-@injectable()
-export class BetHistoryHandlers implements IHandler<void> {
-    name = GameServiceMessage.BetHistory.eventName;
+export namespace BetHistoryHandlers {
+    @injectable()
+    export class BetHistoryPopupHandlers implements IMultipleHandlers {
+        constructor(
+            @inject(BetHistoryStore)
+            protected readonly betHistoryStore: BetHistoryStore
+        ) {}
 
-    constructor() {}
+        handleShowBetHistory(data: BetHistoryModel) {
+            this.betHistoryStore.setData(data);
+        }
 
-    handle() {}
+        eventHandleList = [
+            {
+                name: GameServiceMessage.BetHistory.eventName,
+                handle: this.handleShowBetHistory,
+            },
+        ];
+    }
+
+    @injectable()
+    export class BetHistoryCallServiceHandler implements IHandler<void> {
+        constructor(
+            @inject(ConnectionStore)
+            protected readonly connectionStore: ConnectionStore
+        ) {}
+
+        handle() {
+            this.connectionStore.send(GameServiceMessage.BetHistory.getHistoryEvent, { page: 1 });
+        }
+    }
 }
