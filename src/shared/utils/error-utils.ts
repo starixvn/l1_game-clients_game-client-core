@@ -131,8 +131,8 @@ export namespace ErrorUtils {
     };
 
     export const getErrorMessage = (notice: GameServiceMessage.Notice) => {
-        const option = {};
         const { errorCode, hedgeBetGroup, gameRoundId } = notice;
+        const option = { errorCode };
 
         if (!!hedgeBetGroup) {
             Object.assign(option, createOptionForHedgeBetGroup(hedgeBetGroup));
