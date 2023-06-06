@@ -14,6 +14,7 @@ export namespace BetHistoryHandlers {
 
         handleShowBetHistory(data: BetHistoryModel) {
             this.betHistoryStore.setData(data);
+            this.betHistoryStore.setShowBetHistory(true);
         }
 
         eventHandleList = [
