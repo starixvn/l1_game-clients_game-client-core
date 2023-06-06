@@ -16,7 +16,7 @@ export class ChipStore {
     }
 
     private _chips: Chips = {};
-    playerChip: GameServiceMessage.PlayerChip = null;
+    private _playerChip: GameServiceMessage.PlayerChip = null;
     private _ownChip: GameServiceMessage.OwnChip = { betChoice: "", amount: 0 };
 
     get ownChip() {
@@ -33,6 +33,14 @@ export class ChipStore {
 
     set chips(chips: Chips) {
         this._chips = chips;
+    }
+
+    get playerChip() {
+        return toJS(this._playerChip);
+    }
+
+    set playerChip(playerChip: GameServiceMessage.PlayerChip) {
+        this._playerChip = playerChip;
     }
 
     resetChips() {

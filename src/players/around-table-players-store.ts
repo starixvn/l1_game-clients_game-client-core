@@ -16,8 +16,6 @@ export class AroundTablePlayersStore {
         const { id } = aroundTablePlayer ?? {};
 
         if (id) {
-            console.log("updateAroundTablePlayer ", aroundTablePlayer);
-            console.log("updateAroundTablePlayers ", this.aroundTablePlayers);
             this.aroundTablePlayer = aroundTablePlayer;
             this.aroundTablePlayers[id] = aroundTablePlayer;
         }
@@ -25,7 +23,6 @@ export class AroundTablePlayersStore {
 
     removeAroundTablePlayer(aroundTablePlayer: GameServiceMessage.OutGame) {
         if (aroundTablePlayer?.playerId) {
-            console.log("removePlayer ", aroundTablePlayer);
             this.aroundTablePlayerIdOutGame = aroundTablePlayer.playerId;
             delete this.aroundTablePlayers?.[aroundTablePlayer.playerId];
         }
