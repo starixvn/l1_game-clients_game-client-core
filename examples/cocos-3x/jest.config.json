@@ -1,5 +1,6 @@
 {
     "testEnvironment": "jsdom",
+    "collectCoverage": false,
     "coverageDirectory": "coverage",
     "collectCoverageFrom": ["**/assets/**/*.ts", "!**/engine/*.ts"],
     "coveragePathIgnorePatterns": ["localization-editor"],

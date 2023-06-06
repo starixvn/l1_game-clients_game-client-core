@@ -1,4 +1,5 @@
 import { SiteConfigs } from "../../configs";
+import { sentryLogger } from "./logger";
 
 export namespace UrlUtils {
     export const buildUrl = (protocol = "http", path = "/", configs: SiteConfigs) => {
@@ -21,6 +22,9 @@ export namespace UrlUtils {
     };
 
     export const buildGameGuideUrl = (configs: SiteConfigs) => {
+        if (configs.isDev) {
+            return configs.gameGuideUrlDev;
+        }
         return buildUrlFromSubDomain(configs, configs.subGuideDomain);
     };
 
@@ -56,5 +60,14 @@ export namespace UrlUtils {
 
         const subDirectory = configs?.subDirectory ? `${configs?.subDirectory}/` : "";
         return `/${subDirectory}${configs?.websocket?.route}/socket.io`;
+    };
+
+    export const getSubDomain = (url: string) => {
+        try {
+            return /http(s?):\/\/([^\/]+)/.exec(url)[0];
+        } catch (e) {
+            sentryLogger.logError(`Can not get subdomain with url ${url}`);
+            return "";
+        }
     };
 }

@@ -3,7 +3,7 @@ import gc from "game-client-base";
 import { sharedContainer } from "../../scripts/shared-container";
 
 export const settings = {
-    id: 1,
+    id: 2,
     name: "SeDie",
     durations: {
         wholeRound: 39,

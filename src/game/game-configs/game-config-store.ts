@@ -12,7 +12,7 @@ export class GameConfigStore {
     odds: GameServiceMessage.Odds = {};
     enableFreeBet = false;
     originalOdds?: GameServiceMessage.Odds = null;
-    boostedChoices?: GameServiceMessage.Odds = null;
+    boostedChoices?: string[] = [];
 
     constructor() {
         makeAutoObservable(this);

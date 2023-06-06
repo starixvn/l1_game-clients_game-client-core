@@ -10,7 +10,7 @@ describe("settings", () => {
     it("should have data as expected", () => {
         // Assert
         expect(settings).toStrictEqual({
-            id: 1,
+            id: 2,
             name: "SeDie",
             durations: {
                 wholeRound: 39,

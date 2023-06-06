@@ -33,7 +33,7 @@ describe("GameConfigStore", () => {
             expect(store.odds).toEqual({});
             expect(store.enableFreeBet).toBe(false);
             expect(store.originalOdds).toBeNull();
-            expect(store.boostedChoices).toBeNull();
+            expect(store.boostedChoices).toEqual([]);
         });
         it("should set store configuration when gameConfigs has value", () => {
             // arrange
