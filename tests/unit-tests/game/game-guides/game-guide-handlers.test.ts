@@ -5,7 +5,7 @@ import { GameConfigStore, GameSetting } from "../../../../src/game/game-configs"
 import { GameGuideHandlers } from "../../../../src/game/game-guides/game-guide-handlers";
 import { GameGuideStore } from "../../../../src/game/game-guides/game-guide-store";
 import { RoundStore } from "../../../../src/game/rounds/round-store";
-import { PlayerStore } from "../../../../src/players/player-store";
+import { MainPlayerStore } from "../../../../src/players/main-player-store";
 import { AppTypes } from "../../../../src/shared/constants/app-type";
 import { UrlUtils } from "../../../../src/shared/utils";
 
@@ -25,7 +25,7 @@ describe("GameGuideHandlers test", () => {
             const gameSetting = stub<GameSetting>();
             gameSetting.id = 1;
             authStore = stub<AuthStore>();
-            const playerStore = stub<PlayerStore>();
+            const playerStore = stub<MainPlayerStore>();
             playerStore.stakeLevel.minBet = 1;
             playerStore.stakeLevel.maxBet = 2000;
             playerStore.fractionalOddsFormat = false;

@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { AuthStore } from "../../auth/auth-store";
 import { SiteConfigs } from "../../configs";
-import { PlayerStore } from "../../players/player-store";
+import { MainPlayerStore } from "../../players/main-player-store";
 import { IHandler } from "../../shared";
 import { AppTypes } from "../../shared/constants/app-type";
 import { UrlUtils } from "../../shared/utils";
@@ -16,7 +16,7 @@ export namespace GameGuideHandlers {
             @inject(SiteConfigs) private readonly siteConfigs: SiteConfigs,
             @inject(GameSetting) private readonly gameSetting: GameSetting,
             @inject(AuthStore) private readonly authStore: AuthStore,
-            @inject(PlayerStore) private readonly playerStore: PlayerStore,
+            @inject(MainPlayerStore) private readonly playerStore: MainPlayerStore,
             @inject(RoundStore) private readonly roundStore: RoundStore,
             @inject(GameConfigStore) private readonly gameConfigStore: GameConfigStore,
             @inject(GameGuideStore) private readonly guideStore: GameGuideStore
