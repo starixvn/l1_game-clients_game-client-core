@@ -1,7 +1,9 @@
 import { Label, _decorator, tween } from "cc";
 import GameComponent from "db://shared-components/game/scripts/components/game-component";
 import Observer from "observer";
-import { settings } from "../sedie-settings";
+import { startGame } from "../../../../extensions/shared-components/assets/shared/scripts/startup";
+import { siteConfigs } from "../../../scripts/site-configs";
+import { containerOptions, settings } from "../sedie-settings";
 import { SediePlate } from "./sedie-plate";
 
 const { ccclass, property } = _decorator;
@@ -40,5 +42,9 @@ export default class Sedie extends GameComponent {
             this.cpnThePlate.closeBowl(true);
             this.cpnThePlate.shakePlate();
         }
+    }
+
+    refreshContainer() {
+        startGame(settings.name, containerOptions, siteConfigs);
     }
 }
