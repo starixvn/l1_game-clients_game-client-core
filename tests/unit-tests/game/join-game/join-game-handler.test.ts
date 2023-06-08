@@ -1,11 +1,12 @@
 import { stub } from "jest-auto-stub";
+import { AroundTablePlayersStore } from "../../../../src/game/around-table-players";
 import { ChipStore } from "../../../../src/game/chips";
 import { ConnectionHandlers, ConnectionStore } from "../../../../src/game/connection";
 import { GameConfigStore, GameSetting } from "../../../../src/game/game-configs";
 import { JoinGameHandler } from "../../../../src/game/join-game";
 import { RoundHistoryStore } from "../../../../src/game/round-histories";
 import { RoundRunningHandlers, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
-import { AroundTablePlayersStore, MainPlayerStore } from "../../../../src/players";
+import { MainPlayerStore } from "../../../../src/players";
 import { Mediator } from "../../../../src/shared";
 import { gameSettings, siteConfigs } from "../../container.test";
 

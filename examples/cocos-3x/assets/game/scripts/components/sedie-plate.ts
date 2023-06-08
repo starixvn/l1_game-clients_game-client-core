@@ -3,7 +3,7 @@ import { _decorator, Animation, Component, Node, Sprite, SpriteFrame, tween, UIO
 const { ccclass, property } = _decorator;
 
 @ccclass
-export default class SediePlate extends Component {
+export class SediePlate extends Component {
     @property(Animation)
     animShakePlate: Animation = null;
 

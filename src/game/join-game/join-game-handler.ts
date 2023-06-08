@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
-import { AroundTablePlayersStore } from "../../players";
 import { IHandler } from "../../shared/mediator";
+import { AroundTablePlayersStore } from "../around-table-players";
 import { ChipStore } from "../chips";
 import { RoundHistoryStore } from "../round-histories";
 import { ConnectionHandlers } from "./../connection/connection-handlers";

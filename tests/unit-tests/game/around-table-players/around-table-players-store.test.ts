@@ -1,4 +1,4 @@
-import { AroundTablePlayersStore } from "../../../src/players";
+import { AroundTablePlayersStore } from "../../../../src/game/around-table-players/around-table-players-store";
 
 describe("AroundTablePlayersStore", () => {
     let aroundTablePlayersStore: AroundTablePlayersStore;

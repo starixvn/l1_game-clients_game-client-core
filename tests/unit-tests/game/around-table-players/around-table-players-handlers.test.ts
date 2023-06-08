@@ -1,6 +1,6 @@
 import { stub } from "jest-auto-stub";
-import { AroundTablePlayersStore } from "../../../src/players/around-table-players-store";
-import { AroundTablePlayerHandlers } from "./../../../src/players/around-table-players-handlers";
+import { AroundTablePlayersStore } from "../../../../src/game/around-table-players/around-table-players-store";
+import { AroundTablePlayerHandlers } from "./../../../../src/game/around-table-players/around-table-players-handlers";
 
 describe("AroundTablePlayerHandlers", () => {
     let aroundTablePlayerHandlers: AroundTablePlayerHandlers;

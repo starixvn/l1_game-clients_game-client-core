@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { GameServiceMessage, IMultipleHandlers } from "../shared";
+import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { AroundTablePlayersStore } from "./around-table-players-store";
 
 @injectable()

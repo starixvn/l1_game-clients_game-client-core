@@ -1,3 +1,4 @@
+export * as AroundTablePlayers from "./around-table-players";
 export * as Audios from "./audios";
 export * as Bet from "./bets";
 export * as Chips from "./chips";
