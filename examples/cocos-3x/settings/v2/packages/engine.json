@@ -141,6 +141,8 @@
     "flags": {}
   },
   "macroConfig": {
-    "ENABLE_TRANSPARENT_CANVAS": true
+    "ENABLE_TRANSPARENT_CANVAS": false,
+    "ENABLE_TILEDMAP_CULLING": false,
+    "ENABLE_WEBGL_ANTIALIAS": false
   }
 }
