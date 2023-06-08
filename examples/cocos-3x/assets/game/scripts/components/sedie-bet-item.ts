@@ -5,7 +5,7 @@ import Observer from "observer";
 import { settings } from "../sedie-settings";
 
 const { ccclass } = _decorator;
-const { observer, handle, render } = Observer;
+const { observer } = Observer;
 
 @ccclass
 @observer(settings.name)
