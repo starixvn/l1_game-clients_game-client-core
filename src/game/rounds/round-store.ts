@@ -3,7 +3,6 @@ import { makeAutoObservable } from "mobx";
 
 import { PlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared";
-import { FormatUtils } from "../../shared/utils";
 import { GameConfigStore } from "../game-configs";
 
 export type Bets = {
@@ -28,7 +27,6 @@ export class RoundStore {
     ownBets: GameServiceMessage.OwnBets = {};
     private _totalBets: GameServiceMessage.TotalBets = {};
     resultHash: GameServiceMessage.ResultHash = {};
-   
 
     get minBet() {
         return Math.max(this.gameConfigStore.minBet, this.playerStore.stakeLevel.minBet);
@@ -51,7 +49,7 @@ export class RoundStore {
 
     get totalBets() {
         return Object.keys(this._totalBets).reduce((total, betChoice) => {
-            total[betChoice] = FormatUtils.numberWithCommas(this._totalBets[betChoice] * this.playerStore.rate);
+            total[betChoice] = this._totalBets[betChoice] * this.playerStore.rate;
             return total;
         }, {});
     }
