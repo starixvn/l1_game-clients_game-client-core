@@ -74,7 +74,7 @@ describe("RoundHandlers test", () => {
             roundHandler.handleTotalBets(expectOwnBets);
 
             // Assert
-            expect(roundStore.totalBets).toEqual({ even: "2" });
+            expect(roundStore.totalBets).toEqual({ even: 2 });
         });
     });
     describe("handleResultHash", () => {

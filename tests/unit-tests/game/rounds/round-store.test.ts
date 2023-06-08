@@ -61,7 +61,7 @@ describe("RoundStore", () => {
         const actual = roundStore.totalBets;
 
         // assert
-        expect(actual).toEqual({ even: "5", red4: "10", red3: "2.5" });
+        expect(actual).toEqual({ even: 5, red4: 10, red3: 2.5 });
     });
 
     it("resetForNewRound() should reset ownBets and totalBets", () => {
