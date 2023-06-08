@@ -1,17 +1,14 @@
 import { _decorator, Color, Component, Label, Node, Sprite, SpriteFrame } from "cc";
 import Observer from "observer";
-
-import { settings } from "../sedie-settings";
-import { getStringDate, getStringDateByTime, getStringHourByTime } from "./date-time-helper";
-import { numberWithCommas } from "./number-helper";
+import { DateTimeUtils } from "db://shared-components/utils/date-time-utils";
+import { NumberUtils } from "db://shared-components/utils/number-utils";
 
 const { ccclass } = _decorator;
 const { observer, handle, render } = Observer;
 const { property } = _decorator;
 
 @ccclass
-// @observer(settings.name)
-export default class SedieBetHistoryItem extends Component {
+export default class SedieBetHistoryBodyItem extends Component {
     @property(Label)
     time: Label | null = null;
 
@@ -68,11 +65,11 @@ export default class SedieBetHistoryItem extends Component {
         const { time, phien, result, betwin, win, freeBet, settlementResult } = data;
 
         if (this.time && this.time.node.children.length === 0) {
-            this.time.string = getStringDateByTime(time);
-            // this.time.node.color = win ? Color.YELLOW : Color.WHITE;
+            this.time.string = DateTimeUtils.getStringDateByTime(time);
+            //// this.time.node.color = win ? Color.YELLOW : Color.WHITE;
         } else if (this.date && this.hour) {
-            this.date.string = getStringDate(time);
-            this.hour.string = getStringHourByTime(time);
+            this.date.string = DateTimeUtils.getStringDate(time);
+            this.hour.string = DateTimeUtils.getStringHourByTime(time);
         }
         this.round.string = phien;
 
@@ -86,17 +83,17 @@ export default class SedieBetHistoryItem extends Component {
         this.kqLabel.string = number.toString();
         if (number % 2) {
             this.kqSprite.spriteFrame = this.iconRed;
-            // this.kqLabel.node.color = Color.WHITE;
+            //// this.kqLabel.node.color = Color.WHITE;
         } else {
             this.kqSprite.spriteFrame = this.iconWhite;
-            // this.kqLabel.node.color = Color.BLACK;
+            //// this.kqLabel.node.color = Color.BLACK;
         }
 
-        this.win.string = numberWithCommas(betwin, 2);
+        this.win.string = NumberUtils.numberWithCommas(betwin, 2);
 
         Object.keys(settlementResult).forEach((choice) => {
             const historyItem = this[choice];
-            historyItem.string = freeBet ? 0 : numberWithCommas(data[choice]);
+            historyItem.string = freeBet ? 0 : NumberUtils.numberWithCommas(data[choice]);
 
             if (settlementResult[choice]) {
                 historyItem.node.color = Color.YELLOW;
