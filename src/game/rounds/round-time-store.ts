@@ -44,7 +44,6 @@ export class RoundTimeStore {
     endRound = false;
     startPlacingBet = false;
     endPlacingBet = false;
-    joinGameState = "";
 
     constructor(@inject(GameSetting) gameSetting: GameSetting) {
         makeAutoObservable(this);
@@ -256,14 +255,7 @@ export class RoundTimeStore {
         this.roundState = ROUND_STATE.START_GAME_LOOP;
     }
 
-    setJoinGameState() {
-        if (!this.joinGameState) {
-            this.joinGameState = this.roundState;
-        }
-    }
-
     resetRoundTimeStore() {
         this.roundState = ROUND_STATE.STOP_GAME_LOOP;
-        this.joinGameState = "";
     }
 }

@@ -13,6 +13,7 @@ export interface RoundHistory {
 
 export interface IRoundHistoryInfo {
     roundHistory: RoundHistory;
+    isShow?: boolean;
 }
 
 export interface THighLightInfo extends IRoundHistoryInfo {
@@ -31,7 +32,7 @@ export class RoundHistoryStore {
     }
 
     private _histories: RoundHistory[] = [];
-    private _lastRoundWhenJoinGame: RoundHistory | null = null;
+    joinGameHistory: IRoundHistoryInfo = null;
 
     get histories() {
         return this._histories;
@@ -39,17 +40,6 @@ export class RoundHistoryStore {
 
     set histories(histories: RoundHistory[]) {
         this._histories = histories;
-        if (!this.lastRoundWhenJoinGame) {
-            this.lastRoundWhenJoinGame = this.histories?.[0];
-        }
-    }
-
-    get lastRoundWhenJoinGame() {
-        return this._lastRoundWhenJoinGame;
-    }
-
-    set lastRoundWhenJoinGame(lastRoundWhenJoinGame: RoundHistory | null) {
-        this._lastRoundWhenJoinGame = lastRoundWhenJoinGame;
     }
 
     getLastRound() {
@@ -68,15 +58,23 @@ export class RoundHistoryStore {
     }
 
     get joinRoomShowResult(): IRoundHistoryInfo | null {
-        if (this.lastRoundWhenJoinGame) {
+        if (!this.joinGameHistory && this._histories.length > 0) {
             if (
-                this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
-                this.roundTimeStore.joinGameState === ROUND_STATE.SHOW_RESULT
+                this.roundTimeStore.roundState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
+                this.roundTimeStore.roundState === ROUND_STATE.SHOW_RESULT
             ) {
-                return {
-                    roundHistory: this.lastRoundWhenJoinGame,
+                this.joinGameHistory = {
+                    roundHistory: this.histories[0],
+                    isShow: true,
+                };
+            } else {
+                this.joinGameHistory = {
+                    roundHistory: this.histories[0],
+                    isShow: false,
                 };
             }
+
+            return this.joinGameHistory;
         }
 
         return null;
@@ -107,21 +105,8 @@ export class RoundHistoryStore {
         };
     }
 
-    get isResetResultJoinRoom(): boolean {
-        let isReset = false;
-        if (
-            this.roundTimeStore.joinGameState === ROUND_STATE.PLACING_BET ||
-            this.roundTimeStore.joinGameState === ROUND_STATE.LOCKING_BET ||
-            this.roundTimeStore.joinGameState === ROUND_STATE.STARTING_ROUND
-        ) {
-            isReset = true;
-        }
-
-        return isReset;
-    }
-
     resetRoundHistoryStore() {
         this.histories = [];
-        this._lastRoundWhenJoinGame = null;
+        this.joinGameHistory = null;
     }
 }

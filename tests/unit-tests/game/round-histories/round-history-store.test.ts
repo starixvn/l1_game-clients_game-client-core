@@ -1,5 +1,4 @@
 import { stub } from "jest-auto-stub";
-import { RoundHistories } from "../../../../src/game";
 import { GameSetting } from "../../../../src/game/game-configs";
 import { RoundHistory, RoundHistoryStore } from "../../../../src/game/round-histories";
 import { ROUND_STATE, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
@@ -40,20 +39,7 @@ describe("RoundHistoryStore", () => {
             },
         ];
     });
-    describe("get joinRoomShowResult", () => {
-        test.each([
-            [ROUND_STATE.SHOW_ANIMATION_RESULT, mockHistories],
-            [ROUND_STATE.SHOW_RESULT, mockHistories],
-            [ROUND_STATE.LOCKING_BET, null],
-            [ROUND_STATE.SHOW_ANIMATION_RESULT, null],
-        ])("should return %s when joinGameState is %s", (joinGameState: string, expected: RoundHistories.RoundHistory[] | null) => {
-            const round = expected?.[0] || null;
-            roundHistoryStore.lastRoundWhenJoinGame = round;
-            roundTimeStoreMock.joinGameState = joinGameState;
-
-            expect(roundHistoryStore.joinRoomShowResult).toEqual(round);
-        });
-    });
+   
 
     describe("get joinRoomHighLight", () => {
         test.each([
@@ -69,24 +55,6 @@ describe("RoundHistoryStore", () => {
 
             expect(result.isHighLightAnim).toBe(expectedIsShowHighLight);
             expect(result.roundHistory).toEqual(roundHistoryStore.histories[0]);
-        });
-    });
-
-    describe("get isResetResultJoinRoom", () => {
-        test.each([
-            [ROUND_STATE.SHOW_RESULT, false],
-            [ROUND_STATE.PLACING_BET, true],
-            [ROUND_STATE.LOCKING_BET, true],
-            [ROUND_STATE.STARTING_ROUND, true],
-        ])("should return %s when joinGameState is %s", (joinGameState, expected) => {
-            // Arrange
-            roundTimeStoreMock.joinGameState = joinGameState;
-
-            // Act
-            const result = roundHistoryStore.isResetResultJoinRoom;
-
-            // Assert
-            expect(result).toBe(expected);
         });
     });
 

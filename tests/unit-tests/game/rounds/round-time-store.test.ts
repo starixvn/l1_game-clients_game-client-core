@@ -584,32 +584,6 @@ describe("RoundTimeStore Unit Tests", () => {
         });
     });
 
-    describe("setJoinGameState", () => {
-        test("should set join game state to the current round state", () => {
-            roundTimeStore.roundTime = 10;
-
-            roundTimeStore.setJoinGameState();
-
-            expect(roundTimeStore.joinGameState).toBe(ROUND_STATE.PLACING_BET);
-        });
-
-        test('should set join game state to "waiting" when round time is negative', () => {
-            roundTimeStore.roundTime = -1;
-
-            roundTimeStore.setJoinGameState();
-
-            expect(roundTimeStore.joinGameState).toBe(ROUND_STATE.WAITING);
-        });
-
-        test("should reset join game state when resetRoundTimeStore is called", () => {
-            roundTimeStore.joinGameState = ROUND_STATE.SHOW_RESULT;
-
-            roundTimeStore.resetRoundTimeStore();
-
-            expect(roundTimeStore.joinGameState).toBe("");
-        });
-    });
-
     describe("start", () => {
         it("should set roundState to START_GAME_LOOP", () => {
             // Arrange
