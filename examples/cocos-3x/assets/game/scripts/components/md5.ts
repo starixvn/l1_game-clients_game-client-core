@@ -4,7 +4,7 @@ const { ccclass} = _decorator;
 import Observer from "observer";
 import { settings } from "../sedie-settings";
 
-const { observer, handle, render } = Observer;
+const { observer} = Observer;
 
 export type ExtraInfos = {
     red1: boolean;
@@ -30,7 +30,7 @@ export default class SedieMD5 extends MD5Component {
         if (!!data.hashValue) {
             result = data.hashValue;
         }
-        this.md5Value.string = `${result}`;
+        this.lblMd5Value.string = `${result}`;
     }
 
     generateChips(totalRed: number) {
