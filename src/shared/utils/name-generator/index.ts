@@ -1,5 +1,5 @@
 import { uniqueNamesGenerator } from "unique-names-generator";
-import { getRandomInt } from "../number-utils";
+import { NumberUtils } from "../number-utils";
 import { animals } from "./dictionaries/animals";
 import { colors } from "./dictionaries/colors";
 import { cools } from "./dictionaries/cools";
@@ -11,7 +11,7 @@ export default class NameGenerator {
     public static generateName(): string {
         const dictionaries = [colors, animals, marvels, fruits, cools, new202010];
 
-        const randomDictionaryIndex = getRandomInt(dictionaries.length);
+        const randomDictionaryIndex = NumberUtils.getRandomInt(dictionaries.length);
         const pickedDictionary = dictionaries[randomDictionaryIndex];
 
         const shortName = uniqueNamesGenerator({
@@ -25,7 +25,7 @@ export default class NameGenerator {
         for (let i = 0; i < numberLength; i++) {
             maxNumber = `9${maxNumber}`;
         }
-        const randomNumber = getRandomInt(+maxNumber);
+        const randomNumber = NumberUtils.getRandomInt(+maxNumber);
 
         return `${shortName}${randomNumber}`;
     }

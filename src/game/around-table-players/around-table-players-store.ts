@@ -10,7 +10,7 @@ export class AroundTablePlayersStore {
 
     aroundTablePlayer: GameServiceMessage.AroundTablePlayer = null;
     aroundTablePlayers: GameServiceMessage.AroundTablePlayers = {};
-    aroundTablePlayerIdOutGame = "";
+    outGamePlayerId = "";
 
     updateAroundTablePlayer(aroundTablePlayer: GameServiceMessage.AroundTablePlayer) {
         if (aroundTablePlayer?.id) {
@@ -21,7 +21,7 @@ export class AroundTablePlayersStore {
 
     removeAroundTablePlayer(aroundTablePlayer: GameServiceMessage.OutGame) {
         if (aroundTablePlayer?.playerId) {
-            this.aroundTablePlayerIdOutGame = aroundTablePlayer.playerId;
+            this.outGamePlayerId = aroundTablePlayer.playerId;
             delete this.aroundTablePlayers[aroundTablePlayer.playerId];
         }
     }
