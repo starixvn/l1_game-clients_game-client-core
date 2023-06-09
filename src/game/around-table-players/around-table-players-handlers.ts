@@ -4,18 +4,18 @@ import { AroundTablePlayersStore } from "./around-table-players-store";
 
 @injectable()
 export class AroundTablePlayerHandlers implements IMultipleHandlers {
-    constructor(@inject(AroundTablePlayersStore) protected readonly otherPlayersStore: AroundTablePlayersStore) {}
+    constructor(@inject(AroundTablePlayersStore) protected readonly aroundTablePlayersStore: AroundTablePlayersStore) {}
 
     handlePlayer(aroundTablePlayer: GameServiceMessage.AroundTablePlayer) {
-        this.otherPlayersStore.updateAroundTablePlayer(aroundTablePlayer);
+        this.aroundTablePlayersStore.updateAroundTablePlayer(aroundTablePlayer);
     }
 
     handlePlayers(aroundTablePlayers: GameServiceMessage.AroundTablePlayers) {
-        this.otherPlayersStore.aroundTablePlayers = aroundTablePlayers;
+        this.aroundTablePlayersStore.aroundTablePlayers = aroundTablePlayers;
     }
 
     handlePlayerOutGame(aroundTablePlayerOutGame: GameServiceMessage.OutGame) {
-        this.otherPlayersStore.removeAroundTablePlayer(aroundTablePlayerOutGame);
+        this.aroundTablePlayersStore.removeAroundTablePlayer(aroundTablePlayerOutGame);
     }
 
     eventHandleList = [

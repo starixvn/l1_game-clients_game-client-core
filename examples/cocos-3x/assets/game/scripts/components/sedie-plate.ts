@@ -1,8 +1,13 @@
 import { _decorator, Animation, Component, Node, Sprite, SpriteFrame, tween, UIOpacity, v2, v3 } from "cc";
+import gc from "game-client-base";
+import Observer from "observer";
+import { settings } from "../sedie-settings";
 
 const { ccclass, property } = _decorator;
+const { observer, handle } = Observer;
 
 @ccclass
+@observer(settings.name)
 export class SediePlate extends Component {
     @property(Animation)
     animShakePlate: Animation = null;
@@ -20,6 +25,7 @@ export class SediePlate extends Component {
     sprDotWhite: SpriteFrame = null;
 
     openPlateDuration = 0.5;
+    private audioShakeKey = "shake";
 
     setDots(result) {
         Object.keys(result).forEach((key, index) => {
@@ -38,9 +44,15 @@ export class SediePlate extends Component {
             .delay(0.5)
             .call(() => {
                 this.toggleDotsActive(false);
+                this.playSoundShake();
                 this.animShakePlate.play();
             })
             .start();
+    }
+
+    @handle(gc.Audios.AudioHandler, (handle, id: string) => handle.playSFX(id))
+    playSoundShake() {
+        return this.audioShakeKey;
     }
 
     openBowl(animated: boolean) {

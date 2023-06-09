@@ -8,23 +8,21 @@ export class AroundTablePlayersStore {
         makeAutoObservable(this);
     }
 
-    aroundTablePlayer: GameServiceMessage.AroundTablePlayer | null = null;
+    aroundTablePlayer: GameServiceMessage.AroundTablePlayer = null;
     aroundTablePlayers: GameServiceMessage.AroundTablePlayers = {};
     aroundTablePlayerIdOutGame = "";
 
     updateAroundTablePlayer(aroundTablePlayer: GameServiceMessage.AroundTablePlayer) {
-        const { id } = aroundTablePlayer ?? {};
-
-        if (id) {
+        if (aroundTablePlayer?.id) {
             this.aroundTablePlayer = aroundTablePlayer;
-            this.aroundTablePlayers[id] = aroundTablePlayer;
+            this.aroundTablePlayers[aroundTablePlayer.id] = aroundTablePlayer;
         }
     }
 
     removeAroundTablePlayer(aroundTablePlayer: GameServiceMessage.OutGame) {
         if (aroundTablePlayer?.playerId) {
             this.aroundTablePlayerIdOutGame = aroundTablePlayer.playerId;
-            delete this.aroundTablePlayers?.[aroundTablePlayer.playerId];
+            delete this.aroundTablePlayers[aroundTablePlayer.playerId];
         }
     }
 

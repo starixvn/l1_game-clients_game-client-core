@@ -7,7 +7,7 @@ export namespace FormatUtils {
 
     export const numberWithCommas = (number: number, toFixed = 1, noZeroSuffix = true): string => {
         if (!number) {
-            return "";
+            return "0";
         }
 
         let trimZeroNumber: string;
