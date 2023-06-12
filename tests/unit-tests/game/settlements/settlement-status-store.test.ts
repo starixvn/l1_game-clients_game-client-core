@@ -48,4 +48,33 @@ describe("SettlementStatusStore test", () => {
             expect(store.bet).toBe(0);
         });
     });
+
+    describe("settlementStatus()", () => {
+        it("should return a valid settlement status object", () => {
+            // Arrange
+            const store = new SettlementStatusStore();
+            const mockStatus = {
+                win: true,
+                bet: 50,
+                winningByChoices: {
+                    choice1: 30,
+                    choice2: 20,
+                },
+            };
+            store.setStatusStore(mockStatus);
+
+            // Act
+            const settlementStatus = store.settlementStatus;
+
+            // Assert
+            expect(settlementStatus).toEqual({
+                win: true,
+                bet: 50,
+                winningByChoices: {
+                    choice1: 30,
+                    choice2: 20,
+                },
+            });
+        });
+    });
 });

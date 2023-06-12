@@ -45,4 +45,49 @@ describe("SettlementStore tests", () => {
             expect(store.settlementResult).toEqual(settlementResult);
         });
     });
+
+    describe("payChipInfo", () => {
+        it("should return the finish info when isFinishedShowResult is true", () => {
+            // Arrange
+            const store = new SettlementStore();
+            const mockWinningPlayers = {
+                "1234": {
+                    bet: 1,
+                    rate: 2,
+                    win: true,
+                    winningByChoices: {
+                        choice1: 2,
+                    },
+                },
+            };
+            const mockIsFinishedShowResult = true;
+            const mockSettlementResult = {
+                choice1: true,
+            };
+            store.isFinishedShowResult = mockIsFinishedShowResult;
+            store.settlementResult = mockSettlementResult;
+            store.winningPlayers = mockWinningPlayers;
+
+            // Act
+            const finishInfo = store.payChipInfo;
+
+            // Assert
+            expect(finishInfo).toEqual({
+                settlementResult: mockSettlementResult,
+                winningPlayers: mockWinningPlayers,
+            });
+        });
+
+        it("should return null when isFinishedShowResult is false", () => {
+            // ArrangeeMessage
+            const store = new SettlementStore();
+            store.isFinishedShowResult = false;
+
+            // Act
+            const finishInfo = store.payChipInfo;
+
+            // Assert
+            expect(finishInfo).toBeNull();
+        });
+    });
 });

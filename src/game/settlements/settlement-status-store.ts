@@ -22,4 +22,12 @@ export class SettlementStatusStore {
         this.win = false;
         this.bet = 0;
     }
+
+    get settlementStatus(): GameServiceMessage.Status {
+        return {
+            win: this.win,
+            bet: this.bet,
+            winningByChoices: this.winningByChoices,
+        };
+    }
 }
