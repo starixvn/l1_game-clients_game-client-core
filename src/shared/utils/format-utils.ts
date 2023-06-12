@@ -19,4 +19,9 @@ export namespace FormatUtils {
 
         return trimZeroNumber.replace(formatCommasReg, ",");
     };
+
+    export const truncateFixedDecimals = (number:number, fixed:number) => {
+        const withFixedDecimals = `${number}`.match(new RegExp(`^-?\\d+(?:\.\\d{0,${fixed}})?`))[0];
+        return parseFloat(withFixedDecimals).toString().replace(formatCommasReg, ",");
+    };
 }

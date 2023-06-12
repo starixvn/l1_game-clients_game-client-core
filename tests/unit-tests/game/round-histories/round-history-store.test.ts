@@ -39,7 +39,6 @@ describe("RoundHistoryStore", () => {
             },
         ];
     });
-   
 
     describe("get joinRoomHighLight", () => {
         test.each([
@@ -153,6 +152,22 @@ describe("RoundHistoryStore", () => {
 
             // Assert
             expect(roundHistoryStore.histories).toEqual([finish, ...initialHistories.slice(0, 2)]);
+        });
+    });
+
+    describe("joinRoomShowResult", () => {
+        test.each`
+            roundState                           | histories                                                | expected
+            ${ROUND_STATE.SHOW_ANIMATION_RESULT} | ${[{ id: 1, result: "Win" }, { id: 2, result: "Lose" }]} | ${{ roundHistory: { id: 1, result: "Win" }, isShow: true }}
+            ${ROUND_STATE.SHOW_RESULT}           | ${[{ id: 3, result: "Draw" }, { id: 4, result: "Win" }]} | ${{ roundHistory: { id: 3, result: "Draw" }, isShow: true }}
+            ${ROUND_STATE.LOCKING_BET}           | ${[{ id: 5, result: "Lose" }, { id: 6, result: "Win" }]} | ${{ roundHistory: { id: 5, result: "Lose" }, isShow: false }}
+        `("returns $expected when roundState is $roundState and histories are $histories", ({ roundState, histories, expected }) => {
+            roundHistoryStore.histories = histories;
+            roundTimeStoreMock.roundState = roundState;
+
+            const result = roundHistoryStore.joinRoomShowResult;
+
+            expect(result).toEqual(expected);
         });
     });
 });

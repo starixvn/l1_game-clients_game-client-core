@@ -27,4 +27,18 @@ describe("FormatUtils", () => {
             expect(FormatUtils.numberWithCommas(+number, +toFixed, !!noZeroSuffix)).toBe(expected);
         });
     });
+
+    describe("truncateFixedDecimals", () => {
+        const testCases = [
+            [3.14159, 2, "3.14"],
+            [10.12345, 3, "10.123"],
+            [123.456, 0, "123"],
+            [-5.6789, 1, "-5.6"],
+        ];
+
+        test.each(testCases)("truncates %p to %p decimal places and returns %p", (number, fixed, expected) => {
+            const result = FormatUtils.truncateFixedDecimals(+number, +fixed);
+            expect(result).toBe(expected);
+        });
+    });
 });
