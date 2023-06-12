@@ -1,11 +1,11 @@
-import { getSharedContainer } from "db://shared-components/scripts/startup";
+import { getSharedContainer } from "db://shared-components/shared/scripts/startup";
 import { buildObserverContainer } from "game-client-base";
 import mobx from "mobx";
 import { configure } from "observer";
 
 import "../../../assets/scripts/shared-container";
 
-jest.mock("db://shared-components/scripts/startup", () => ({
+jest.mock("db://shared-components/shared/scripts/startup", () => ({
     getSharedContainer: jest.fn(() => ({ sharedContainer: true })),
 }));
 

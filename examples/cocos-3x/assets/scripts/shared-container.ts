@@ -1,4 +1,4 @@
-import { getSharedContainer } from "db://shared-components/scripts/startup";
+import { getSharedContainer } from "db://shared-components/shared/scripts/startup";
 import gc from "game-client-base";
 import mobx from "mobx";
 import Observer from "observer";

@@ -1,5 +1,5 @@
 import { _decorator } from "cc";
-import SlidingChip from "db://shared-components/sliding-chip/scripts/components/sliding-chip";
+import SlidingChip from "db://shared-components/game/sliding-chip/scripts/components/sliding-chip";
 import Observer from "observer";
 
 import { settings } from "../sedie-settings";

@@ -1,6 +1,6 @@
 import { _decorator } from "cc";
 import StartupComponent from "db://shared-components/game/scripts/components/startup-component";
-import { startGame } from "db://shared-components/scripts/startup";
+import { startGame } from "db://shared-components/shared/scripts/startup";
 import Observer from "observer";
 import { siteConfigs } from "../../../scripts/site-configs";
 

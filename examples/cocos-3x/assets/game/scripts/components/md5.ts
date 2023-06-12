@@ -1,10 +1,10 @@
-import MD5Component,  { MD5Type } from "db://shared-components/md5/scripts/md5-component";
 import { _decorator } from "cc";
-const { ccclass} = _decorator;
+import MD5Component, { MD5Type } from "db://shared-components/game/md5/scripts/md5-component";
 import Observer from "observer";
 import { settings } from "../sedie-settings";
+const { ccclass } = _decorator;
 
-const { observer} = Observer;
+const { observer } = Observer;
 
 export type ExtraInfos = {
     red1: boolean;
@@ -30,7 +30,7 @@ export default class SedieMD5 extends MD5Component {
         if (!!data.hashValue) {
             result = data.hashValue;
         }
-        this.lblMd5Value.string = `${result}`;
+        this.lblMd5Value && (this.lblMd5Value.string = `${result}`);
     }
 
     generateChips(totalRed: number) {
@@ -39,7 +39,7 @@ export default class SedieMD5 extends MD5Component {
             1: `${this.CHIP_RED} ${this.CHIP_WHITE} ${this.CHIP_WHITE} ${this.CHIP_WHITE}`,
             2: `${this.CHIP_RED} ${this.CHIP_RED} ${this.CHIP_WHITE} ${this.CHIP_WHITE}`,
             3: `${this.CHIP_RED} ${this.CHIP_RED} ${this.CHIP_RED} ${this.CHIP_WHITE}`,
-            4: `${this.CHIP_RED} ${this.CHIP_RED} ${this.CHIP_RED} ${this.CHIP_RED}`
+            4: `${this.CHIP_RED} ${this.CHIP_RED} ${this.CHIP_RED} ${this.CHIP_RED}`,
         };
 
         return chips.hasOwnProperty(totalRed) ? chips[totalRed] : "";

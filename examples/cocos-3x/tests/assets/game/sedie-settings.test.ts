@@ -2,7 +2,7 @@ import { LogStore } from "db://shared-components/game/scripts/stores/log-store";
 import { GameConfigs } from "game-client-base";
 import { containerOptions, settings } from "../../../assets/game/scripts/sedie-settings";
 
-jest.mock("db://shared-components/scripts/startup", () => ({
+jest.mock("db://shared-components/shared/scripts/startup", () => ({
     getSharedContainer: jest.fn(() => ({ sharedContainer: true })),
 }));
 
