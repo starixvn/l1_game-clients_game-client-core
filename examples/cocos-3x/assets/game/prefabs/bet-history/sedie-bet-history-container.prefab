@@ -146,6 +146,10 @@
       "__uuid__": "7144f629-861a-42b4-a562-665b91684e74",
       "__expectedType__": "cc.Prefab"
     },
+    "paginationPrefab": {
+      "__uuid__": "ad823654-8be2-4611-a477-a5cd82585450",
+      "__expectedType__": "cc.Prefab"
+    },
     "_id": ""
   },
   {
@@ -162,6 +166,6 @@
     },
     "fileId": "e22BwO1ihPxqLETz0GktMD",
     "instance": null,
-    "targetOverrides": null
+    "targetOverrides": []
   }
 ]

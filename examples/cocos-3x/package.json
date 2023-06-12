@@ -26,6 +26,7 @@
         "lodash-es": "^4.17.21",
         "mobx": "6.9.0",
         "observer": "1.2.0",
+        "moment": "^2.26.0",
         "sc-scoreboards": "1.0.6"
     },
     "devDependencies": {

@@ -2,13 +2,14 @@ import { _decorator, Color, Component, Label, Node, Sprite, SpriteFrame } from "
 import Observer from "observer";
 import { DateTimeUtils } from "db://shared-components/utils/date-time-utils";
 import { NumberUtils } from "db://shared-components/utils/number-utils";
+import { ObserverComponent } from "../../../../../extensions/shared-components/assets/common/observer-component/scripts/observer-component";
 
 const { ccclass } = _decorator;
 const { observer, handle, render } = Observer;
 const { property } = _decorator;
 
 @ccclass
-export default class SedieBetHistoryBodyItem extends Component {
+export default class SedieBetHistoryBodyItem extends ObserverComponent {
     @property(Label)
     time: Label | null = null;
 

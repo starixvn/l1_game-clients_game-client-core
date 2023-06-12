@@ -4,8 +4,8 @@ import { makeAutoObservable, makeObservable, observable } from "mobx";
 export interface BetHistoryModel {
     page: number;
     pageSize: number;
-    totalItems: number;
-    betLog: Array<any>;
+    total: number;
+    betLogs: Array<any>;
 }
 
 @injectable()
@@ -18,6 +18,7 @@ export class BetHistoryStore {
         makeAutoObservable(this);
     }
 
+    page: number = 1;
     data: BetHistoryModel = null;
     showBetHistory: boolean = false;
 

@@ -13,8 +13,8 @@ export namespace BetHistoryHandlers {
         ) {}
 
         handleShowBetHistory(data: BetHistoryModel) {
-            this.betHistoryStore.setData(data);
             this.betHistoryStore.setShowBetHistory(true);
+            this.betHistoryStore.setData(data);
         }
 
         eventHandleList = [
@@ -26,14 +26,14 @@ export namespace BetHistoryHandlers {
     }
 
     @injectable()
-    export class BetHistoryCallServiceHandler implements IHandler<void> {
+    export class BetHistoryCallServiceHandler implements IHandler<number> {
         constructor(
             @inject(ConnectionStore)
             protected readonly connectionStore: ConnectionStore
         ) {}
 
-        handle() {
-            this.connectionStore.send(GameServiceMessage.BetHistory.getHistoryEvent, { page: 1 });
+        handle(page: number = 1) {
+            this.connectionStore.send(GameServiceMessage.BetHistory.getHistoryEvent, { page });
         }
     }
 }

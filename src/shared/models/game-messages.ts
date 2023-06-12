@@ -226,6 +226,7 @@ export namespace GameServiceMessage {
     }
 
     export class BetHistory {
+        page: number;
         static eventName = "history";
         static getHistoryEvent = "getHistory";
     }
