@@ -59,20 +59,12 @@ export class RoundHistoryStore {
 
     get joinRoomShowResult(): IRoundHistoryInfo | null {
         if (!this.joinGameHistory && this._histories.length > 0) {
-            if (
-                this.roundTimeStore.roundState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
-                this.roundTimeStore.roundState === ROUND_STATE.SHOW_RESULT
-            ) {
-                this.joinGameHistory = {
-                    roundHistory: this.histories[0],
-                    isShow: true,
-                };
-            } else {
-                this.joinGameHistory = {
-                    roundHistory: this.histories[0],
-                    isShow: false,
-                };
-            }
+            const roundState = this.roundTimeStore.roundState;
+            const isShow = roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || roundState === ROUND_STATE.SHOW_RESULT;
+            this.joinGameHistory = {
+                roundHistory: this.histories[0],
+                isShow: isShow,
+            };
 
             return this.joinGameHistory;
         }
