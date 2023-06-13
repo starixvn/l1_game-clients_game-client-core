@@ -35,7 +35,7 @@ describe("ChipStore", () => {
     });
 
     test("should reset chips", () => {
-        // Add some initial chips to the store
+        // Arrange
         chipStore.chips = {
             1: {
                 red: {
@@ -44,16 +44,16 @@ describe("ChipStore", () => {
             },
         };
 
-        // Reset the chips
+        // Act
         chipStore.resetChips();
 
-        // Assert that the chips object is empty
+        // Assert
         expect(chipStore.chips).toEqual({});
     });
 
     describe("Get ChipsByCurrency", () => {
         it("should return the chips converted by currency", () => {
-            // Mock the required dependencies
+            // Arrange
             const mockChips = {
                 1: {
                     test1: { 1: 10 },
@@ -62,28 +62,32 @@ describe("ChipStore", () => {
             };
             chipStore.chips = mockChips;
             mainPlayerStore.rate = 1;
-
             const expectedChipsByCurrency = {
                 test1: { "1": 10 },
                 test2: { "2": 5 },
             };
 
-            expect(chipStore.chipsByCurrency).toEqual(expectedChipsByCurrency);
+            // Action
+            const chipsByMainPlayerRate = chipStore.chipsByMainPlayerRate;
+
+            // Assert
+            expect(chipsByMainPlayerRate).toEqual(expectedChipsByCurrency);
         });
     });
 
     describe("getChipValueByCurrency", () => {
         it("should return the chip amount converted by currency", () => {
-            // Mock the required dependencies
+            // Arrange
             const mockChipAmount = { 1: 10 };
             const mockPlayerRate = 2;
             const mockChipRate = 0.5;
-
             const expectedChipValueByCurrency = { "0.25": 10 };
 
-            expect(chipStore.convertChipValueFollowCurrency(mockChipAmount, mockPlayerRate, mockChipRate)).toEqual(
-                expectedChipValueByCurrency
-            );
+            // Action
+            const chipAmountConvert = chipStore.convertChipToPlayerRate(mockChipAmount, mockPlayerRate, mockChipRate);
+
+            // Assert
+            expect(chipAmountConvert).toEqual(expectedChipValueByCurrency);
         });
     });
 });

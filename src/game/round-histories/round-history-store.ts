@@ -69,7 +69,7 @@ export class RoundHistoryStore {
             return this.joinGameHistory;
         }
 
-        return null;
+        return this.joinGameHistory;
     }
 
     get highLightInfo(): THighLightInfo {

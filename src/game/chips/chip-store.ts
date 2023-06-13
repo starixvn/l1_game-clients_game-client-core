@@ -4,12 +4,12 @@ import { MainPlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared/models/game-messages";
 import { NumberUtils } from "../../shared/utils";
 
-export interface IChipAmount {
+export interface IChipGroup {
     [chipValue: string]: number;
 }
 
-export interface TChipsByCurrency {
-    [choiceName: string]: IChipAmount;
+export interface TChipsByMainPlayerRate {
+    [choiceName: string]: IChipGroup;
 }
 @injectable()
 export class ChipStore {
@@ -51,31 +51,31 @@ export class ChipStore {
         this.ownChip = { betChoice: "", amount: 0 };
     }
 
-    get chipsByCurrency(): TChipsByCurrency {
-        const newChips = {};
+    get chipsByMainPlayerRate(): TChipsByMainPlayerRate {
+        const chipsByMainPlayerRate = {};
         for (const rate in this.chips) {
-            const chipValues = this.chips[rate];
-            const betChoices = Object.keys(chipValues);
-            for (const betChoice of betChoices) {
-                const chipAmount = chipValues[betChoice];
-                if (chipAmount) {
-                    const chipAmountConvert = this.convertChipValueFollowCurrency(chipAmount, this.mainPlayerStore.rate, +rate);
-                    newChips[betChoice] = chipAmountConvert;
+            const chipsByChoiceName = this.chips[rate];
+            const choiceNames = Object.keys(chipsByChoiceName);
+            for (const name of choiceNames) {
+                const chipGroup = chipsByChoiceName[name];
+                if (chipGroup) {
+                    const chipValueConvert = this.convertChipToPlayerRate(chipGroup, this.mainPlayerStore.rate, +rate);
+                    chipsByMainPlayerRate[name] = chipValueConvert;
                 }
             }
         }
 
-        return newChips;
+        return chipsByMainPlayerRate;
     }
 
-    convertChipValueFollowCurrency(chipAmount: IChipAmount, playerRate: number, chipRate: number) {
-        const chipAmountConvert: IChipAmount = {};
-        for (const chipValue in chipAmount) {
+    convertChipToPlayerRate(chipGroup: IChipGroup, playerRate: number, chipRate: number) {
+        const chipValueConvert: IChipGroup = {};
+        for (const chipValue in chipGroup) {
             const convertChipValue = NumberUtils.getValueByCurrency(+chipValue, playerRate, chipRate);
 
-            chipAmountConvert[convertChipValue] = chipAmount[chipValue];
+            chipValueConvert[convertChipValue] = chipGroup[chipValue];
         }
 
-        return chipAmountConvert;
+        return chipValueConvert;
     }
 }
