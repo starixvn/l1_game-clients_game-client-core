@@ -1,12 +1,16 @@
+import { stub } from "jest-auto-stub";
 import { ChipHandlers, ChipStore } from "../../../../src/game/chips";
+import { MainPlayerStore } from "../../../../src/players";
 import { GameServiceMessage } from "../../../../src/shared";
 
 describe("ChipHandlers", () => {
     let chipHandlers: ChipHandlers;
     let chipStoreMock: ChipStore;
+    let mainPlayerStore: MainPlayerStore;
 
     beforeEach(() => {
-        chipStoreMock = new ChipStore();
+        mainPlayerStore = stub<MainPlayerStore>();
+        chipStoreMock = new ChipStore(mainPlayerStore);
         chipStoreMock.chips = {
             "1": {
                 even: {
