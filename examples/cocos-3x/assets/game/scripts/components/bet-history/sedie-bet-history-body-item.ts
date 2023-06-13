@@ -1,8 +1,8 @@
 import { _decorator, Color, Component, Label, Node, Sprite, SpriteFrame } from "cc";
 import Observer from "observer";
-import { DateTimeUtils } from "db://shared-components/utils/date-time-utils";
-import { NumberUtils } from "db://shared-components/utils/number-utils";
-import { ObserverComponent } from "../../../../../extensions/shared-components/assets/common/observer-component/scripts/observer-component";
+import { DateTimeUtils } from "db://shared-components/shared/utils/date-time-utils";
+import { NumberUtils } from "db://shared-components/shared/utils/number-utils";
+import { ObserverComponent } from "../../../../../extensions/shared-components/assets/shared/common-components/observer-component/scripts/observer-component";
 
 const { ccclass } = _decorator;
 const { observer, handle, render } = Observer;

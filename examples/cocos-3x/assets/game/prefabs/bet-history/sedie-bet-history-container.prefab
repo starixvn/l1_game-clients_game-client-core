@@ -146,15 +146,11 @@
       "__uuid__": "7144f629-861a-42b4-a562-665b91684e74",
       "__expectedType__": "cc.Prefab"
     },
-    "paginationPrefab": {
-      "__uuid__": "ad823654-8be2-4611-a477-a5cd82585450",
-      "__expectedType__": "cc.Prefab"
-    },
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "08GG2RN59DGJMbqS0KfX2Y"
+    "fileId": "58gXB16yZH+pQo7DnHiJTv"
   },
   {
     "__type__": "cc.PrefabInfo",

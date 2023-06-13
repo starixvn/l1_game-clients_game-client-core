@@ -1,5 +1,5 @@
 import { _decorator, instantiate, Node } from "cc";
-import { BetHistoryContainer } from "db://shared-components/bet-history/scripts/components/bet-history-container";
+import { BetHistoryContainer } from "db://shared-components/game/bet-history/scripts/components/bet-history-container";
 import SedieBetHistoryBodyItem from "./sedie-bet-history-body-item";
 import Observer from "observer";
 import { settings } from "../../sedie-settings";
