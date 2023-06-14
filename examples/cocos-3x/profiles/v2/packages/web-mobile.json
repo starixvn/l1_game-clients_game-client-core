@@ -12,11 +12,6 @@
       "startScene": "77134ae0-6a21-45c4-a01e-5ea25dfe88ac",
       "scenes": [
         {
-          "url": "db://assets/session-timeout/session-timeout.scene",
-          "uuid": "70cd195b-5957-439b-a580-e9172ae383f4",
-          "inBundle": false
-        },
-        {
           "url": "db://assets/game/game.scene",
           "uuid": "4229fd91-1ded-407f-b130-7b678b820c27",
           "inBundle": false
@@ -24,6 +19,16 @@
         {
           "url": "db://shared-components/splash/prefabs/splash.scene",
           "uuid": "77134ae0-6a21-45c4-a01e-5ea25dfe88ac",
+          "inBundle": false
+        },
+        {
+          "url": "db://shared-components/session-timeout/session-timeout.scene",
+          "uuid": "1b4ca76d-3ce5-41e6-a47c-0fb1f85bb3f4",
+          "inBundle": false
+        },
+        {
+          "url": "db://assets/under-maintenance/under-maintenance.scene",
+          "uuid": "86a3474c-ed60-42a0-89da-9d530ed682d0",
           "inBundle": false
         }
       ]
