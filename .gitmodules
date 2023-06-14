@@ -17,3 +17,8 @@ branch = main
 	path = examples/cocos-3x/extensions/localization-editor
 	url = ../localization-editor.git
 	branch = main
+
+[submodule "examples/cocos-3x/build-templates"]
+	path = examples/cocos-3x/build-templates
+	url = ../build-templates.git
+	branch = main
