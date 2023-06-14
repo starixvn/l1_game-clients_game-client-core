@@ -2,12 +2,17 @@ include:
   - project: "ci/core-cicd"
     ref: main
     file: "luminet.gitlab-ci.yml"
+  - project: "ci/common-ci"
+    ref: master
+    file: "npm/publish-npm.gitlab-ci.yml"
+
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   GIT_STRATEGY: clone
   COCOS_VERSION: "3.7.2"
   NODEJS_INTEGRATION_TEST_IMAGE_VERSION: "hub.lumigame.com/docker-hub/library/node:18.1-alpine"
+
 
 .build_cocos_creator_script: &build_cocos_creator_script
   stage: build-cocos-web
@@ -106,3 +111,9 @@ cocos_unit_test_js:
     when: never
   - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: "$CI_COMMIT_BRANCH"
+
+publish_npm:
+  stage: test
+  image: "$NODEJS_IMAGE"
+
+
