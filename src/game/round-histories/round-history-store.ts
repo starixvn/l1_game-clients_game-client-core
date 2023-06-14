@@ -65,8 +65,6 @@ export class RoundHistoryStore {
                 roundHistory: this.histories[0],
                 isShow: isShow,
             };
-
-            return this.joinGameHistory;
         }
 
         return this.joinGameHistory;
