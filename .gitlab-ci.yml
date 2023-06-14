@@ -115,5 +115,6 @@ cocos_unit_test_js:
 publish_npm:
   stage: test
   image: "$NODEJS_IMAGE"
+  needs: ["sonar_js"]
 
 
