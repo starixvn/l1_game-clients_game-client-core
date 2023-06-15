@@ -11,6 +11,19 @@ export type RoundTimeSetting = {
     startRound: number;
 };
 
+/**
+ * Timeline:
+ *
+ *   Settle                                                                                                 Settle
+ *   |                                                                                                        |
+ *   V                                                                                                        V
+ *   |-------------------------|---------------|------------------|---------------|---------------|-----------|-------------------------|
+ *   |  SHOW_ANIMATION_RESULT  |  SHOW_RESULT  |  STARTING_ROUND  |  PLACING_BET  |  LOCKING_BET  |  WAITING  |  SHOW_ANIMATION_RESULT  |
+ *   |-------------------------|---------------|------------------|---------------|---------------|-----------|-------------------------|
+ *   |         in 2s           |               |      in 1s       |               |               |           |
+ *   39 Whole round           37              31                  30              5               0       0...|... 39 Whole round
+ */
+
 export const ROUND_STATE = {
     START_GAME_LOOP: "startGameLoop",
     BEGIN_STARTING_ROUND: "beginStartingRound",

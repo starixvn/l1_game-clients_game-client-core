@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { GameServiceMessage } from "../../shared";
 import { GameSetting } from "../game-configs";
-import { ROUND_STATE, RoundStore, RoundTimeStore } from "../rounds";
+import { ROUND_STATE, RoundTimeStore } from "../rounds/round-time-store";
 
 export interface RoundHistory {
     roundId: number;
@@ -25,7 +25,6 @@ export interface THighLightInfo extends IRoundHistoryInfo {
 export class RoundHistoryStore {
     constructor(
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
-        @inject(RoundStore) protected readonly roundStore: RoundStore,
         @inject(GameSetting) protected readonly gameSetting: GameSetting
     ) {
         makeAutoObservable(this);
