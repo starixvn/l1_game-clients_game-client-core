@@ -1,3 +1,10 @@
+## [1.0.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.0.1...v1.0.2) (2023-06-15)
+
+
+### Bug Fixes
+
+* change the package name from game-client-base to @sg/game-client-base ([2582d7a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/2582d7ac41ff63083ae23d2bc2b4c900d00798a3))
+
 ## [1.0.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.0.0...v1.0.1) (2023-06-15)
 
 
