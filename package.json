@@ -1,5 +1,5 @@
 {
-    "name": "game-client-base",
+    "name": "@sg/game-client-base",
     "version": "1.0.0",
     "type": "commonjs",
     "types": "dist/index.d.ts",
@@ -8,6 +8,10 @@
     "files": [
         "dist/"
     ],
+    "author": {
+        "email": "pentagon@luminetsoft.com",
+        "name": "pentagon"
+    },
     "scripts": {
         "start": "tsc --watch",
         "build": "tsc",
