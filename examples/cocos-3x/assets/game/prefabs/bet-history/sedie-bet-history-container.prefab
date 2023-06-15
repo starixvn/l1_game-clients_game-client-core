@@ -135,15 +135,11 @@
       "__id__": 7
     },
     "prefab": {
-      "__uuid__": "4e56c83e-7fd6-4fa0-9f04-41d46e698ddb",
+      "__uuid__": "16e1ca38-402a-4aaf-b60c-6b4200fe1cf1",
       "__expectedType__": "cc.Prefab"
     },
-    "headerPrefab": {
-      "__uuid__": "0c2059be-a0a3-4a85-80e6-e69c4ded0a99",
-      "__expectedType__": "cc.Prefab"
-    },
-    "bodyPrefab": {
-      "__uuid__": "7144f629-861a-42b4-a562-665b91684e74",
+    "tablePrefab": {
+      "__uuid__": "fe684778-62e6-4415-a56d-c5d2f283f925",
       "__expectedType__": "cc.Prefab"
     },
     "_id": ""

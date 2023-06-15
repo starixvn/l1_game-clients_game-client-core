@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { makeAutoObservable, makeObservable, observable } from "mobx";
+import { makeAutoObservable } from "mobx";
 
 export interface BetHistoryModel {
     page: number;
@@ -11,25 +11,12 @@ export interface BetHistoryModel {
 @injectable()
 export class BetHistoryStore {
     constructor() {
-        // makeObservable(this, {
-        //     showBetHistory: observable,
-        //     data: observable,
-        // });
         makeAutoObservable(this);
     }
 
-    page: number = 1;
     data: BetHistoryModel = null;
-    showBetHistory: boolean = false;
 
     setData(data: BetHistoryModel) {
-        console.log(" Bet History setData");
         this.data = data;
-        // this.setShowBetHistory(true);
-        // console.log(JSON.stringify(data, null, 2));
-    }
-
-    setShowBetHistory(showBetHistory: boolean) {
-        this.showBetHistory = showBetHistory;
     }
 }

@@ -1,28 +1,21 @@
 import { inject, injectable } from "inversify";
-import { GameServiceMessage, IHandler, IMultipleHandlers } from "../../shared";
+import { GameServiceMessage, IHandler } from "../../shared";
 import { ConnectionStore } from "../connection";
 import { BetHistoryModel, BetHistoryStore } from "./bet-history-store";
-import { NoticeStore } from "../notices";
 
 export namespace BetHistoryHandlers {
     @injectable()
-    export class BetHistoryPopupHandlers implements IMultipleHandlers {
+    export class BetHistoryPopupHandlers implements IHandler<BetHistoryModel> {
+        name = GameServiceMessage.BetHistory.eventName;
+
         constructor(
             @inject(BetHistoryStore)
             protected readonly betHistoryStore: BetHistoryStore
         ) {}
 
-        handleShowBetHistory(data: BetHistoryModel) {
-            this.betHistoryStore.setShowBetHistory(true);
+        handle(data: BetHistoryModel) {
             this.betHistoryStore.setData(data);
         }
-
-        eventHandleList = [
-            {
-                name: GameServiceMessage.BetHistory.eventName,
-                handle: this.handleShowBetHistory,
-            },
-        ];
     }
 
     @injectable()
@@ -32,7 +25,7 @@ export namespace BetHistoryHandlers {
             protected readonly connectionStore: ConnectionStore
         ) {}
 
-        handle(page: number = 1) {
+        handle(page = 1) {
             this.connectionStore.send(GameServiceMessage.BetHistory.getHistoryEvent, { page });
         }
     }
