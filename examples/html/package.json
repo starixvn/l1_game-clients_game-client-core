@@ -8,7 +8,7 @@
         "build": "webpack"
     },
     "dependencies": {
-        "game-client-base": "file:../..",
+        "@sg/game-client-base": "file:../..",
         "html-webpack-plugin": "5.5.0",
         "observer": "1.1.2",
         "reflect-metadata": "0.1.13",

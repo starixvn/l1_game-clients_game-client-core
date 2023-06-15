@@ -1,4 +1,4 @@
-import gc from "game-client-base";
+import gc from "@sg/game-client-base";
 
 export const siteConfigs: gc.Configs.SiteConfigs = {
     isDev: true,

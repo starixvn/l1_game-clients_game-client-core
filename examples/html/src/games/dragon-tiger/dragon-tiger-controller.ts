@@ -1,4 +1,4 @@
-import { Connection } from "game-client-base";
+import { Connection } from "@sg/game-client-base";
 import { Container } from "inversify";
 import { DragonTigerGameHtmlView } from "./dragon-tiger-game-html-view";
 

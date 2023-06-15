@@ -1,4 +1,4 @@
-import { Auth, Connection, GameConfigs, Player, Rounds, Shared } from "game-client-base";
+import { Auth, Connection, GameConfigs, Player, Rounds, Shared } from "@sg/game-client-base";
 import { injectable } from "inversify";
 import { handle, observer, render } from "observer";
 import { siteConfigs } from "../../configs";

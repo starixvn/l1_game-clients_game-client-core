@@ -1,4 +1,4 @@
-import { Configs, GameConfigs, IContainerOptions, getContainer } from "game-client-base";
+import { Configs, GameConfigs, IContainerOptions, getContainer } from "@sg/game-client-base";
 import * as mobx from "mobx";
 import Observer from "observer";
 import { siteConfigs } from "../../configs/site-configs";

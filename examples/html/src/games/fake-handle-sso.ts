@@ -1,4 +1,4 @@
-import { Shared } from "game-client-base";
+import { Shared } from "@sg/game-client-base";
 
 const ssoResponse = {
     isAuthenticated: true,
