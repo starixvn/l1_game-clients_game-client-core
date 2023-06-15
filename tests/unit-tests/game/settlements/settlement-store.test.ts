@@ -16,7 +16,6 @@ describe("SettlementStore tests", () => {
                 result: observable,
                 settlementResult: observable,
                 isFinishedShowResult: observable,
-                isFinishedSettle: observable,
                 winningPlayers: observable,
                 setSettlementStore: action,
             });
@@ -39,7 +38,6 @@ describe("SettlementStore tests", () => {
 
             // assert
             expect(store.isFinishedShowResult).toBe(false);
-            expect(store.isFinishedSettle).toBe(false);
             expect(store.roundId).toBe(1);
             expect(store.result).toEqual(result);
             expect(store.settlementResult).toEqual(settlementResult);

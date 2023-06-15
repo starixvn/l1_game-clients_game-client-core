@@ -19,7 +19,6 @@ export namespace SettlementUIHandlers {
             @inject(SettlementStatusStore) private readonly settlementStatusStore: SettlementStatusStore
         ) {}
         handle() {
-            this.settlementStore.isFinishedSettle = true;
             this.settlementStatusStore.resetSettlementStatus();
         }
     }

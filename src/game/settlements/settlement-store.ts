@@ -13,12 +13,10 @@ export class SettlementStore {
     result: GameServiceMessage.TResult = null;
     settlementResult: GameServiceMessage.TSettlementResult = null;
     isFinishedShowResult = false;
-    isFinishedSettle = false;
     winningPlayers: GameServiceMessage.TWinningPlayers = null;
 
     setSettlementStore(finish: GameServiceMessage.Finish | undefined) {
         this.isFinishedShowResult = false;
-        this.isFinishedSettle = false;
         finish?.roundId && (this.roundId = finish.roundId);
         finish?.result && (this.result = finish.result);
         finish?.settlementResult && (this.settlementResult = finish.settlementResult);
@@ -31,7 +29,6 @@ export class SettlementStore {
             result: observable,
             settlementResult: observable,
             isFinishedShowResult: observable,
-            isFinishedSettle: observable,
             winningPlayers: observable,
             setSettlementStore: action,
         });

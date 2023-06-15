@@ -25,16 +25,6 @@ describe("SettlementUIHandlers test", () => {
             settlementStatusStore = new SettlementStatusStore();
             handler = new SettlementUIHandlers.FinishedSettlement(settlementStore, settlementStatusStore);
         });
-        it("should set finishedSettle true in SettlementStore", () => {
-            // arrange
-            settlementStore.isFinishedSettle = false;
-
-            // act
-            handler.handle();
-
-            // assert
-            expect(settlementStore.isFinishedSettle).toBe(true);
-        });
         it("should call resetSettlementStatus in settlementStatusStore", () => {
             // arrange
             settlementStatusStore.resetSettlementStatus = jest.fn();
