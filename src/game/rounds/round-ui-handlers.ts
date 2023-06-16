@@ -13,16 +13,17 @@ export namespace RoundUIHandlers {
             @inject(RoundStore) private readonly roundStore: RoundStore,
             @inject(SettlementStatusStore) private readonly settlementStatusStore: SettlementStatusStore
         ) {
-            when(this.isStartingRound, this.handle);
+            when(
+                () => {
+                    return this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND;
+                },
+                () => this.handle()
+            );
         }
 
-        isStartingRound = () => {
-            return this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND;
-        };
-
-        handle = () => {
+        handle() {
             this.roundStore.resetForNewRound();
             this.settlementStatusStore.resetSettlementStatus();
-        };
+        }
     }
 }
