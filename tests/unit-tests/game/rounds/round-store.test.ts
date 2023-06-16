@@ -1,5 +1,7 @@
+import { stub } from "jest-auto-stub";
 import { GameConfigStore } from "../../../../src/game/game-configs";
-import { RoundStore } from "../../../../src/game/rounds";
+import { RoundHistoryStore } from "../../../../src/game/round-histories/round-history-store";
+import { RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
 import { MainPlayerStore } from "../../../../src/players";
 
 const gameConfig = {
@@ -31,12 +33,16 @@ describe("RoundStore", () => {
     let roundStore: RoundStore;
     let gameConfigStore: GameConfigStore;
     let mainPlayerStore: MainPlayerStore;
+    let roundHistoryStore: RoundHistoryStore;
+    let roundTimeStore: RoundTimeStore;
 
     beforeEach(() => {
-        gameConfigStore = new GameConfigStore();
+        gameConfigStore = stub<GameConfigStore>();
         gameConfigStore.setGameConfigs(gameConfig);
-        mainPlayerStore = new MainPlayerStore();
-        roundStore = new RoundStore(gameConfigStore, mainPlayerStore);
+        mainPlayerStore = stub<MainPlayerStore>();
+        roundHistoryStore = stub<RoundHistoryStore>();
+        roundTimeStore = stub<RoundTimeStore>();
+        roundStore = new RoundStore(gameConfigStore, roundHistoryStore, roundTimeStore, mainPlayerStore);
     });
 
     it("should have initial values", () => {

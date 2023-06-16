@@ -1,3 +1,4 @@
+import { stub } from "jest-auto-stub";
 import { GameConfigStore } from "../../../../src/game/game-configs";
 import { MainPlayerStore } from "../../../../src/players";
 import { GameServiceMessage } from "../../../../src/shared";
@@ -10,11 +11,11 @@ describe("RoundHandlers test", () => {
     let roundStore: RoundStore;
 
     beforeEach(() => {
-        mainPlayerStore = new MainPlayerStore();
-        configStore = new GameConfigStore();
+        mainPlayerStore = stub<MainPlayerStore>();
+        configStore = stub<GameConfigStore>();
         configStore.setGameConfigs = jest.fn();
         mainPlayerStore.setAuthorizeStore = jest.fn();
-        roundStore = new RoundStore(configStore, mainPlayerStore);
+        roundStore = stub<RoundStore>();
     });
 
     afterEach(() => {
@@ -36,8 +37,8 @@ describe("RoundHandlers test", () => {
 
         it("should call handleRoundId in RoundHandlers with roundID less than or equal 1", () => {
             // Arrange
-            roundStore = new RoundStore(configStore, mainPlayerStore);
             const roundHandler = new RoundHandlers(roundStore);
+            roundStore.roundId = 0;
             const expectRoundId = -1;
 
             // Act

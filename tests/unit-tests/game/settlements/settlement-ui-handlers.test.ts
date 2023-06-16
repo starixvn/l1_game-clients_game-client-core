@@ -1,4 +1,4 @@
-import { SettlementStatusStore, SettlementStore, SettlementUIHandlers } from "../../../../src/game/settlements";
+import { SettlementStore, SettlementUIHandlers } from "../../../../src/game/settlements";
 
 describe("SettlementUIHandlers test", () => {
     describe("FinishedShowResult", () => {
@@ -13,27 +13,6 @@ describe("SettlementUIHandlers test", () => {
 
             // assert
             expect(store.isFinishedShowResult).toBe(true);
-        });
-    });
-
-    describe("FinishedSettlement", () => {
-        let settlementStore: SettlementStore;
-        let settlementStatusStore: SettlementStatusStore;
-        let handler: SettlementUIHandlers.FinishedSettlement;
-        beforeEach(() => {
-            settlementStore = new SettlementStore();
-            settlementStatusStore = new SettlementStatusStore();
-            handler = new SettlementUIHandlers.FinishedSettlement(settlementStore, settlementStatusStore);
-        });
-        it("should call resetSettlementStatus in settlementStatusStore", () => {
-            // arrange
-            settlementStatusStore.resetSettlementStatus = jest.fn();
-
-            // act
-            handler.handle();
-
-            // assert
-            expect(settlementStatusStore.resetSettlementStatus).toHaveBeenCalled();
         });
     });
 });

@@ -8,7 +8,6 @@ import { RoundStore } from "../../../../src/game/rounds/round-store";
 import { MainPlayerStore } from "../../../../src/players/main-player-store";
 import { AppTypes } from "../../../../src/shared/constants/app-type";
 import { UrlUtils } from "../../../../src/shared/utils";
-
 jest.mock("../../../../src/shared/utils", () => ({
     UrlUtils: { buildGameGuideUrl: jest.fn() },
 }));
@@ -26,14 +25,13 @@ describe("GameGuideHandlers test", () => {
             gameSetting.id = 1;
             authStore = stub<AuthStore>();
             const playerStore = stub<MainPlayerStore>();
-            playerStore.stakeLevel.minBet = 1;
-            playerStore.stakeLevel.maxBet = 2000;
             playerStore.fractionalOddsFormat = false;
             const gameConfigsStore = stub<GameConfigStore>();
-            gameConfigsStore.minBet = 1;
-            gameConfigsStore.maxBet = 2000;
             gameConfigsStore.boostedChoices = [];
-            const roundStore = new RoundStore(gameConfigsStore, playerStore);
+            const roundStore = stub<RoundStore>({
+                minBet: 1,
+                maxBet: 2000,
+            });
             guideStore = stub<GameGuideStore>();
             handler = new GameGuideHandlers.GetGuideURL(
                 siteConfigs,

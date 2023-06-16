@@ -17,7 +17,7 @@ describe("RoundHistoryStore", () => {
         roundStoreMock = stub<RoundStore>();
         gameSetting = stub<GameSetting>();
 
-        roundHistoryStore = new RoundHistoryStore(roundTimeStoreMock, roundStoreMock, gameSetting);
+        roundHistoryStore = new RoundHistoryStore(roundTimeStoreMock, gameSetting);
         mockHistories = [
             {
                 roundId: 1,
