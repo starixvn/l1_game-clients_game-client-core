@@ -1,3 +1,10 @@
+# [1.1.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.0.2...v1.1.0) (2023-06-16)
+
+
+### Features
+
+* add auto scale on scene ([471bbb1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/471bbb1ac5f59cfbc119fd4f28b0db91fb9141c1))
+
 ## [1.0.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.0.1...v1.0.2) (2023-06-15)
 
 
