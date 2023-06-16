@@ -1,3 +1,10 @@
+# [1.2.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.1.0...v1.2.0) (2023-06-16)
+
+
+### Features
+
+* implement scoreboard ([63a7a15](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/63a7a157f35b5b15d9db1514d564137ef8e3a254))
+
 # [1.1.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.0.2...v1.1.0) (2023-06-16)
 
 
