@@ -1,5 +1,4 @@
 import { _decorator, Color, Label, Node, Sprite, SpriteFrame } from "cc";
-import Observer from "observer";
 import { DateTimeUtils } from "db://shared-components/shared/utils/date-time-utils";
 import { NumberUtils } from "db://shared-components/shared/utils/number-utils";
 import { ObserverComponent } from "../../../../../extensions/shared-components/assets/shared/common-components/observer-component/scripts/observer-component";
@@ -66,7 +65,7 @@ export default class SedieBetHistoryBodyItem extends ObserverComponent {
 
         if (this.time && this.time.node.children.length === 0) {
             this.time.string = DateTimeUtils.getStringDateByTime(time);
-            //// this.time.node.color = win ? Color.YELLOW : Color.WHITE;
+            this.time.color = win ? Color.YELLOW : Color.WHITE;
         } else if (this.date && this.hour) {
             this.date.string = DateTimeUtils.getStringDate(time);
             this.hour.string = DateTimeUtils.getStringHourByTime(time);
@@ -83,10 +82,10 @@ export default class SedieBetHistoryBodyItem extends ObserverComponent {
         this.kqLabel.string = number.toString();
         if (number % 2) {
             this.kqSprite.spriteFrame = this.iconRed;
-            //// this.kqLabel.node.color = Color.WHITE;
+            this.kqLabel.color = Color.WHITE;
         } else {
             this.kqSprite.spriteFrame = this.iconWhite;
-            //// this.kqLabel.node.color = Color.BLACK;
+            this.kqLabel.color = Color.BLACK;
         }
 
         this.win.string = NumberUtils.numberWithCommas(betwin, 2);
