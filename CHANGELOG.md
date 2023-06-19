@@ -1,3 +1,19 @@
+# [1.3.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.2.0...v1.3.0) (2023-06-19)
+
+
+### Bug Fixes
+
+* add clientRoundId in round store ([e53d55e](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/e53d55e00510fab165e9379687031d15454d1e49))
+* merge startup component to game component ([dc3e837](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/dc3e83729b80a4d7245cdb628bb78de44759db45))
+* move gamecomponent to canvas ([3486b1e](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/3486b1e58e5671875fcd49e1f55fa79b3619f01d))
+* remove unused variable isFinishedSettle ([c47d61f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/c47d61fa09022685b496f3f6dbfef5eba4c28740))
+* starting round handler ([dcb680d](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/dcb680da8e4b3c0967fe3189a6a27a173311176a))
+
+
+### Features
+
+* add StartingRoundHandler ([0dd7c52](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/0dd7c52aaba0a7685f5382a0200a67429b80cb26))
+
 # [1.2.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.1.0...v1.2.0) (2023-06-16)
 
 
