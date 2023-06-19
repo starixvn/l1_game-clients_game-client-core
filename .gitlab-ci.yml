@@ -88,11 +88,12 @@ cocos_unit_test_js:
   before_script:
   - npm set registry http://npm.lumigame.com
   - yarn global add jest@29.5.0
-  - echo $SRC_PATH
-  - cd "$SRC_PATH"
   - npm install
   script:
-  - npm run posttest-coverage-with-cocos
+  - npm run build
+  - cd ./examples/cocos-3x 
+  - npm install 
+  - npm run test
   allow_failure: false
   cache:
   - key:
