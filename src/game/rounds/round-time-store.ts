@@ -132,6 +132,10 @@ export class RoundTimeStore {
         return this._roundTime <= this.placingBet;
     }
 
+    get isResultDisplayRange() {
+        return this.roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || this.roundState === ROUND_STATE.SHOW_RESULT;
+    }
+
     resetRoundTime() {
         this._roundTime = this.wholeRound;
     }
