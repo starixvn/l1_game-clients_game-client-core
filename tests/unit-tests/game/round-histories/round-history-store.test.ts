@@ -1,20 +1,18 @@
 import { stub } from "jest-auto-stub";
 import { GameSetting } from "../../../../src/game/game-configs";
 import { RoundHistory, RoundHistoryStore } from "../../../../src/game/round-histories";
-import { ROUND_STATE, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
+import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
 
 jest.mock("mobx");
 
 describe("RoundHistoryStore", () => {
     let roundHistoryStore: RoundHistoryStore;
     let roundTimeStoreMock: RoundTimeStore;
-    let roundStoreMock: RoundStore;
     let mockHistories: RoundHistory[];
     let gameSetting: GameSetting;
 
     beforeEach(() => {
         roundTimeStoreMock = stub<RoundTimeStore>();
-        roundStoreMock = stub<RoundStore>();
         gameSetting = stub<GameSetting>();
 
         roundHistoryStore = new RoundHistoryStore(roundTimeStoreMock, gameSetting);

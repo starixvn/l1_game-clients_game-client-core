@@ -1,3 +1,4 @@
+import { stub } from "jest-auto-stub";
 import { action, makeObservable, observable } from "mobx";
 import { SettlementStore } from "../../../../src/game/settlements";
 import { GameServiceMessage } from "../../../../src/shared";
@@ -86,6 +87,34 @@ describe("SettlementStore tests", () => {
 
             // Assert
             expect(finishInfo).toBeNull();
+        });
+    });
+
+    describe("resetSettlementStore", () => {
+        it("should reset winningPlayers and settlementResult to null", () => {
+            // Act
+            const settlementStore = new SettlementStore();
+            settlementStore.winningPlayers = stub<GameServiceMessage.TWinningPlayers>();
+            settlementStore.settlementResult = stub<GameServiceMessage.TSettlementResult>();
+
+            // Arrange
+            settlementStore.resetSettlementStore();
+
+            // Assert
+            expect(settlementStore.winningPlayers).toBeNull();
+            expect(settlementStore.settlementResult).toBeNull();
+        });
+
+        it("should reset winningPlayers and settlementResult to null even if they are already null", () => {
+            // Act
+            const settlementStore = new SettlementStore();
+
+            // Arrange
+            settlementStore.resetSettlementStore();
+
+            // Assert
+            expect(settlementStore.winningPlayers).toBeNull();
+            expect(settlementStore.settlementResult).toBeNull();
         });
     });
 });

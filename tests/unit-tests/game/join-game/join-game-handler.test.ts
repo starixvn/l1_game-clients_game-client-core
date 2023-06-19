@@ -5,6 +5,8 @@ import { ConnectionHandlers, ConnectionStore } from "../../../../src/game/connec
 import { JoinGameHandler } from "../../../../src/game/join-game";
 import { RoundHistoryStore } from "../../../../src/game/round-histories";
 import { RoundRunningHandlers, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
+import { SettlementStore } from "../../../../src/game/settlements";
+import { gameSettings, siteConfigs } from "../../container.test";
 
 describe("JoinGameHandler", () => {
     let roundRunning: RoundRunningHandlers;
@@ -16,8 +18,10 @@ describe("JoinGameHandler", () => {
     let chipStore: ChipStore;
     let aroundTablePlayersStore: AroundTablePlayersStore;
     let roundHistoryStore: RoundHistoryStore;
+    let settlementStore: SettlementStore;
 
     beforeEach(() => {
+        settlementStore = stub<SettlementStore>();
         roundTimeStore = stub<RoundTimeStore>();
         chipStore = stub<ChipStore>();
         aroundTablePlayersStore = stub<AroundTablePlayersStore>();
@@ -25,9 +29,10 @@ describe("JoinGameHandler", () => {
         roundRunning = stub<RoundRunningHandlers>();
         connectStore = stub<ConnectionStore>();
         connectStore.initBaseListener = jest.fn();
-        connection = stub<ConnectionHandlers.ConnectHandler>();
         roundStore = stub<RoundStore>();
-        handler = new JoinGameHandler(connection, roundStore, chipStore, aroundTablePlayersStore, roundHistoryStore);
+        connection = new ConnectionHandlers.ConnectHandler(connectStore, siteConfigs, gameSettings);
+
+        handler = new JoinGameHandler(connection, roundStore, chipStore, aroundTablePlayersStore, roundHistoryStore, settlementStore);
     });
 
     afterEach(() => {
@@ -41,6 +46,7 @@ describe("JoinGameHandler", () => {
             chipStore.resetChips = jest.fn();
             aroundTablePlayersStore.resetAroundTablePlayersStore = jest.fn();
             roundHistoryStore.resetRoundHistoryStore = jest.fn();
+            settlementStore.resetSettlementStore = jest.fn();
             connection.handle = jest.fn();
 
             // Act

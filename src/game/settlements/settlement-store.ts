@@ -44,4 +44,9 @@ export class SettlementStore {
 
         return null;
     }
+
+    resetSettlementStore() {
+        this.winningPlayers = null;
+        this.settlementResult = null;
+    }
 }
