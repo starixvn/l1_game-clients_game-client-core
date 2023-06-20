@@ -18,7 +18,7 @@
         "test": "jest unit-tests",
         "integration-test": "jest integration-tests/index.test.ts",
         "test-coverage": "jest unit-tests --collect-coverage",
-        "posttest-coverage-with-cocos": "npm run build && cd examples/cocos-3x && npm install && npm run test",
+        "posttest-coverage-with-cocos": "npm run build && cd examples/cocos-3x && npm install && npm run test-coverage",
         "test:watch": "jest --watch --verbose",
         "start-simulator": "docker compose -f \"examples/server-simulator/docker-compose.yml\" up -d --build",
         "reg": "npm set registry http://npm.lumigame.com",
