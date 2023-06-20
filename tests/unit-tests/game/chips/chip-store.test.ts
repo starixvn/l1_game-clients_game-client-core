@@ -1,13 +1,16 @@
 import { stub } from "jest-auto-stub";
+import { RoundTimeStore } from "../../../../src/game/rounds";
 import { MainPlayerStore } from "../../../../src/players";
 import { ChipStore } from "./../../../../src/game/chips/chip-store";
 describe("ChipStore", () => {
     let chipStore: ChipStore;
     let mainPlayerStore: MainPlayerStore;
+    let roundTimeStore: RoundTimeStore;
 
     beforeEach(() => {
         mainPlayerStore = stub<MainPlayerStore>();
-        chipStore = new ChipStore(mainPlayerStore);
+        roundTimeStore = stub<RoundTimeStore>();
+        chipStore = new ChipStore(mainPlayerStore, roundTimeStore);
     });
 
     test("initializes with empty chips object", () => {
@@ -52,26 +55,46 @@ describe("ChipStore", () => {
     });
 
     describe("Get ChipsByCurrency", () => {
-        it("should return the chips converted by currency", () => {
+        test("returns chipsByMainPlayerRate object with isShow set to true", () => {
             // Arrange
+            const mainPlayerStore = stub<MainPlayerStore>();
+            const roundTimeStore = stub<RoundTimeStore>({ isDisplayingResultState: false });
+            const chipStore = new ChipStore(mainPlayerStore, roundTimeStore);
             const mockChips = {
                 1: {
-                    test1: { 1: 10 },
-                    test2: { 2: 5 },
+                    choice1: {
+                        "1": 1,
+                    },
                 },
             };
             chipStore.chips = mockChips;
-            mainPlayerStore.rate = 1;
-            const expectedChipsByCurrency = {
-                test1: { "1": 10 },
-                test2: { "2": 5 },
-            };
 
-            // Action
-            const chipsByMainPlayerRate = chipStore.chipsByMainPlayerRate;
+            // Act
+            const result = chipStore.chipsByMainPlayerRate;
 
             // Assert
-            expect(chipsByMainPlayerRate).toEqual(expectedChipsByCurrency);
+            expect(result.isShow).toBeTruthy();
+        });
+
+        test("returns chipsByMainPlayerRate object with isShow set to false", () => {
+            // Arrange
+            const mainPlayerStore = stub<MainPlayerStore>();
+            const roundTimeStore = stub<RoundTimeStore>({ isDisplayingResultState: true });
+            const chipStore = new ChipStore(mainPlayerStore, roundTimeStore);
+            const mockChips = {
+                1: {
+                    choice1: {
+                        "1": 1,
+                    },
+                },
+            };
+            chipStore.chips = mockChips;
+
+            // Act
+            const result = chipStore.chipsByMainPlayerRate;
+
+            // Assert
+            expect(result.isShow).toBeFalsy();
         });
     });
 

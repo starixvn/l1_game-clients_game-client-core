@@ -425,6 +425,46 @@ describe("RoundTimeStore Unit Tests", () => {
         });
     });
 
+    describe("isDisplayingResultState", () => {
+        const testCases = [
+            {
+                roundState: ROUND_STATE.SHOW_ANIMATION_RESULT,
+                expected: true,
+            },
+            {
+                roundState: ROUND_STATE.SHOW_RESULT,
+                expected: true,
+            },
+            {
+                roundState: ROUND_STATE.STOP_GAME_LOOP,
+                expected: true,
+            },
+            {
+                roundState: ROUND_STATE.STARTING_ROUND,
+                expected: false,
+            },
+            {
+                roundState: ROUND_STATE.PLACING_BET,
+                expected: false,
+            },
+            {
+                roundState: ROUND_STATE.LOCKING_BET,
+                expected: false,
+            },
+        ];
+
+        test.each(testCases)("returns %s when roundState is %s", ({ roundState, expected }) => {
+            // Arrange
+            roundTimeStore.roundState = roundState;
+
+            // Act
+            const result = roundTimeStore.isDisplayingResultState;
+
+            // Assert
+            expect(result).toBe(expected);
+        });
+    });
+
     describe("calculateBeginStatus", () => {
         it("should switch beginState to BEGIN_PLACING_BET if isStartPlacingBet is true and current beginState is not BEGIN_PLACING_BET", () => {
             // Arrange

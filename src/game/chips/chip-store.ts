@@ -3,17 +3,24 @@ import { makeAutoObservable, toJS } from "mobx";
 import { MainPlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared/models/game-messages";
 import { NumberUtils } from "../../shared/utils";
+import { RoundTimeStore } from "../rounds";
 
 export interface IChipGroup {
     [chipValue: string]: number;
 }
 
 export interface TChipsByMainPlayerRate {
-    [choiceName: string]: IChipGroup;
+    chips: {
+        [choiceName: string]: IChipGroup;
+    };
+    isShow: boolean;
 }
 @injectable()
 export class ChipStore {
-    constructor(@inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore) {
+    constructor(
+        @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
+        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore
+    ) {
         makeAutoObservable(this);
     }
 
@@ -52,15 +59,24 @@ export class ChipStore {
     }
 
     get chipsByMainPlayerRate(): TChipsByMainPlayerRate {
-        const chipsByMainPlayerRate = {};
-        for (const rate in this.chips) {
-            const chipsByChoiceName = this.chips[rate];
-            const choiceNames = Object.keys(chipsByChoiceName);
-            for (const name of choiceNames) {
-                const chipGroup = chipsByChoiceName[name];
-                if (chipGroup) {
-                    const chipValueConvert = this.convertChipToPlayerRate(chipGroup, this.mainPlayerStore.rate, +rate);
-                    chipsByMainPlayerRate[name] = chipValueConvert;
+        const chipsByMainPlayerRate: TChipsByMainPlayerRate = { chips: {}, isShow: true };
+
+        if (this.roundTimeStore.isDisplayingResultState) {
+            chipsByMainPlayerRate.isShow = false;
+        }
+
+        if (this.chips) {
+            for (const rate in this.chips) {
+                const chipsByChoiceName = this.chips[rate];
+                const choiceNames = Object.keys(chipsByChoiceName);
+
+                for (const name of choiceNames) {
+                    const chipGroup = chipsByChoiceName[name];
+
+                    if (chipGroup) {
+                        const chipValueConvert = this.convertChipToPlayerRate(chipGroup, this.mainPlayerStore.rate, +rate);
+                        chipsByMainPlayerRate.chips[name] = chipValueConvert;
+                    }
                 }
             }
         }

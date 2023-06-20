@@ -132,8 +132,12 @@ export class RoundTimeStore {
         return this._roundTime <= this.placingBet;
     }
 
-    get isResultDisplayRange() {
-        return this.roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || this.roundState === ROUND_STATE.SHOW_RESULT;
+    get isDisplayingResultState() {
+        return (
+            this.roundState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
+            this.roundState === ROUND_STATE.SHOW_RESULT ||
+            this.roundState === ROUND_STATE.STOP_GAME_LOOP
+        );
     }
 
     resetRoundTime() {
