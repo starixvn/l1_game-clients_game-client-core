@@ -49,7 +49,7 @@ export class BetHandler {
     }
 
     showNoticePlaceBetFailure(freebetEnabled: boolean) {
-        const message = freebetEnabled ? l10n.t("notEnoughScoin") : l10n.t("userInsufficientFund");
+        const message = freebetEnabled ? l10n.t("notEnoughScoin") : l10n.t("notEnoughMoney");
         this.noticeStore.addWarning(message);
     }
 
