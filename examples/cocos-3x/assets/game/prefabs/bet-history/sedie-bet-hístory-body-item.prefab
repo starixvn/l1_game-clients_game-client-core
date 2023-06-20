@@ -27,17 +27,17 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 152
-      },
-      {
         "__id__": 154
       },
       {
         "__id__": 156
+      },
+      {
+        "__id__": 158
       }
     ],
     "_prefab": {
-      "__id__": 158
+      "__id__": 160
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -70,7 +70,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "bg",
+    "_name": "background",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -277,10 +277,13 @@
       },
       {
         "__id__": 149
+      },
+      {
+        "__id__": 151
       }
     ],
     "_prefab": {
-      "__id__": 151
+      "__id__": 153
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -470,7 +473,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "chan",
+    "_name": "even",
     "_objFlags": 0,
     "_parent": {
       "__id__": 10
@@ -627,7 +630,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "le",
+    "_name": "odd",
     "_objFlags": 0,
     "_parent": {
       "__id__": 10
@@ -1628,7 +1631,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "phien",
+    "_name": "round",
     "_objFlags": 0,
     "_parent": {
       "__id__": 75
@@ -2034,7 +2037,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "dot",
+    "_name": "result",
     "_objFlags": 0,
     "_parent": {
       "__id__": 10
@@ -2250,7 +2253,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "kq",
+    "_name": "lblResult",
     "_objFlags": 0,
     "_parent": {
       "__id__": 99
@@ -2465,7 +2468,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "win-container",
+    "_name": "win",
     "_objFlags": 0,
     "_parent": {
       "__id__": 10
@@ -2524,7 +2527,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "win",
+    "_name": "lblWin",
     "_objFlags": 0,
     "_parent": {
       "__id__": 121
@@ -3030,6 +3033,40 @@
     "fileId": "28d0eQ3I9Pv7Am5HmWXZSv"
   },
   {
+    "__type__": "46afeco0eZHqq9lYA6mgJgW",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 10
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 152
+    },
+    "lblTime": null,
+    "lblRound": null,
+    "lblWin": null,
+    "nodeBackground": null,
+    "sprResult": null,
+    "lblResult": null,
+    "lblDate": null,
+    "lblHour": null,
+    "odd": null,
+    "even": null,
+    "red2": null,
+    "red3": null,
+    "red4": null,
+    "white3": null,
+    "white4": null,
+    "sprIconRed": null,
+    "sprIconWhite": null,
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "e9XJsQhjFMPp0trrjROs2L"
+  },
+  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -3051,7 +3088,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 153
+      "__id__": 155
     },
     "_opacity": 255,
     "_id": ""
@@ -3069,7 +3106,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 155
+      "__id__": 157
     },
     "_contentSize": {
       "__type__": "cc.Size",
@@ -3096,28 +3133,28 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 157
+      "__id__": 159
     },
-    "time": {
+    "lblTime": {
       "__id__": 12
     },
-    "round": {
+    "lblRound": {
       "__id__": 77
     },
-    "win": {
+    "lblWin": {
       "__id__": 123
     },
-    "bg": {
+    "nodeBackground": {
       "__id__": 2
     },
-    "kqSprite": {
+    "sprResult": {
       "__id__": 101
     },
-    "kqLabel": {
+    "lblResult": {
       "__id__": 109
     },
-    "date": null,
-    "hour": null,
+    "lblDate": null,
+    "lblHour": null,
     "odd": {
       "__id__": 28
     },
@@ -3139,8 +3176,14 @@
     "white4": {
       "__id__": 68
     },
-    "iconRed": null,
-    "iconWhite": null,
+    "sprIconRed": {
+      "__uuid__": "929196a9-c0af-47cc-9509-342b3a3f7786@1238c",
+      "__expectedType__": "cc.SpriteFrame"
+    },
+    "sprIconWhite": {
+      "__uuid__": "929196a9-c0af-47cc-9509-342b3a3f7786@90c95",
+      "__expectedType__": "cc.SpriteFrame"
+    },
     "_id": ""
   },
   {

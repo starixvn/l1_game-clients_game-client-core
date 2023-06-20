@@ -14,9 +14,9 @@ export class BetHistoryStore {
         makeAutoObservable(this);
     }
 
-    data: BetHistoryModel = null;
+    betHistoryModel: BetHistoryModel = null;
 
-    setData(data: BetHistoryModel) {
-        this.data = data;
+    setData(betHistoryModel: BetHistoryModel) {
+        this.betHistoryModel = betHistoryModel;
     }
 }

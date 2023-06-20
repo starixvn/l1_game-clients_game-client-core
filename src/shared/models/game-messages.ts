@@ -25,7 +25,7 @@ export namespace GameClientEmitMessage {
 
     export const inGame = "inGame";
 
-    export class GetHistory {
+    export class BetHistory {
         page: number;
 
         static eventName = "getHistory";
@@ -226,9 +226,7 @@ export namespace GameServiceMessage {
     }
 
     export class BetHistory {
-        page: number;
         static eventName = "history";
-        static getHistoryEvent = "getHistory";
     }
 }
 

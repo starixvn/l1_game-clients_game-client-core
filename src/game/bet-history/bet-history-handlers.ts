@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { GameServiceMessage, IHandler } from "../../shared";
+import { GameClientEmitMessage, GameServiceMessage, IHandler } from "../../shared";
 import { ConnectionStore } from "../connection";
 import { BetHistoryModel, BetHistoryStore } from "./bet-history-store";
 
@@ -12,7 +12,7 @@ export namespace BetHistoryHandlers {
         ) {}
 
         handle(page = 1) {
-            this.connectionStore.send(GameServiceMessage.BetHistory.getHistoryEvent, { page });
+            this.connectionStore.send(GameClientEmitMessage.BetHistory.eventName, { page });
         }
     }
 

@@ -1,76 +1,75 @@
 import { _decorator, Color, Label, Node, Sprite, SpriteFrame } from "cc";
-import { DateTimeUtils } from "db://shared-components/shared/utils/date-time-utils";
-import { NumberUtils } from "db://shared-components/shared/utils/number-utils";
-import { ObserverComponent } from "../../../../../extensions/shared-components/assets/shared/common-components/observer-component/scripts/observer-component";
+import BetHistoryBodyItem from "../../../../../extensions/shared-components/assets/game/bet-history/scripts/components/bet-history-body-item";
+import gc from "@sg/game-client-base";
 
 const { ccclass } = _decorator;
 const { property } = _decorator;
-
+const { DateTimeUtils, FormatUtils } = gc;
 @ccclass
-export default class SedieBetHistoryBodyItem extends ObserverComponent {
+export default class SedieBetHistoryBodyItem extends BetHistoryBodyItem {
     @property(Label)
-    time: Label | null = null;
+    lblTime: Label = null;
 
     @property(Label)
-    round: Label | null = null;
+    lblRound: Label = null;
 
     @property(Label)
-    win: Label | null = null;
+    lblWin: Label = null;
 
     @property(Node)
-    bg: Node | null = null;
+    nodeBackground: Node = null;
 
     @property(Sprite)
-    kqSprite: Sprite | null = null;
+    sprResult: Sprite = null;
 
     @property(Label)
-    kqLabel: Label | null = null;
+    lblResult: Label = null;
 
     @property(Label)
-    date: Label | null = null;
+    lblDate: Label = null;
 
     @property(Label)
-    hour: Label | null = null;
+    lblHour: Label = null;
 
     @property(Label)
-    odd: Label | null = null;
+    odd: Label = null;
 
     @property(Label)
-    even: Label | null = null;
+    even: Label = null;
 
     @property(Label)
-    red2: Label | null = null;
+    red2: Label = null;
 
     @property(Label)
-    red3: Label | null = null;
+    red3: Label = null;
 
     @property(Label)
-    red4: Label | null = null;
+    red4: Label = null;
 
     @property(Label)
-    white3: Label | null = null;
+    white3: Label = null;
 
     @property(Label)
-    white4: Label | null = null;
+    white4: Label = null;
 
     @property(SpriteFrame)
-    iconRed: SpriteFrame = null;
+    sprIconRed: SpriteFrame = null;
 
     @property(SpriteFrame)
-    iconWhite: SpriteFrame = null;
+    sprIconWhite: SpriteFrame = null;
 
     setData(data: any, index: number) {
-        this.bg.active = index % 2 > 0;
+        this.nodeBackground.active = index % 2 > 0;
         const { time, phien, result, betwin, win, freeBet, settlementResult } = data;
 
-        if (this.time && this.time.node.children.length === 0) {
-            this.time.string = DateTimeUtils.getStringDateByTime(time);
-            this.time.color = win ? Color.YELLOW : Color.WHITE;
-        } else if (this.date && this.hour) {
-            this.date.string = DateTimeUtils.getStringDate(time);
-            this.hour.string = DateTimeUtils.getStringHourByTime(time);
+        if (this.lblTime && this.lblTime.node.children.length === 0) {
+            this.lblTime.string = DateTimeUtils.getStringDateByTime(time);
+            this.lblTime.color = win ? Color.YELLOW : Color.WHITE;
+        } else if (this.lblDate && this.lblHour) {
+            this.lblDate.string = DateTimeUtils.getStringDate(time);
+            this.lblHour.string = DateTimeUtils.getStringHourByTime(time);
         }
-        this.round.string = phien;
+        this.lblRound.string = phien;
 
         let number = 0;
         Object.keys(result).forEach((key) => {
@@ -79,20 +78,20 @@ export default class SedieBetHistoryBodyItem extends ObserverComponent {
             }
         });
 
-        this.kqLabel.string = number.toString();
+        this.lblResult.string = number.toString();
         if (number % 2) {
-            this.kqSprite.spriteFrame = this.iconRed;
-            this.kqLabel.color = Color.WHITE;
+            this.sprResult.spriteFrame = this.sprIconRed;
+            this.lblResult.color = Color.WHITE;
         } else {
-            this.kqSprite.spriteFrame = this.iconWhite;
-            this.kqLabel.color = Color.BLACK;
+            this.sprResult.spriteFrame = this.sprIconWhite;
+            this.lblResult.color = Color.BLACK;
         }
 
-        this.win.string = NumberUtils.numberWithCommas(betwin, 2);
+        this.lblWin.string = FormatUtils.numberWithCommas(betwin, 2);
 
         Object.keys(settlementResult).forEach((choice) => {
             const historyItem = this[choice];
-            historyItem.string = freeBet ? 0 : NumberUtils.numberWithCommas(data[choice]);
+            historyItem.string = freeBet ? 0 : FormatUtils.numberWithCommas(data[choice]);
 
             if (settlementResult[choice]) {
                 historyItem.node.color = Color.YELLOW;

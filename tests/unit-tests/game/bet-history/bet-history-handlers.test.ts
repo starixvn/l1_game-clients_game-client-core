@@ -1,6 +1,6 @@
 import { BetHistoryHandlers, BetHistoryModel, BetHistoryStore } from "../../../../src/game/bet-history";
 import { ConnectionStore } from "../../../../src/game/connection";
-import { GameServiceMessage, Mediator } from "../../../../src/shared";
+import { GameClientEmitMessage, GameServiceMessage, Mediator } from "../../../../src/shared";
 import { gameSettings } from "../../container.test";
 
 describe("BetHistoryPopupHandlers tests", () => {
@@ -29,7 +29,7 @@ describe("BetHistoryPopupHandlers tests", () => {
 
 describe("BetHistoryCallServiceHandler tests", () => {
     describe("handle", () => {
-        it("shouldcall connection store to send page data to server", () => {
+        it("should call connection store to send page data to server", () => {
             const connectionStore = new ConnectionStore(new Mediator(), gameSettings);
             connectionStore.send = jest.fn();
             const page = 1;
@@ -41,7 +41,7 @@ describe("BetHistoryCallServiceHandler tests", () => {
             handler.handle(page);
 
             // assert
-            expect(connectionStore.send).toHaveBeenCalledWith(GameServiceMessage.BetHistory.getHistoryEvent, { page: 1 });
+            expect(connectionStore.send).toHaveBeenCalledWith(GameClientEmitMessage.BetHistory.eventName, { page: 1 });
         });
     });
 });

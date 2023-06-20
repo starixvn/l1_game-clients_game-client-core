@@ -21,7 +21,7 @@ describe("BetHistoryStore tests", () => {
             store.setData(data);
 
             // assert
-            expect(store.data).toEqual(data);
+            expect(store.betHistoryModel).toEqual(data);
         });
     });
 });
