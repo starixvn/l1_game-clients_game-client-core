@@ -1,3 +1,14 @@
+# [1.4.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.3.0...v1.4.0) (2023-06-20)
+
+
+### Features
+
+* hide chips when join show result ([6f0ce4f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/6f0ce4f17192f78811ac0af883dde38b8d3f7eda))
+* join game show chips ([23cfe91](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/23cfe917b5eed9f114bfafaab3cc1f09930dbc1f))
+* move get chip follow stake-level to chip-store ([8562a06](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/8562a067255a7e36c6c3ea1188e6271fc905fe02))
+* show wrong message when bet without enough money ([5ca73ae](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/5ca73aeb8c4ab3b515794907528a3d6eace918b0))
+* update show result when join room ([f337194](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/f33719479eb3acb89f3d42b0080719f6e56a3b15))
+
 # [1.3.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.2.0...v1.3.0) (2023-06-19)
 
 
