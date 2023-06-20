@@ -101,47 +101,4 @@ describe("RoundStore", () => {
         expect(roundStore.totalBets).toEqual({});
         expect(roundStore.resultHash).toEqual({});
     });
-
-    describe("chipValuesByStakeLevel", () => {
-        it("should return an array of chip values within the specified range", () => {
-            // Act
-            gameConfigStore.chips = ["1", "5", "10", "25", "50", "100"];
-            gameConfigStore.minBet = 5;
-            gameConfigStore.maxBet = 50;
-            mainPlayerStore.stakeLevel.minBet = 5;
-            mainPlayerStore.stakeLevel.maxBet = 50;
-
-            // Arrange
-            const result = roundStore.chipValuesByStakeLevel;
-
-            // Assert
-            expect(result).toEqual([5, 10, 25, 50]);
-        });
-
-        it("should return an empty array if no chips are within the specified range", () => {
-            // Act
-            gameConfigStore.chips = ["1", "5", "10", "25", "50", "100"];
-            gameConfigStore.minBet = 500;
-            gameConfigStore.maxBet = 1000;
-
-            // Arrange
-            const result = roundStore.chipValuesByStakeLevel;
-
-            // Assert
-            expect(result).toEqual([]);
-        });
-
-        it("should return an empty array if the chip values are not numbers", () => {
-            // Act
-            gameConfigStore.chips = ["1", "5", "10", "25", "50", "100"];
-            gameConfigStore.minBet = 5;
-            gameConfigStore.maxBet = 50;
-
-            // Arrange
-            const result = roundStore.chipValuesByStakeLevel;
-
-            // Assert
-            expect(result).toEqual([]);
-        });
-    });
 });

@@ -82,10 +82,6 @@ export class RoundStore {
         }, {});
     }
 
-    get chipValuesByStakeLevel() {
-        return this.gameConfigStore.chips.map((chip) => +chip).filter((value) => value >= this.minBet && value <= this.maxBet);
-    }
-
     resetForNewRound() {
         this.ownBets = {};
         this._totalBets = {};

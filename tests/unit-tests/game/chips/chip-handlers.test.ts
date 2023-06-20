@@ -1,6 +1,7 @@
 import { stub } from "jest-auto-stub";
 import { ChipHandlers, ChipStore } from "../../../../src/game/chips";
-import { RoundTimeStore } from "../../../../src/game/rounds";
+import { GameConfigStore } from "../../../../src/game/game-configs";
+import { RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
 import { MainPlayerStore } from "../../../../src/players";
 import { GameServiceMessage } from "../../../../src/shared";
 
@@ -9,11 +10,15 @@ describe("ChipHandlers", () => {
     let chipStoreMock: ChipStore;
     let mainPlayerStore: MainPlayerStore;
     let roundTimeStore: RoundTimeStore;
+    let gameConfigStore: GameConfigStore;
+    let roundStore: RoundStore;
 
     beforeEach(() => {
         mainPlayerStore = stub<MainPlayerStore>();
         roundTimeStore = stub<RoundTimeStore>();
-        chipStoreMock = new ChipStore(mainPlayerStore, roundTimeStore);
+        gameConfigStore = stub<GameConfigStore>();
+        roundStore = stub<RoundStore>();
+        chipStoreMock = new ChipStore(mainPlayerStore, roundTimeStore, gameConfigStore, roundStore);
         chipStoreMock.chips = {
             "1": {
                 even: {

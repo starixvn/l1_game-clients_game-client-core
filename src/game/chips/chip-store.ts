@@ -3,7 +3,8 @@ import { makeAutoObservable, toJS } from "mobx";
 import { MainPlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared/models/game-messages";
 import { NumberUtils } from "../../shared/utils";
-import { RoundTimeStore } from "../rounds";
+import { GameConfigStore } from "../game-configs";
+import { RoundStore, RoundTimeStore } from "../rounds";
 
 export interface IChipGroup {
     [chipValue: string]: number;
@@ -19,7 +20,9 @@ export interface TChipsByMainPlayerRate {
 export class ChipStore {
     constructor(
         @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
-        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore
+        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
+        @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore,
+        @inject(RoundStore) protected readonly roundStore: RoundStore
     ) {
         makeAutoObservable(this);
     }
@@ -93,5 +96,11 @@ export class ChipStore {
         }
 
         return chipValueConvert;
+    }
+
+    get chipValuesByStakeLevel() {
+        return this.gameConfigStore.chips
+            .map((chip) => +chip)
+            .filter((value) => value >= this.roundStore.minBet && value <= this.roundStore.maxBet);
     }
 }
