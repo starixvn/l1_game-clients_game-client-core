@@ -24,10 +24,15 @@ export namespace AppHandlers {
                             time: new Date(sessionInfo?.ssoTime).getTime(),
                             musicEnable: playerSetting?.musicEnable ?? true,
                             sfxEnable: playerSetting?.sfxEnable ?? true,
+                            username: sessionInfo?.username,
+                            isAuthenticated: sessionInfo?.isAuthenticated,
+                            memberName: sessionInfo?.memberName,
                         };
                         const urlParams = new URLSearchParams();
                         Object.keys(params).forEach((key) => params[key] !== undefined && urlParams.append(key, params[key]));
                         const encodedQueryString = GameUtils.base64Encode(urlParams.toString());
+                        console.log("--------------------encodedQueryString", `${decodedReturnUrl}?params=${encodedQueryString}`);
+
                         window.location.replace(`${decodedReturnUrl}?params=${encodedQueryString}`);
                     }
                 } catch (err) {

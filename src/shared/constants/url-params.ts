@@ -9,4 +9,5 @@ export const URLParams = {
     ref: "ref",
     musicEnable: "musicEnable",
     sfxEnable: "sfxEnable",
+    rurl: "rurl",
 };

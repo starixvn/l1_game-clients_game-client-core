@@ -78,7 +78,7 @@ export namespace AuthHandlers {
         }
 
         private needAutoGenerateNickname(isAuthorized: boolean) {
-            return !isAuthorized && (this.appStore.isDirectMode || this.appStore.isPlayForFun);
+            return !isAuthorized && this.appStore.isAutoCreateNickname;
         }
 
         private async autoGenerateName() {
@@ -125,9 +125,15 @@ export namespace AuthHandlers {
         private async handleAuthorizeWithURLParams(urlParams: URLSearchParams) {
             if (urlParams?.has(URLParams.token)) {
                 this.appStore.setURLStore(urlParams);
-                this.appStore.isDirectMode = true; // will remove
+                this.appStore.isAutoCreateNickname = true;
                 const token = urlParams.get(URLParams.token);
                 const system = +urlParams.get(URLParams.appType) || AppTypes.Club;
+
+                // test
+                if (urlParams?.has(URLParams.rurl)) {
+                    this.appStore.setURLStore(urlParams);
+                }
+
                 await this.handleSSOAndAuthorize(token, system);
             } else {
                 if (urlParams?.has(URLParams.params)) {
@@ -138,6 +144,7 @@ export namespace AuthHandlers {
                     await this.handleAuthorize();
                 }
             }
+
             this.clearParamsOnUrl();
         }
 

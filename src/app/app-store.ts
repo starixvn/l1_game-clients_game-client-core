@@ -26,6 +26,7 @@ export class AppStore {
     isApp = false;
     isPlayForFun = false;
     urlInfo: IUrlInfo = {};
+    isAutoCreateNickname = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -41,11 +42,13 @@ export class AppStore {
             const refData = urlParams.get(URLParams.ref);
             if (this.isOpenDirectly(refData)) {
                 this.isDirectMode = true;
+                this.isAutoCreateNickname = true;
                 this.urlInfo.ref = refData;
             }
             if (this.isPlayForFunMode(refData)) {
                 this.isPlayForFun = true;
                 this.urlInfo.ref = refData;
+                this.isAutoCreateNickname = true;
             }
         }
         if (urlParams.has(URLParams.returnUrl) && urlParams.get(URLParams.returnUrl) !== "") {
