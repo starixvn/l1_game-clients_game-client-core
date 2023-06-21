@@ -1,3 +1,20 @@
+# [1.5.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.4.0...v1.5.0) (2023-06-21)
+
+
+### Features
+
+* Bet History ([d23f974](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d23f974f30dd9f1e5a7c351e25f76892b4f750d3))
+* Bet History - add prefabs ([5bf9590](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/5bf9590f74cdf964c9f965fd6b4a9f0e9a261241))
+* bet history - add unittest ([408840c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/408840cdec1093661f2447685d8c3098a3f83b3f))
+* bet history - add unittest ([42a8a80](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/42a8a804cc6c1064f4df5c2a108635e1c4e2687e))
+* Bet History - move prefab to game scene for testing ([f09ed77](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/f09ed7793505a1eaa3e75434258ea4ccab1a38ef))
+* Bet History - move prefab to sharing components ([fe92e74](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/fe92e74763d4703c662db5ccd9f38e16b6a93275))
+* Bet History - pagination ([f2ec533](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/f2ec53300640f378f08b55214eac58312d1fe348))
+* Bet History - rebase master ([6be019a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/6be019a781c5e7b9e1f8b77b0c67f34e210c6a86))
+* bet history - refactor code ([466c85b](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/466c85b9414d2366f3a460c3e32eb65c2e136e8a))
+* bet history - review code ([b10221b](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b10221b588ce61e5390bf06ced3c1ac0c28bf164))
+* bet history - test ci ([aec0df1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/aec0df1009065240e5d19ca0c825b67bd00e28a9))
+
 # [1.4.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.3.0...v1.4.0) (2023-06-20)
 
 
