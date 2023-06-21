@@ -19,6 +19,7 @@ export namespace AppHandlers {
                     } else {
                         const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
                         const playerSetting = StorageManager.get(localStorageKeys.playerSetting) as UserSettingData;
+                        const language = sessionInfo?.language;
                         const params = {
                             ss: sessionInfo?.session,
                             time: new Date(sessionInfo?.ssoTime).getTime(),
@@ -27,13 +28,12 @@ export namespace AppHandlers {
                             username: sessionInfo?.username,
                             isAuthenticated: sessionInfo?.isAuthenticated,
                             memberName: sessionInfo?.memberName,
+                            language,
                         };
                         const urlParams = new URLSearchParams();
                         Object.keys(params).forEach((key) => params[key] !== undefined && urlParams.append(key, params[key]));
                         const encodedQueryString = GameUtils.base64Encode(urlParams.toString());
-                        console.log("--------------------encodedQueryString", `${decodedReturnUrl}?params=${encodedQueryString}`);
-
-                        window.location.replace(`${decodedReturnUrl}?params=${encodedQueryString}`);
+                        window.location.replace(`${decodedReturnUrl}?lang=${language}&params=${encodedQueryString}`);
                     }
                 } catch (err) {
                     sentryLogger.logError(err);

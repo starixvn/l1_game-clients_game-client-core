@@ -42,7 +42,7 @@ describe("AppHandlers", () => {
                 it("should call window.location.replace with params", () => {
                     // arrange
                     appStore.isDirectMode = false;
-                    const session = { session: "session", ssoTime: new Date("2023-01-01") };
+                    const session = { session: "session", ssoTime: new Date("2023-01-01"), language: "en" };
                     StorageManager.get = jest
                         .fn()
                         .mockReturnValueOnce(session)
@@ -55,9 +55,9 @@ describe("AppHandlers", () => {
 
                     // assert
                     expect(GameUtils.base64Encode).toHaveBeenCalledWith(
-                        `ss=session&time=${session.ssoTime.getTime()}&musicEnable=false&sfxEnable=true`
+                        `ss=session&time=${session.ssoTime.getTime()}&musicEnable=false&sfxEnable=true&language=en`
                     );
-                    expect(window.location.replace).toHaveBeenCalledWith(`returnUrl?params=${encodedQueryString}`);
+                    expect(window.location.replace).toHaveBeenCalledWith(`returnUrl?lang=en&params=${encodedQueryString}`);
                 });
             });
         });

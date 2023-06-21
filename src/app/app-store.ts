@@ -38,24 +38,28 @@ export class AppStore {
     }
 
     setURLStore(urlParams: URLSearchParams) {
-        if (urlParams.has(URLParams.ref)) {
-            const refData = urlParams.get(URLParams.ref);
-            if (this.isOpenDirectly(refData)) {
+        const refData = urlParams.get(URLParams.ref);
+        const returnUrl = urlParams.get(URLParams.returnUrl);
+        const appType = urlParams.get(URLParams.appType);
+
+        if (refData) {
+            if (this.isOpenDirectly(refData) || this.isPlayForFunMode(refData)) {
                 this.isDirectMode = true;
                 this.isAutoCreateNickname = true;
-                this.urlInfo.ref = refData;
             }
+
             if (this.isPlayForFunMode(refData)) {
                 this.isPlayForFun = true;
-                this.urlInfo.ref = refData;
-                this.isAutoCreateNickname = true;
             }
-        }
-        if (urlParams.has(URLParams.returnUrl) && urlParams.get(URLParams.returnUrl) !== "") {
-            this.urlInfo.returnUrl = urlParams.get(URLParams.returnUrl);
+
+            this.urlInfo.ref = refData;
         }
 
-        if (urlParams.has(URLParams.appType) && urlParams.get(URLParams.appType) === AppTypes.App.toString()) {
+        if (returnUrl) {
+            this.urlInfo.returnUrl = returnUrl;
+        }
+
+        if (appType === AppTypes.App.toString()) {
             this.isApp = true;
         }
     }
