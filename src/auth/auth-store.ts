@@ -26,6 +26,7 @@ export class AuthStore {
     browserUserAgent = "";
     isDisabledAccount = false;
     errorCode = "";
+    ssoErrorMessage = "";
     ssoTime: Date;
 
     constructor() {

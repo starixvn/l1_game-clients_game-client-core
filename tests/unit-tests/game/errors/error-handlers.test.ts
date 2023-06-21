@@ -1,36 +1,34 @@
 import { stub } from "jest-auto-stub";
-import { AppStore } from "../../../../src/app";
-import { AuthHandlers } from "../../../../src/auth";
+import { AuthStore } from "../../../../src/auth";
 import { ErrorHandlers } from "../../../../src/game/errors";
-import { NoticeStore, NoticeType } from "../../../../src/game/notices";
-import { RoundStore } from "../../../../src/game/rounds/round-store";
+import { NoticeStore } from "../../../../src/game/notices";
 import { MainPlayerStore } from "../../../../src/players";
 import { GameServiceMessage } from "../../../../src/shared";
+import { ErrorUtils } from "../../../../src/shared/utils/error-utils";
+
 jest.mock("../../../../src/shared/l10n", () => ({
     l10n: {
-        t: jest.fn()
+        t: jest.fn(),
     },
 }));
 
-import { LocalizedUtils } from "../../../../src/shared/utils/localized-utils";
+jest.mock("../../../../src/shared/utils/error-utils", () => ({
+    ErrorUtils: { isSessionTimeoutError: jest.fn(), getErrorMessage: jest.fn() },
+}));
 
 describe("ErrorHandlers test", () => {
     let instance: ErrorHandlers;
-    let roundStore: RoundStore;
     let noticeStore: NoticeStore;
     let mainPlayerStore: MainPlayerStore;
-    let appStore: AppStore;
-    let signOutHandler: AuthHandlers.SignOut;
+    let authStore: AuthStore;
     beforeAll(() => {
-        roundStore = stub<RoundStore>();
         noticeStore = stub<NoticeStore>();
         mainPlayerStore = stub<MainPlayerStore>();
-        appStore = stub<AppStore>();
-        signOutHandler = stub<AuthHandlers.SignOut>();
+        authStore = stub<AuthStore>();
     });
 
     beforeEach(() => {
-        instance = new ErrorHandlers(roundStore, mainPlayerStore, appStore, noticeStore, signOutHandler);
+        instance = new ErrorHandlers(mainPlayerStore, noticeStore, authStore);
     });
 
     afterEach(() => {
@@ -38,17 +36,16 @@ describe("ErrorHandlers test", () => {
     });
 
     describe("handleApiError", () => {
-        it("shows message for expired token, when error code is session timeout type.", () => {
+        it("set error code in auth store, when error code is session timeout type.", () => {
             // Arrange
             const data = stub<GameServiceMessage.ApiError>();
-            const showMessageSpy = jest.spyOn(instance, "showMessageForExpiredToken");
-            instance.isSessionTimeoutError = jest.fn().mockReturnValue(true);
+            (ErrorUtils.isSessionTimeoutError as jest.Mock).mockReturnValue(true);
 
             // Act
             instance.handleApiError(data);
 
             // Assert
-            expect(showMessageSpy).toBeCalled();
+            expect(authStore.errorCode).toBe(data.errorCode);
         });
 
         it("shows notice error, when error code is NOT session timeout type.", () => {
@@ -57,7 +54,7 @@ describe("ErrorHandlers test", () => {
                 hedgeBetGroup: [],
                 errorCode: "1001",
             });
-            instance.isSessionTimeoutError = jest.fn().mockReturnValue(false);
+            (ErrorUtils.isSessionTimeoutError as jest.Mock).mockReturnValue(false);
             delete data.minBet;
             delete data.maxBet;
 
@@ -74,7 +71,7 @@ describe("ErrorHandlers test", () => {
                 hedgeBetGroup: [],
                 errorCode: "1001",
             });
-            instance.isSessionTimeoutError = jest.fn().mockReturnValue(false);
+            (ErrorUtils.isSessionTimeoutError as jest.Mock).mockReturnValue(false);
             const minBet = 1;
             const maxBet = 10;
             data.minBet = minBet;
@@ -87,85 +84,6 @@ describe("ErrorHandlers test", () => {
             expect(noticeStore.addNotice).toBeCalled();
             expect(mainPlayerStore.stakeLevel.minBet).toEqual(minBet);
             expect(mainPlayerStore.stakeLevel.maxBet).toEqual(maxBet);
-        });
-    });
-
-    describe("isSessionTimeoutError", () => {
-        it("should return true if error code is one of the expected token error codes", () => {
-            // Arrange
-            const errorCode = "1002";
-
-            // Act
-            const result = instance.isSessionTimeoutError(errorCode);
-
-            // Assert
-            expect(result).toBe(true);
-        });
-
-        it("should return false if error code is not one of the expected token error codes", () => {
-            // Arrange
-            const errorCode = "9999";
-
-            // Act
-            const result = instance.isSessionTimeoutError(errorCode);
-
-            // Assert
-            expect(result).toBe(false);
-        });
-    });
-
-    describe("showMessageForExpiredToken", () => {
-        beforeEach(() => {
-            appStore.isApp = true;
-            noticeStore.addNotice = jest.fn();
-            signOutHandler.handle = jest.fn();
-            LocalizedUtils.getLocalizedText = (key, option) => key;
-            jest.useFakeTimers();
-            jest.spyOn(global, "setTimeout");
-        });
-
-        afterEach(() => {
-            jest.runOnlyPendingTimers();
-            jest.useRealTimers();
-        });
-
-        it("should call addNotice with messages.sessionExpired", () => {
-            // Arrange
-            const errorCode = "1001";
-            const text = appStore.isApp ? "sessionExpired" : "sessionTimeout";
-            const message = `${text} (${errorCode})`;
-
-            // Act
-            instance.showMessageForExpiredToken(errorCode);
-
-            // Assert
-            expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 10000);
-            expect(noticeStore.addNotice).toHaveBeenCalledWith({
-                message: message,
-                title: "Notice",
-                type: NoticeType.Error,
-                onClose: expect.any(Function),
-            });
-        });
-
-        it("should call addNotice with messages.sessionTimeout", () => {
-            // Arrange
-            appStore.isApp = false;
-            const errorCode = "1001";
-            const text = appStore.isApp ? "sessionExpired" : "sessionTimeout";
-            const message = `${text} (${errorCode})`;
-
-            // Act
-            instance.showMessageForExpiredToken(errorCode);
-
-            // Assert
-            expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 10000);
-            expect(noticeStore.addNotice).toHaveBeenCalledWith({
-                message: message,
-                title: "Notice",
-                type: NoticeType.Error,
-                onClose: expect.any(Function),
-            });
         });
     });
 });

@@ -21,7 +21,7 @@ export class ConnectionStore {
     }
 
     connection: Socket = null;
-    isConnected = false;
+    isConnected: boolean = null;
     isConnectFailed = false;
     signedIn = false;
 

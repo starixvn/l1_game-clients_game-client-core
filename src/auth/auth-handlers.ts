@@ -6,6 +6,7 @@ import { MainPlayerStore } from "../players";
 import { GameServiceMessage, IHandler } from "../shared";
 import { AppTypes } from "../shared/constants/app-type";
 import { GameUtils } from "../shared/utils/game-utils";
+import { LocalizedUtils } from "../shared/utils/localized-utils";
 import { sentryLogger } from "../shared/utils/logger";
 import NameGenerator from "../shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
@@ -105,6 +106,7 @@ export namespace AuthHandlers {
 
                 await this.handleAuthorizeWithURLParams(urlParams);
             } catch (err) {
+                this.authStore.ssoErrorMessage = LocalizedUtils.getLocalizedText("splash_connectionLost");
                 sentryLogger.logError(err);
             }
         }
@@ -149,6 +151,8 @@ export namespace AuthHandlers {
                 this.authStore.setAuthSSOStore(response);
                 this.saveDataInStorage();
                 await this.handleAuthorize(response.ss, response.username);
+            } else {
+                this.authStore.ssoErrorMessage = LocalizedUtils.getLocalizedText("splash_loginFailed");
             }
         }
 
@@ -231,15 +235,9 @@ export namespace AuthHandlers {
 
         private handleError(response: ReCheckInResponse) {
             const errorCode = response.apiError.errorCode.toString();
-            const expiredSessionErrorCodes = ["1001", "1002"];
             this.authStore.errorCode = errorCode;
             if (response.isDisableAccount) {
-                this.authStore.isDisabledAccount = true;
-                this.signOutHandler.handle();
-            } else {
-                if (expiredSessionErrorCodes.includes(errorCode)) {
-                    this.signOutHandler.handle();
-                }
+                this.authStore.isDisabledAccount = response.isDisableAccount;
             }
         }
     }

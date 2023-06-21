@@ -63,4 +63,20 @@ describe("ErrorUtils", () => {
             expect(result["betChoice2"]).toEqual(hedgeBetGroup[1]);
         });
     });
+
+    describe("isSessionTimeoutError", () => {
+        test.each([
+            ["1001", true],
+            ["1002", true],
+            ["SB0002", true],
+            ["SB0011", true],
+            ["9999", false],
+        ])("should return true if error code is one of the expected token error codes", (errorCode, expected) => {
+            // Act
+            const result = ErrorUtils.isSessionTimeoutError(errorCode);
+
+            // Assert
+            expect(result).toBe(expected);
+        });
+    });
 });

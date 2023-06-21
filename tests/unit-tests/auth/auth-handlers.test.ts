@@ -8,6 +8,8 @@ import { MainPlayerStore } from "../../../src/players";
 import { Mediator } from "../../../src/shared";
 
 import { GameUtils } from "../../../src/shared/utils/game-utils";
+import { LocalizedUtils } from "../../../src/shared/utils/localized-utils";
+import { sentryLogger } from "../../../src/shared/utils/logger";
 import NameGenerator from "../../../src/shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 import { siteConfigs } from "../container.test";
@@ -22,7 +24,12 @@ jest.mock("../../../src/shared/utils/storage-manager", () => ({
     },
     localStorageKeys: { session: "session-key", playerSetting: "setting-key" },
 }));
-
+jest.mock("../../../src/shared/utils/logger", () => ({
+    sentryLogger: { logError: jest.fn() },
+}));
+jest.mock("../../../src/shared/utils/localized-utils", () => ({
+    LocalizedUtils: { getLocalizedText: jest.fn() },
+}));
 let notificationServiceHandler: NotificationHandlers;
 
 describe("AuthHandlers tests", () => {
@@ -639,6 +646,33 @@ describe("AuthHandlers tests", () => {
 
                 // assert
                 expect(authorizeHandler.handle).toHaveBeenCalledWith({ session: "session", username: "username" });
+            });
+        });
+
+        describe("when has error", () => {
+            const urlParams = new URLSearchParams("token=a&appType=1");
+            const error = new Error("error");
+            beforeEach(() => {
+                (LocalizedUtils.getLocalizedText as jest.Mock).mockReturnValueOnce("connection lost when sso");
+                (StorageManager.get as jest.Mock).mockReturnValueOnce(undefined);
+                userService.sso = jest.fn().mockImplementationOnce(() => {
+                    throw error;
+                });
+                authStore.ssoErrorMessage = "";
+            });
+            it("should set sso error message into authStore", async () => {
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(authStore.ssoErrorMessage).toBe("connection lost when sso");
+            });
+            it("should log error", async () => {
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(sentryLogger.logError).toHaveBeenCalledWith(error);
             });
         });
     });

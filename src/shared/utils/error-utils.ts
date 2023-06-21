@@ -157,4 +157,9 @@ export namespace ErrorUtils {
         const key = parseErrorCode(errorCode, !!notice.isPlaceBetFailed);
         return LocalizedUtils.getLocalizedText(key, option);
     };
+
+    export const isSessionTimeoutError = (errorCode: string): boolean => {
+        const expectedTokenErrorCodes = ["1001", "1002", "SB0002", "SB0011"];
+        return expectedTokenErrorCodes.includes(errorCode);
+    };
 }
