@@ -1,3 +1,10 @@
+# [1.8.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.7.0...v1.8.0) (2023-06-22)
+
+
+### Features
+
+* add remote game icon ([2a52b0f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/2a52b0fea13182fe26ae9756630294d026950a79))
+
 # [1.7.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.6.0...v1.7.0) (2023-06-22)
 
 
