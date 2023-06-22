@@ -1,3 +1,15 @@
+# [1.6.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.5.0...v1.6.0) (2023-06-22)
+
+
+### Bug Fixes
+
+* fix bug after rebase ([e85120f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/e85120fac2f76b3057c43238a2746cd76f7a599a))
+
+
+### Features
+
+* multiple language for splash & notice error when sso ([11e9272](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/11e92720007db1327f325499c3942a0281b180d2))
+
 # [1.5.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.4.0...v1.5.0) (2023-06-21)
 
 
