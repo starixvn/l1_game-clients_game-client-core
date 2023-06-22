@@ -104,6 +104,7 @@ describe("DisableGameHandlers tests", () => {
                 title: "Notice",
                 type: NoticeType.Error,
                 onClose: expect.any(Function),
+                showBtnCofirmButton: true,
             });
         });
     });

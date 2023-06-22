@@ -1,11 +1,17 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 
+export interface IBetHistoryLog {
+    time: string;
+    phien: number;
+    win: number;
+}
+
 export interface BetHistoryModel {
     page: number;
     pageSize: number;
     total: number;
-    betLogs: Array<any>;
+    betLogs: Array<IBetHistoryLog>;
 }
 
 @injectable()

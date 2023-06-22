@@ -1,8 +1,13 @@
 import { injectable } from "inversify";
+import { makeAutoObservable } from "mobx";
 @injectable()
 export class DisabledGameStore {
     disabled = false;
     showPopup = false;
+
+    constructor() {
+        makeAutoObservable(this);
+    }
 
     setGameStatus(disabled: boolean) {
         this.disabled = disabled;

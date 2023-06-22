@@ -5,6 +5,15 @@ import gc from "@sg/game-client-base";
 const { ccclass } = _decorator;
 const { property } = _decorator;
 const { DateTimeUtils, FormatUtils } = gc;
+
+interface ISedieBetHistoryLog extends gc.BetHistory.IBetHistoryLog {
+    result: any;
+    betwin: number;
+    freeBet: boolean;
+    settlementResult: any;
+    phien: number;
+}
+
 @ccclass
 export default class SedieBetHistoryBodyItem extends BetHistoryBodyItem {
     @property(Label)
@@ -58,9 +67,9 @@ export default class SedieBetHistoryBodyItem extends BetHistoryBodyItem {
     @property(SpriteFrame)
     sprIconWhite: SpriteFrame = null;
 
-    setData(data: any, index: number) {
+    setData(data: ISedieBetHistoryLog, index: number) {
         this.nodeBackground.active = index % 2 > 0;
-        const { time, phien, result, betwin, win, freeBet, settlementResult } = data;
+        const { time, phien, win, result, betwin, freeBet, settlementResult } = data;
 
         if (this.lblTime && this.lblTime.node.children.length === 0) {
             this.lblTime.string = DateTimeUtils.getStringDateByTime(time);
@@ -69,7 +78,7 @@ export default class SedieBetHistoryBodyItem extends BetHistoryBodyItem {
             this.lblDate.string = DateTimeUtils.getStringDate(time);
             this.lblHour.string = DateTimeUtils.getStringHourByTime(time);
         }
-        this.lblRound.string = phien;
+        this.lblRound.string = phien.toString();
 
         let number = 0;
         Object.keys(result).forEach((key) => {

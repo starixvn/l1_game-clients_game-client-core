@@ -32,13 +32,15 @@ export class DisableGameHandlers implements IHandler<GameServiceMessage.Disabled
     }
 
     showPopupHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
-        this.disabledGameStore.setShowPopup(true);
         this.noticeStore.addNotice({
             message: disabledGameInfo[this.authStore.language] ?? defaultDisabledMessage,
             title: LocalizedUtils.getLocalizedText("Notice"),
             type: NoticeType.Error,
             onClose: this.onClosedHandle,
+            showBtnCofirmButton: true,
         });
+
+        this.disabledGameStore.setShowPopup(true);
     }
 
     inGameHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
