@@ -1,3 +1,18 @@
+# [1.7.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.6.0...v1.7.0) (2023-06-22)
+
+
+### Bug Fixes
+
+* update scoreboard test ([6236569](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/623656964943916b56918bc20a39cbd94143d84b))
+
+
+### Features
+
+* set opacity with value 1 ([e664558](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/e6645582f7403ee1cff915f88ef4b4211ce66bc6))
+* update check auto create-nickname ([042a941](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/042a941d2791d5fd274397a08bd289808494ed9d))
+* update return params Lobby ([4a2acdb](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/4a2acdb19b16e7fca8bf275defd5d2a07acb0c76))
+* update type on SiteConfigs ([ecb300c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/ecb300c33a0b96349eb708f5c4342e520636e9e0))
+
 # [1.6.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.5.0...v1.6.0) (2023-06-22)
 
 
