@@ -11,6 +11,7 @@ jest.mock("../../../../src/shared/utils", () => ({
     LocalizedUtils: { getLocalizedText: jest.fn() },
     ErrorUtils: { isSessionTimeoutError: jest.fn().mockReturnValue(false) },
 }));
+jest.mock("mobx");
 
 describe("NoticeErrorsHandlers", () => {
     afterEach(() => {

@@ -65,7 +65,7 @@ export namespace NoticeErrorsHandlers {
             protected readonly backToOperatorLobbyHandler: AppHandlers.BackToOperatorLobby
         ) {
             when(
-                () => this.connectionStore.isConnected === false,
+                () => this.connectionStore.isConnectFailed,
                 () => {
                     this.showNotice();
                 }

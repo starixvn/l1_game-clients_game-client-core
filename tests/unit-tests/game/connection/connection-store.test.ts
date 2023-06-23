@@ -296,5 +296,38 @@ describe("ConnectionStore tests", () => {
             // assert
             expect(sentryLogger.logError).toHaveBeenCalledWith(reason);
         });
+
+        describe("when disconnect with reason is not from client", () => {
+            it("should set isConnectFailed is true", () => {
+                // arrange
+                const reason = "io server disconnect";
+
+                // act
+                store.onDisconnected(reason);
+
+                // assert
+                expect(store.isConnectFailed).toBe(true);
+            });
+        });
+
+        describe("when disconnect with reason is from client", () => {
+            it("should set isConnectFailed is false", () => {
+                // arrange
+                const reason = "io client disconnect";
+
+                // act
+                store.onDisconnected(reason);
+
+                // assert
+                expect(store.isConnectFailed).toBe(false);
+            });
+            it("should set isConnectFailed is false", () => {
+                // act
+                store.onDisconnected();
+
+                // assert
+                expect(store.isConnectFailed).toBe(false);
+            });
+        });
     });
 });

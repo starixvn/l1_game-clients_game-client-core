@@ -74,6 +74,9 @@ export class ConnectionStore {
     }
 
     onDisconnected(reason = "") {
+        if (reason && reason !== "io client disconnect") {
+            this.isConnectFailed = true;
+        }
         this.isConnected = false;
         this.signedIn = false;
         this.connection.disconnect();
