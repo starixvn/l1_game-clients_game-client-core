@@ -6,7 +6,6 @@ import { JoinGameHandler } from "../../../../src/game/join-game";
 import { RoundHistoryStore } from "../../../../src/game/round-histories";
 import { RoundRunningHandlers, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
 import { SettlementStore } from "../../../../src/game/settlements";
-import { gameSettings, siteConfigs } from "../../container.test";
 
 describe("JoinGameHandler", () => {
     let roundRunning: RoundRunningHandlers;
@@ -30,7 +29,7 @@ describe("JoinGameHandler", () => {
         connectStore = stub<ConnectionStore>();
         connectStore.initBaseListener = jest.fn();
         roundStore = stub<RoundStore>();
-        connection = new ConnectionHandlers.ConnectHandler(connectStore, siteConfigs, gameSettings);
+        connection = new ConnectionHandlers.ConnectHandler(connectStore);
 
         handler = new JoinGameHandler(connection, roundStore, chipStore, aroundTablePlayersStore, roundHistoryStore, settlementStore);
     });

@@ -1,7 +1,7 @@
+import { stub } from "jest-auto-stub";
 import { BetHistoryHandlers, BetHistoryModel, BetHistoryStore } from "../../../../src/game/bet-history";
 import { ConnectionStore } from "../../../../src/game/connection";
-import { GameClientEmitMessage, GameServiceMessage, Mediator } from "../../../../src/shared";
-import { gameSettings } from "../../container.test";
+import { GameClientEmitMessage } from "../../../../src/shared";
 
 describe("BetHistoryPopupHandlers tests", () => {
     describe("handle", () => {
@@ -30,8 +30,7 @@ describe("BetHistoryPopupHandlers tests", () => {
 describe("BetHistoryCallServiceHandler tests", () => {
     describe("handle", () => {
         it("should call connection store to send page data to server", () => {
-            const connectionStore = new ConnectionStore(new Mediator(), gameSettings);
-            connectionStore.send = jest.fn();
+            const connectionStore = stub<ConnectionStore>();
             const page = 1;
 
             // arrange

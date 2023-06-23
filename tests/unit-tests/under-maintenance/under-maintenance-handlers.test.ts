@@ -1,10 +1,11 @@
+import { stub } from "jest-auto-stub";
 import { AppStore } from "../../../src/app/app-store";
 import { ConnectionStore } from "../../../src/game/connection";
 import { NotificationStore } from "../../../src/notification";
 import { Mediator, NotificationServiceMessage } from "../../../src/shared";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 import { UnderMaintenanceHandler } from "../../../src/under-maintenance";
-import { gameSettings, siteConfigs } from "../container.test";
+import { siteConfigs } from "../container.test";
 
 jest.mock("../../../src/shared/utils/storage-manager", () => ({
     StorageManager: {
@@ -27,8 +28,7 @@ const fakeUmInfo: NotificationServiceMessage.UnderMaintenanceInfo = {
 const appStore = new AppStore();
 appStore.setUM = jest.fn();
 
-const connectionStore = new ConnectionStore(new Mediator(), gameSettings);
-connectionStore.onDisconnected = jest.fn();
+const connectionStore = stub<ConnectionStore>();
 
 const notificationStore = new NotificationStore(new Mediator());
 notificationStore.onDisconnected = jest.fn();

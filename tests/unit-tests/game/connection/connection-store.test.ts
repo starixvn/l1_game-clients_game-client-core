@@ -1,25 +1,103 @@
-import { io } from "socket.io-client";
+import { stub } from "jest-auto-stub";
+import { io } from "socket.io-client/dist/socket.io.js";
 import { ConnectionStore, events } from "../../../../src/game/connection";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
-import { StorageManager, sentryLogger } from "../../../../src/shared/utils";
-import { gameSettings } from "../../container.test";
+import { StorageManager, UrlUtils, sentryLogger } from "../../../../src/shared/utils";
+import { gameSettings, siteConfigs } from "../../container.test";
 
 jest.mock("../../../../src/shared/utils", () => ({
     StorageManager: { get: jest.fn() },
     localStorageKeys: { session: "" },
     sentryLogger: { logError: jest.fn() },
-}));
-jest.mock("socket.io-client", () => ({
-    io: jest.fn().mockReturnValue({ on: jest.fn() }),
+    UrlUtils: {
+        buildServerUrl: jest.fn().mockReturnValue("socketUri"),
+        getProxyRoute: jest.fn().mockReturnValue("/socket.io"),
+    },
 }));
 jest.mock("mobx");
+const optionsDefault = {
+    path: "/socket.io",
+    socketUri: "socketUri",
+    transports: ["websocket"],
+    upgrade: false,
+    forceNew: true,
+    parser: siteConfigs.enableMsgpackParserAllGames,
+};
+jest.mock("socket.io-client/dist/socket.io.js", () => ({
+    io: jest.fn().mockReturnValue({}),
+}));
 
 describe("ConnectionStore tests", () => {
+    let store: ConnectionStore;
+    let mediator: Mediator;
+    beforeEach(() => {
+        mediator = stub<Mediator>();
+        store = new ConnectionStore(mediator, gameSettings, siteConfigs);
+        console.log(store);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    describe("initConnection", () => {
+        beforeEach(() => {
+            store.reset = jest.fn();
+            store.initBaseListener = jest.fn();
+        });
+        it("should call UrlUtils.buildServerUrl with expected arguments", () => {
+            // act
+            store.initConnection();
+
+            // assert
+            expect(UrlUtils.buildServerUrl).toHaveBeenCalledWith("http", siteConfigs.websocket.proxyPath, gameSettings.id, siteConfigs);
+        });
+
+        it("should call UrlUtils.getProxyRoute with expected arguments", () => {
+            // act
+            store.initConnection();
+
+            // assert
+            expect(UrlUtils.getProxyRoute).toHaveBeenCalledWith(siteConfigs);
+        });
+        it("should call io with expected arguments", () => {
+            // act
+            store.initConnection();
+
+            // assert
+            expect(io).toHaveBeenCalledWith("socketUri", optionsDefault);
+        });
+        it("should set connection", () => {
+            // act
+            store.initConnection();
+
+            // assert
+            expect(store.connection).toEqual({});
+        });
+        it("should call init base listener", () => {
+            // act
+            store.initConnection();
+
+            // assert
+            expect(store.initBaseListener).toHaveBeenCalled();
+        });
+
+        it("should call reset", () => {
+            // act
+            store.initConnection();
+
+            // assert
+            expect(store.reset).toHaveBeenCalled();
+        });
+    });
+
     describe("initBaseListener", () => {
         describe("when connection not null", () => {
-            const store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("", {});
-            store.connection.on = jest.fn();
+            beforeEach(() => {
+                store.connection = {
+                    on: jest.fn(),
+                };
+            });
             it("should init listeners onConnected", () => {
                 // act
                 store.initBaseListener();
@@ -79,8 +157,7 @@ describe("ConnectionStore tests", () => {
 
         it("should set isConnected true", () => {
             // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("", {});
+            store.connection = {};
             store.connection.onAny = jest.fn();
             store.connection.emit = jest.fn();
 
@@ -93,8 +170,7 @@ describe("ConnectionStore tests", () => {
 
         it("should set isConnectFailed false", () => {
             // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("", {});
+            store.connection = {};
             store.connection.onAny = jest.fn();
             store.connection.emit = jest.fn();
 
@@ -107,8 +183,7 @@ describe("ConnectionStore tests", () => {
 
         it("should call connection onAny", () => {
             // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("", {});
+            store.connection = {};
             store.connection.onAny = jest.fn();
             store.connection.emit = jest.fn();
 
@@ -121,8 +196,7 @@ describe("ConnectionStore tests", () => {
 
         it("should call signin", () => {
             // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("", {});
+            store.connection = {};
             store.connection.onAny = jest.fn();
             store.connection.emit = jest.fn();
 
@@ -142,9 +216,6 @@ describe("ConnectionStore tests", () => {
     describe("onHandleData", () => {
         it("should call mediator emit with keys of payload when event equal game name", () => {
             // arrange
-            const mediator = new Mediator();
-            mediator.emit = jest.fn();
-            const store = new ConnectionStore(mediator, gameSettings);
             const payload = { roundId: 1, remainingTime: 20 };
 
             // act
@@ -159,9 +230,6 @@ describe("ConnectionStore tests", () => {
         });
         it("should call mediator emit with keys of payload when event is message", () => {
             // arrange
-            const mediator = new Mediator();
-            mediator.emit = jest.fn();
-            const store = new ConnectionStore(mediator, gameSettings);
             const payload = { userStakeLevel: { minBet: 1, maxBet: 2000 } };
 
             // act
@@ -175,9 +243,6 @@ describe("ConnectionStore tests", () => {
 
         it("should call mediator emit with payload when event is not game name or message", () => {
             // arrange
-            const mediator = new Mediator();
-            mediator.emit = jest.fn();
-            const store = new ConnectionStore(mediator, gameSettings);
             const payload = { value: 123 };
 
             // act
@@ -192,9 +257,6 @@ describe("ConnectionStore tests", () => {
 
     describe("onSignedIn", () => {
         it("should set signedIn is true", () => {
-            // arrange
-            const store = new ConnectionStore(new Mediator(), gameSettings);
-
             // act
             store.onSignedIn();
 
@@ -204,10 +266,8 @@ describe("ConnectionStore tests", () => {
     });
 
     describe("onConnectFailed", () => {
-        let store: ConnectionStore;
         beforeEach(() => {
-            store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("");
+            store.connection = {};
             store.connection.disconnect = jest.fn();
         });
         it("should set isConnectFailed is true", () => {
@@ -255,10 +315,8 @@ describe("ConnectionStore tests", () => {
     });
 
     describe("onDisconnected", () => {
-        let store: ConnectionStore;
         beforeEach(() => {
-            store = new ConnectionStore(new Mediator(), gameSettings);
-            store.connection = io("");
+            store.connection = {};
             store.connection.disconnect = jest.fn();
         });
 
@@ -328,6 +386,25 @@ describe("ConnectionStore tests", () => {
                 // assert
                 expect(store.isConnectFailed).toBe(false);
             });
+        });
+    });
+
+    describe("reset", () => {
+        it("should reset all stores", () => {
+            // arrange
+            store.connection = {};
+            store.isConnected = false;
+            store.isConnected = true;
+            store.signedIn = true;
+
+            // act
+            store.reset();
+
+            // assert
+            expect(store.connection).toBeNull();
+            expect(store.isConnected).toBeNull();
+            expect(store.isConnectFailed).toBe(false);
+            expect(store.signedIn).toBe(false);
         });
     });
 });

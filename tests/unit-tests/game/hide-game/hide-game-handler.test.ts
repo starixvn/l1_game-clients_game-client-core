@@ -3,7 +3,6 @@ import { ConnectionStore } from "../../../../src/game/connection";
 import { GameSetting } from "../../../../src/game/game-configs";
 import { HideGameHandler } from "../../../../src/game/hide-game";
 import { RoundRunningHandlers, RoundTimeStore } from "../../../../src/game/rounds";
-import { Mediator } from "../../../../src/shared";
 import { gameSettings } from "../../container.test";
 
 describe("HideGameHandler", () => {
@@ -18,7 +17,7 @@ describe("HideGameHandler", () => {
         gameSetting.name = gameSettings.name;
         gameSetting.durations = gameSettings.durations;
         roundTimeStore = stub<RoundTimeStore>();
-        connectStore = new ConnectionStore(new Mediator(), gameSetting);
+        connectStore = stub<ConnectionStore>();
         roundRunning = new RoundRunningHandlers(roundTimeStore, gameSetting);
         handler = new HideGameHandler(roundRunning, connectStore);
     });

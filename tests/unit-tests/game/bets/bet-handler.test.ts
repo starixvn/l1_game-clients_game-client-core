@@ -1,8 +1,10 @@
+import { stub } from "jest-auto-stub";
 import { BetHandler, BetStore } from "../../../../src/game/bets";
 import { NoticeStore } from "../../../../src/game/notices";
 import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
 import { MainPlayerStore } from "../../../../src/players";
-import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
+import { GameClientEmitMessage } from "../../../../src/shared";
+import { l10n } from "../../../../src/shared/l10n";
 import { gameSettings } from "../../container.test";
 import { ConnectionStore } from "./../../../../src/game/connection";
 import { OrientationStore } from "./../../../../src/game/orientation";
@@ -10,7 +12,6 @@ import { OrientationStore } from "./../../../../src/game/orientation";
 jest.mock("../../../../src/shared/l10n", () => ({
     l10n: jest.fn(),
 }));
-import { l10n } from "../../../../src/shared/l10n";
 
 describe("BetHandler", () => {
     let connectionStore: ConnectionStore;
@@ -25,7 +26,7 @@ describe("BetHandler", () => {
 
     beforeAll(() => {
         mainPlayerStore = new MainPlayerStore();
-        connectionStore = new ConnectionStore(new Mediator(), gameSettings);
+        connectionStore = stub<ConnectionStore>();
         betStore = new BetStore();
         orientationStore = new OrientationStore();
         noticeStore = new NoticeStore();
@@ -69,7 +70,6 @@ describe("BetHandler", () => {
             // Arrange
             roundTimeStore.roundState = ROUND_STATE.STARTING_ROUND;
             l10n.t = jest.fn(() => "Cannot bet at the moment. Please wait for a few seconds.");
-
 
             // Act
             betHandler.handle(betChoice);

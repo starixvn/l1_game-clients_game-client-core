@@ -1,13 +1,14 @@
-import { AppStore } from "../../../../src/app/app-store";
-import { GameServiceMessage, Mediator } from "../../../../src/shared";
-import { DisableGameHandlers, DisabledGameStore, defaultDisabledMessage } from "../../../../src/game/disabled-game";
-import { NoticeStore, NoticeType } from "../../../../src/game/notices";
+import { stub } from "jest-auto-stub";
 import { AppHandlers } from "../../../../src/app";
-import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
-import { gameSettings } from "../../container.test";
+import { AppStore } from "../../../../src/app/app-store";
 import { AuthStore } from "../../../../src/auth/auth-store";
 import { ConnectionStore } from "../../../../src/game/connection";
+import { DisableGameHandlers, DisabledGameStore, defaultDisabledMessage } from "../../../../src/game/disabled-game";
+import { NoticeStore, NoticeType } from "../../../../src/game/notices";
 import { RoundRunningHandlers } from "../../../../src/game/rounds";
+import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
+import { GameServiceMessage } from "../../../../src/shared";
+import { gameSettings } from "../../container.test";
 
 jest.mock("../../../../src/shared/utils/localized-utils", () => {
     return {
@@ -38,7 +39,7 @@ describe("DisableGameHandlers tests", () => {
 
     beforeAll(() => {
         // arrange
-        connectionStore = new ConnectionStore(new Mediator(), gameSettings);
+        connectionStore = stub<ConnectionStore>();
         authStore = new AuthStore();
         disabledGameStore = new DisabledGameStore();
         disabledGameStore.setGameStatus = jest.fn();

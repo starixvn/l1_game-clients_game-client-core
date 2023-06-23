@@ -1,10 +1,11 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { Socket } from "socket.io-client/dist/socket.io.js";
+import { Socket, io } from "socket.io-client/dist/socket.io.js";
 import { ISessionInfo } from "../../auth";
+import { SiteConfigs } from "../../configs/site-configs";
 import { GameClientEmitMessage, Mediator } from "../../shared";
 import { SocketEvents } from "../../shared/constants/socket-event";
-import { StorageManager, localStorageKeys, sentryLogger } from "../../shared/utils";
+import { StorageManager, UrlUtils, localStorageKeys, sentryLogger } from "../../shared/utils";
 import { GameSetting } from "../game-configs";
 
 export const events = {
@@ -14,9 +15,24 @@ export const events = {
     },
 };
 
+export interface ISocketOption {
+    socketUri: string;
+    proxyRoute?: string;
+    forceNew?: boolean;
+    enableMsgpackParser?: boolean;
+    transports?: string[];
+    upgrade?: boolean;
+    path?: string;
+    extraHeaders?: object;
+}
+
 @injectable()
 export class ConnectionStore {
-    constructor(@inject(Mediator) protected readonly mediator: Mediator, @inject(GameSetting) protected readonly gameSetting: GameSetting) {
+    constructor(
+        @inject(Mediator) protected readonly mediator: Mediator,
+        @inject(GameSetting) protected readonly gameSetting: GameSetting,
+        @inject(SiteConfigs) protected readonly siteConfigs: SiteConfigs
+    ) {
         makeAutoObservable(this);
     }
 
@@ -24,6 +40,25 @@ export class ConnectionStore {
     isConnected: boolean = null;
     isConnectFailed = false;
     signedIn = false;
+
+    initConnection(customizeOptions?: ISocketOption) {
+        this.reset();
+
+        const gameId = this.gameSetting.id;
+        const socketUri = UrlUtils.buildServerUrl("http", `${this.siteConfigs.websocket.proxyPath}`, gameId, this.siteConfigs);
+        const optionsDefault = {
+            path: UrlUtils.getProxyRoute(this.siteConfigs),
+            socketUri,
+            transports: ["websocket"],
+            upgrade: false,
+            forceNew: true,
+            parser: this.siteConfigs.enableMsgpackParserAllGames,
+        };
+        const options = { ...optionsDefault, ...customizeOptions };
+        this.connection = io(options.socketUri, options);
+
+        this.initBaseListener();
+    }
 
     initBaseListener() {
         if (this.connection) {
@@ -74,16 +109,27 @@ export class ConnectionStore {
     }
 
     onDisconnected(reason = "") {
-        if (reason && reason !== "io client disconnect") {
-            this.isConnectFailed = true;
-        }
+        this.setConnectFailed(reason);
         this.isConnected = false;
         this.signedIn = false;
         this.connection.disconnect();
-        reason && sentryLogger.logError(reason);
+    }
+
+    setConnectFailed(reason = "") {
+        if (reason && reason !== "io client disconnect") {
+            this.isConnectFailed = true;
+            sentryLogger.logError(reason);
+        }
     }
 
     send(eventName: string, data: any) {
         this.connection?.emit(eventName, data);
+    }
+
+    reset() {
+        this.connection = null;
+        this.isConnected = null;
+        this.isConnectFailed = false;
+        this.signedIn = false;
     }
 }
