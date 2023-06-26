@@ -1,3 +1,11 @@
+## [1.8.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.8.0...v1.8.1) (2023-06-26)
+
+
+### Bug Fixes
+
+* move connect socket into store ([4e157fa](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/4e157fa5b0f99b1918f1ce86e661fc4825c68802))
+* not show notice when client disconnect ([4552c60](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/4552c60eeaee0ba43ee4792d86a59e3f31b7849f))
+
 # [1.8.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.7.0...v1.8.0) (2023-06-22)
 
 
