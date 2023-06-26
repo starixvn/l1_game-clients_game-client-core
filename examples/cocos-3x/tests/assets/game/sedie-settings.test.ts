@@ -5,6 +5,9 @@ import { containerOptions, settings } from "../../../assets/game/scripts/sedie-s
 jest.mock("db://shared-components/shared/scripts/startup", () => ({
     getSharedContainer: jest.fn(() => ({ sharedContainer: true })),
 }));
+jest.mock("mobx-logger", () => {
+    enableLogging: jest.fn();
+});
 
 describe("settings", () => {
     it("should have data as expected", () => {

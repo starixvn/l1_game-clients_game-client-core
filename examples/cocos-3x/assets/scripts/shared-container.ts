@@ -5,7 +5,7 @@ import mobxLogger from "mobx-logger";
 import Observer from "observer";
 import { siteConfigs } from "./site-configs";
 
-mobxLogger.enableLogging();
+mobxLogger?.enableLogging();
 
 export const sharedContainer = getSharedContainer(siteConfigs);
 
