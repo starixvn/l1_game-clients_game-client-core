@@ -19,6 +19,10 @@ export class ChipHandlers implements IMultipleHandlers {
             name: GameServiceMessage.OwnChip.eventName,
             handle: this.handleOwnChip,
         },
+        {
+            name: GameServiceMessage.ReBet.eventName,
+            handle: this.handleReBet,
+        },
     ];
 
     handleChips(chips: GameServiceMessage.Chips) {
@@ -31,5 +35,9 @@ export class ChipHandlers implements IMultipleHandlers {
 
     handleOwnChip(ownChip: GameServiceMessage.OwnChip) {
         this.store.ownChip = ownChip;
+    }
+
+    handleReBet(reBet: GameServiceMessage.ReBet) {
+        this.store.reBet = reBet;
     }
 }

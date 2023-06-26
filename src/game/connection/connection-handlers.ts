@@ -25,4 +25,25 @@ export namespace ConnectionHandlers {
             this.connectionStore.send(GameClientEmitMessage.inGame, null);
         }
     }
+
+    @injectable()
+    export class RetryGameHandler implements IHandler<void> {
+        private retryGameId: NodeJS.Timeout;
+
+        constructor(
+            @inject(ConnectionStore) private readonly connectionStore: ConnectionStore,
+            @inject(RoundRunningHandlers) private readonly roundRunning: RoundRunningHandlers
+        ) {}
+
+        handle() {
+            this.clearInterval();
+            this.retryGameId = setInterval(() => {
+                this.connectionStore.send(GameClientEmitMessage.retry, null);
+            }, 3);
+        }
+
+        clearInterval() {
+            this.retryGameId && clearInterval(this.retryGameId);
+        }
+    }
 }

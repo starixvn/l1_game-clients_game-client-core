@@ -254,7 +254,8 @@ export namespace AuthHandlers {
             @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
             @inject(UserService) private readonly userService: UserService,
             @inject(SignOut) private readonly signOutHandler: SignOut
-        ) {}
+        ) // @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler
+        {}
 
         async handle({ sessionInfo }) {
             const { session, username } = sessionInfo;
@@ -268,6 +269,7 @@ export namespace AuthHandlers {
 
         private handleSuccessful(response: ReCheckInResponse, sessionInfo: ISessionInfo) {
             if (response.apiError) {
+                // this.retryGameHandler.clearInterval();
                 this.handleError(response);
             } else {
                 this.authStore.setAuthStoreFromStorage(sessionInfo);

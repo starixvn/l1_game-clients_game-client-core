@@ -122,6 +122,10 @@ export class RoundTimeStore {
         );
     }
 
+    get isVisibleReBet() {
+        return this.isStartingRound || this.isLocking || this.isWaiting;
+    }
+
     resetRoundTime() {
         this._roundTime = this.wholeRound;
     }

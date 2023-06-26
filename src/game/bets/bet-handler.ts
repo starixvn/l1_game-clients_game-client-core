@@ -70,4 +70,18 @@ export class BetHandler {
 
         return !isBetPhase;
     }
+
+    handleReBet() {
+        if (this.isInPhasePreventBet()) {
+            return;
+        }
+
+        if (this.betStore?.isProcessingBet) {
+            this.showWarningProcessingBet();
+            return;
+        }
+
+        this.betStore.isProcessingBet = true;
+        this.connectionStore.send(GameClientEmitMessage.reBet, { m: this.orientationStore.m });
+    }
 }

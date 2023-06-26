@@ -15,7 +15,6 @@ export type RoundOdds = {
     odds: GameServiceMessage.Odds;
     fractional: boolean;
 };
-
 @injectable()
 export class RoundStore {
     constructor(
@@ -30,7 +29,7 @@ export class RoundStore {
     }
 
     roundId = 0;
-    ownBets: GameServiceMessage.OwnBets = {};
+    private _ownBets: GameServiceMessage.OwnBets = {};
     private _totalBets: GameServiceMessage.TotalBets = {};
     resultHash: GameServiceMessage.ResultHash = {};
 
@@ -82,6 +81,14 @@ export class RoundStore {
             total[betChoice] = this._totalBets[betChoice] * this.mainPlayerStore.rate;
             return total;
         }, {});
+    }
+
+    get ownBets() {
+        return this._ownBets;
+    }
+
+    set ownBets(ownBets: GameServiceMessage.OwnBets) {
+        this._ownBets = ownBets;
     }
 
     resetForNewRound() {

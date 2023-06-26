@@ -30,6 +30,9 @@ export namespace GameClientEmitMessage {
 
         static eventName = "getHistory";
     }
+
+    export const retry = "retry";
+    export const reBet = "rebet";
 }
 
 export namespace GameServiceMessage {
@@ -203,7 +206,7 @@ export namespace GameServiceMessage {
     };
 
     export class Winners {
-        roundId:number;
+        roundId: number;
         winningPlayers: TWinningPlayers;
 
         static eventName = "winners";
@@ -242,6 +245,13 @@ export namespace GameServiceMessage {
         isDisabledAccount: boolean;
 
         static eventName = "kickedOut";
+    }
+    export class ReBet {
+        [betChoice: string]: {
+            [chipValue: string]: number;
+        };
+
+        static eventName = "rebet";
     }
 }
 

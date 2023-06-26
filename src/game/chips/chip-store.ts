@@ -16,6 +16,11 @@ export interface TChipsByMainPlayerRate {
     };
     isShow: boolean;
 }
+
+export interface TChipReBet {
+    betChoice: string;
+    amount: number;
+}
 @injectable()
 export class ChipStore {
     constructor(
@@ -30,6 +35,7 @@ export class ChipStore {
     private _chips: GameServiceMessage.Chips = {};
     private _playerChip: GameServiceMessage.PlayerChip = null;
     private _ownChip: GameServiceMessage.OwnChip = { betChoice: "", amount: 0 };
+    private _reBet: GameServiceMessage.ReBet = {};
 
     get ownChip() {
         return this._ownChip;
@@ -53,6 +59,14 @@ export class ChipStore {
 
     set playerChip(playerChip: GameServiceMessage.PlayerChip) {
         this._playerChip = playerChip;
+    }
+
+    get reBet() {
+        return this._reBet;
+    }
+
+    set reBet(reBet: GameServiceMessage.ReBet) {
+        this._reBet = reBet;
     }
 
     resetChips() {
@@ -102,5 +116,36 @@ export class ChipStore {
         return this.gameConfigStore.chips
             .map((chip) => +chip)
             .filter((value) => value >= this.roundStore.minBet && value <= this.roundStore.maxBet);
+    }
+
+    get collectChipsReBet() {
+        const chipsReBet: TChipReBet[] = [];
+
+        for (const choice in this.reBet) {
+            if (this.reBet.hasOwnProperty(choice)) {
+                const chipsGroup = this.reBet[choice];
+                this.addChipsToReBet(chipsReBet, choice, chipsGroup);
+            }
+        }
+
+        return chipsReBet;
+    }
+
+    protected addChipsToReBet(chipsReBet: TChipReBet[], choice: string, chipsGroup: IChipGroup) {
+        for (const chipValue in chipsGroup) {
+            if (chipsGroup.hasOwnProperty(chipValue)) {
+                const quantity: number = chipsGroup[chipValue];
+                this.addIndividualChips(chipsReBet, choice, chipValue, quantity);
+            }
+        }
+    }
+
+    protected addIndividualChips(chipsReBet: TChipReBet[], choice: string, chipValue: string, quantity: number) {
+        for (let i = 0; i < quantity; i++) {
+            chipsReBet.push({
+                betChoice: choice,
+                amount: +chipValue,
+            });
+        }
     }
 }
