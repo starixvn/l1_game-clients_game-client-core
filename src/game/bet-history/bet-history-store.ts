@@ -3,7 +3,7 @@ import { makeAutoObservable } from "mobx";
 
 export interface IBetHistoryLog {
     time: string;
-    phien: number;
+    roundId: number;
     win: number;
 }
 

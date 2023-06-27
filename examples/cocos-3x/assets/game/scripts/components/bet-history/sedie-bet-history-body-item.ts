@@ -11,7 +11,6 @@ interface ISedieBetHistoryLog extends gc.BetHistory.IBetHistoryLog {
     betwin: number;
     freeBet: boolean;
     settlementResult: any;
-    phien: number;
 }
 
 @ccclass
@@ -69,7 +68,7 @@ export default class SedieBetHistoryBodyItem extends BetHistoryBodyItem {
 
     setData(data: ISedieBetHistoryLog, index: number) {
         this.nodeBackground.active = index % 2 > 0;
-        const { time, phien, win, result, betwin, freeBet, settlementResult } = data;
+        const { time, roundId, win, result, betwin, freeBet, settlementResult } = data;
 
         if (this.lblTime && this.lblTime.node.children.length === 0) {
             this.lblTime.string = DateTimeUtils.getStringDateByTime(time);
@@ -78,7 +77,7 @@ export default class SedieBetHistoryBodyItem extends BetHistoryBodyItem {
             this.lblDate.string = DateTimeUtils.getStringDate(time);
             this.lblHour.string = DateTimeUtils.getStringHourByTime(time);
         }
-        this.lblRound.string = phien.toString();
+        this.lblRound.string = roundId.toString();
 
         let number = 0;
         Object.keys(result).forEach((key) => {
