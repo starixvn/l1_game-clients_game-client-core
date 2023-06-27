@@ -1,7 +1,6 @@
 import { stub } from "jest-auto-stub";
 import { GameSetting } from "../../../../src/game/game-configs";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
-import { GameServiceMessage } from "../../../../src/shared";
 import { gameSettings } from "../../container.test";
 import { RoundRunningHandlers } from "./../../../../src/game/rounds/round-running-handlers";
 
@@ -21,29 +20,6 @@ describe("RoundRunningHandlers", () => {
     afterEach(() => {
         jest.clearAllMocks();
         clearInterval(roundRunningHandlers.runnerId);
-    });
-
-    it("should start the runner when the correct game is sent", () => {
-        // Arrange
-        roundRunningHandlers.startRunner = jest.fn();
-        const inGame = "sedie";
-
-        // Act
-        roundRunningHandlers.handleToGame(inGame);
-
-        // Assert
-        expect(roundRunningHandlers.startRunner).toHaveBeenCalledTimes(1);
-    });
-
-    it("should not start the runner when the wrong game is sent", () => {
-        // Arrange
-        roundRunningHandlers.startRunner = jest.fn();
-
-        // Act
-        roundRunningHandlers.handleToGame("DragonTiger");
-
-        // Assert
-        expect(roundRunningHandlers.startRunner).toHaveBeenCalledTimes(0);
     });
 
     describe("startRunner", () => {
@@ -92,20 +68,5 @@ describe("RoundRunningHandlers", () => {
         // Assert
         expect(window.clearInterval).toHaveBeenCalledWith(roundRunningHandlers.runnerId);
         expect(roundTimeStore.resetRoundTimeStore).toHaveBeenCalled();
-    });
-
-    describe("eventHandleList", () => {
-        it("should be equal expected", () => {
-            // Arrange
-            const expected = [
-                {
-                    name: GameServiceMessage.toGame,
-                    handle: roundRunningHandlers.handleToGame,
-                },
-            ];
-
-            // Assert
-            expect(roundRunningHandlers.eventHandleList).toEqual(expected);
-        });
     });
 });

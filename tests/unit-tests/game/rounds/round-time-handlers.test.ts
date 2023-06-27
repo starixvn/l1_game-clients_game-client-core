@@ -1,4 +1,6 @@
+import { stub } from "jest-auto-stub";
 import { GameSetting } from "../../../../src/game/game-configs";
+import { RoundRunningHandlers } from "../../../../src/game/rounds";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
 import { GameServiceMessage } from "../../../../src/shared";
 import { RoundTimeHandlers } from "./../../../../src/game/rounds/round-time-handlers";
@@ -8,13 +10,15 @@ describe("RoundTimeHandlers", () => {
     let roundTimeStore: RoundTimeStore;
     let roundTimeHandler: RoundTimeHandlers;
     let gameSetting: GameSetting;
+    let roundRunningHandlers: RoundRunningHandlers;
 
     beforeEach(() => {
         gameSetting = new GameSetting();
         gameSetting.name = gameSettings.name;
         gameSetting.durations = gameSettings.durations;
         roundTimeStore = new RoundTimeStore(gameSetting);
-        roundTimeHandler = new RoundTimeHandlers(roundTimeStore);
+        roundRunningHandlers = stub<RoundRunningHandlers>();
+        roundTimeHandler = new RoundTimeHandlers(roundTimeStore, roundRunningHandlers);
     });
 
     afterEach(() => {
@@ -24,12 +28,14 @@ describe("RoundTimeHandlers", () => {
         it("should update store round time and start store", () => {
             // Arrange
             roundTimeStore.start = jest.fn();
+            roundRunningHandlers.startRunner = jest.fn();
 
             // Act
             roundTimeHandler.handleRemainingTime(5);
 
             // Assert
             expect(roundTimeStore.roundTime).toBe(5);
+            expect(roundRunningHandlers.startRunner).toBeCalled();
         });
 
         it("should not update store round time and start store when remaining time is 0", () => {

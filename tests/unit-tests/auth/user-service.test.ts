@@ -1,28 +1,9 @@
 import { UserService } from "../../../src/auth";
-import { SiteConfigs } from "../../../src/configs/site-configs";
 import { UrlUtils } from "../../../src/shared/utils";
+import { siteConfigs } from "../container.test";
 
 jest.mock("../../../src/shared/utils");
 
-const siteConfigs: SiteConfigs = {
-    isDev: true,
-    systemType: "SC1",
-    ssl: false,
-    serverDomainMapper: {
-        localhost: "localhost:5002",
-    },
-    subDomain: "",
-    env: "LOCAL",
-    subGuideDomain: "l1-guide",
-    enableMsgpackParserAllGames: false,
-    enableMsgpackParserOnNotification: false,
-    userServiceUrlDev: "http://localhost:3000/user",
-    notificationServiceUrlDev: "https://localhost:3008",
-    websocket: {
-        proxyPath: "sedie",
-        route: "",
-    },
-};
 describe("UserService tests", () => {
     describe("constructor", () => {
         describe("environment Dev", () => {

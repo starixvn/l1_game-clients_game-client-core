@@ -146,6 +146,7 @@ describe("UrlUtils", () => {
                 enableMsgpackParserOnNotification: false,
                 userServiceUrlDev: "http://localhost:3000/user",
                 notificationServiceUrlDev: "http://localhost:3008",
+                mainObserver: "",
             };
             const result = UrlUtils.getProxyRoute(configs);
             expect(result).toBe("/socket.io");
@@ -172,6 +173,7 @@ describe("UrlUtils", () => {
                 enableMsgpackParserOnNotification: false,
                 userServiceUrlDev: "http://localhost:3000/user",
                 notificationServiceUrlDev: "http://localhost:3008",
+                mainObserver: "",
             };
 
             const result = UrlUtils.getProxyRoute(configs);
@@ -199,6 +201,7 @@ describe("UrlUtils", () => {
                 enableMsgpackParserOnNotification: false,
                 userServiceUrlDev: "http://localhost:3000/user",
                 notificationServiceUrlDev: "http://localhost:3008",
+                mainObserver: "",
             };
 
             const result = UrlUtils.getProxyRoute(configs);
