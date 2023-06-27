@@ -38,7 +38,7 @@ export namespace ReBetHandlers {
         constructor(@inject(ReBetStore) private readonly reBetStore: ReBetStore) {}
 
         handle() {
-            const storageReBet = StorageManager.get(this.reBetStore.keyReBet) as IRuleShowReBet;
+            const storageReBet = StorageManager.get(this.reBetStore.keyStorageReBet) as IRuleShowReBet;
             if (storageReBet?.roundId) {
                 this.reBetStore.ruleShowReBet = storageReBet;
             }

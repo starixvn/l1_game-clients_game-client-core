@@ -421,6 +421,7 @@ describe("AuthHandlers tests", () => {
             userService = new UserService(siteConfigs);
             player = new MainPlayerStore();
             signOut = new AuthHandlers.SignOut(appStore, authStore);
+            authStore = stub<AuthStore>();
             reCheckIn = new AuthHandlers.ReCheckIn(authStore, player, userService, signOut);
             triggerRecheckIn = new AuthHandlers.TriggerRecheckIn(reCheckIn, signOut);
             handler = new AuthHandlers.ClearRecheckInInterval(triggerRecheckIn);

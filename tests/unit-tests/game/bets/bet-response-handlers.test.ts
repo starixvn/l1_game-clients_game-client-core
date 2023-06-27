@@ -1,11 +1,18 @@
+import { stub } from "jest-auto-stub";
 import { BetResponseHandlers, BetStore } from "../../../../src/game/bets";
+import { ConnectionHandlers } from "../../../../src/game/connection";
+import { RoundTimeStore } from "../../../../src/game/rounds";
 
 describe("BetResponseHandler", () => {
     let betStore: BetStore;
     let instance: BetResponseHandlers;
+    let roundTimeStore: RoundTimeStore;
+    let retryGameHandler: ConnectionHandlers.RetryGameHandler;
     beforeAll(() => {
         betStore = new BetStore();
-        instance = new BetResponseHandlers(betStore);
+        roundTimeStore = stub<RoundTimeStore>();
+        retryGameHandler = stub<ConnectionHandlers.RetryGameHandler>();
+        instance = new BetResponseHandlers(betStore, roundTimeStore, retryGameHandler);
         betStore.isProcessingBet = true;
     });
 

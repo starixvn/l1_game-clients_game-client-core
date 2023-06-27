@@ -170,4 +170,116 @@ describe("ChipStore", () => {
             expect(result).toEqual([]);
         });
     });
+
+    describe("collect Chips handle ReBet", () => {
+        describe("collectChipsReBet", () => {
+            test("should return an array of chips for all choices and quantities", () => {
+                // Set up test data
+                chipStore.reBet = {
+                    choice1: {
+                        "1": 2,
+                        "5": 3,
+                    },
+                    choice2: {
+                        "10": 1,
+                    },
+                };
+
+                // Call the method under test
+                const chipsReBet = chipStore.collectChipsReBet;
+
+                // Assert the result
+                expect(chipsReBet).toEqual([
+                    { betChoice: "choice1", amount: 1 },
+                    { betChoice: "choice1", amount: 1 },
+                    { betChoice: "choice1", amount: 5 },
+                    { betChoice: "choice1", amount: 5 },
+                    { betChoice: "choice1", amount: 5 },
+                    { betChoice: "choice2", amount: 10 },
+                ]);
+            });
+
+            test("should return an empty array when reBet is empty", () => {
+                // Set up test data
+                chipStore.reBet = {};
+
+                // Call the method under test
+                const chipsReBet = chipStore.collectChipsReBet;
+
+                // Assert the result
+                expect(chipsReBet).toEqual([]);
+            });
+        });
+
+        describe("addChipsToReBet", () => {
+            test("should add chips to the chipsReBet array based on choices and chip groups", () => {
+                // Set up test data
+                const chipsReBet = [];
+                const choice = "choice1";
+                const chipsGroup = {
+                    "1": 2,
+                    "5": 3,
+                };
+
+                // Call the method under test
+                chipStore.addChipsToReBet(chipsReBet, choice, chipsGroup);
+
+                // Assert the result
+                expect(chipsReBet).toEqual([
+                    { betChoice: "choice1", amount: 1 },
+                    { betChoice: "choice1", amount: 1 },
+                    { betChoice: "choice1", amount: 5 },
+                    { betChoice: "choice1", amount: 5 },
+                    { betChoice: "choice1", amount: 5 },
+                ]);
+            });
+
+            test("should not add chips when chipsGroup is empty", () => {
+                // Set up test data
+                const chipsReBet = [];
+                const choice = "choice1";
+                const chipsGroup = {};
+
+                // Call the method under test
+                chipStore.addChipsToReBet(chipsReBet, choice, chipsGroup);
+
+                // Assert the result
+                expect(chipsReBet).toEqual([]);
+            });
+        });
+
+        describe("addIndividualChips", () => {
+            test("should add individual chips to the chipsReBet array based on choice, chipValue, and quantity", () => {
+                // Set up test data
+                const chipsReBet = [];
+                const choice = "choice1";
+                const chipValue = "5";
+                const quantity = 3;
+
+                // Call the method under test
+                chipStore.addIndividualChips(chipsReBet, choice, chipValue, quantity);
+
+                // Assert the result
+                expect(chipsReBet).toEqual([
+                    { betChoice: "choice1", amount: 5 },
+                    { betChoice: "choice1", amount: 5 },
+                    { betChoice: "choice1", amount: 5 },
+                ]);
+            });
+
+            test("should not add chips when quantity is 0", () => {
+                // Set up test data
+                const chipsReBet = [];
+                const choice = "choice1";
+                const chipValue = "5";
+                const quantity = 0;
+
+                // Call the method under test
+                chipStore.addIndividualChips(chipsReBet, choice, chipValue, quantity);
+
+                // Assert the result
+                expect(chipsReBet).toEqual([]);
+            });
+        });
+    });
 });

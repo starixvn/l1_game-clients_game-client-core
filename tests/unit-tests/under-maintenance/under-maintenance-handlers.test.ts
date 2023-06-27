@@ -1,6 +1,6 @@
 import { stub } from "jest-auto-stub";
 import { AppStore } from "../../../src/app/app-store";
-import { ConnectionStore } from "../../../src/game/connection";
+import { ConnectionHandlers, ConnectionStore } from "../../../src/game/connection";
 import { NotificationStore } from "../../../src/notification";
 import { Mediator, NotificationServiceMessage } from "../../../src/shared";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
@@ -33,13 +33,16 @@ const connectionStore = stub<ConnectionStore>();
 const notificationStore = new NotificationStore(new Mediator());
 notificationStore.onDisconnected = jest.fn();
 
+const retryGameHandler: ConnectionHandlers.RetryGameHandler = stub<ConnectionHandlers.RetryGameHandler>();
+retryGameHandler.clearInterval = jest.fn();
+
 let handler: UnderMaintenanceHandler;
 
 describe("UnderMaintenanceHandler tests", () => {
     describe("handle", () => {
         beforeAll(() => {
             // arrange
-            handler = new UnderMaintenanceHandler(appStore, connectionStore, notificationStore, siteConfigs);
+            handler = new UnderMaintenanceHandler(appStore, connectionStore, notificationStore, siteConfigs, retryGameHandler);
 
             // act
             handler.handle(fakeUmInfo);
@@ -64,6 +67,11 @@ describe("UnderMaintenanceHandler tests", () => {
             it("should clear session.", () => {
                 // assert
                 expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.session);
+            });
+
+            it("should clear interval retry game.", () => {
+                // assert
+                expect(retryGameHandler.clearInterval).toHaveBeenCalled();
             });
         });
     });

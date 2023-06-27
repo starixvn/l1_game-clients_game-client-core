@@ -94,6 +94,10 @@ describe("ChipHandlers", () => {
                 name: GameServiceMessage.OwnChip.eventName,
                 handle: chipHandlers.handleOwnChip,
             },
+            {
+                name: GameServiceMessage.ReBet.eventName,
+                handle: chipHandlers.handleReBet,
+            },
         ];
 
         // Assert

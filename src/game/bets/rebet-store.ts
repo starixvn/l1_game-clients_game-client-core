@@ -41,7 +41,7 @@ export class ReBetStore {
         roundId: 0,
     };
 
-    get keyReBet() {
+    get keyStorageReBet() {
         return `${localStorageKeys.ruleReBet}_${this.gameSetting.id}`;
     }
 
@@ -59,7 +59,7 @@ export class ReBetStore {
             const ruleReBet = { roundId: this.roundStore.clientRoundId };
             this.ruleShowReBet = ruleReBet;
 
-            StorageManager.set(this.keyReBet, ruleReBet);
+            StorageManager.set(this.keyStorageReBet, ruleReBet);
         }
     }
 }

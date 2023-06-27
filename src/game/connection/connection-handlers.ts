@@ -30,10 +30,7 @@ export namespace ConnectionHandlers {
     export class RetryGameHandler implements IHandler<void> {
         private retryGameId: NodeJS.Timeout;
 
-        constructor(
-            @inject(ConnectionStore) private readonly connectionStore: ConnectionStore,
-            @inject(RoundRunningHandlers) private readonly roundRunning: RoundRunningHandlers
-        ) {}
+        constructor(@inject(ConnectionStore) private readonly connectionStore: ConnectionStore) {}
 
         handle() {
             this.clearInterval();

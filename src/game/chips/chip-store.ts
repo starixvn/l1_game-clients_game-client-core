@@ -131,7 +131,7 @@ export class ChipStore {
         return chipsReBet;
     }
 
-    protected addChipsToReBet(chipsReBet: TChipReBet[], choice: string, chipsGroup: IChipGroup) {
+    addChipsToReBet(chipsReBet: TChipReBet[], choice: string, chipsGroup: IChipGroup) {
         for (const chipValue in chipsGroup) {
             if (chipsGroup.hasOwnProperty(chipValue)) {
                 const quantity: number = chipsGroup[chipValue];
@@ -140,7 +140,7 @@ export class ChipStore {
         }
     }
 
-    protected addIndividualChips(chipsReBet: TChipReBet[], choice: string, chipValue: string, quantity: number) {
+    addIndividualChips(chipsReBet: TChipReBet[], choice: string, chipValue: string, quantity: number) {
         for (let i = 0; i < quantity; i++) {
             chipsReBet.push({
                 betChoice: choice,
