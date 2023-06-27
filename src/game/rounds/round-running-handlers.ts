@@ -1,10 +1,9 @@
 import { inject, injectable } from "inversify";
-import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { GameSetting } from "../game-configs";
 import { RoundTimeStore } from "./round-time-store";
 
 @injectable()
-export class RoundRunningHandlers implements IMultipleHandlers {
+export class RoundRunningHandlers {
     runnerId;
 
     constructor(
@@ -22,18 +21,5 @@ export class RoundRunningHandlers implements IMultipleHandlers {
     stopRunner() {
         clearInterval(this.runnerId);
         this.roundTimeStore.resetRoundTimeStore();
-    }
-
-    eventHandleList = [
-        {
-            name: GameServiceMessage.toGame,
-            handle: this.handleToGame,
-        },
-    ];
-
-    handleToGame(toGame: string) {
-        if (toGame && toGame.toLocaleLowerCase() === this.gameSetting.name.toLocaleLowerCase()) {
-            this.startRunner();
-        }
     }
 }

@@ -26,6 +26,7 @@ const defaultConfig: gc.Configs.SiteConfigs = {
         proxyPath: "sedie",
         route: "",
     },
+    mainObserver: "SeDie",
 };
 
 let configDev = {
@@ -46,3 +47,5 @@ if (window.envConfig) {
 
 export const siteConfigs: gc.Configs.SiteConfigs =
     window.envConfig && window.envConfig.isDev ? defaultConfig : { ...defaultConfig, ...configDev, ...window.envConfig };
+
+window.envConfig = siteConfigs;

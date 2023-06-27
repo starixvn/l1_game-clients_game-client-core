@@ -18,4 +18,5 @@ export class SiteConfigs {
     SGConnectSubDomain?: string;
     notificationServiceUrlDev?: string;
     gameGuideUrlDev?: string;
+    mainObserver: string;
 }

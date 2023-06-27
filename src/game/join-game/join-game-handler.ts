@@ -1,29 +1,16 @@
 import { inject, injectable } from "inversify";
+import { GameServiceMessage } from "../../shared";
 import { IHandler } from "../../shared/mediator";
-import { AroundTablePlayersStore } from "../around-table-players";
-import { ChipStore } from "../chips";
-import { RoundHistoryStore } from "../round-histories";
-import { SettlementStore } from "../settlements";
-import { ConnectionHandlers } from "./../connection/connection-handlers";
-import { RoundStore } from "./../rounds/round-store";
+import { JoinGameStore } from "./join-game-store";
 
 @injectable()
-export class JoinGameHandler implements IHandler<void> {
-    constructor(
-        @inject(ConnectionHandlers.ConnectHandler) private readonly connection: ConnectionHandlers.ConnectHandler,
-        @inject(RoundStore) private readonly roundStore: RoundStore,
-        @inject(ChipStore) private readonly chipStore: ChipStore,
-        @inject(AroundTablePlayersStore) private readonly otherPlayersStore: AroundTablePlayersStore,
-        @inject(RoundHistoryStore) private readonly roundHistoryStore: RoundHistoryStore,
-        @inject(SettlementStore) private readonly settlementStore: SettlementStore
-    ) {}
+export class JoinGameHandler implements IHandler<string> {
+    name = GameServiceMessage.toGame;
+    constructor(@inject(JoinGameStore) private readonly joinGameStore: JoinGameStore) {}
 
-    async handle() {
-        this.roundStore.resetRoundStore();
-        this.chipStore.resetChips();
-        this.otherPlayersStore.resetAroundTablePlayersStore();
-        this.roundHistoryStore.resetRoundHistoryStore();
-        this.settlementStore.resetSettlementStore();
-        this.connection.handle();
+    async handle(toGame: string) {
+        this.joinGameStore.toGame = {
+            name: toGame,
+        };
     }
 }
