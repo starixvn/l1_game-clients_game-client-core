@@ -7,7 +7,7 @@ import { fruits } from "./dictionaries/fruits";
 import { marvels } from "./dictionaries/marvels";
 import { new202010 } from "./dictionaries/new202010";
 
-export default class NameGenerator {
+export class NameGenerator {
     public static generateName(): string {
         const dictionaries = [colors, animals, marvels, fruits, cools, new202010];
 

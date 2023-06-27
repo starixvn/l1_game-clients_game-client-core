@@ -10,7 +10,7 @@ import { Mediator } from "../../../src/shared";
 import { GameUtils } from "../../../src/shared/utils/game-utils";
 import { LocalizedUtils } from "../../../src/shared/utils/localized-utils";
 import { sentryLogger } from "../../../src/shared/utils/logger";
-import NameGenerator from "../../../src/shared/utils/name-generator";
+import { NameGenerator } from "../../../src/shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 import { siteConfigs } from "../container.test";
 

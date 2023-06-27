@@ -8,7 +8,7 @@ import { AppTypes } from "../shared/constants/app-type";
 import { GameUtils } from "../shared/utils/game-utils";
 import { LocalizedUtils } from "../shared/utils/localized-utils";
 import { sentryLogger } from "../shared/utils/logger";
-import NameGenerator from "../shared/utils/name-generator";
+import { NameGenerator } from "../shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
 import { AppStore } from "./../app/app-store";
 import { URLParams } from "./../shared/constants/url-params";
@@ -35,7 +35,7 @@ export namespace AuthHandlers {
         }
     }
     @injectable()
-    export class Authorize implements IHandler<{ session: string; username: string }> {
+    export class Authorize implements IHandler<{ session?: string; username?: string }> {
         private session = "";
         private username = "";
         constructor(
@@ -82,8 +82,11 @@ export namespace AuthHandlers {
         }
 
         private async autoGenerateName() {
-            const name = NameGenerator.generateName();
-            const response = await this.userService.signName(this.session, this.username, name);
+            this.handleSignName(NameGenerator.generateName());
+        }
+
+        async handleSignName(username: string) {
+            const response = await this.userService.signName(this.session, this.username, username);
             await this.handleAuthorizedResponse(response as IAuthorizeResponse);
         }
     }
@@ -125,7 +128,7 @@ export namespace AuthHandlers {
         private async handleAuthorizeWithURLParams(urlParams: URLSearchParams) {
             if (urlParams?.has(URLParams.token)) {
                 this.appStore.setURLStore(urlParams);
-                this.appStore.isAutoCreateNickname = true;
+                // this.appStore.isAutoCreateNickname = true;
                 const token = urlParams.get(URLParams.token);
                 const system = +urlParams.get(URLParams.appType) || AppTypes.Club;
 
