@@ -235,6 +235,31 @@ describe("AuthHandlers tests", () => {
                     // assert
                     expect(mainPlayerStore.setAuthorizeStore).toHaveBeenCalledWith(response.user);
                 });
+
+                it("should show sign-name when authorized equal false", async () => {
+                    // arrange
+                    const response = { isUM: false, umInfo: null, isSuccessful: true, authorized: false, user: null };
+                    // @ts-ignore
+                    userService.authorize.mockReturnValueOnce(response);
+                    const mainPlayerStore = new MainPlayerStore();
+                    mainPlayerStore.setAuthorizeStore = jest.fn();
+                    const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+
+                    const handler = new AuthHandlers.Authorize(
+                        authStore,
+                        appStore,
+                        mainPlayerStore,
+                        userService,
+                        signOutHandler,
+                        notificationServiceHandler
+                    );
+
+                    // act
+                    await handler.handle({ session: "session", username: "username" });
+
+                    // assert
+                    expect(authStore.isShowSignName).toBeTruthy();
+                });
             });
 
             describe("when auth store isDirectMode true", () => {

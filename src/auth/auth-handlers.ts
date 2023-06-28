@@ -72,8 +72,12 @@ export namespace AuthHandlers {
             if (this.needAutoGenerateNickname(response.authorized)) {
                 await this.autoGenerateName();
             } else {
-                response.user && this.mainPlayerStore.setAuthorizeStore(response.user);
-                this.authStore.isAuthorized = response.authorized;
+                if (!response.authorized && !response.user) {
+                    this.authStore.isShowSignName = true;
+                } else {
+                    response.user && this.mainPlayerStore.setAuthorizeStore(response.user);
+                    this.authStore.isAuthorized = response.authorized;
+                }
             }
         }
 
@@ -86,6 +90,7 @@ export namespace AuthHandlers {
         }
 
         async handleSignName(username: string) {
+            this.authStore.isShowSignName = false;
             const response = await this.userService.signName(this.session, this.username, username);
             await this.handleAuthorizedResponse(response as IAuthorizeResponse);
         }
@@ -128,11 +133,9 @@ export namespace AuthHandlers {
         private async handleAuthorizeWithURLParams(urlParams: URLSearchParams) {
             if (urlParams?.has(URLParams.token)) {
                 this.appStore.setURLStore(urlParams);
-                // this.appStore.isAutoCreateNickname = true;
                 const token = urlParams.get(URLParams.token);
                 const system = +urlParams.get(URLParams.appType) || AppTypes.Club;
 
-                // test
                 if (urlParams?.has(URLParams.rurl)) {
                     this.appStore.setURLStore(urlParams);
                 }

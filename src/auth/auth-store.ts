@@ -28,6 +28,7 @@ export class AuthStore {
     errorCode = "";
     ssoErrorMessage = "";
     ssoTime: Date;
+    isShowSignName = false;
 
     constructor() {
         makeAutoObservable(this);
