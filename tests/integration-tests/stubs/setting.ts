@@ -30,5 +30,5 @@ export const siteConfigs: SiteConfigs = {
         proxyPath: "sedie",
         route: "",
     },
-    mainObserver: "SeDie",
+    mainObserverNamespace: "SeDie",
 };

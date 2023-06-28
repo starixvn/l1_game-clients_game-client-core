@@ -1,32 +1,54 @@
 import gc from "@sg/game-client-base";
-
 declare global {
     interface Window {
         envConfig: gc.Configs.SiteConfigs;
     }
 }
 
+// Dev Machine
+// const defaultConfig: gc.Configs.SiteConfigs = {
+//     isDev: true, // if this property is true, then you should add token=anything into the querytring to sso to the game http://localhost:7456/?token=anything
+//     systemType: "SC1",
+//     ssl: false,
+//     serverDomainMapper: {
+//         localhost: "localhost:5002",
+//     },
+//     subDomain: "",
+//     env: "LOCAL",
+//     subGuideDomain: "",
+//     SGConnectSubDomain: "connectsite",
+//     enableMsgpackParserAllGames: false,
+//     enableMsgpackParserOnNotification: false,
+//     userServiceUrlDev: "http://localhost:3000/user",
+//     notificationServiceUrlDev: "http://localhost:3008",
+//     gameGuideUrlDev: "http://localhost:3000/guide",
+//     websocket: {
+//         proxyPath: "sedie",
+//         route: "",
+//     },
+//     mainObserverNamespace: settings.name,
+// };
+
+// LOCAL3
 const defaultConfig: gc.Configs.SiteConfigs = {
-    isDev: true, // if this property is true, then you should add token=anything into the querytring to sso to the game http://localhost:7456/?token=anything
+    isDev: false, // if this property is true, then you should add token=anything into the querytring to sso to the game http://localhost:7456/?token=anything
     systemType: "SC1",
-    ssl: false,
+    ssl: true,
+    subDomain: "l1-proxy3",
     serverDomainMapper: {
-        localhost: "localhost:5002",
+        localhost: "lumigame.com",
     },
-    subDomain: "",
-    env: "LOCAL",
-    subGuideDomain: "",
-    SGConnectSubDomain: "connectsite",
-    enableMsgpackParserAllGames: false,
+    env: "LOCAL3",
+    sentryUrl: "https://2af29bdacdbf4d9ba2db6600b450541f@sentry.lumigame.com/28",
+    subGuideDomain: "l1-guide-3",
     enableMsgpackParserOnNotification: false,
-    userServiceUrlDev: "http://localhost:3000/user",
-    notificationServiceUrlDev: "http://localhost:3008",
-    gameGuideUrlDev: "http://localhost:3000/guide",
+    enableMsgpackParserAllGames: false,
     websocket: {
         proxyPath: "sedie",
-        route: "",
+        route: "sedie",
     },
-    mainObserver: "SeDie",
+    SGConnectSubDomain: "l1-connectsite3",
+    mainObserverNamespace: "SeDie",
 };
 
 let configDev = {
