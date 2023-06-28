@@ -1,3 +1,17 @@
+# [1.9.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.8.1...v1.9.0) (2023-06-28)
+
+
+### Bug Fixes
+
+* refactor mainObserverNamespace ([3c5d83e](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/3c5d83e9c332507d599dd4521764d8599d87a87b))
+* update submodules ([d32041d](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d32041d74f608e01382968003a57f160e371181e))
+
+
+### Features
+
+* handle toGame in join game handler ([7fb6ac1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/7fb6ac140a7387299e2f73718954bd6c1aa8ddd2))
+* start runner when receive remaining time ([d2988e0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d2988e04a5a077041e27b9ceddb968cb94e23882))
+
 ## [1.8.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.8.0...v1.8.1) (2023-06-26)
 
 
