@@ -1,3 +1,11 @@
+# [1.10.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.9.0...v1.10.0) (2023-06-28)
+
+
+### Features
+
+* disabled service then return to splash screen ([ce6b5f2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/ce6b5f2366a16229ee7aa2bc730d128c56430f9b))
+* disabled service then return to splash screen - rebase master ([d588992](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d5889927b81caad420809095235102dccf7e5a92))
+
 # [1.9.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.8.1...v1.9.0) (2023-06-28)
 
 
