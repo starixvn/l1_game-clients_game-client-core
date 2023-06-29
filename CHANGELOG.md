@@ -1,3 +1,14 @@
+# [1.11.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.10.2...v1.11.0) (2023-06-29)
+
+
+### Features
+
+* fix reabse main ([7cd2679](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/7cd267992aed4478fc2acc38a246df95eee4a06a))
+* handle sign-name ([91ff65a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/91ff65aeaa367f4d3c7cbcfd8d1915f3ea6ed4f8))
+* refactor code ([ec35f7a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/ec35f7ad94df1fa254878ab9580dcfda2c2fae1c))
+* update sign-name ([fd7e631](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/fd7e631c335952e376f4e0296382b1ed992b9051))
+* update translate ([3c39bf2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/3c39bf2f11474d9394de076087625dd11212d8c3))
+
 ## [1.10.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.10.1...v1.10.2) (2023-06-29)
 
 
