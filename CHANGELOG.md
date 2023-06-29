@@ -1,3 +1,10 @@
+## [1.10.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.10.0...v1.10.1) (2023-06-29)
+
+
+### Bug Fixes
+
+* upgrade version ([1013907](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/1013907127da38767e60b36a6e8ce4be12751171))
+
 # [1.10.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.9.0...v1.10.0) (2023-06-28)
 
 
