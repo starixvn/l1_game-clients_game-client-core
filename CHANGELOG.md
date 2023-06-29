@@ -1,3 +1,11 @@
+## [1.10.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.10.1...v1.10.2) (2023-06-29)
+
+
+### Bug Fixes
+
+* update reload and exclude games ([aacbb14](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/aacbb14278ae3cfe3b5ece65703afcc921bbe43d))
+* update shared-components ([52054c4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/52054c4b0575ad7a31a945a600876d9cc9b7fd53))
+
 ## [1.10.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.10.0...v1.10.1) (2023-06-29)
 
 
