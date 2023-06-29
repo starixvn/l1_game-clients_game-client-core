@@ -37,6 +37,12 @@ app.get("/kickedOut", function (req, res) {
     });
 });
 
+app.get("/reload", function (req, res) {
+    res.send("Force reload!");
+    io.emit("reload", true);
+});
+
+
 server.listen(port, () => {
     console.log(`listening on *:${port}`);
 });

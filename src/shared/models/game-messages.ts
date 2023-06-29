@@ -63,6 +63,7 @@ export namespace GameServiceMessage {
     }
     export const remainingTime = "remainingTime";
     export const um = "um";
+    export const notPermittedToPlay = "notPermittedToPlay";
 
     export const roundId = "roundId";
     export type Odds = {
@@ -245,4 +246,6 @@ export namespace NotificationServiceMessage {
     }
 
     export const sessionTimeoutEventName = "notifyTimeout";
+
+    export const reloadEventName = "reload";
 }

@@ -9,6 +9,7 @@ export const events = {
     ...SocketEvents,
     ...{
         kickedOut: "kickedOut",
+        reload: "reload"
     },
 };
 
@@ -36,6 +37,7 @@ export class NotificationStore {
         this.isConnectFailed = false;
 
         this.connection.on(events.kickedOut, this.onHandleKickedOut.bind(this));
+        this.connection.on(events.reload, this.onReload.bind(this));
     }
 
     onHandleKickedOut(data: boolean | NotificationServiceMessage.UnderMaintenanceInfo) {
@@ -44,6 +46,10 @@ export class NotificationStore {
         } else {
             this.mediator.emit(NotificationServiceMessage.UnderMaintenanceInfo.eventName, data);
         }
+    }
+
+    onReload(){
+        this.mediator.emit(NotificationServiceMessage.reloadEventName);
     }
 
     onConnectFailed(error?: Error) {
