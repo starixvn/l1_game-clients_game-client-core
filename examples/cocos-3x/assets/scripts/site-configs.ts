@@ -26,7 +26,7 @@ const defaultConfig: gc.Configs.SiteConfigs = {
         proxyPath: "sedie",
         route: "",
     },
-    mainObserverNamespace: "SeDie",
+    mainObserverNamespace: "SeDie"
 };
 
 // LOCAL3
