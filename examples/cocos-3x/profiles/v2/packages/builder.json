@@ -11,7 +11,7 @@
         "progress": 1,
         "state": "success",
         "stage": "build",
-        "message": "6-13-2023 16:43:09 build success in 119021 ms!",
+        "message": "6-29-2023 09:03:00 build success in 105229 ms!",
         "options": {
           "name": "cocos-3x",
           "platform": "web-mobile",
@@ -38,8 +38,8 @@
               "inBundle": false
             },
             {
-              "url": "db://shared-components/splash/prefabs/splash.scene",
-              "uuid": "77134ae0-6a21-45c4-a01e-5ea25dfe88ac",
+              "url": "db://shared-components/feature-structure/scene.scene",
+              "uuid": "b97b166d-3dd1-4968-8fa8-488f447e05b0",
               "inBundle": false
             },
             {
@@ -48,8 +48,18 @@
               "inBundle": false
             },
             {
-              "url": "db://assets/under-maintenance/under-maintenance.scene",
-              "uuid": "86a3474c-ed60-42a0-89da-9d530ed682d0",
+              "url": "db://shared-components/under-maintenance/under-maintenance.scene",
+              "uuid": "237a6582-3b47-45f2-b04c-8d8231a23aad",
+              "inBundle": false
+            },
+            {
+              "url": "db://shared-components/game/scoreboards/scoreboard.scene",
+              "uuid": "9ec9624e-8ef6-4e81-bf0e-34a4eab4a438",
+              "inBundle": false
+            },
+            {
+              "url": "db://shared-components/splash/splash.scene",
+              "uuid": "77134ae0-6a21-45c4-a01e-5ea25dfe88ac",
               "inBundle": false
             }
           ],
@@ -58,7 +68,7 @@
           "__version__": "1.3.4",
           "web-mobile": []
         },
-        "time": "6-13-2023 16:41",
+        "time": "6-29-2023 09:01",
         "dirty": false
       }
     }
