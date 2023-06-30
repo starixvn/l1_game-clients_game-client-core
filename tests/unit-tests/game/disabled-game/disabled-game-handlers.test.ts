@@ -3,7 +3,7 @@ import { AppHandlers } from "../../../../src/app";
 import { AppStore } from "../../../../src/app/app-store";
 import { AuthStore } from "../../../../src/auth/auth-store";
 import { ConnectionStore } from "../../../../src/game/connection";
-import { DisableGameHandlers, DisabledGameStore, defaultDisabledMessage } from "../../../../src/game/disabled-game";
+import { DisableGameHandlers, DisabledGameStore } from "../../../../src/game/disabled-game";
 import { NoticeStore, NoticeType } from "../../../../src/game/notices";
 import { RoundRunningHandlers } from "../../../../src/game/rounds";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
@@ -85,10 +85,7 @@ describe("DisableGameHandlers tests", () => {
     });
 
     describe("showPopupHandle", () => {
-        const authStoreLangs = [
-            ["en-US", fakeDisabledGameInfo["en-US"]],
-            ["abc", defaultDisabledMessage],
-        ];
+        const authStoreLangs = [["en-US", fakeDisabledGameInfo["en-US"]]];
         test.each(authStoreLangs)("should set disable game true and open popup.", (authStoreLang, expectedDisabledMessages) => {
             // arrange
             disabledGameStore.disabled = true;

@@ -18,6 +18,6 @@ export namespace DateTimeUtils {
     };
 
     export const getStringDateByTimeGMT8 = (time: Date) => {
-        return moment(time).utcOffset("+08:00").format("HH:mm DD-MM-YYYY");
+        return moment(time).utcOffset("+08:00").format("HH:mm DD/MM/YYYY");
     };
 }

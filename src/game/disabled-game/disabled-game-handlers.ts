@@ -9,7 +9,6 @@ import { RoundTimeStore } from "../rounds/round-time-store";
 import { ConnectionStore } from "../connection/connection-store";
 import { RoundRunningHandlers } from "../rounds";
 
-export const defaultDisabledMessage = "Under maintenance, please back later after 10 seconds";
 @injectable()
 export class DisableGameHandlers implements IHandler<GameServiceMessage.DisabledGameInfo> {
     name = GameServiceMessage.DisabledGameInfo.eventName;
@@ -33,7 +32,7 @@ export class DisableGameHandlers implements IHandler<GameServiceMessage.Disabled
 
     showPopupHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
         this.noticeStore.addNotice({
-            message: disabledGameInfo[this.authStore.language] ?? defaultDisabledMessage,
+            message: disabledGameInfo[this.authStore.language],
             title: LocalizedUtils.getLocalizedText("Notice"),
             type: NoticeType.Error,
             onClose: this.onClosedHandle,
