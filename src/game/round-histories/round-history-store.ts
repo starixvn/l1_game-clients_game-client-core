@@ -77,11 +77,9 @@ export class RoundHistoryStore {
             case ROUND_STATE.SHOW_RESULT:
                 isHighLightAnim = true;
                 break;
-            case ROUND_STATE.STARTING_ROUND:
-            case ROUND_STATE.PLACING_BET:
-                isHighLightAnim = false;
-                break;
+
             case ROUND_STATE.LOCKING_BET:
+            case ROUND_STATE.STOP_GAME_LOOP:
             case ROUND_STATE.SHOW_ANIMATION_RESULT:
                 isResetHighlight = true;
                 break;

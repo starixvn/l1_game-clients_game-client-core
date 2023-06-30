@@ -60,13 +60,10 @@ export class BetHandler {
     }
 
     isInPhasePreventBet() {
-        const isBetPhase = [ROUND_STATE.BEGIN_PLACING_BET, ROUND_STATE.PLACING_BET].includes(this.roundTimeStore.roundState);
+        const isBetPhase = [ROUND_STATE.PLACING_BET].includes(this.roundTimeStore.roundState);
         if (!isBetPhase) {
             const warningMsg =
-                this.roundTimeStore.roundState === ROUND_STATE.BEGIN_STARTING_ROUND ||
-                this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND
-                    ? l10n.t("cannotPlaceBet")
-                    : l10n.t("placeBetNextRound");
+                this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND ? l10n.t("cannotPlaceBet") : l10n.t("placeBetNextRound");
 
             this.noticeStore.addWarning(warningMsg);
         }

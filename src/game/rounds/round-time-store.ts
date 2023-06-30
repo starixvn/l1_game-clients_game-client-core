@@ -26,19 +26,15 @@ export type RoundTimeSetting = {
 
 export const ROUND_STATE = {
     START_GAME_LOOP: "startGameLoop",
-    BEGIN_STARTING_ROUND: "beginStartingRound",
     STARTING_ROUND: "startingRound",
-    BEGIN_PLACING_BET: "beginPlacingBet",
     PLACING_BET: "placingBet",
-    BEGIN_LOCKING_BET: "beginLockingBet",
     LOCKING_BET: "lockingBet",
-    BEGIN_WAITING: "beginWaiting",
     WAITING: "waiting",
     SHOW_ANIMATION_RESULT: "showAnimationResult",
-    BEGIN_SHOW_RESULT: "beginShowResult",
     SHOW_RESULT: "showResult",
     CHANGE_REMAINING_TIME: "changeRemainingTime",
     STOP_GAME_LOOP: "stopGameLoop",
+    NONE: "none",
 };
 
 @injectable()
@@ -49,8 +45,7 @@ export class RoundTimeStore {
     genResult = 0;
     startRound = 0;
     private _roundTime = 0;
-    private _roundState = ROUND_STATE.WAITING;
-    private _beginState = "";
+    private _roundState = ROUND_STATE.NONE;
     private _countdownTimer = 0;
     private _remaining = 0;
     startNewRound = false;
@@ -116,16 +111,7 @@ export class RoundTimeStore {
     }
 
     get isInRoundTime() {
-        return (
-            this.roundState === ROUND_STATE.BEGIN_PLACING_BET ||
-            this.roundState === ROUND_STATE.PLACING_BET ||
-            this.roundState === ROUND_STATE.BEGIN_LOCKING_BET ||
-            this.roundState === ROUND_STATE.LOCKING_BET
-        );
-    }
-
-    get isStopGame() {
-        return this.roundState === ROUND_STATE.STOP_GAME_LOOP;
+        return this.roundState === ROUND_STATE.PLACING_BET || this.roundState === ROUND_STATE.LOCKING_BET;
     }
 
     get isShowDisabledGameMessage() {
@@ -181,26 +167,8 @@ export class RoundTimeStore {
         this._roundState = value;
     }
 
-    get beginState() {
-        return this._beginState;
-    }
-
     get countdownTimer() {
         return this._countdownTimer;
-    }
-
-    calculateBeginStatus() {
-        if (this.isStartPlacingBet && this._beginState !== ROUND_STATE.BEGIN_PLACING_BET) {
-            this._beginState = ROUND_STATE.BEGIN_PLACING_BET;
-        }
-
-        if (this.isStaringLocking && this._beginState !== ROUND_STATE.BEGIN_LOCKING_BET) {
-            this._beginState = ROUND_STATE.BEGIN_LOCKING_BET;
-        }
-
-        if (this.isStartWaiting && this._beginState !== ROUND_STATE.BEGIN_WAITING) {
-            this._beginState = ROUND_STATE.BEGIN_WAITING;
-        }
     }
 
     calculateRoundStatus() {
@@ -208,8 +176,6 @@ export class RoundTimeStore {
         if (this.roundTime < 0) {
             return;
         }
-
-        this.calculateBeginStatus();
 
         if (this.isWaiting) {
             this._remaining = this.roundTime - this.placingBet;

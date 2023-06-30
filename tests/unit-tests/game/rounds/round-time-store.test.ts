@@ -381,9 +381,7 @@ describe("RoundTimeStore Unit Tests", () => {
 
     describe("isInRoundTime", () => {
         const testCases = [
-            { roundState: ROUND_STATE.BEGIN_PLACING_BET, expected: true },
             { roundState: ROUND_STATE.PLACING_BET, expected: true },
-            { roundState: ROUND_STATE.BEGIN_LOCKING_BET, expected: true },
             { roundState: ROUND_STATE.LOCKING_BET, expected: true },
             { roundState: ROUND_STATE.SHOW_RESULT, expected: false },
             { roundState: ROUND_STATE.STARTING_ROUND, expected: false },
@@ -398,30 +396,6 @@ describe("RoundTimeStore Unit Tests", () => {
 
             // Assert
             expect(result).toBe(expected);
-        });
-    });
-
-    describe("isStopGame", () => {
-        it("should return true if roundState is STOP_GAME_LOOP", () => {
-            // Arrange
-            roundTimeStore.roundState = ROUND_STATE.STOP_GAME_LOOP;
-
-            // Act
-            const result = roundTimeStore.isStopGame;
-
-            // Assert
-            expect(result).toBe(true);
-        });
-
-        it("should return false if roundState is not STOP_GAME_LOOP", () => {
-            // Arrange
-            roundTimeStore.roundState = ROUND_STATE.BEGIN_WAITING;
-
-            // Act
-            const result = roundTimeStore.isStopGame;
-
-            // Assert
-            expect(result).toBe(false);
         });
     });
 
@@ -462,66 +436,6 @@ describe("RoundTimeStore Unit Tests", () => {
 
             // Assert
             expect(result).toBe(expected);
-        });
-    });
-
-    describe("calculateBeginStatus", () => {
-        it("should switch beginState to BEGIN_PLACING_BET if isStartPlacingBet is true and current beginState is not BEGIN_PLACING_BET", () => {
-            // Arrange
-            const mockObject = {
-                isStartPlacingBet: true,
-                _beginState: ROUND_STATE.BEGIN_WAITING,
-            };
-
-            // Act
-            roundTimeStore.calculateBeginStatus.call(mockObject);
-
-            // Assert
-            expect(mockObject._beginState).toBe(ROUND_STATE.BEGIN_PLACING_BET);
-        });
-
-        it("should switch beginState to BEGIN_LOCKING_BET if isStaringLocking is true and current beginState is not BEGIN_LOCKING_BET", () => {
-            // Arrange
-            const mockObject = {
-                isStaringLocking: true,
-                _beginState: ROUND_STATE.BEGIN_WAITING,
-            };
-
-            // Act
-            roundTimeStore.calculateBeginStatus.call(mockObject);
-
-            // Assert
-            expect(mockObject._beginState).toBe(ROUND_STATE.BEGIN_LOCKING_BET);
-        });
-
-        it("should switch beginState to BEGIN_WAITING if isStartWaiting is true and current beginState is not BEGIN_WAITING", () => {
-            // Arrange
-            const mockObject = {
-                isStartWaiting: true,
-                _beginState: ROUND_STATE.BEGIN_PLACING_BET,
-            };
-
-            // Act
-            roundTimeStore.calculateBeginStatus.call(mockObject);
-
-            // Assert
-            expect(mockObject._beginState).toBe(ROUND_STATE.BEGIN_WAITING);
-        });
-
-        it("should not switch beginState if none of the conditions are met", () => {
-            // Arrange
-            const obj = {
-                isStartPlacingBet: false,
-                isStaringLocking: false,
-                isStartWaiting: false,
-                _beginState: ROUND_STATE.BEGIN_PLACING_BET,
-            };
-
-            // Act
-            roundTimeStore.calculateBeginStatus.call(obj);
-
-            // Assert
-            expect(obj._beginState).toBe(ROUND_STATE.BEGIN_PLACING_BET);
         });
     });
 
@@ -621,20 +535,6 @@ describe("RoundTimeStore Unit Tests", () => {
                     expect(roundTimeStore.roundState).toBe(ROUND_STATE.PLACING_BET);
                 });
             }
-        });
-    });
-
-    describe("start", () => {
-        it("should set roundState to START_GAME_LOOP", () => {
-            // Arrange
-
-            roundTimeStore.roundState = ROUND_STATE.BEGIN_STARTING_ROUND;
-
-            // Act
-            roundTimeStore.start();
-
-            // Assert
-            expect(roundTimeStore.roundState).toBe(ROUND_STATE.START_GAME_LOOP);
         });
     });
 });

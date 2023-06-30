@@ -43,7 +43,6 @@ describe("RoundHistoryStore", () => {
             [ROUND_STATE.SHOW_ANIMATION_RESULT, false],
             [ROUND_STATE.SHOW_RESULT, true],
             [ROUND_STATE.PLACING_BET, false],
-            [ROUND_STATE.BEGIN_LOCKING_BET, false],
         ])("should return the correct value for roundState: %s", (roundState, expectedIsShowHighLight) => {
             roundTimeStoreMock.roundState = roundState;
             roundHistoryStore.histories = mockHistories;
