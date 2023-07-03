@@ -99,4 +99,5 @@ export const localStorageKeys = {
     directMode: "direct-mode",
     returnUrl: "rurl",
     playerSetting: "player-setting",
+    playerIngameSelections: "player-selections"
 };

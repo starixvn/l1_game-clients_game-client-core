@@ -1,5 +1,7 @@
 import { AppHandlers, AppStore } from "../../../src/app";
 import { GameUtils, StorageManager } from "../../../src/shared/utils";
+import { PlayerSelectionHandlers } from "../../../src/game/player-selections";
+import { PlayerSelectionStore } from "../../../src/game/player-selections";
 
 jest.mock("../../../src/shared/utils");
 
@@ -15,7 +17,7 @@ describe("AppHandlers", () => {
                 writable: true,
             });
             appStore = new AppStore();
-            handler = new AppHandlers.BackToOperatorLobby(appStore);
+            handler = new AppHandlers.BackToOperatorLobby(appStore, new PlayerSelectionHandlers.ClearHandlers(new PlayerSelectionStore()));
         });
         describe("when app store has return url", () => {
             beforeAll(() => {

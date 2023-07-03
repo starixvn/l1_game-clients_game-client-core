@@ -14,6 +14,7 @@ import { AppStore } from "./../app/app-store";
 import { URLParams } from "./../shared/constants/url-params";
 import { AuthStore, ISessionInfo } from "./auth-store";
 import { UserService } from "./user-service";
+import { PlayerSelectionHandlers } from "../game/player-selections";
 
 interface IAuthorizeResponse {
     errorCode?: string;
@@ -103,7 +104,8 @@ export namespace AuthHandlers {
             @inject(AppStore) private readonly appStore: AppStore,
             @inject(UserService) private readonly userService: UserService,
             @inject(Authorize) private readonly authorizeHandler: Authorize,
-            @inject(SignOut) private readonly signOutHandler: SignOut
+            @inject(SignOut) private readonly signOutHandler: SignOut,
+            @inject(PlayerSelectionHandlers.ClearHandlers) private readonly playerSelectionClearHandler: PlayerSelectionHandlers.ClearHandlers
         ) {}
 
         async handle(urlParams: URLSearchParams) {
@@ -132,6 +134,7 @@ export namespace AuthHandlers {
 
         private async handleAuthorizeWithURLParams(urlParams: URLSearchParams) {
             if (urlParams?.has(URLParams.token)) {
+                this.playerSelectionClearHandler.handle();
                 this.appStore.setURLStore(urlParams);
                 const token = urlParams.get(URLParams.token);
                 const system = +urlParams.get(URLParams.appType) || AppTypes.Club;
@@ -143,6 +146,7 @@ export namespace AuthHandlers {
                 await this.handleSSOAndAuthorize(token, system);
             } else {
                 if (urlParams?.has(URLParams.params)) {
+                    this.playerSelectionClearHandler.handle();
                     this.handleAuthorizeFromMainClient(urlParams);
                 } else {
                     this.appStore.loadReturnUrl();

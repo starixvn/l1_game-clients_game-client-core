@@ -9,6 +9,8 @@ import { RoundRunningHandlers } from "../../../../src/game/rounds";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
 import { GameServiceMessage } from "../../../../src/shared";
 import { gameSettings } from "../../container.test";
+import { PlayerSelectionHandlers } from "../../../../src/game/player-selections";
+import { PlayerSelectionStore } from "../../../../src/game/player-selections";
 
 jest.mock("../../../../src/shared/utils/localized-utils", () => {
     return {
@@ -54,7 +56,7 @@ describe("DisableGameHandlers tests", () => {
 
         roundRunningHandlers = new RoundRunningHandlers(roundTimeStore, gameSettings);
 
-        backToOperatorLobby = new AppHandlers.BackToOperatorLobby(new AppStore());
+        backToOperatorLobby = new AppHandlers.BackToOperatorLobby(new AppStore(), new PlayerSelectionHandlers.ClearHandlers(new PlayerSelectionStore()));
 
         handler = new DisableGameHandlers(
             connectionStore,

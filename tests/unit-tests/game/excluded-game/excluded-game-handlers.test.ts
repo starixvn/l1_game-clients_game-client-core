@@ -4,6 +4,8 @@ import { NoticeStore } from "../../../../src/game/notices";
 import { gameSettings } from "../../container.test";
 import { NoPermissionHandlers } from "../../../../src/game/excluded-game";
 import { GameServiceMessage } from "../../../../src/shared";
+import { PlayerSelectionHandlers } from "../../../../src/game/player-selections";
+import { PlayerSelectionStore } from "../../../../src/game/player-selections";
 
 jest.mock("../../../../src/shared/utils/localized-utils", () => {
     return {
@@ -21,7 +23,7 @@ describe("ExcludedGameHandlers tests", () => {
     it("has name is equal notpermitted", () => {
         // arrange
         noticeStore = new NoticeStore();
-        backToOperatorLobby = new AppHandlers.BackToOperatorLobby(new AppStore());
+        backToOperatorLobby = new AppHandlers.BackToOperatorLobby(new AppStore(), new PlayerSelectionHandlers.ClearHandlers(new PlayerSelectionStore()));
 
         handler = new NoPermissionHandlers(
             noticeStore,
@@ -37,7 +39,7 @@ describe("ExcludedGameHandlers tests", () => {
         test("should add notice", () => {
             // arrange
             noticeStore = new NoticeStore();
-            backToOperatorLobby = new AppHandlers.BackToOperatorLobby(new AppStore());
+            backToOperatorLobby = new AppHandlers.BackToOperatorLobby(new AppStore(),  new PlayerSelectionHandlers.ClearHandlers(new PlayerSelectionStore()));
             backToOperatorLobby.handle = jest.fn();
 
             handler = new NoPermissionHandlers(

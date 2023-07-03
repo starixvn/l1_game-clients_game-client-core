@@ -17,3 +17,4 @@ export * as Settlements from "./settlements";
 export * as UserSettings from "./user-settings";
 export * as BetHistory from "./bet-history";
 export * as ExcludedGame from "./excluded-game";
+export * as PlayerSelections from "./player-selections";

@@ -4,12 +4,17 @@ import { UserSettingData } from "../game/user-settings/user-setting-store";
 import { IHandler } from "../shared";
 import { GameUtils, StorageManager, localStorageKeys, sentryLogger } from "../shared/utils";
 import { AppStore } from "./app-store";
+import { PlayerSelectionHandlers } from "../game/player-selections";
 
 export namespace AppHandlers {
     @injectable()
     export class BackToOperatorLobby implements IHandler<void> {
-        constructor(@inject(AppStore) private readonly appStore: AppStore) {}
+        constructor(
+            @inject(AppStore) private readonly appStore: AppStore, 
+            @inject(PlayerSelectionHandlers.ClearHandlers) private readonly playerSelectionClearHandler: PlayerSelectionHandlers.ClearHandlers) {}
+
         handle() {
+            this.playerSelectionClearHandler.handle();
             const returnUrl = this.appStore.urlInfo?.returnUrl;
             if (returnUrl) {
                 try {
