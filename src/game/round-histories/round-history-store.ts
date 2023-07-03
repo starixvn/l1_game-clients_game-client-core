@@ -27,7 +27,7 @@ export class RoundHistoryStore {
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(GameSetting) protected readonly gameSetting: GameSetting
     ) {
-        makeAutoObservable(this);
+        makeAutoObservable(this, { joinGameHistory: false });
     }
 
     private _histories: RoundHistory[] = [];

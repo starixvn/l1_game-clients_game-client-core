@@ -24,7 +24,9 @@ export class RoundStore {
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore
     ) {
-        makeAutoObservable(this);
+        makeAutoObservable(this, {
+            _clientRoundId: false,
+        });
     }
 
     roundId = 0;
@@ -32,7 +34,7 @@ export class RoundStore {
     private _totalBets: GameServiceMessage.TotalBets = {};
     resultHash: GameServiceMessage.ResultHash = {};
 
-    private _clientRoundId = 0;
+    _clientRoundId = 0;
 
     get clientRoundId() {
         let lastRoundId = 0;

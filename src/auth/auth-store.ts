@@ -22,7 +22,6 @@ export class AuthStore {
     session = "";
     system = 0;
     memberName = "";
-    isAuthorized?: boolean = null;
     browserUserAgent = "";
     isDisabledAccount = false;
     errorCode = "";
@@ -32,6 +31,14 @@ export class AuthStore {
 
     constructor() {
         makeAutoObservable(this);
+    }
+
+    private _isAuthorized?: boolean = null;
+    public get isAuthorized(): boolean {
+        return this._isAuthorized;
+    }
+    public set isAuthorized(value: boolean) {
+        this._isAuthorized = value;
     }
 
     getSessionInfo(): ISessionInfo {

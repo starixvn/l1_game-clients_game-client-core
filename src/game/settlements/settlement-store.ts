@@ -28,9 +28,9 @@ export class SettlementStore {
             roundId: observable,
             result: observable,
             settlementResult: observable,
-            isFinishedShowResult: observable,
             winningPlayers: observable,
             setSettlementStore: action,
+            isFinishedShowResult: false,
         });
     }
 

@@ -24,12 +24,48 @@ export interface AudioData {
 @injectable()
 export class AudioStore {
     constructor() {
-        makeAutoObservable(this);
+        makeAutoObservable(this, {
+            musicIds: false,
+        });
     }
 
     musicIds: string[] = [];
-    musicState = MusicState.NONE;
-    music: AudioData = null;
-    sfx: AudioData = null;
-    startMusicPlayer = false;
+    private _musicState: number = MusicState.NONE;
+    public get musicState(): number {
+        return this._musicState;
+    }
+
+    public set musicState(value: number) {
+        this._musicState = value;
+    }
+
+    private _music: AudioData = null;
+
+    public get music(): AudioData {
+        return this._music;
+    }
+
+    public set music(value: AudioData) {
+        this._music = value;
+    }
+
+    private _sfx: AudioData = null;
+
+    public get sfx(): AudioData {
+        return this._sfx;
+    }
+
+    public set sfx(value: AudioData) {
+        this._sfx = value;
+    }
+
+    private _startMusicPlayer = false;
+
+    get startMusicPlayer() {
+        return this._startMusicPlayer;
+    }
+
+    set startMusicPlayer(value: boolean) {
+        this._startMusicPlayer = value;
+    }
 }
