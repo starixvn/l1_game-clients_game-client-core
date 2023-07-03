@@ -1,3 +1,11 @@
+# [1.12.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.11.0...v1.12.0) (2023-07-03)
+
+
+### Features
+
+* fix font and update UM multiple languages ([5754c50](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/5754c50a1a82235c2711f7b7a462eb51681f6c14))
+* fix font and update UM multiple languages ([3bcff68](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/3bcff682913c56dd02a4528ac13211025990a183))
+
 # [1.11.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.10.2...v1.11.0) (2023-06-29)
 
 
