@@ -41,9 +41,9 @@ export default class Sedie extends GameComponent {
         }
     }
 
-    startGenerateResult(isStartGenerateResult: boolean) {
-        if (isStartGenerateResult) {
-            super.startGenerateResult(isStartGenerateResult);
+    handleStartRound(isStartRound: boolean) {
+        if (isStartRound) {
+            super.handleStartRound(isStartRound);
             this.cpnThePlate.closeBowl(true);
             this.cpnThePlate.shakePlate();
         }
