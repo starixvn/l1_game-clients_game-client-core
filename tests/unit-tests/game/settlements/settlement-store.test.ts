@@ -16,7 +16,7 @@ describe("SettlementStore tests", () => {
                 roundId: observable,
                 result: observable,
                 settlementResult: observable,
-                isFinishedShowResult: observable,
+                isFinishedShowResult: false,
                 winningPlayers: observable,
                 setSettlementStore: action,
             });

@@ -1,8 +1,8 @@
+import { stub } from "jest-auto-stub";
 import { AudioType } from "../../../../src/game/audios";
 import { UserSettingHandlers } from "../../../../src/game/user-settings/user-setting-handlers";
 import { UserSettingStore } from "../../../../src/game/user-settings/user-setting-store";
 import { StorageManager, localStorageKeys } from "../../../../src/shared/utils";
-
 describe("UserSettingHandlers", () => {
     let userSettingHandlers: UserSettingHandlers;
     let userSettingStore: UserSettingStore;
@@ -20,8 +20,8 @@ describe("UserSettingHandlers", () => {
         it("should load storages successfully", () => {
             // Arrange
             const settingsData = {
-                musicEnable: true,
-                sfxEnable: false,
+                _musicEnable: true,
+                _sfxEnable: false,
             };
             StorageManager.get = jest.fn().mockReturnValue(settingsData);
 
@@ -35,7 +35,7 @@ describe("UserSettingHandlers", () => {
 
         it("should not load storages if there are no settings available", () => {
             // Arrange
-            const defaultStore = { musicEnable: false, sfxEnable: true };
+            const defaultStore = stub<UserSettingStore>({ _musicEnable: false, _sfxEnable: true });
             userSettingStore = defaultStore;
             StorageManager.get = jest.fn().mockReturnValue(undefined);
 
@@ -43,7 +43,8 @@ describe("UserSettingHandlers", () => {
             userSettingHandlers.loadStorages();
 
             // Assert
-            expect(userSettingStore).toEqual(defaultStore);
+            expect(userSettingStore.musicEnable).toEqual(defaultStore.musicEnable);
+            expect(userSettingStore.sfxEnable).toEqual(defaultStore.sfxEnable);
         });
     });
 
@@ -54,8 +55,8 @@ describe("UserSettingHandlers", () => {
                 musicEnable: true,
                 sfxEnable: false,
             };
-            userSettingStore.musicEnable = settingsData.musicEnable;
-            userSettingStore.sfxEnable = settingsData.sfxEnable;
+
+            userSettingStore = stub<UserSettingStore>(settingsData);
             StorageManager.set = jest.fn();
 
             // Act

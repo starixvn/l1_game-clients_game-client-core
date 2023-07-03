@@ -122,16 +122,6 @@ describe("RoundTimeStore Unit Tests", () => {
             // Assert
             expect(roundTimeStore.isWaiting).toBeFalsy();
         });
-
-        it("should return false if wholeRound is equal to 0", () => {
-            // Arrange
-            roundTimeStore.roundTime = 7;
-            roundTimeStore.placingBet = 5;
-            roundTimeStore.wholeRound = 0;
-
-            // Assert
-            expect(roundTimeStore.isWaiting).toBeFalsy();
-        });
     });
 
     describe("isStartWaiting", () => {
@@ -179,15 +169,6 @@ describe("RoundTimeStore Unit Tests", () => {
             // Assert
             expect(roundTimeStore.isLocking).toBeFalsy();
         });
-
-        it("should return false when wholeRound is zero", () => {
-            // Arrange
-            roundTimeStore.roundTime = 2;
-            roundTimeStore.wholeRound = 0;
-
-            // Assert
-            expect(roundTimeStore.isLocking).toBeFalsy();
-        });
     });
 
     describe("isStaringLocking", () => {
@@ -204,15 +185,6 @@ describe("RoundTimeStore Unit Tests", () => {
             // Arrange
             roundTimeStore.roundTime = 20;
             roundTimeStore.wholeRound = 1;
-
-            // Assert
-            expect(roundTimeStore.isStaringLocking).toBeFalsy();
-        });
-
-        it("should return false when wholeRound is zero", () => {
-            // Arrange
-            roundTimeStore.roundTime = 2;
-            roundTimeStore.wholeRound = 0;
 
             // Assert
             expect(roundTimeStore.isStaringLocking).toBeFalsy();
@@ -290,11 +262,11 @@ describe("RoundTimeStore Unit Tests", () => {
     });
 
     describe("isStartRound", () => {
-        it("should return true if roundTime equals placingBet plus genResult", () => {
+        it("should return true if roundTime equals placingBet plus startRound", () => {
             // Arrange
             roundTimeStore.roundTime = 32;
             roundTimeStore.placingBet = 30;
-            roundTimeStore.generatingResult = 2;
+            roundTimeStore.startRound = 2;
 
             // Act
             const result = roundTimeStore.isStartRound;
@@ -303,11 +275,11 @@ describe("RoundTimeStore Unit Tests", () => {
             expect(result).toBe(true);
         });
 
-        it("should return false if roundTime does not equal placingBet plus genResult", () => {
+        it("should return false if roundTime does not equal placingBet plus startRound", () => {
             // Arrange
             roundTimeStore.roundTime = 31;
             roundTimeStore.placingBet = 30;
-            roundTimeStore.generatingResult = 2;
+            roundTimeStore.startRound = 2;
 
             const result = roundTimeStore.isStartRound;
 

@@ -9,17 +9,17 @@ export interface UserSettingData {
 @injectable()
 export class UserSettingStore implements UserSettingData {
     constructor() {
-        makeAutoObservable(this);
+        makeAutoObservable(this, { _musicEnable: false, _sfxEnable: false });
     }
 
-    private _musicEnable = true;
+    _musicEnable = true;
     public get musicEnable() {
         return this._musicEnable;
     }
     public set musicEnable(value) {
         this._musicEnable = value;
     }
-    private _sfxEnable = true;
+    _sfxEnable = true;
     public get sfxEnable() {
         return this._sfxEnable;
     }
