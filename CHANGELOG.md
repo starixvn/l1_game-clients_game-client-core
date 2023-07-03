@@ -1,3 +1,10 @@
+# [1.14.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.13.1...v1.14.0) (2023-07-03)
+
+
+### Features
+
+* hande account closed ([e3073f3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/e3073f30178032807c057366afdbb4d6135981c1))
+
 ## [1.13.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.13.0...v1.13.1) (2023-07-03)
 
 
