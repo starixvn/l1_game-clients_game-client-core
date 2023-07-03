@@ -1,3 +1,10 @@
+# [1.13.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.12.0...v1.13.0) (2023-07-03)
+
+
+### Features
+
+* update round-time store ([a15554e](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/a15554e6aea47fb233217537a3d77c9babc3ce1e))
+
 # [1.12.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.11.0...v1.12.0) (2023-07-03)
 
 
