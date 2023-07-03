@@ -1,3 +1,12 @@
+## [1.13.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.13.0...v1.13.1) (2023-07-03)
+
+
+### Bug Fixes
+
+* remember player selection chip ([0d3201e](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/0d3201e6db72223f91dcd7a1484941a1b28fb192))
+* update shared-components ([6b1618d](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/6b1618d877da3e8efe081a56c6401afeb3b1f113))
+* update unit test ([50390b3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/50390b3507c4eb9cf66ae57fc883bae39cd5b027))
+
 # [1.13.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.12.0...v1.13.0) (2023-07-03)
 
 
