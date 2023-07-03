@@ -13,6 +13,7 @@ import { sentryLogger } from "../../../src/shared/utils/logger";
 import { NameGenerator } from "../../../src/shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 import { siteConfigs } from "../container.test";
+import { PlayerSelectionHandlers } from "../../../src/game/player-selections";
 
 jest.mock("../../../src/shared/utils/game-utils");
 jest.mock("../../../src/shared/utils/name-generator");
@@ -404,6 +405,7 @@ describe("AuthHandlers tests", () => {
         let authorizeHandler: AuthHandlers.Authorize;
         let signOutHandler: AuthHandlers.SignOut;
         let ssoHandler: AuthHandlers.SSO;
+        let playerSelectionClearHandler: PlayerSelectionHandlers.ClearHandlers;
 
         beforeEach(() => {
             authStore = stub<AuthStore>();
@@ -411,7 +413,8 @@ describe("AuthHandlers tests", () => {
             userService = stub<UserService>();
             authorizeHandler = stub<AuthHandlers.Authorize>();
             signOutHandler = stub<AuthHandlers.SignOut>();
-            ssoHandler = new AuthHandlers.SSO(authStore, appStore, userService, authorizeHandler, signOutHandler);
+            playerSelectionClearHandler = stub<PlayerSelectionHandlers.ClearHandlers>();
+            ssoHandler = new AuthHandlers.SSO(authStore, appStore, userService, authorizeHandler, signOutHandler, playerSelectionClearHandler);
         });
         afterEach(() => {
             jest.clearAllMocks();
