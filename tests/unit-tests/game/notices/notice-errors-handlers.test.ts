@@ -156,7 +156,7 @@ describe("NoticeErrorsHandlers", () => {
             expect(typeof (noticeStore.addNotice as jest.Mock).mock.calls[0][0].onClose).toBe("function");
             expect(LocalizedUtils.getLocalizedText).toHaveBeenCalledWith(`gameNames.${gameSetting.id}`);
             expect(LocalizedUtils.getLocalizedText).toHaveBeenCalledWith("lostGameConnection", { gameName: "Game name" });
-            expect(LocalizedUtils.getLocalizedText).toHaveBeenCalledWith("Notice");
+            expect(LocalizedUtils.getLocalizedText).toHaveBeenCalledWith("notice");
         });
     });
 });

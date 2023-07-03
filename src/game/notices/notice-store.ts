@@ -17,7 +17,7 @@ export interface Notice extends Warning {
 
     onClose: () => void;
 
-    showBtnCofirmButton?: boolean;
+    showBtnConfirmButton?: boolean;
 }
 
 @injectable()

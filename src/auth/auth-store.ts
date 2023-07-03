@@ -82,4 +82,9 @@ export class AuthStore {
         response.memberName && (this.memberName = response.memberName);
         this.ssoTime = new Date();
     }
+
+    setAccountClosed(errorCode: string) {
+        this.isDisabledAccount = true;
+        this.errorCode = errorCode;
+    }
 }

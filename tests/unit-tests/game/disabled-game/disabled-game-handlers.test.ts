@@ -100,10 +100,10 @@ describe("DisableGameHandlers tests", () => {
             expect(disabledGameStore.setShowPopup).toBeCalledWith(true);
             expect(noticeStore.addNotice).toHaveBeenCalledWith({
                 message: expectedDisabledMessages,
-                title: "Notice",
+                title: "notice",
                 type: NoticeType.Error,
                 onClose: expect.any(Function),
-                showBtnCofirmButton: true,
+                showBtnConfirmButton: true,
             });
         });
     });

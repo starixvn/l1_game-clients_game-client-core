@@ -229,6 +229,13 @@ export namespace GameServiceMessage {
     export class BetHistory {
         static eventName = "history";
     }
+
+    export class AccountClosed {
+        errorCode: string;
+        isDisabledAccount: boolean;
+
+        static eventName = "kickedOut";
+    }
 }
 
 export namespace NotificationServiceMessage {

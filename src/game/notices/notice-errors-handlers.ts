@@ -45,9 +45,10 @@ export namespace NoticeErrorsHandlers {
             setTimeout(signOut, 10000);
             this.noticeStore.addNotice({
                 message,
-                title: LocalizedUtils.getLocalizedText("Notice"),
+                title: LocalizedUtils.getLocalizedText("notice"),
                 type: NoticeType.Error,
                 onClose: signOut,
+                showBtnConfirmButton: true,
             });
         }
     }
@@ -80,7 +81,7 @@ export namespace NoticeErrorsHandlers {
             };
             this.noticeStore.addNotice({
                 message,
-                title: LocalizedUtils.getLocalizedText("Notice"),
+                title: LocalizedUtils.getLocalizedText("notice"),
                 type: NoticeType.Error,
                 onClose: backToLobby,
             });

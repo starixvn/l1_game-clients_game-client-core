@@ -36,7 +36,7 @@ export class ErrorHandlers implements IMultipleHandlers {
         const text = ErrorUtils.getErrorMessage(apiError);
         this.noticeStore.addNotice({
             message: text,
-            title: LocalizedUtils.getLocalizedText("Notice"),
+            title: LocalizedUtils.getLocalizedText("notice"),
             type: NoticeType.Error,
             onClose: () => {},
         });
