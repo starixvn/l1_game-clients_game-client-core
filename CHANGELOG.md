@@ -1,3 +1,11 @@
+## [1.15.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.0...v1.15.1) (2023-07-04)
+
+
+### Bug Fixes
+
+* add prompt message ([c04583f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/c04583f4119ee95f9c9566c105d9a0aba1f858aa))
+* update shared-components ([8e546e2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/8e546e2a260fcc9de167adf258313dbaa38599b0))
+
 # [1.15.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.14.0...v1.15.0) (2023-07-04)
 
 
