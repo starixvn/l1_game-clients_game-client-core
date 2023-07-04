@@ -1,3 +1,10 @@
+# [1.15.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.14.0...v1.15.0) (2023-07-04)
+
+
+### Features
+
+* multiple languages in session timeout screen ([036ed50](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/036ed507a7d6d47d3d088b4ba6edfa7b10e378b5))
+
 # [1.14.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.13.1...v1.14.0) (2023-07-03)
 
 
