@@ -1,5 +1,5 @@
 import { stub } from "jest-auto-stub";
-import { action, makeObservable, observable } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { SettlementStore } from "../../../../src/game/settlements";
 import { GameServiceMessage } from "../../../../src/shared";
 
@@ -7,19 +7,12 @@ jest.mock("mobx");
 
 describe("SettlementStore tests", () => {
     describe("constructor", () => {
-        it("should call makeObservable", () => {
+        it("should call makeAutoObservable", () => {
             // act
             const store = new SettlementStore();
 
             // assert
-            expect(makeObservable).toHaveBeenCalledWith(store, {
-                roundId: observable,
-                result: observable,
-                settlementResult: observable,
-                isFinishedShowResult: false,
-                winningPlayers: observable,
-                setSettlementStore: action,
-            });
+            expect(makeAutoObservable).toHaveBeenCalledWith(store);
         });
     });
     describe("setSettlementStore", () => {

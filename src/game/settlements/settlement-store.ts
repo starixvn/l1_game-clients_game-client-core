@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { action, makeObservable, observable } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { GameServiceMessage } from "../../shared";
 
 export type TPayChipInfo = {
@@ -12,8 +12,14 @@ export class SettlementStore {
     roundId = 0;
     result: GameServiceMessage.TResult = null;
     settlementResult: GameServiceMessage.TSettlementResult = null;
-    isFinishedShowResult = false;
     winningPlayers: GameServiceMessage.TWinningPlayers = null;
+    private _isFinishedShowResult = false;
+    public get isFinishedShowResult() {
+        return this._isFinishedShowResult;
+    }
+    public set isFinishedShowResult(value) {
+        this._isFinishedShowResult = value;
+    }
 
     setSettlementStore(finish: GameServiceMessage.Finish | undefined) {
         this.isFinishedShowResult = false;
@@ -24,14 +30,7 @@ export class SettlementStore {
     }
 
     constructor() {
-        makeObservable(this, {
-            roundId: observable,
-            result: observable,
-            settlementResult: observable,
-            winningPlayers: observable,
-            setSettlementStore: action,
-            isFinishedShowResult: false,
-        });
+        makeAutoObservable(this);
     }
 
     get payChipInfo(): TPayChipInfo {
