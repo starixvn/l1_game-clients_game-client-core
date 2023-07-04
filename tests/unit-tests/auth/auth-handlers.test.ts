@@ -7,13 +7,14 @@ import { NotificationHandlers } from "../../../src/notification/notification-han
 import { MainPlayerStore } from "../../../src/players";
 import { Mediator } from "../../../src/shared";
 
+import { NoticeStore } from "../../../src/game/notices/notice-store";
+import { PlayerSelectionHandlers } from "../../../src/game/player-selections";
 import { GameUtils } from "../../../src/shared/utils/game-utils";
 import { LocalizedUtils } from "../../../src/shared/utils/localized-utils";
 import { sentryLogger } from "../../../src/shared/utils/logger";
 import { NameGenerator } from "../../../src/shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 import { siteConfigs } from "../container.test";
-import { PlayerSelectionHandlers } from "../../../src/game/player-selections";
 
 jest.mock("../../../src/shared/utils/game-utils");
 jest.mock("../../../src/shared/utils/name-generator");
@@ -41,6 +42,7 @@ describe("AuthHandlers tests", () => {
         // arrange
         const userService = new UserService(siteConfigs);
         userService.authorize = jest.fn();
+        const noticeStore = stub<NoticeStore>();
         describe("when UM", () => {
             const response = { isUM: true, umInfo: {} };
             beforeEach(() => {
@@ -57,6 +59,7 @@ describe("AuthHandlers tests", () => {
                 appStore.setUM = jest.fn();
                 const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
                 const handler = new AuthHandlers.Authorize(
+                    noticeStore,
                     authStore,
                     appStore,
                     mainPlayerStore,
@@ -81,6 +84,7 @@ describe("AuthHandlers tests", () => {
                 const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
                 const handler = new AuthHandlers.Authorize(
+                    noticeStore,
                     authStore,
                     appStore,
                     mainPlayerStore,
@@ -106,6 +110,7 @@ describe("AuthHandlers tests", () => {
                 const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
                 const handler = new AuthHandlers.Authorize(
+                    noticeStore,
                     authStore,
                     appStore,
                     mainPlayerStore,
@@ -137,6 +142,7 @@ describe("AuthHandlers tests", () => {
                 signOutHandler.handle = jest.fn();
 
                 const handler = new AuthHandlers.Authorize(
+                    noticeStore,
                     authStore,
                     appStore,
                     mainPlayerStore,
@@ -154,12 +160,15 @@ describe("AuthHandlers tests", () => {
         });
 
         describe("when authorize successfully", () => {
+            let noticeStore: NoticeStore;
             beforeEach(() => {
                 // @ts-ignore
+
                 StorageManager.get.mockReturnValueOnce({
                     ss: "sessionInfo.session",
                     username: "username",
                 });
+                noticeStore = stub<NoticeStore>();
             });
             describe("when auth store isDirectMode false", () => {
                 const authStore = new AuthStore();
@@ -174,6 +183,7 @@ describe("AuthHandlers tests", () => {
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
                     const handler = new AuthHandlers.Authorize(
+                        noticeStore,
                         authStore,
                         appStore,
                         mainPlayerStore,
@@ -198,6 +208,7 @@ describe("AuthHandlers tests", () => {
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
                     const handler = new AuthHandlers.Authorize(
+                        noticeStore,
                         authStore,
                         appStore,
                         mainPlayerStore,
@@ -222,6 +233,7 @@ describe("AuthHandlers tests", () => {
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
                     const handler = new AuthHandlers.Authorize(
+                        noticeStore,
                         authStore,
                         appStore,
                         mainPlayerStore,
@@ -247,6 +259,7 @@ describe("AuthHandlers tests", () => {
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
                     const handler = new AuthHandlers.Authorize(
+                        noticeStore,
                         authStore,
                         appStore,
                         mainPlayerStore,
@@ -282,6 +295,7 @@ describe("AuthHandlers tests", () => {
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
                     const handler = new AuthHandlers.Authorize(
+                        noticeStore,
                         authStore,
                         appStore,
                         mainPlayerStore,
@@ -311,6 +325,7 @@ describe("AuthHandlers tests", () => {
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
                     const handler = new AuthHandlers.Authorize(
+                        noticeStore,
                         authStore,
                         appStore,
                         mainPlayerStore,
@@ -340,6 +355,7 @@ describe("AuthHandlers tests", () => {
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
                     const handler = new AuthHandlers.Authorize(
+                        noticeStore,
                         authStore,
                         appStore,
                         mainPlayerStore,
@@ -353,6 +369,36 @@ describe("AuthHandlers tests", () => {
 
                     // assert
                     expect(mainPlayerStore.setAuthorizeStore).toHaveBeenCalledWith({ UID: 1 });
+                });
+
+                it("should showErrorMessageSignName in SplashScreen when run with isDirectMode = true and signName failed", async () => {
+                    // arrange
+                    const response = { isUM: false, umInfo: null, isSuccessful: true, authorized: false };
+                    // @ts-ignore
+                    userService.authorize.mockReturnValueOnce(response);
+                    userService.signName = jest.fn().mockReturnValue({ authorized: false });
+                    const authStore = new AuthStore();
+                    const appStore = new AppStore();
+                    appStore.isDirectMode = true;
+                    appStore.isAutoCreateNickname = true;
+                    const mainPlayerStore = new MainPlayerStore();
+                    mainPlayerStore.setAuthorizeStore = jest.fn();
+                    const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+                    const handler = new AuthHandlers.Authorize(
+                        noticeStore,
+                        authStore,
+                        appStore,
+                        mainPlayerStore,
+                        userService,
+                        signOutHandler,
+                        notificationServiceHandler
+                    );
+
+                    // act
+                    await handler.handle({ session: "session", username: "username" });
+
+                    // assert
+                    expect(noticeStore.addNotice).toHaveBeenCalled();
                 });
             });
         });
@@ -414,7 +460,14 @@ describe("AuthHandlers tests", () => {
             authorizeHandler = stub<AuthHandlers.Authorize>();
             signOutHandler = stub<AuthHandlers.SignOut>();
             playerSelectionClearHandler = stub<PlayerSelectionHandlers.ClearHandlers>();
-            ssoHandler = new AuthHandlers.SSO(authStore, appStore, userService, authorizeHandler, signOutHandler, playerSelectionClearHandler);
+            ssoHandler = new AuthHandlers.SSO(
+                authStore,
+                appStore,
+                userService,
+                authorizeHandler,
+                signOutHandler,
+                playerSelectionClearHandler
+            );
         });
         afterEach(() => {
             jest.clearAllMocks();
@@ -686,6 +739,61 @@ describe("AuthHandlers tests", () => {
                 // assert
                 expect(sentryLogger.logError).toHaveBeenCalledWith(error);
             });
+        });
+    });
+
+    describe("handleSignName", () => {
+        let authorize: AuthHandlers.Authorize;
+        let authStore: AuthStore;
+        let mainPlayerStore: MainPlayerStore;
+        const userService = new UserService(siteConfigs);
+        const noticeStore = stub<NoticeStore>();
+        beforeEach(() => {
+            authStore = new AuthStore();
+            const appStore = new AppStore();
+            mainPlayerStore = new MainPlayerStore();
+            const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
+            authorize = new AuthHandlers.Authorize(
+                noticeStore,
+                authStore,
+                appStore,
+                mainPlayerStore,
+                userService,
+                signOutHandler,
+                notificationServiceHandler
+            );
+        });
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
+        it("should set isShowSignName to false and call handleAuthorizedResponse when authorized", async () => {
+            // Arrange
+            const username = "test_username";
+            const response = { authorized: true, user: { UID: 1 } };
+            userService.signName = jest.fn().mockReturnValue(response);
+            mainPlayerStore.setAuthorizeStore = jest.fn();
+
+            // Act
+            await authorize.handleSignName(username);
+
+            // Assert
+            expect(authStore.isShowSignName).toBe(false);
+            expect(authStore.isAuthorized).toBe(true);
+        });
+
+        it("should call showErrorMessageSignName when not authorized", async () => {
+            // Arrange
+            const username = "test_username";
+            const response = { authorized: false, errorCode: "2002" };
+            userService.signName = jest.fn().mockReturnValue(response);
+
+            // Act
+            await authorize.handleSignName(username);
+
+            // Assert
+            expect(userService.signName).toHaveBeenCalledWith("", "", username);
+            expect(noticeStore.addNotice).toHaveBeenCalled();
         });
     });
 });

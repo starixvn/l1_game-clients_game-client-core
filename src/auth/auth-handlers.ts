@@ -1,12 +1,13 @@
 import { inject, injectable } from "inversify";
 import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
+import { NoticeStore, NoticeType } from "../game/notices/notice-store";
+import { PlayerSelectionHandlers } from "../game/player-selections";
 import { UserSettingData } from "../game/user-settings/user-setting-store";
 import { NotificationHandlers } from "../notification/notification-handlers";
 import { MainPlayerStore } from "../players";
-import { GameServiceMessage, IHandler } from "../shared";
+import { GameServiceMessage, IHandler, utils } from "../shared";
 import { AppTypes } from "../shared/constants/app-type";
 import { GameUtils } from "../shared/utils/game-utils";
-import { LocalizedUtils } from "../shared/utils/localized-utils";
 import { sentryLogger } from "../shared/utils/logger";
 import { NameGenerator } from "../shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
@@ -14,7 +15,8 @@ import { AppStore } from "./../app/app-store";
 import { URLParams } from "./../shared/constants/url-params";
 import { AuthStore, ISessionInfo } from "./auth-store";
 import { UserService } from "./user-service";
-import { PlayerSelectionHandlers } from "../game/player-selections";
+
+const { LocalizedUtils, ErrorUtils } = utils;
 
 interface IAuthorizeResponse {
     errorCode?: string;
@@ -40,6 +42,7 @@ export namespace AuthHandlers {
         private session = "";
         private username = "";
         constructor(
+            @inject(NoticeStore) protected readonly noticeStore: NoticeStore,
             @inject(AuthStore) private readonly authStore: AuthStore,
             @inject(AppStore) private readonly appStore: AppStore,
             @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
@@ -91,9 +94,25 @@ export namespace AuthHandlers {
         }
 
         async handleSignName(username: string) {
-            this.authStore.isShowSignName = false;
-            const response = await this.userService.signName(this.session, this.username, username);
-            await this.handleAuthorizedResponse(response as IAuthorizeResponse);
+            const response = (await this.userService.signName(this.session, this.username, username)) as IAuthorizeResponse;
+            if (response.authorized) {
+                this.authStore.isShowSignName = false;
+                await this.handleAuthorizedResponse(response);
+            } else {
+                this.showErrorMessageSignName(response.errorCode);
+            }
+        }
+
+        private showErrorMessageSignName(errorCode: string) {
+            const key = ErrorUtils.parseErrorCode(errorCode);
+            const text = LocalizedUtils.getLocalizedText(key);
+            this.noticeStore.addNotice({
+                message: text,
+                title: LocalizedUtils.getLocalizedText("notice"),
+                type: NoticeType.Error,
+                onClose: () => {},
+                showBtnConfirmButton: true,
+            });
         }
     }
 
@@ -105,7 +124,8 @@ export namespace AuthHandlers {
             @inject(UserService) private readonly userService: UserService,
             @inject(Authorize) private readonly authorizeHandler: Authorize,
             @inject(SignOut) private readonly signOutHandler: SignOut,
-            @inject(PlayerSelectionHandlers.ClearHandlers) private readonly playerSelectionClearHandler: PlayerSelectionHandlers.ClearHandlers
+            @inject(PlayerSelectionHandlers.ClearHandlers)
+            private readonly playerSelectionClearHandler: PlayerSelectionHandlers.ClearHandlers
         ) {}
 
         async handle(urlParams: URLSearchParams) {
