@@ -1,3 +1,17 @@
+## [1.15.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.1...v1.15.2) (2023-07-04)
+
+
+### Bug Fixes
+
+* audio store, round history store, round store, setting store ([45c6035](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/45c6035e4a307a6887e5c5a13ce70dfc7146f838))
+* issue using when => replace by reaction. ([da6e5ec](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/da6e5ec2334f199ab4604b4597291c66a94b1c4d))
+* refactor isStartGenerateResult to isStartRound ([b17adfb](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b17adfb05efe9ed84fd48fb56fb22dbb1d2d1853))
+* update shared ([0753fe3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/0753fe3f5ee5068ffd47e88e9c27d09bc5e2e3fa))
+* update shared component ([7f2ac6e](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/7f2ac6e357be336c1b780b9be52c7c618f20f9dd))
+* update shared component ([380f23e](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/380f23e186a4c197e62d6a9b2289f90c9793a951))
+* update unit test ([c99f7b6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/c99f7b6378a70fca9bc953dfc94f8d7ee3a4ed25))
+* using get set isFinishedShowResult ([52d21fc](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/52d21fcf335321bb33d1436ecc523af65f191abc))
+
 ## [1.15.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.0...v1.15.1) (2023-07-04)
 
 
