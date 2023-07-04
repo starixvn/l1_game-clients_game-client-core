@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { reaction, when } from "mobx";
+import { reaction } from "mobx";
 import { AppHandlers, AppStore } from "../../app";
 import { AuthHandlers, AuthStore } from "../../auth";
 import { utils } from "../../shared";
@@ -65,11 +65,9 @@ export namespace NoticeErrorsHandlers {
             @inject(AppHandlers.BackToOperatorLobby)
             protected readonly backToOperatorLobbyHandler: AppHandlers.BackToOperatorLobby
         ) {
-            when(
+            reaction(
                 () => this.connectionStore.isConnectFailed,
-                () => {
-                    this.showNotice();
-                }
+                (isConnectFailed) => isConnectFailed && this.showNotice()
             );
         }
 

@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
-import { when } from "mobx";
+import { reaction } from "mobx";
 import { IHandler } from "../../shared";
 import { SettlementStatusStore } from "../settlements";
 import { RoundStore } from "./round-store";
-import { ROUND_STATE, RoundTimeStore } from "./round-time-store";
+import { RoundTimeStore } from "./round-time-store";
 
 export namespace RoundUIHandlers {
     @injectable()
@@ -13,11 +13,9 @@ export namespace RoundUIHandlers {
             @inject(RoundStore) private readonly roundStore: RoundStore,
             @inject(SettlementStatusStore) private readonly settlementStatusStore: SettlementStatusStore
         ) {
-            when(
-                () => {
-                    return this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND;
-                },
-                () => this.handle()
+            reaction(
+                () => this.roundTimeStore.isStartRound,
+                (isStartRound) => isStartRound && this.handle()
             );
         }
 
