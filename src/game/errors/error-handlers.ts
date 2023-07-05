@@ -20,8 +20,9 @@ export class ErrorHandlers implements IMultipleHandlers {
     handleApiError(apiError: GameServiceMessage.ApiError) {
         const { minBet, maxBet, errorCode } = apiError;
 
-        if (ErrorUtils.isSessionTimeoutError(`${errorCode}`)) {
-            this.authStore.errorCode = errorCode;
+        const errorCodeString = errorCode.toString();
+        if (ErrorUtils.isSessionTimeoutError(errorCodeString)) {
+            this.authStore.errorCode = errorCodeString;
             return;
         }
 
