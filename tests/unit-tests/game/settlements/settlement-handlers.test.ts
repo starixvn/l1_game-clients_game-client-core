@@ -46,6 +46,29 @@ describe("SettlementHandlers tests", () => {
         });
     });
 
+    describe("handleWinners", () => {
+        it("should call handleWinners in SettlementStatusStore", () => {
+            // arrange
+            const winner: GameServiceMessage.Winners = {
+                roundId: 1,
+                winningPlayers: {
+                    1: {
+                        bet: 1,
+                        rate: 1,
+                        win: true,
+                        winningByChoices: { choice: 1 },
+                    },
+                },
+            };
+
+            // act
+            settlementHandlers.handleWinners(winner);
+
+            // assert
+            expect(settlementStore.winningPlayers).toEqual(winner.winningPlayers);
+        });
+    });
+
     describe("eventHandleList", () => {
         it("should be equal expected", () => {
             // arrange
@@ -57,6 +80,10 @@ describe("SettlementHandlers tests", () => {
                 {
                     name: GameServiceMessage.Status.eventName,
                     handle: settlementHandlers.handleStatus,
+                },
+                {
+                    name: GameServiceMessage.Winners.eventName,
+                    handle: settlementHandlers.handleWinners,
                 },
             ];
 

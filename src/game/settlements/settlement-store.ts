@@ -1,4 +1,5 @@
 import { injectable } from "inversify";
+import * as _ from "lodash";
 import { makeAutoObservable } from "mobx";
 import { GameServiceMessage } from "../../shared";
 
@@ -12,13 +13,22 @@ export class SettlementStore {
     roundId = 0;
     result: GameServiceMessage.TResult = null;
     settlementResult: GameServiceMessage.TSettlementResult = null;
-    winningPlayers: GameServiceMessage.TWinningPlayers = null;
+    private _winningPlayers: GameServiceMessage.TWinningPlayers = null;
     private _isFinishedShowResult = false;
     public get isFinishedShowResult() {
         return this._isFinishedShowResult;
     }
+
     public set isFinishedShowResult(value) {
         this._isFinishedShowResult = value;
+    }
+
+    get winningPlayers() {
+        return this._winningPlayers;
+    }
+
+    set winningPlayers(winningPlayers: GameServiceMessage.TWinningPlayers) {
+        !_.isEmpty(winningPlayers) && (this._winningPlayers = winningPlayers);
     }
 
     setSettlementStore(finish: GameServiceMessage.Finish | undefined) {

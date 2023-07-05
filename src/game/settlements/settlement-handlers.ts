@@ -21,6 +21,10 @@ export class SettlementHandlers implements IMultipleHandlers {
         this.statusStore.setStatusStore(status);
     }
 
+    handleWinners(winners: GameServiceMessage.Winners) {
+        this.settlementStore.winningPlayers = winners.winningPlayers;
+    }
+
     eventHandleList = [
         {
             name: GameServiceMessage.Finish.eventName,
@@ -29,6 +33,10 @@ export class SettlementHandlers implements IMultipleHandlers {
         {
             name: GameServiceMessage.Status.eventName,
             handle: this.handleStatus,
+        },
+        {
+            name: GameServiceMessage.Winners.eventName,
+            handle: this.handleWinners,
         },
     ];
 }

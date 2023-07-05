@@ -202,6 +202,13 @@ export namespace GameServiceMessage {
         [betChoice: string]: boolean;
     };
 
+    export class Winners {
+        roundId:number;
+        winningPlayers: TWinningPlayers;
+
+        static eventName = "winners";
+    }
+
     export type TWinningPlayers = {
         [playerId: number]: {
             bet: number;
