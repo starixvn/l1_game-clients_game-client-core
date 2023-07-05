@@ -1,3 +1,10 @@
+## [1.15.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.2...v1.15.3) (2023-07-05)
+
+
+### Bug Fixes
+
+* sign-name && popup notice size ([45e5842](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/45e58425b146bedde4e81bfbc9cde5c9ae8b31ba))
+
 ## [1.15.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.1...v1.15.2) (2023-07-04)
 
 
