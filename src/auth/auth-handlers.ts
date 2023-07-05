@@ -174,8 +174,6 @@ export namespace AuthHandlers {
                     await this.handleAuthorize();
                 }
             }
-
-            this.clearParamsOnUrl();
         }
 
         private async handleSSOAndAuthorize(token: string, system: number) {
@@ -186,7 +184,7 @@ export namespace AuthHandlers {
             }
             if (response.isAuthenticated) {
                 this.authStore.setAuthSSOStore(response);
-                this.saveDataInStorage();
+                this.saveDataSSOInStorage();
                 await this.handleAuthorize(response.ss, response.username);
             } else {
                 this.authStore.ssoErrorMessage = LocalizedUtils.getLocalizedText("splash_loginFailed");
@@ -198,13 +196,14 @@ export namespace AuthHandlers {
             const urlSearchParams = new URLSearchParams(params);
             this.authStore.setAuthStoreFromUrlParam(urlSearchParams);
             this.appStore.setURLStore(urlSearchParams);
-            this.saveDataInStorage(urlSearchParams);
+            this.saveDataSSOInStorage(urlSearchParams);
             const session = urlSearchParams.get(URLParams.session);
             const username = urlSearchParams.get(URLParams.username);
             await this.handleAuthorize(session, username);
         }
 
-        private saveDataInStorage(urlParams?: URLSearchParams) {
+        private saveDataSSOInStorage(urlParams?: URLSearchParams) {
+            this.clearDataSSOInStorage();
             StorageManager.set(localStorageKeys.session, this.authStore.getSessionInfo());
             if (this.appStore.isDirectMode) {
                 this.appStore.saveDirectModeInfo();
@@ -219,7 +218,14 @@ export namespace AuthHandlers {
             }
         }
 
+        private clearDataSSOInStorage() {
+            StorageManager.remove(localStorageKeys.session);
+            StorageManager.remove(localStorageKeys.directMode);
+            StorageManager.remove(localStorageKeys.returnUrl);
+        }
+
         private async handleAuthorize(session?: string, username?: string) {
+            this.clearParamsOnUrl();
             if (!session || !username) {
                 const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
                 if (!sessionInfo) {

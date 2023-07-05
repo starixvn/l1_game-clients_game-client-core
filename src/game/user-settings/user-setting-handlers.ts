@@ -22,7 +22,7 @@ export class UserSettingHandlers {
     }
 
     saveStorages() {
-        const data = this.userSettingStore as UserSettingData;
+        const data: UserSettingData = { musicEnable: this.userSettingStore.musicEnable, sfxEnable: this.userSettingStore.sfxEnable };
         StorageManager.set(localStorageKeys.playerSetting, data);
     }
 

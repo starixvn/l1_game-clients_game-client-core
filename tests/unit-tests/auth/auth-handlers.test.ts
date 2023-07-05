@@ -24,7 +24,7 @@ jest.mock("../../../src/shared/utils/storage-manager", () => ({
         set: jest.fn(),
         remove: jest.fn(),
     },
-    localStorageKeys: { session: "session-key", playerSetting: "setting-key" },
+    localStorageKeys: { session: "session-key", playerSetting: "setting-key", directMode: "directMode", returnUrl: "returnUrl" },
 }));
 jest.mock("../../../src/shared/utils/logger", () => ({
     sentryLogger: { logError: jest.fn() },
@@ -535,6 +535,8 @@ describe("AuthHandlers tests", () => {
                     userService.sso.mockReturnValueOnce(response);
                     // @ts-ignore
                     authStore.getSessionInfo.mockReturnValueOnce({ session: response.ss });
+                    // @ts-ignore
+                    StorageManager.remove = jest.fn();
                 });
                 it("should set store into authStore", async () => {
                     // act
@@ -542,6 +544,16 @@ describe("AuthHandlers tests", () => {
 
                     // assert
                     expect(authStore.setAuthSSOStore).toHaveBeenCalledWith(response);
+                });
+
+                it("should clear old sso data in storage", async () => {
+                    // act
+                    await ssoHandler.handle(urlParams);
+
+                    // assert
+                    expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.session);
+                    expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.directMode);
+                    expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.returnUrl);
                 });
 
                 it("should save session info in storage", async () => {

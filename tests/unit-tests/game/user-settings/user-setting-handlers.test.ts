@@ -20,8 +20,8 @@ describe("UserSettingHandlers", () => {
         it("should load storages successfully", () => {
             // Arrange
             const settingsData = {
-                _musicEnable: true,
-                _sfxEnable: false,
+                musicEnable: true,
+                sfxEnable: false,
             };
             StorageManager.get = jest.fn().mockReturnValue(settingsData);
 
@@ -30,12 +30,13 @@ describe("UserSettingHandlers", () => {
 
             // Assert
             expect(StorageManager.get).toHaveBeenCalledWith(localStorageKeys.playerSetting);
-            expect(userSettingStore).toEqual(settingsData);
+            expect(userSettingStore.musicEnable).toBe(settingsData.musicEnable);
+            expect(userSettingStore.sfxEnable).toBe(settingsData.sfxEnable);
         });
 
         it("should not load storages if there are no settings available", () => {
             // Arrange
-            const defaultStore = stub<UserSettingStore>({ _musicEnable: false, _sfxEnable: true });
+            const defaultStore = stub<UserSettingStore>({ musicEnable: false, sfxEnable: true });
             userSettingStore = defaultStore;
             StorageManager.get = jest.fn().mockReturnValue(undefined);
 
