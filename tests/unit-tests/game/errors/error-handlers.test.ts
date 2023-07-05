@@ -38,7 +38,9 @@ describe("ErrorHandlers test", () => {
     describe("handleApiError", () => {
         it("set error code in auth store, when error code is session timeout type.", () => {
             // Arrange
-            const data = stub<GameServiceMessage.ApiError>();
+            const data = stub<GameServiceMessage.ApiError>({
+                errorCode: `1001`,
+            });
             (ErrorUtils.isSessionTimeoutError as jest.Mock).mockReturnValue(true);
 
             // Act
