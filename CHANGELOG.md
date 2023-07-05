@@ -1,3 +1,10 @@
+## [1.15.4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.3...v1.15.4) (2023-07-05)
+
+
+### Bug Fixes
+
+* can not observable error code, wrong type number and string ([af69db7](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/af69db771e33cac9b078a56ace9fc905769a1345))
+
 ## [1.15.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.2...v1.15.3) (2023-07-05)
 
 
