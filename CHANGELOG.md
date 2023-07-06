@@ -1,3 +1,14 @@
+# [1.16.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.6...v1.16.0) (2023-07-06)
+
+
+### Features
+
+* fix correct name ([bd67d8f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/bd67d8fd192578b519454dc14539bfa99abf3161))
+* update display ballace follow system-type on arround-table-players ([17d5faf](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/17d5faf222b94e206fbbf41763afa5a3295593fb))
+* update handle winning around-table-players ([5919cf4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/5919cf44037f8b79d35e182145d0f2fb6f773ef1))
+* update reset settlement-store ([29bc604](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/29bc604054dd2a1846ad40c1ba970010a8bc4edd))
+* update system name ([e0662eb](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/e0662eb505089c296d4921a326362cea1a9105c5))
+
 ## [1.15.6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.5...v1.15.6) (2023-07-06)
 
 
