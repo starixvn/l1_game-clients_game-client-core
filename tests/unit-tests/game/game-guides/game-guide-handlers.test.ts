@@ -7,8 +7,16 @@ import { GameGuideStore } from "../../../../src/game/game-guides/game-guide-stor
 import { RoundStore } from "../../../../src/game/rounds/round-store";
 import { MainPlayerStore } from "../../../../src/players/main-player-store";
 import { AppTypes } from "../../../../src/shared/constants/app-type";
-import { UrlUtils } from "../../../../src/shared/utils";
+import { UrlUtils, StorageManager } from "../../../../src/shared/utils";
 jest.mock("../../../../src/shared/utils", () => ({
+    StorageManager: {
+        get: jest.fn(),
+        set: jest.fn(),
+        remove: jest.fn(),
+    },
+    localStorageKeys: {
+        playerIngameSelections: "player-selections",
+    },
     UrlUtils: { buildGameGuideUrl: jest.fn() },
 }));
 const now = new Date(123456);
@@ -93,7 +101,7 @@ describe("GameGuideHandlers test", () => {
             ({ system, language, specialDirection, expected }) => {
                 // arrange
                 authStore.system = system;
-                authStore.language = language;
+                (StorageManager.get as jest.Mock).mockReturnValueOnce({ session: "session", ssoTime: new Date("2023-01-01"), language });
 
                 // act
                 handler.handle({ theme: "blue", specialDirection });
