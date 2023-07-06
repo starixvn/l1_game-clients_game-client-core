@@ -66,9 +66,9 @@ describe("AroundTablePlayersStore", () => {
     });
 
     describe("updateMaxBalanceDisplay", () => {
-        it("should update maxBalanceDisplay to 99999 when systemType is SC2", () => {
+        it("should update maxBalanceDisplay to 99999 when systemType is VG", () => {
             // Arrange
-            const siteConfigsMock = stub<SiteConfigs>({ systemType: "SC2" });
+            const siteConfigsMock = stub<SiteConfigs>({ systemType: "VG" });
             const aroundTablePlayersStoreMock = new AroundTablePlayersStore(siteConfigsMock);
             // Act
             aroundTablePlayersStoreMock.updateMaxBalanceDisplay();
@@ -77,9 +77,9 @@ describe("AroundTablePlayersStore", () => {
             expect(aroundTablePlayersStoreMock.maxBalanceDisplay).toBe(99999);
         });
 
-        it("should not update maxBalanceDisplay when systemType is not SC2", () => {
+        it("should not update maxBalanceDisplay when systemType is not VG", () => {
             // Arrange
-            const siteConfigsMock = stub<SiteConfigs>({ systemType: "SC1" });
+            const siteConfigsMock = stub<SiteConfigs>({ systemType: "SG" });
             const aroundTablePlayersStoreMock = new AroundTablePlayersStore(siteConfigsMock);
 
             // Act

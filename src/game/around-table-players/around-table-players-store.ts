@@ -1,7 +1,8 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { SiteConfigs, SystemType } from "../../configs";
+import { SiteConfigs } from "../../configs";
 import { GameServiceMessage } from "../../shared";
+import { SystemConfigs } from "./../../configs/system-configs";
 
 @injectable()
 export class AroundTablePlayersStore {
@@ -12,11 +13,11 @@ export class AroundTablePlayersStore {
     aroundTablePlayer: GameServiceMessage.AroundTablePlayer = null;
     aroundTablePlayers: GameServiceMessage.AroundTablePlayers = {};
     outGamePlayerId = "";
-    maxBalanceDisplay = 9999;
+    maxBalanceDisplay = SystemConfigs.SG.maxBalanceDisplay;
 
     updateMaxBalanceDisplay() {
-        if (this.siteConfigs.systemType === SystemType.SC2) {
-            this.maxBalanceDisplay = 99999;
+        if (this.siteConfigs.systemType === SystemConfigs.VG.name) {
+            this.maxBalanceDisplay = SystemConfigs.VG.maxBalanceDisplay;
         }
     }
 

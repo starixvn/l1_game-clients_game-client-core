@@ -8,7 +8,7 @@ declare global {
 // Dev Machine
 const defaultConfig: gc.Configs.SiteConfigs = {
     isDev: true, // if this property is true, then you should add token=anything into the querytring to sso to the game http://localhost:7456/?token=anything
-    systemType: "SC1",
+    systemType: "SG",
     ssl: false,
     serverDomainMapper: {
         localhost: "localhost:5002",
@@ -26,13 +26,13 @@ const defaultConfig: gc.Configs.SiteConfigs = {
         proxyPath: "sedie",
         route: "",
     },
-    mainObserverNamespace: "SeDie"
+    mainObserverNamespace: "SeDie",
 };
 
 // LOCAL3
 // const defaultConfig: gc.Configs.SiteConfigs = {
 //     isDev: false, // if this property is true, then you should add token=anything into the querytring to sso to the game http://localhost:7456/?token=anything
-//     systemType: "SC1",
+//     systemType: "SG",
 //     ssl: true,
 //     subDomain: "l1-proxy3",
 //     serverDomainMapper: {

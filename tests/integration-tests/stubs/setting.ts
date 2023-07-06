@@ -14,7 +14,7 @@ export const servicePort = 5002;
 
 export const siteConfigs: SiteConfigs = {
     isDev: true,
-    systemType: "SC1",
+    systemType: "SG",
     ssl: false,
     serverDomainMapper: {
         localhost: `localhost:${servicePort}`,

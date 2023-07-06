@@ -2,7 +2,7 @@ import gc from "@sg/game-client-base";
 
 export const siteConfigs: gc.Configs.SiteConfigs = {
     isDev: true,
-    systemType: "SC1",
+    systemType: "SG",
     ssl: false,
     serverDomainMapper: {
         localhost: "localhost:5002",
