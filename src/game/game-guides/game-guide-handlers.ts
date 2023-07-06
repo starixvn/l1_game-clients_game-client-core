@@ -1,10 +1,10 @@
 import { inject, injectable } from "inversify";
-import { AuthStore } from "../../auth/auth-store";
+import { AuthStore, ISessionInfo } from "../../auth/auth-store";
 import { SiteConfigs } from "../../configs";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { IHandler } from "../../shared";
 import { AppTypes } from "../../shared/constants/app-type";
-import { UrlUtils } from "../../shared/utils";
+import { UrlUtils, StorageManager, localStorageKeys } from "../../shared/utils";
 import { GameConfigStore, GameSetting } from "../game-configs";
 import { RoundStore } from "../rounds/round-store";
 import { GameGuideStore } from "./game-guide-store";
@@ -62,7 +62,9 @@ export namespace GameGuideHandlers {
                 "zh-CN": "zh_cn",
                 "zh-TW": "zh_tw",
             };
-            return languages[this.authStore.language] || "en";
+            const session = StorageManager.get(localStorageKeys.session) as ISessionInfo;
+
+            return languages[session.language] || "en";
         }
     }
 }
