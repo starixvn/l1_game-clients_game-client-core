@@ -20,3 +20,8 @@ export class SiteConfigs {
     gameGuideUrlDev?: string;
     mainObserverNamespace: string;
 }
+
+export enum SystemType {
+    SC1 = "SC1",
+    SC2 = "SC2",
+}
