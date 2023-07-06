@@ -1,3 +1,10 @@
+## [1.15.6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.5...v1.15.6) (2023-07-06)
+
+
+### Bug Fixes
+
+* bug splash screen & sound setting ([08d07ef](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/08d07ef8a38c85d728a8f201d5bbe6063a38440a))
+
 ## [1.15.5](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.4...v1.15.5) (2023-07-06)
 
 
