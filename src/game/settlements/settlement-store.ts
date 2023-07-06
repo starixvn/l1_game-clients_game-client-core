@@ -10,11 +10,16 @@ export type TPayChipInfo = {
 
 @injectable()
 export class SettlementStore {
+    constructor() {
+        makeAutoObservable(this);
+    }
+
     roundId = 0;
     result: GameServiceMessage.TResult = null;
     settlementResult: GameServiceMessage.TSettlementResult = null;
     private _winningPlayers: GameServiceMessage.TWinningPlayers = null;
     private _isFinishedShowResult = false;
+
     public get isFinishedShowResult() {
         return this._isFinishedShowResult;
     }
@@ -39,12 +44,8 @@ export class SettlementStore {
         finish?.winningPlayers && (this.winningPlayers = finish.winningPlayers);
     }
 
-    constructor() {
-        makeAutoObservable(this);
-    }
-
     get payChipInfo(): TPayChipInfo {
-        if (this.isFinishedShowResult) {
+        if (this.isFinishedShowResult && this.winningPlayers) {
             return {
                 settlementResult: this.settlementResult,
                 winningPlayers: this.winningPlayers,
@@ -55,7 +56,7 @@ export class SettlementStore {
     }
 
     resetSettlementStore() {
-        this.winningPlayers = null;
+        this._winningPlayers = null;
         this.settlementResult = null;
     }
 }
