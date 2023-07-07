@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import * as _ from "lodash";
-import { makeAutoObservable, when } from "mobx";
+import { makeAutoObservable, reaction } from "mobx";
 
 import { StorageManager, localStorageKeys } from "../../exports";
 import { GameServiceMessage } from "../../shared";
@@ -29,11 +29,9 @@ export class ReBetStore {
     ) {
         makeAutoObservable(this);
 
-        when(
-            () => !_.isEmpty(this.roundStore.ownBets),
-            () => {
-                this.updateStorageBetBet();
-            }
+        reaction(
+            () => this.roundStore.ownBets,
+            (ownBets) => !_.isEmpty(ownBets) && this.updateStorageBetBet()
         );
     }
 
