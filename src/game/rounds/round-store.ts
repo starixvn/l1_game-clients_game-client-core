@@ -35,6 +35,10 @@ export class RoundStore {
 
     _clientRoundId = 0;
 
+    set clientRoundId(roundId: number) {
+        this._clientRoundId = roundId;
+    }
+
     get clientRoundId() {
         let lastRoundId = 0;
 
@@ -89,10 +93,6 @@ export class RoundStore {
 
     set ownBets(ownBets: GameServiceMessage.OwnBets) {
         this._ownBets = ownBets;
-    }
-
-    set clientRoundId(roundId: number) {
-        this._clientRoundId = roundId;
     }
 
     resetForNewRound() {
