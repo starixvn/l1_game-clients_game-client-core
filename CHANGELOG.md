@@ -1,3 +1,15 @@
+# [1.17.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.16.0...v1.17.0) (2023-07-07)
+
+
+### Bug Fixes
+
+* update latest shared-components ([a93d0c0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/a93d0c04be5e1bd5714f36b39c1c06045d835b16))
+
+
+### Features
+
+* game guide url build base on session ([b6e3bc1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b6e3bc1030098338cea7f9ba8ec8ed97464cdc68))
+
 # [1.16.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.15.6...v1.16.0) (2023-07-06)
 
 
