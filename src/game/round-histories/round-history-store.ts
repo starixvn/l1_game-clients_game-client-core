@@ -75,7 +75,7 @@ export class RoundHistoryStore {
 
         switch (this.roundTimeStore.roundState) {
             case ROUND_STATE.SHOW_RESULT:
-                isHighLightAnim = true;
+                isHighLightAnim = !!this.joinGameHistory;
                 break;
 
             case ROUND_STATE.LOCKING_BET:
