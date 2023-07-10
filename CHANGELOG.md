@@ -1,3 +1,12 @@
+# [1.18.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.17.0...v1.18.0) (2023-07-10)
+
+
+### Features
+
+* add rebet ([037996a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/037996a3ebb1c8621a45c7d9b7c3e30df0ada209))
+* update rebet ([cf22a18](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/cf22a1850db4f01233ab37e029080f5ae15fc53e))
+* update test Rebet ([76b4ffe](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/76b4ffe12d7114b2244f16196d11f8ed1675292f))
+
 # [1.17.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.16.0...v1.17.0) (2023-07-07)
 
 
