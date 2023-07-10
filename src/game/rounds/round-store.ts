@@ -121,14 +121,8 @@ export class RoundStore {
 
     get highLightAnim(): THighLightInfo {
         let isAnim = false;
-
-        switch (this.roundTimeStore.roundState) {
-            case ROUND_STATE.SHOW_RESULT:
-                isAnim = true;
-                break;
-            default:
-                isAnim = false;
-                break;
+        if (this.roundTimeStore.roundState === ROUND_STATE.SHOW_RESULT) {
+            isAnim = true;
         }
 
         return {

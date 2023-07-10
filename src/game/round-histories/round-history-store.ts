@@ -52,7 +52,7 @@ export class RoundHistoryStore {
     }
 
     get joinRoomShowResult(): IRoundHistoryInfo | null {
-        if (!this.joinGameHistory && this._histories.length > 0 && this.roundTimeStore.roundState != ROUND_STATE.STOP_GAME_LOOP) {
+        if (!this.joinGameHistory && this._histories.length > 0 && this.roundTimeStore.roundState !== ROUND_STATE.STOP_GAME_LOOP) {
             const roundState = this.roundTimeStore.roundState;
             const isShow = roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || roundState === ROUND_STATE.SHOW_RESULT;
             this.joinGameHistory = {
