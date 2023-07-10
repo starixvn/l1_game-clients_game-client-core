@@ -38,27 +38,6 @@ describe("RoundHistoryStore", () => {
         ];
     });
 
-    describe("get joinRoomHighLight", () => {
-        test.each([
-            [ROUND_STATE.SHOW_ANIMATION_RESULT, false, false],
-            [ROUND_STATE.SHOW_RESULT, true, true],
-            [ROUND_STATE.PLACING_BET, false, false],
-        ])("should return the correct value for roundState: %s", (roundState, joinGameHistory, expectedIsShowHighLight) => {
-            roundTimeStoreMock.roundState = roundState;
-            roundHistoryStore.histories = mockHistories;
-            joinGameHistory &&
-                (roundHistoryStore.joinGameHistory = {
-                    roundHistory: history[0],
-                    isShow: false,
-                });
-
-            const result = roundHistoryStore.highLightInfo;
-
-            expect(result.isHighLightAnim).toBe(expectedIsShowHighLight);
-            expect(result.roundHistory).toEqual(roundHistoryStore.histories[0]);
-        });
-    });
-
     describe("updateHistories", () => {
         it("should update histories correctly when numberOfRoundHistory is greater than 0", () => {
             // Arrange

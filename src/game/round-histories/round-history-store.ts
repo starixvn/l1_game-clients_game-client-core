@@ -16,11 +16,6 @@ export interface IRoundHistoryInfo {
     isShow?: boolean;
 }
 
-export interface THighLightInfo extends IRoundHistoryInfo {
-    isHighLightAnim: boolean;
-    isResetHighlight: boolean;
-}
-
 @injectable()
 export class RoundHistoryStore {
     constructor(
@@ -57,43 +52,15 @@ export class RoundHistoryStore {
     }
 
     get joinRoomShowResult(): IRoundHistoryInfo | null {
-        if (!this.joinGameHistory && this._histories.length > 0) {
+        if (!this.joinGameHistory && this._histories.length > 0 && this.roundTimeStore.roundState != ROUND_STATE.STOP_GAME_LOOP) {
             const roundState = this.roundTimeStore.roundState;
             const isShow = roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || roundState === ROUND_STATE.SHOW_RESULT;
             this.joinGameHistory = {
-                roundHistory: this.histories[0],
+                roundHistory: this.getLastRound(),
                 isShow: isShow,
             };
         }
 
         return this.joinGameHistory;
-    }
-
-    get highLightInfo(): THighLightInfo {
-        let isHighLightAnim = false;
-        let isResetHighlight = false;
-
-        switch (this.roundTimeStore.roundState) {
-            case ROUND_STATE.SHOW_RESULT:
-                isHighLightAnim = !!this.joinGameHistory;
-                break;
-
-            case ROUND_STATE.LOCKING_BET:
-            case ROUND_STATE.STOP_GAME_LOOP:
-            case ROUND_STATE.SHOW_ANIMATION_RESULT:
-                isResetHighlight = true;
-                break;
-        }
-
-        return {
-            isHighLightAnim,
-            roundHistory: this.getLastRound(),
-            isResetHighlight,
-        };
-    }
-
-    resetRoundHistoryStore() {
-        this.histories = [];
-        this.joinGameHistory = null;
     }
 }

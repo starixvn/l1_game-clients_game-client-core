@@ -15,6 +15,16 @@ export type RoundOdds = {
     odds: GameServiceMessage.Odds;
     fractional: boolean;
 };
+
+export interface THighLightInfo {
+    isAnim: boolean;
+    settlementResult: GameServiceMessage.TSettlementResult;
+}
+
+export interface THighLightBorder {
+    settlementResult: GameServiceMessage.TSettlementResult;
+}
+
 @injectable()
 export class RoundStore {
     constructor(
@@ -93,6 +103,52 @@ export class RoundStore {
 
     set ownBets(ownBets: GameServiceMessage.OwnBets) {
         this._ownBets = ownBets;
+    }
+
+    get isResetHighlight(): boolean {
+        let isResetHighlight = false;
+
+        switch (this.roundTimeStore.roundState) {
+            case ROUND_STATE.LOCKING_BET:
+            case ROUND_STATE.STOP_GAME_LOOP:
+            case ROUND_STATE.SHOW_ANIMATION_RESULT:
+                isResetHighlight = true;
+                break;
+        }
+
+        return isResetHighlight;
+    }
+
+    get highLightAnim(): THighLightInfo {
+        let isAnim = false;
+
+        switch (this.roundTimeStore.roundState) {
+            case ROUND_STATE.SHOW_RESULT:
+                isAnim = true;
+                break;
+            default:
+                isAnim = false;
+                break;
+        }
+
+        return {
+            isAnim,
+            settlementResult: this.roundHistoryStore?.getLastRound()?.settlementResult,
+        };
+    }
+
+    get highLightBorder(): THighLightBorder {
+        let settlementResult: GameServiceMessage.TSettlementResult = {};
+
+        switch (this.roundTimeStore.roundState) {
+            case ROUND_STATE.SHOW_RESULT:
+            case ROUND_STATE.PLACING_BET:
+            case ROUND_STATE.STARTING_ROUND:
+                settlementResult = this.roundHistoryStore?.getLastRound()?.settlementResult;
+                break;
+        }
+
+        return { settlementResult };
     }
 
     resetForNewRound() {

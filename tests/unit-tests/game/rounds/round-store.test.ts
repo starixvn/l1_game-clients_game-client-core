@@ -1,7 +1,7 @@
 import { stub } from "jest-auto-stub";
 import { GameConfigStore } from "../../../../src/game/game-configs";
 import { RoundHistoryStore } from "../../../../src/game/round-histories/round-history-store";
-import { RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
+import { ROUND_STATE, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
 import { MainPlayerStore } from "../../../../src/players";
 
 const gameConfig = {
@@ -29,6 +29,27 @@ const gameConfig = {
     },
     enableFreeBet: false,
 };
+
+const mockHistories = [
+    {
+        roundId: 1,
+        result: {
+            red1: false,
+            red2: false,
+            red3: true,
+            red4: true,
+        },
+        settlementResult: {
+            odd: false,
+            even: true,
+            red2: true,
+            red3: false,
+            red4: false,
+            white3: false,
+            white4: false,
+        },
+    },
+];
 describe("RoundStore", () => {
     let roundStore: RoundStore;
     let gameConfigStore: GameConfigStore;
@@ -100,5 +121,73 @@ describe("RoundStore", () => {
         expect(roundStore.ownBets).toEqual({});
         expect(roundStore.totalBets).toEqual({});
         expect(roundStore.resultHash).toEqual({});
+    });
+
+    describe("isResetHighlight", () => {
+        test.each([
+            [ROUND_STATE.LOCKING_BET, true],
+            [ROUND_STATE.STOP_GAME_LOOP, true],
+            [ROUND_STATE.SHOW_ANIMATION_RESULT, true],
+            [ROUND_STATE.PLACING_BET, false],
+        ])("should return %s when roundState is %s", (roundState, expected) => {
+            // Arrange
+            roundTimeStore.roundState = roundState;
+
+            // Act
+            const result = roundStore.isResetHighlight;
+
+            // Assert
+            expect(result).toBe(expected);
+        });
+    });
+
+    describe("getHighLightAnim", () => {
+        test.each([
+            [ROUND_STATE.SHOW_RESULT, true, mockHistories[0].settlementResult],
+            [ROUND_STATE.PLACING_BET, false, mockHistories[0].settlementResult],
+        ])(
+            "should return { isAnim: %s, settlementResult: %s } when roundState is %s",
+            (roundState, expectedIsAnim, expectedSettlementResult) => {
+                // Arrange
+                roundTimeStore.roundState = roundState;
+                jest.spyOn(roundHistoryStore, "getLastRound").mockReturnValue(mockHistories[0]);
+
+                // Act
+                const result = roundStore.highLightAnim;
+
+                // Assert
+                expect(result).toEqual({ isAnim: expectedIsAnim, settlementResult: expectedSettlementResult });
+            }
+        );
+    });
+
+    describe("getHighLightBorder()", () => {
+        test.each([
+            [ROUND_STATE.SHOW_RESULT, { settlementResult: mockHistories[0].settlementResult }],
+            [
+                ROUND_STATE.PLACING_BET,
+                {
+                    settlementResult: mockHistories[0].settlementResult,
+                },
+            ],
+            [
+                ROUND_STATE.STARTING_ROUND,
+                {
+                    settlementResult: mockHistories[0].settlementResult,
+                },
+            ],
+            // Add more test cases as needed
+        ])("returns the expected result for roundState %s", (roundState, expected) => {
+            // Arrange
+            roundTimeStore.roundState = roundState;
+
+            jest.spyOn(roundHistoryStore, "getLastRound").mockReturnValue(mockHistories[0]);
+
+            // Act
+            const result = roundStore.highLightBorder;
+
+            // Assert
+            expect(result).toEqual(expected);
+        });
     });
 });
