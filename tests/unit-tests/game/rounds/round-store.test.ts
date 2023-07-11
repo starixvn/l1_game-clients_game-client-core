@@ -2,6 +2,7 @@ import { stub } from "jest-auto-stub";
 import { GameConfigStore } from "../../../../src/game/game-configs";
 import { RoundHistoryStore } from "../../../../src/game/round-histories/round-history-store";
 import { ROUND_STATE, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
+import { SettlementStore } from "../../../../src/game/settlements";
 import { MainPlayerStore } from "../../../../src/players";
 
 const gameConfig = {
@@ -56,6 +57,7 @@ describe("RoundStore", () => {
     let mainPlayerStore: MainPlayerStore;
     let roundHistoryStore: RoundHistoryStore;
     let roundTimeStore: RoundTimeStore;
+    let settlementStore: SettlementStore;
 
     beforeEach(() => {
         gameConfigStore = stub<GameConfigStore>();
@@ -63,7 +65,8 @@ describe("RoundStore", () => {
         mainPlayerStore = stub<MainPlayerStore>();
         roundHistoryStore = stub<RoundHistoryStore>();
         roundTimeStore = stub<RoundTimeStore>();
-        roundStore = new RoundStore(gameConfigStore, roundHistoryStore, roundTimeStore, mainPlayerStore);
+        settlementStore = stub<SettlementStore>();
+        roundStore = new RoundStore(gameConfigStore, roundHistoryStore, roundTimeStore, mainPlayerStore, settlementStore);
     });
 
     it("should have initial values", () => {
@@ -141,27 +144,24 @@ describe("RoundStore", () => {
         });
     });
 
-    describe("getHighLightAnim", () => {
+    describe("get highLightAnim", () => {
         test.each([
-            [ROUND_STATE.SHOW_RESULT, true, mockHistories[0].settlementResult],
-            [ROUND_STATE.PLACING_BET, false, mockHistories[0].settlementResult],
-        ])(
-            "should return { isAnim: %s, settlementResult: %s } when roundState is %s",
-            (roundState, expectedIsAnim, expectedSettlementResult) => {
-                // Arrange
-                roundTimeStore.roundState = roundState;
-                jest.spyOn(roundHistoryStore, "getLastRound").mockReturnValue(mockHistories[0]);
+            [true, mockHistories[0].settlementResult],
+            [false, mockHistories[0].settlementResult],
+        ])("should return { isAnim: %s, settlementResult: %s }", (expectedIsAnim, expectedSettlementResult) => {
+            // Arrange
+            settlementStore.isFinishedShowResult = expectedIsAnim;
+            jest.spyOn(roundHistoryStore, "getLastRound").mockReturnValue(mockHistories[0]);
 
-                // Act
-                const result = roundStore.highLightAnim;
+            // Act
+            const result = roundStore.highLightAnim;
 
-                // Assert
-                expect(result).toEqual({ isAnim: expectedIsAnim, settlementResult: expectedSettlementResult });
-            }
-        );
+            // Assert
+            expect(result).toEqual({ isAnim: expectedIsAnim, settlementResult: expectedSettlementResult });
+        });
     });
 
-    describe("getHighLightBorder()", () => {
+    describe("get highLightBorder()", () => {
         test.each([
             [ROUND_STATE.SHOW_RESULT, { settlementResult: mockHistories[0].settlementResult }],
             [

@@ -5,6 +5,7 @@ import { MainPlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared";
 import { GameConfigStore } from "../game-configs";
 import { RoundHistoryStore } from "../round-histories";
+import { SettlementStore } from "../settlements";
 import { ROUND_STATE, RoundTimeStore } from "./round-time-store";
 
 export type Bets = {
@@ -31,7 +32,8 @@ export class RoundStore {
         @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore,
         @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
-        @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore
+        @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
+        @inject(SettlementStore) protected readonly settlementStore: SettlementStore
     ) {
         makeAutoObservable(this, {
             _clientRoundId: false,
@@ -120,14 +122,12 @@ export class RoundStore {
     }
 
     get highLightAnim(): THighLightInfo {
-        let isAnim = false;
-        if (this.roundTimeStore.roundState === ROUND_STATE.SHOW_RESULT) {
-            isAnim = true;
-        }
+        const isAnim = this.settlementStore.isFinishedShowResult;
+        const settlementResult = this.roundHistoryStore?.getLastRound()?.settlementResult;
 
         return {
             isAnim,
-            settlementResult: this.roundHistoryStore?.getLastRound()?.settlementResult,
+            settlementResult,
         };
     }
 

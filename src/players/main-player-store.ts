@@ -17,7 +17,7 @@ export class MainPlayerStore {
     UID = 0;
     name = "";
     balance = 0;
-    avatarId = 0;
+    avatarId = 1;
     ss = "";
     system = 1;
     operatorName: string;
