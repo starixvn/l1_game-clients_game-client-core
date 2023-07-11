@@ -11,7 +11,7 @@ export class AroundTablePlayerHandlers implements IMultipleHandlers {
     }
 
     handlePlayers(aroundTablePlayers: GameServiceMessage.AroundTablePlayers) {
-        this.aroundTablePlayersStore.aroundTablePlayers = aroundTablePlayers;
+        this.aroundTablePlayersStore.setAroundTablePlayers(aroundTablePlayers);
     }
 
     handlePlayerOutGame(aroundTablePlayerOutGame: GameServiceMessage.OutGame) {

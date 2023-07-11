@@ -54,7 +54,13 @@ export class ChipStore {
     }
 
     get playerChip() {
-        return toJS(this._playerChip);
+        if (this._playerChip) {
+            const chip = { ...toJS(this._playerChip) };
+            chip.red = NumberUtils.getValueByCurrency(+chip.red, this.mainPlayerStore.rate, chip.rate);
+            chip.amount = NumberUtils.getValueByCurrency(+chip.amount, this.mainPlayerStore.rate, chip.rate);
+            return chip;
+        }
+        return this._playerChip;
     }
 
     set playerChip(playerChip: GameServiceMessage.PlayerChip) {
@@ -70,8 +76,8 @@ export class ChipStore {
     }
 
     resetChips() {
-        this.chips = {};
-        this.playerChip = null;
+        this._chips = {};
+        this._playerChip = null;
         this.ownChip = { betChoice: "", amount: 0 };
     }
 

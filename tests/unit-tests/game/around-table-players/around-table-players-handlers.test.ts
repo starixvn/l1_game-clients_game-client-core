@@ -41,7 +41,7 @@ describe("AroundTablePlayerHandlers", () => {
         aroundTablePlayerHandlers.handlePlayers(aroundTablePlayers);
 
         // Assert
-        expect(aroundTablePlayersStoreMock.aroundTablePlayers).toBe(aroundTablePlayers);
+        expect(aroundTablePlayersStoreMock.setAroundTablePlayers).toHaveBeenCalledWith(aroundTablePlayers);
     });
 
     test("handlePlayerOutGame should call removeAroundTablePlayer on otherPlayersStore with the provided aroundTablePlayerOutGame", () => {

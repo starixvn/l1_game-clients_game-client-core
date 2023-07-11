@@ -6,11 +6,11 @@ export namespace NumberUtils {
         return Math.floor((randomNumber / 0xffffffff) * length);
     };
 
-    export const getValueByCurrency = (value: number, playerRate: number, otherRate?: number): number => {
-        if (!otherRate) {
-            otherRate = 1;
+    export const getValueByCurrency = (value: number, mainPlayerRate: number, otherPlayerRate?: number): number => {
+        if (!otherPlayerRate) {
+            otherPlayerRate = 1;
         }
 
-        return (value * otherRate) / playerRate;
+        return (value * otherPlayerRate) / mainPlayerRate;
     };
 }

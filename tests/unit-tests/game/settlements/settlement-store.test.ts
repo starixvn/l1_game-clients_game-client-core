@@ -2,15 +2,23 @@ import { stub } from "jest-auto-stub";
 import { makeAutoObservable } from "mobx";
 import { SettlementStore } from "../../../../src/game/settlements";
 import { GameServiceMessage } from "../../../../src/shared";
+import { NumberUtils } from "../../../../src/shared/utils/number-utils";
+import { MainPlayerStore } from "../../../../src/players/main-player-store";
 
+jest.mock("../../../../src/shared/utils/number-utils", () => ({ NumberUtils: { getValueByCurrency: jest.fn() } }));
 jest.mock("mobx");
 
 describe("SettlementStore tests", () => {
+    let store: SettlementStore;
+    let mainPlayerStore: MainPlayerStore;
+
+    beforeEach(() => {
+        mainPlayerStore = stub<MainPlayerStore>();
+        store = new SettlementStore(mainPlayerStore);
+    });
+
     describe("constructor", () => {
         it("should call makeAutoObservable", () => {
-            // act
-            const store = new SettlementStore();
-
             // assert
             expect(makeAutoObservable).toHaveBeenCalledWith(store);
         });
@@ -18,7 +26,6 @@ describe("SettlementStore tests", () => {
     describe("setSettlementStore", () => {
         it("should set settlement store", () => {
             // arrange
-            const store = new SettlementStore();
             const finish = new GameServiceMessage.Finish();
             finish.roundId = 1;
             const result = { red1: false, red2: true, red3: true, red4: true };
@@ -38,14 +45,45 @@ describe("SettlementStore tests", () => {
         });
     });
 
-    describe("payChipInfo", () => {
-        it("should return the finish info when isFinishedShowResult is true", () => {
-            // Arrange
-            const store = new SettlementStore();
+    describe("get winningPlayers", () => {
+        it("should convert rate for balance before return value", () => {
+            // arrange
+            mainPlayerStore.rate = 1;
             const mockWinningPlayers = {
                 "1234": {
                     bet: 1,
-                    rate: 2,
+                    rate: 0.5,
+                    win: true,
+                    winningByChoices: {
+                        choice1: 2,
+                    },
+                },
+            };
+            (NumberUtils.getValueByCurrency as jest.Mock).mockReturnValueOnce(0.5);
+            store.winningPlayers = mockWinningPlayers;
+            const expected = {
+                "1234": {
+                    ...mockWinningPlayers[1234],
+                    bet: 0.5,
+                },
+            };
+            // act
+            const actual = store.winningPlayers;
+
+            // assert
+            expect(actual).toEqual(expected);
+        });
+    });
+
+    describe("payChipInfo", () => {
+        it("should return the finish info when isFinishedShowResult is true", () => {
+            // Arrange
+            mainPlayerStore.rate = 1;
+            (NumberUtils.getValueByCurrency as jest.Mock).mockReturnValueOnce(1);
+            const mockWinningPlayers = {
+                "1234": {
+                    bet: 1,
+                    rate: 1,
                     win: true,
                     winningByChoices: {
                         choice1: 2,
@@ -72,7 +110,6 @@ describe("SettlementStore tests", () => {
 
         it("should return null when isFinishedShowResult is false", () => {
             // ArrangeeMessage
-            const store = new SettlementStore();
             store.isFinishedShowResult = false;
 
             // Act
@@ -86,28 +123,24 @@ describe("SettlementStore tests", () => {
     describe("resetSettlementStore", () => {
         it("should reset winningPlayers and settlementResult to null", () => {
             // Act
-            const settlementStore = new SettlementStore();
-            settlementStore.winningPlayers = stub<GameServiceMessage.TWinningPlayers>();
-            settlementStore.settlementResult = stub<GameServiceMessage.TSettlementResult>();
+            store.winningPlayers = stub<GameServiceMessage.TWinningPlayers>();
+            store.settlementResult = stub<GameServiceMessage.TSettlementResult>();
 
             // Arrange
-            settlementStore.resetSettlementStore();
+            store.resetSettlementStore();
 
             // Assert
-            expect(settlementStore.winningPlayers).toBeNull();
-            expect(settlementStore.settlementResult).toBeNull();
+            expect(store.winningPlayers).toBeNull();
+            expect(store.settlementResult).toBeNull();
         });
 
         it("should reset winningPlayers and settlementResult to null even if they are already null", () => {
-            // Act
-            const settlementStore = new SettlementStore();
-
             // Arrange
-            settlementStore.resetSettlementStore();
+            store.resetSettlementStore();
 
             // Assert
-            expect(settlementStore.winningPlayers).toBeNull();
-            expect(settlementStore.settlementResult).toBeNull();
+            expect(store.winningPlayers).toBeNull();
+            expect(store.settlementResult).toBeNull();
         });
     });
 });

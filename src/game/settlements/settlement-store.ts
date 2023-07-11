@@ -1,7 +1,9 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import * as _ from "lodash";
 import { makeAutoObservable } from "mobx";
 import { GameServiceMessage } from "../../shared";
+import { MainPlayerStore } from "../../players/main-player-store";
+import { NumberUtils } from "../../shared/utils/number-utils";
 
 export type TPayChipInfo = {
     settlementResult: GameServiceMessage.TSettlementResult;
@@ -10,7 +12,7 @@ export type TPayChipInfo = {
 
 @injectable()
 export class SettlementStore {
-    constructor() {
+    constructor(@inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore) {
         makeAutoObservable(this);
     }
 
@@ -29,6 +31,14 @@ export class SettlementStore {
     }
 
     get winningPlayers() {
+        if (this._winningPlayers) {
+            const winningPlayers = { ...this._winningPlayers };
+            Object.values(winningPlayers).forEach(
+                (winningPlayer) =>
+                    (winningPlayer.bet = NumberUtils.getValueByCurrency(winningPlayer.bet, this.mainPlayerStore.rate, winningPlayer.rate))
+            );
+            return winningPlayers;
+        }
         return this._winningPlayers;
     }
 

@@ -82,7 +82,7 @@ export class RoundStore {
 
     get totalBets() {
         return Object.keys(this._totalBets).reduce((total, betChoice) => {
-            total[betChoice] = this._totalBets[betChoice] * this.mainPlayerStore.rate;
+            total[betChoice] = this._totalBets[betChoice] / this.mainPlayerStore.rate;
             return total;
         }, {});
     }

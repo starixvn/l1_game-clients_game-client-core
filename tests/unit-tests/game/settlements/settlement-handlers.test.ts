@@ -10,7 +10,7 @@ describe("SettlementHandlers tests", () => {
     let roundHistoryStore: RoundHistoryStore;
 
     beforeEach(() => {
-        settlementStore = new SettlementStore();
+        settlementStore = stub<SettlementStore>();
         statusStore = new SettlementStatusStore();
         roundHistoryStore = stub<RoundHistoryStore>();
         settlementHandlers = new SettlementHandlers(settlementStore, statusStore, roundHistoryStore);

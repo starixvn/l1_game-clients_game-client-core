@@ -131,6 +131,7 @@ export namespace GameServiceMessage {
         betChoice: string;
         amount: number;
         red: number;
+        rate?: number;
 
         static eventName = "playerChip";
     }
@@ -140,6 +141,7 @@ export namespace GameServiceMessage {
         red: number;
         avatarId: number;
         type: boolean;
+        rate?: number;
 
         static eventName = "player";
     }

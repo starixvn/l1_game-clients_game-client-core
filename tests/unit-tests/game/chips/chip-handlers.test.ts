@@ -15,6 +15,7 @@ describe("ChipHandlers", () => {
 
     beforeEach(() => {
         mainPlayerStore = stub<MainPlayerStore>();
+        mainPlayerStore.rate = 1;
         roundTimeStore = stub<RoundTimeStore>();
         gameConfigStore = stub<GameConfigStore>();
         roundStore = stub<RoundStore>();

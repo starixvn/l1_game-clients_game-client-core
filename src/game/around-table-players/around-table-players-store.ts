@@ -3,10 +3,15 @@ import { makeAutoObservable } from "mobx";
 import { SiteConfigs } from "../../configs";
 import { GameServiceMessage } from "../../shared";
 import { SystemConfigs } from "./../../configs/system-configs";
+import { NumberUtils } from "../../shared/utils/number-utils";
+import { MainPlayerStore } from "../../players/main-player-store";
 
 @injectable()
 export class AroundTablePlayersStore {
-    constructor(@inject(SiteConfigs) protected readonly siteConfigs: SiteConfigs) {
+    constructor(
+        @inject(SiteConfigs) protected readonly siteConfigs: SiteConfigs,
+        @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore
+    ) {
         makeAutoObservable(this);
     }
 
@@ -14,6 +19,14 @@ export class AroundTablePlayersStore {
     aroundTablePlayers: GameServiceMessage.AroundTablePlayers = {};
     outGamePlayerId = "";
     maxBalanceDisplay = SystemConfigs.SG.maxBalanceDisplay;
+
+    setAroundTablePlayers(players: GameServiceMessage.AroundTablePlayers) {
+        const aroundTablePlayers = { ...players };
+        Object.values(aroundTablePlayers).forEach((player) => {
+            player.red = NumberUtils.getValueByCurrency(player.red, this.mainPlayerStore.rate, player.rate);
+        });
+        this.aroundTablePlayers = aroundTablePlayers;
+    }
 
     updateMaxBalanceDisplay() {
         if (this.siteConfigs.systemType === SystemConfigs.VG.name) {
@@ -23,8 +36,10 @@ export class AroundTablePlayersStore {
 
     updateAroundTablePlayer(aroundTablePlayer: GameServiceMessage.AroundTablePlayer) {
         if (aroundTablePlayer?.id) {
-            this.aroundTablePlayer = aroundTablePlayer;
-            this.aroundTablePlayers[aroundTablePlayer.id] = aroundTablePlayer;
+            const player = { ...aroundTablePlayer };
+            player.red = NumberUtils.getValueByCurrency(player.red, this.mainPlayerStore.rate, player.rate);
+            this.aroundTablePlayer = player;
+            this.aroundTablePlayers[aroundTablePlayer.id] = player;
         }
     }
 

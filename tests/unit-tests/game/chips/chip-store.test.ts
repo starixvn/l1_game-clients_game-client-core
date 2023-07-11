@@ -3,6 +3,7 @@ import { GameConfigStore } from "../../../../src/game/game-configs";
 import { RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
 import { MainPlayerStore } from "../../../../src/players";
 import { ChipStore } from "./../../../../src/game/chips/chip-store";
+
 describe("ChipStore", () => {
     let chipStore: ChipStore;
     let mainPlayerStore: MainPlayerStore;
@@ -35,6 +36,21 @@ describe("ChipStore", () => {
     test("initializes with empty own chip object", () => {
         // Assert
         expect(chipStore.ownChip).toEqual({ betChoice: "", amount: 0 });
+    });
+
+    describe("get playerChip", () => {
+        it("should convert rate for balance and amount before return value", () => {
+            // Arrange
+            chipStore.playerChip = { amount: 100, betChoice: "a", playerId: "12", red: 2000, rate: 0.5 };
+            mainPlayerStore.rate = 1;
+
+            // Act
+            const actual = chipStore.playerChip;
+
+            // Assert
+            expect(actual.amount).toBe(50);
+            expect(actual.red).toBe(1000);
+        });
     });
 
     test("can set own chip object", () => {
