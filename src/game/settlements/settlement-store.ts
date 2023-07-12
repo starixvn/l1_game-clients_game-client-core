@@ -68,5 +68,6 @@ export class SettlementStore {
     resetSettlementStore() {
         this._winningPlayers = null;
         this.settlementResult = null;
+        this.isFinishedShowResult = false;
     }
 }

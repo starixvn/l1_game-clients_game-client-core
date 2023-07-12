@@ -132,14 +132,14 @@ export class RoundStore {
     }
 
     get highLightBorder(): THighLightBorder {
-        let settlementResult: GameServiceMessage.TSettlementResult = {};
-
-        switch (this.roundTimeStore.roundState) {
-            case ROUND_STATE.SHOW_RESULT:
-            case ROUND_STATE.PLACING_BET:
-            case ROUND_STATE.STARTING_ROUND:
-                settlementResult = this.roundHistoryStore?.getLastRound()?.settlementResult;
-                break;
+        let settlementResult: GameServiceMessage.TSettlementResult = null;
+        const isFinishedShowResult = this.settlementStore.isFinishedShowResult;
+        if (
+            this.roundTimeStore.roundState === ROUND_STATE.PLACING_BET ||
+            this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND ||
+            isFinishedShowResult
+        ) {
+            settlementResult = this.roundHistoryStore?.getLastRound()?.settlementResult;
         }
 
         return { settlementResult };
