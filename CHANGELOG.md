@@ -1,3 +1,10 @@
+## [1.19.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.19.2...v1.19.3) (2023-07-13)
+
+
+### Bug Fixes
+
+* calculate round-id ([10eda03](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/10eda039813b021372335fa4845b66903d0c4262))
+
 ## [1.19.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.19.1...v1.19.2) (2023-07-13)
 
 
