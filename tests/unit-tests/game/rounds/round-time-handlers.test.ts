@@ -29,6 +29,7 @@ describe("RoundTimeHandlers", () => {
             // Arrange
             roundTimeStore.start = jest.fn();
             roundRunningHandlers.startRunner = jest.fn();
+            roundRunningHandlers.stopRunner = jest.fn();
 
             // Act
             roundTimeHandler.handleRemainingTime(5);
@@ -36,6 +37,7 @@ describe("RoundTimeHandlers", () => {
             // Assert
             expect(roundTimeStore.roundTime).toBe(5);
             expect(roundRunningHandlers.startRunner).toBeCalled();
+            expect(roundRunningHandlers.stopRunner).toBeCalled();
         });
 
         it("should not update store round time and start store when remaining time is 0", () => {

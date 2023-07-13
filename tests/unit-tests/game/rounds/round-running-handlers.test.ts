@@ -31,17 +31,6 @@ describe("RoundRunningHandlers", () => {
             expect(roundRunningHandlers.runnerId).not.toBeNull();
         });
 
-        it("should stop the timer before starting a new one", () => {
-            // Arrange
-            jest.spyOn(roundRunningHandlers, "stopRunner");
-
-            // Act
-            roundRunningHandlers.startRunner();
-
-            // Assert
-            expect(roundRunningHandlers.stopRunner).toHaveBeenCalled();
-        });
-
         it("should call countdown every second", () => {
             // Arrange
             roundTimeStore.calculateRoundStatus = jest.fn();

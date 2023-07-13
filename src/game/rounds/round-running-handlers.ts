@@ -12,7 +12,6 @@ export class RoundRunningHandlers {
     ) {}
 
     startRunner() {
-        this.stopRunner();
         this.runnerId = setInterval(() => {
             this.roundTimeStore.countdown();
         }, 1000);
