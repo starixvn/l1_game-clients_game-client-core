@@ -1,3 +1,10 @@
+## [1.19.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.19.1...v1.19.2) (2023-07-13)
+
+
+### Bug Fixes
+
+* missing color on rebet button ([b268054](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b26805441d93b90eef1667359d6bd18c5060a838))
+
 ## [1.19.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.19.0...v1.19.1) (2023-07-13)
 
 
