@@ -1,3 +1,10 @@
+## [1.19.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.19.0...v1.19.1) (2023-07-13)
+
+
+### Bug Fixes
+
+* missing share-component ([368a908](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/368a90849575d2e36d88bd44d3fee28aff6243cb))
+
 # [1.19.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.18.1...v1.19.0) (2023-07-13)
 
 
