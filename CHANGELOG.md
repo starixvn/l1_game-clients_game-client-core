@@ -1,3 +1,13 @@
+# [1.19.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.18.1...v1.19.0) (2023-07-13)
+
+
+### Features
+
+* update handle highlight ([c6197ec](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/c6197ec5b1e6ad8c3e91fdae5520188b5f595cce))
+* update handle highlight - show result ([9910e5c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9910e5cc41f8250f643d220630ad97fe9a2e0f6e))
+* update handle node anim - static ([d9970aa](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d9970aa9985279cbd37aabfcffb8781591a17787))
+* update highlight ([8712119](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/87121197c360ef6d22318ead41b75fd8f4327e75))
+
 ## [1.18.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.18.0...v1.18.1) (2023-07-13)
 
 
