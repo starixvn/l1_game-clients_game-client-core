@@ -1,3 +1,10 @@
+## [1.18.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.18.0...v1.18.1) (2023-07-13)
+
+
+### Bug Fixes
+
+* convert rate ([02ee24f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/02ee24f7876cea7a5a29b76baf7c2e6dd9a436ad))
+
 # [1.18.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.17.0...v1.18.0) (2023-07-10)
 
 
