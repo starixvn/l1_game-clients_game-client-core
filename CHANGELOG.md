@@ -1,3 +1,10 @@
+# [1.20.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.19.3...v1.20.0) (2023-07-17)
+
+
+### Features
+
+* jackpot notification ([e7311e8](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/e7311e8a5e541e47c16a8df2767f72a0e2011a7d))
+
 ## [1.19.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.19.2...v1.19.3) (2023-07-13)
 
 
