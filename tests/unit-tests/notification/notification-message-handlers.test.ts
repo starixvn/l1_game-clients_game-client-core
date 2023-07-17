@@ -1,6 +1,6 @@
 import { stub } from "jest-auto-stub";
 import { AuthHandlers } from "../../../src/auth/auth-handlers";
-import { NotificationMessageHandlers, NotificationStore } from "../../../src/notification";
+import { JackpotWinnerStore, NotificationMessageHandlers, NotificationStore } from "../../../src/notification";
 import { NotificationServiceMessage } from "../../../src/shared";
 
 describe("NotificationMessageHandlers", () => {
@@ -37,6 +37,38 @@ describe("NotificationMessageHandlers", () => {
 
                 // assert
                 expect(signOutHandler.handle).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe("notify jackpot winner", () => {
+        let jackpotWinnerStore: JackpotWinnerStore;
+        let handler: NotificationMessageHandlers.NotifyJackpotWinner;
+        beforeEach(() => {
+            jackpotWinnerStore = stub<JackpotWinnerStore>();
+            handler = new NotificationMessageHandlers.NotifyJackpotWinner(jackpotWinnerStore);
+        });
+
+        it("has name is equal notifyTimeout", () => {
+            // assert
+            expect(handler.name).toEqual(NotificationServiceMessage.JackpotWinner.eventName);
+        });
+
+        describe("handle", () => {
+            it("should set jackpotWinner of jackpotWinnerStore", () => {
+                // arrange
+                const jackpotWinner = {
+                    gameId: 1,
+                    winnerName: "player1",
+                    amount: 100,
+                    pool: 1,
+                };
+
+                // act
+                handler.handle(jackpotWinner);
+
+                // assert
+                expect(jackpotWinnerStore.setJackpotWinner).toHaveBeenCalledWith(jackpotWinner);
             });
         });
     });

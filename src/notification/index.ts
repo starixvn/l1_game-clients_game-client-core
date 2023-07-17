@@ -1,3 +1,4 @@
+export * from "./jackpot-winner-store";
 export * from "./notification-handlers";
 export * from "./notification-message-handlers";
 export * from "./notification-store";

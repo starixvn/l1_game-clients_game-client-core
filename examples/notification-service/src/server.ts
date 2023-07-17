@@ -42,6 +42,15 @@ app.get("/reload", function (req, res) {
     io.emit("reload", true);
 });
 
+app.get("/jackpot", function (req, res) {
+    res.send("jackpot notification");
+    io.emit("jackpotWinner", {
+        gameId: 5,
+        winnerName: "player123456",
+        amount: 50000,
+        pool: 5,
+    });
+});
 
 server.listen(port, () => {
     console.log(`listening on *:${port}`);

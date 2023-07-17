@@ -27,6 +27,7 @@ export class MainPlayerStore {
     availSpins?: number = 0;
     fractionalOddsFormat = false;
     displayPlayerCurrency = true;
+    disableJackpotGames = false;
     offerGames?: { gameId: number }[] = null;
     browserUserAgent = "";
 
@@ -39,6 +40,7 @@ export class MainPlayerStore {
         this.offerGames = user.offerGames;
         this.fractionalOddsFormat = user.fractionalOddsFormat;
         this.displayPlayerCurrency = user.isDisplayPlayerCurrency;
+        this.disableJackpotGames = user.disableJackpotGames;
     }
 
     setBalance(balance: number, scoin: number, availSpins: number) {

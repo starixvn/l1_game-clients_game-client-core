@@ -54,6 +54,7 @@ export namespace GameServiceMessage {
         availSpins?: number;
         fractionalOddsFormat?: boolean;
         isDisplayPlayerCurrency?: boolean;
+        disableJackpotGames?: boolean;
 
         static eventName = "user";
     }
@@ -274,4 +275,12 @@ export namespace NotificationServiceMessage {
     export const sessionTimeoutEventName = "notifyTimeout";
 
     export const reloadEventName = "reload";
+
+    export class JackpotWinner {
+        gameId: number;
+        winnerName: string;
+        amount: number;
+        pool: number;
+        static eventName = "jackpotWinner";
+    }
 }
