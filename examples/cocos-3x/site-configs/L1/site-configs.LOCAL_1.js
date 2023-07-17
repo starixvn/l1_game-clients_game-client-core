@@ -12,4 +12,10 @@ window.envConfig = {
         route: "sedie",
     },
     SGConnectSubDomain: "l1-connectsite1",
+    tolgee: {
+        defaultLanguage: "en",
+        apiKey: "tgpak_gvpw45brha2xg3btoztxeytunvudc5dbn5twqodtonztc",
+        apiUrl: "https://tolgee.sabagame.com/",
+        projectId: "5",
+    },
 };

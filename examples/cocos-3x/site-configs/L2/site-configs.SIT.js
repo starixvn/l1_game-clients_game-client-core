@@ -13,4 +13,7 @@ window.envConfig = {
     },
     subDirectory: "sit",
     SGConnectSubDomain: "l2-connect-sit",
+    tolgee: {
+        defaultLanguage: "en",
+    },
 };

@@ -2,6 +2,7 @@ export * from "./date-time-utils";
 export * from "./error-utils";
 export * from "./format-utils";
 export * from "./game-utils";
+export * from "./localization-manager";
 export * from "./localized-utils";
 export * from "./logger";
 export * from "./mobx-logger";

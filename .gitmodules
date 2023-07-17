@@ -22,3 +22,7 @@
 	path = examples/cocos-3x/build-templates
 	url = ../build-templates.git
 	branch = main
+[submodule "examples/cocos-3x/extensions/i18n"]
+	path = examples/cocos-3x/extensions/i18n
+	url = ../i18n.git
+	branch = main

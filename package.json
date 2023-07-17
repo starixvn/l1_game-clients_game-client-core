@@ -25,7 +25,8 @@
         "pub": "npm publish --registry http://npm.lumigame.com",
         "betaver": "npm version prerelease --preid beta",
         "pubbeta": "npm publish --registry http://npm.lumigame.com --tag beta",
-        "semantic-release": "semantic-release"
+        "semantic-release": "semantic-release",
+        "generate-tolgee-data": "ts-node ./tolgee-generator/index.ts"
     },
     "jestSonar": {
         "reportPath": "reports",
@@ -33,6 +34,7 @@
         "indent": 4
     },
     "dependencies": {
+        "@tolgee/web": "^5.9.12",
         "base64-string": "^1.1.2",
         "eventemitter2": "6.4.9",
         "inversify": "6.0.1",

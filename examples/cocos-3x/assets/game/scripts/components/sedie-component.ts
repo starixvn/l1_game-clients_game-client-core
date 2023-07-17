@@ -4,6 +4,7 @@ import { startGame } from "db://shared-components/shared/scripts/startup";
 import Observer from "observer";
 import { siteConfigs } from "../../../scripts/site-configs";
 import { containerOptions, settings } from "../sedie-settings";
+import "./../../../resources/i18n";
 import { SediePlate } from "./sedie-plate";
 
 startGame(settings.name, containerOptions, siteConfigs);

@@ -27,6 +27,9 @@ const defaultConfig: gc.Configs.SiteConfigs = {
         route: "",
     },
     mainObserverNamespace: "SeDie",
+    tolgee: {
+        defaultLanguage: "en",
+    },
 };
 
 // LOCAL3
@@ -49,6 +52,12 @@ const defaultConfig: gc.Configs.SiteConfigs = {
 //     },
 //     SGConnectSubDomain: "l1-connectsite3",
 //     mainObserverNamespace: "SeDie",
+//     tolgee: {
+//         defaultLanguage: "en",
+//         apiKey: "tgpak_gvpw45brha2xg3btoztxeytunvudc5dbn5twqodtonztc",
+//         apiUrl: "https://tolgee.sabagame.com/",
+//         projectId: "5",
+//     },
 // };
 
 let configDev = {

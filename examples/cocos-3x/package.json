@@ -18,10 +18,12 @@
     "scripts": {
         "test": "jest",
         "test-coverage": "jest --collect-coverage",
-        "obfuscator-config-file": "ts-node ./site-configs/site-config-obfuscator.ts"
+        "obfuscator-config-file": "ts-node ./site-configs/site-config-obfuscator.ts",
+        "merge-json": "node tolgee-data/merge-tolgee-data.js"
     },
     "dependencies": {
         "@sg/game-client-base": "file:../..",
+        "@tolgee/web": "^5.9.12",
         "inversify": "6.0.1",
         "lodash-es": "^4.17.21",
         "mobx": "6.9.0",
@@ -36,6 +38,7 @@
         "jest-environment-jsdom": "29.5.0",
         "jest-junit": "16.0.0",
         "jest-sonar-reporter": "2.0.0",
+        "json-concat": "^0.0.1",
         "reflect-metadata": "0.1.13",
         "ts-jest": "29.1.0",
         "ts-node": "10.9.1",
