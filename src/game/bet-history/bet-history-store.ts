@@ -1,18 +1,37 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 
-export interface IBetHistoryLog {
+export type DynamicObject<T> = {
+    [key: string]: T;
+};
+
+export type BetDetailsLog = {
+    amount: number;
+    time: string;
+    choice: string;
+    rate: number;
+    rebet: boolean;
+};
+
+export type BetHistoryLog = {
     time: string;
     roundId: number;
     win: number;
-}
+    betwin: number;
+    totalAmount: number;
+    freeBet: boolean;
+    odds: DynamicObject<number>;
+    result: DynamicObject<object>;
+    settlementResult: DynamicObject<boolean>;
+    betLogDetails?: Array<BetDetailsLog>;
+};
 
-export interface BetHistoryModel {
+export type BetHistoryModel = {
     page: number;
     pageSize: number;
     total: number;
-    betLogs: Array<IBetHistoryLog>;
-}
+    betLogs: Array<BetHistoryLog>;
+};
 
 @injectable()
 export class BetHistoryStore {
