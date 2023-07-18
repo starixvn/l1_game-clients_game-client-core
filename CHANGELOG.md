@@ -1,3 +1,10 @@
+# [1.22.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.21.0...v1.22.0) (2023-07-18)
+
+
+### Features
+
+* bet history ([86816d4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/86816d4fae19b5daa8026541995d78d29993d804))
+
 # [1.21.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.20.0...v1.21.0) (2023-07-18)
 
 
