@@ -1,10 +1,21 @@
+import { stub } from "jest-auto-stub";
+import { NoticeStore } from "../../../src/game/notices/notice-store";
 import { MainPlayerStore } from "../../../src/players/main-player-store";
+import { LocalizedUtils } from "../../../src/shared/utils";
+
+jest.mock("../../../src/shared/l10n", () => ({
+    l10n: {
+        t: jest.fn(),
+    },
+}));
 
 describe("MainPlayerStore", () => {
     let mainPlayerStore: MainPlayerStore;
+    let noticeStore: NoticeStore;
 
     beforeEach(() => {
-        mainPlayerStore = new MainPlayerStore();
+        noticeStore = stub<NoticeStore>();
+        mainPlayerStore = new MainPlayerStore(noticeStore);
     });
 
     test("setAuthorizeStore should set the properties on the store with the provided user", () => {
@@ -66,5 +77,61 @@ describe("MainPlayerStore", () => {
 
         // Assert
         expect(mainPlayerStore.stakeLevel).toStrictEqual(stakeLevel);
+    });
+
+    describe("showNoticeChangeStakeLevel", () => {
+        afterEach(() => {
+            jest.clearAllMocks();
+            noticeStore.addWarning = jest.fn();
+            LocalizedUtils.getLocalizedText = jest.fn((key, option) => `Mocked ${key}`);
+        });
+
+        it("should add a warning when minBet and maxBet are different", () => {
+            // Arrange
+            const stakeLevel = { minBet: 10, maxBet: 100 };
+            const currentStakeLevel = { minBet: 5, maxBet: 50 };
+
+            // Act
+            mainPlayerStore.showNoticeChangeStakeLevel(stakeLevel, currentStakeLevel);
+
+            // Assert
+            expect(noticeStore.addWarning).toHaveBeenCalled();
+        });
+
+        it("should not add a warning when minBet and maxBet are the same", () => {
+            // Arrange
+            const stakeLevel = { minBet: 10, maxBet: 100 };
+            const currentStakeLevel = { minBet: 10, maxBet: 100 };
+
+            // Act
+            mainPlayerStore.showNoticeChangeStakeLevel(stakeLevel, currentStakeLevel);
+
+            // Assert
+            expect(noticeStore.addWarning).not.toHaveBeenCalled();
+        });
+
+        it("should not add a warning when currentStakeLevel is undefined", () => {
+            // Arrange
+            const stakeLevel = { minBet: 10, maxBet: 100 };
+            const currentStakeLevel = { minBet: 0, maxBet: 1000 };
+
+            // Act
+            mainPlayerStore.showNoticeChangeStakeLevel(stakeLevel, currentStakeLevel);
+
+            // Assert
+            expect(noticeStore.addWarning).not.toHaveBeenCalled();
+        });
+
+        it("should not add a warning when minBet or maxBet are zero", () => {
+            // Arrange
+            const stakeLevel = { minBet: 0, maxBet: 100 };
+            const currentStakeLevel = { minBet: 5, maxBet: 0 };
+
+            // Act
+            mainPlayerStore.showNoticeChangeStakeLevel(stakeLevel, currentStakeLevel);
+
+            // Assert
+            expect(noticeStore.addWarning).not.toHaveBeenCalled();
+        });
     });
 });

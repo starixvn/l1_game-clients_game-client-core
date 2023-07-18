@@ -54,7 +54,7 @@ describe("AuthHandlers tests", () => {
                 // @ts-ignore
                 StorageManager.get.mockReturnValueOnce({ session: "session", username: "username" });
                 const authStore = new AuthStore();
-                const mainPlayerStore = new MainPlayerStore();
+                const mainPlayerStore = new MainPlayerStore(noticeStore);
                 const appStore = new AppStore();
                 appStore.setUM = jest.fn();
                 const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
@@ -78,7 +78,7 @@ describe("AuthHandlers tests", () => {
                 // arrange
                 // @ts-ignore
                 const authStore = new AuthStore();
-                const mainPlayerStore = new MainPlayerStore();
+                const mainPlayerStore = new MainPlayerStore(noticeStore);
                 const appStore = new AppStore();
                 appStore.setUM = jest.fn();
                 const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
@@ -104,7 +104,7 @@ describe("AuthHandlers tests", () => {
                 // @ts-ignore
                 StorageManager.get.mockReturnValueOnce({ session: "session", username: "username" });
                 const authStore = new AuthStore();
-                const mainPlayerStore = new MainPlayerStore();
+                const mainPlayerStore = new MainPlayerStore(noticeStore);
                 const appStore = new AppStore();
                 appStore.setUM = jest.fn();
                 const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
@@ -136,7 +136,7 @@ describe("AuthHandlers tests", () => {
             it("should call signOut", async () => {
                 // arrange
                 const authStore = new AuthStore();
-                const mainPlayerStore = new MainPlayerStore();
+                const mainPlayerStore = new MainPlayerStore(noticeStore);
                 const appStore = new AppStore();
                 const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
                 signOutHandler.handle = jest.fn();
@@ -179,7 +179,7 @@ describe("AuthHandlers tests", () => {
                     const response = { isUM: false, umInfo: null, isSuccessful: true, authorized: true };
                     // @ts-ignore
                     userService.authorize.mockReturnValueOnce(response);
-                    const mainPlayerStore = new MainPlayerStore();
+                    const mainPlayerStore = new MainPlayerStore(noticeStore);
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
                     const handler = new AuthHandlers.Authorize(
@@ -203,7 +203,7 @@ describe("AuthHandlers tests", () => {
                     const response = { isUM: false, umInfo: null, isSuccessful: true, authorized: false, user: null };
                     // @ts-ignore
                     userService.authorize.mockReturnValueOnce(response);
-                    const mainPlayerStore = new MainPlayerStore();
+                    const mainPlayerStore = new MainPlayerStore(noticeStore);
                     mainPlayerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
@@ -228,7 +228,7 @@ describe("AuthHandlers tests", () => {
                     const response = { isUM: false, umInfo: null, isSuccessful: true, authorized: false, user: { UID: 1 } };
                     // @ts-ignore
                     userService.authorize.mockReturnValueOnce(response);
-                    const mainPlayerStore = new MainPlayerStore();
+                    const mainPlayerStore = new MainPlayerStore(noticeStore);
                     mainPlayerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
@@ -254,7 +254,7 @@ describe("AuthHandlers tests", () => {
                     const response = { isUM: false, umInfo: null, isSuccessful: true, authorized: false, user: null };
                     // @ts-ignore
                     userService.authorize.mockReturnValueOnce(response);
-                    const mainPlayerStore = new MainPlayerStore();
+                    const mainPlayerStore = new MainPlayerStore(noticeStore);
                     mainPlayerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
@@ -290,7 +290,7 @@ describe("AuthHandlers tests", () => {
                     const appStore = new AppStore();
                     appStore.isDirectMode = true;
                     appStore.isAutoCreateNickname = true;
-                    const mainPlayerStore = new MainPlayerStore();
+                    const mainPlayerStore = new MainPlayerStore(noticeStore);
                     mainPlayerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
@@ -320,7 +320,7 @@ describe("AuthHandlers tests", () => {
                     const appStore = new AppStore();
                     appStore.isDirectMode = true;
                     appStore.isAutoCreateNickname = true;
-                    const mainPlayerStore = new MainPlayerStore();
+                    const mainPlayerStore = new MainPlayerStore(noticeStore);
                     mainPlayerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
@@ -350,7 +350,7 @@ describe("AuthHandlers tests", () => {
                     const appStore = new AppStore();
                     appStore.isDirectMode = true;
                     appStore.isAutoCreateNickname = true;
-                    const mainPlayerStore = new MainPlayerStore();
+                    const mainPlayerStore = new MainPlayerStore(noticeStore);
                     mainPlayerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
 
@@ -381,7 +381,7 @@ describe("AuthHandlers tests", () => {
                     const appStore = new AppStore();
                     appStore.isDirectMode = true;
                     appStore.isAutoCreateNickname = true;
-                    const mainPlayerStore = new MainPlayerStore();
+                    const mainPlayerStore = new MainPlayerStore(noticeStore);
                     mainPlayerStore.setAuthorizeStore = jest.fn();
                     const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
                     const handler = new AuthHandlers.Authorize(
@@ -414,12 +414,14 @@ describe("AuthHandlers tests", () => {
         let handler: AuthHandlers.ClearRecheckInInterval;
         let signOut: AuthHandlers.SignOut;
         let appStore: AppStore;
+        let noticeStore: NoticeStore;
 
         beforeEach(() => {
             authStore = new AuthStore();
             appStore = new AppStore();
             userService = new UserService(siteConfigs);
-            player = new MainPlayerStore();
+            noticeStore = stub<NoticeStore>();
+            player = new MainPlayerStore(noticeStore);
             signOut = new AuthHandlers.SignOut(appStore, authStore);
             authStore = stub<AuthStore>();
             reCheckIn = new AuthHandlers.ReCheckIn(authStore, player, userService, signOut);
@@ -764,7 +766,7 @@ describe("AuthHandlers tests", () => {
         beforeEach(() => {
             authStore = new AuthStore();
             const appStore = new AppStore();
-            mainPlayerStore = new MainPlayerStore();
+            mainPlayerStore = new MainPlayerStore(noticeStore);
             const signOutHandler = new AuthHandlers.SignOut(appStore, authStore);
             authorize = new AuthHandlers.Authorize(
                 noticeStore,

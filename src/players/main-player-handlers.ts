@@ -7,7 +7,9 @@ export class MainPlayerHandlers implements IMultipleHandlers {
     constructor(@inject(MainPlayerStore) protected readonly store: MainPlayerStore) {}
 
     handleStakeLevel(stakeLevel: GameServiceMessage.UserStakeLevel) {
+        const currentStakeLevel = { ...this.store.stakeLevel };
         this.store.setStakeLevel(stakeLevel);
+        this.store.showNoticeChangeStakeLevel(stakeLevel, currentStakeLevel);
     }
 
     handlePlayerProfile(profile: GameServiceMessage.User) {

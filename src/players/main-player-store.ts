@@ -1,6 +1,8 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+import { NoticeStore } from "../game/notices/notice-store";
 import { GameServiceMessage } from "../shared";
+import { LocalizedUtils } from "../shared/utils";
 
 export interface IStakeLevel {
     minBet: number;
@@ -9,7 +11,10 @@ export interface IStakeLevel {
 
 @injectable()
 export class MainPlayerStore {
-    constructor() {
+    constructor(
+        @inject(NoticeStore)
+        protected readonly noticeStore: NoticeStore
+    ) {
         makeAutoObservable(this);
     }
 
@@ -51,5 +56,15 @@ export class MainPlayerStore {
 
     setStakeLevel(stakeLevel: GameServiceMessage.UserStakeLevel) {
         stakeLevel && (this.stakeLevel = stakeLevel);
+    }
+
+    showNoticeChangeStakeLevel(stakeLevel: GameServiceMessage.UserStakeLevel, currentStakeLevel: IStakeLevel) {
+        if (
+            currentStakeLevel?.minBet > 0 &&
+            currentStakeLevel?.maxBet > 0 &&
+            (stakeLevel?.minBet !== currentStakeLevel?.minBet || stakeLevel?.maxBet !== currentStakeLevel?.maxBet)
+        ) {
+            this.noticeStore.addWarning(LocalizedUtils.getLocalizedText("limitBetChanged"));
+        }
     }
 }

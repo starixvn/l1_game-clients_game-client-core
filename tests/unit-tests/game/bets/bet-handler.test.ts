@@ -25,11 +25,12 @@ describe("BetHandler", () => {
     let showWarningProcessingBet;
 
     beforeAll(() => {
-        mainPlayerStore = new MainPlayerStore();
+        noticeStore = new NoticeStore();
+        mainPlayerStore = new MainPlayerStore(noticeStore);
         connectionStore = stub<ConnectionStore>();
         betStore = new BetStore();
         orientationStore = new OrientationStore();
-        noticeStore = new NoticeStore();
+
         roundTimeStore = new RoundTimeStore(gameSettings);
     });
 
