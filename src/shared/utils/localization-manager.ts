@@ -15,14 +15,14 @@ export class TranslationOptions {
     availableLanguages?: string[];
 }
 
-export class TransaltionManager {
+export class TranslationManager {
     public static defaultLanguageId = "en";
     public static options: TranslationOptions;
     public static isReady: boolean;
 
     public static init(options: TranslationOptions) {
-        TransaltionManager.options = options;
-        TransaltionManager.isReady = true;
+        TranslationManager.options = options;
+        TranslationManager.isReady = true;
         if (options.isUseTolgeeRealTime) {
             options.tg.run();
             options.tg.on("initialLoad", () => {
@@ -31,7 +31,7 @@ export class TransaltionManager {
         } else {
             options.onLoaded && options.onLoaded();
         }
-        localStorage.setItem(`current_language`, TransaltionManager.options.languageId);
+        localStorage.setItem(`current_language`, TranslationManager.options.languageId);
     }
 
     public static async changeLanguage(languageId: string) {
@@ -39,20 +39,20 @@ export class TransaltionManager {
             return;
         }
 
-        TransaltionManager.options.languageId = languageId;
+        TranslationManager.options.languageId = languageId;
 
-        if (TransaltionManager.options.isUseTolgeeRealTime) {
-            await TransaltionManager.options.tg.changeLanguage(languageId);
+        if (TranslationManager.options.isUseTolgeeRealTime) {
+            await TranslationManager.options.tg.changeLanguage(languageId);
         }
     }
 
     public static translate(key: string) {
         try {
-            if (TransaltionManager.options != null) {
-                if (TransaltionManager.options.isUseTolgeeRealTime) {
-                    return TransaltionManager.getTolgeeTranslation(key);
+            if (TranslationManager.options != null) {
+                if (TranslationManager.options.isUseTolgeeRealTime) {
+                    return TranslationManager.getTolgeeTranslation(key);
                 } else {
-                    return TransaltionManager.getStaticDataTranslation(key);
+                    return TranslationManager.getStaticDataTranslation(key);
                 }
             }
         } catch (e) {
@@ -74,15 +74,15 @@ export class TransaltionManager {
                 key = splittedKeyItems[1];
             }
         }
-        return TransaltionManager.options.tg.t(key, `Not found: ${key}`, options);
+        return TranslationManager.options.tg.t(key, `Not found: ${key}`, options);
     }
 
     private static getStaticDataTranslation(key: string) {
-        if (TransaltionManager.options.getStaticData == null || key == null || key === "") {
+        if (TranslationManager.options.getStaticData == null || key == null || key === "") {
             return `Data null: ${key}`;
         }
 
-        const languageData = TransaltionManager.options.getStaticData(TransaltionManager.options.languageId);
+        const languageData = TranslationManager.options.getStaticData(TranslationManager.options.languageId);
         const splittedKeyItems = key.split(".");
 
         if (splittedKeyItems.length > 1 && languageData[splittedKeyItems[0]]) {
@@ -103,35 +103,35 @@ export class TransaltionManager {
             "zh-TW": "zh_tw",
         };
 
-        return languageMapping[languageCode] || TransaltionManager.defaultLanguageId;
+        return languageMapping[languageCode] || TranslationManager.defaultLanguageId;
     }
 
     public static getLanguageId() {
-        let languageId = localStorage.getItem(`current_language`) ?? TransaltionManager.defaultLanguageId;
+        let languageId = localStorage.getItem(`current_language`) ?? TranslationManager.defaultLanguageId;
 
         const urlParams = new URLSearchParams(window.location.search);
 
         if (urlParams.has("lang")) {
-            languageId = TransaltionManager.toLanguageId(urlParams.get("lang"));
+            languageId = TranslationManager.toLanguageId(urlParams.get("lang"));
         } else if (urlParams.has("params")) {
             const decodedParams = new URLSearchParams(atob(urlParams.get("params")));
             if (decodedParams.has("lang")) {
-                languageId = TransaltionManager.toLanguageId(decodedParams.get("lang"));
+                languageId = TranslationManager.toLanguageId(decodedParams.get("lang"));
             }
         }
 
-        if (TransaltionManager.options && !TransaltionManager.options.availableLanguages.includes(languageId)) {
-            return TransaltionManager.defaultLanguageId;
+        if (TranslationManager.options && !TranslationManager.options.availableLanguages.includes(languageId)) {
+            return TranslationManager.defaultLanguageId;
         }
 
         return languageId;
     }
 
     public static loadTranslationResource() {
-        const languageId = TransaltionManager.getLanguageId();
+        const languageId = TranslationManager.getLanguageId();
         localStorage.setItem(`current_language`, languageId);
 
         console.log("Loaded language:" + languageId);
-        TransaltionManager.changeLanguage(languageId);
+        TranslationManager.changeLanguage(languageId);
     }
 }
