@@ -20,7 +20,9 @@ export namespace NoticeErrorsHandlers {
             @inject(AuthStore)
             protected readonly authStore: AuthStore,
             @inject(AuthHandlers.SignOut)
-            protected readonly signOutHandler: AuthHandlers.SignOut
+            protected readonly signOutHandler: AuthHandlers.SignOut,
+            @inject(ConnectionStore)
+            protected readonly connectionStore: ConnectionStore
         ) {
             reaction(() => this.authStore.errorCode, this.onErrorCodeChange.bind(this));
         }
@@ -41,6 +43,7 @@ export namespace NoticeErrorsHandlers {
         showNotice(message = "") {
             const signOut = () => {
                 this.signOutHandler.handle();
+                this.connectionStore.closeSocket();
             };
             setTimeout(signOut, 10000);
             this.noticeStore.addNotice({

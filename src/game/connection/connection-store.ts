@@ -126,6 +126,10 @@ export class ConnectionStore {
         this.connection?.emit(eventName, data);
     }
 
+    closeSocket() {
+        this.connection?.disconnect();
+    }
+
     reset() {
         this.connection = null;
         this.isConnected = null;

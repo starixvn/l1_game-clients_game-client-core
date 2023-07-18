@@ -23,15 +23,17 @@ describe("NoticeErrorsHandlers", () => {
         let noticeStore: NoticeStore;
         let authStore: AuthStore;
         let signOutHandler: AuthHandlers.SignOut;
+        let connectionStore: ConnectionStore;
         beforeAll(() => {
             appStore = stub<AppStore>();
             noticeStore = stub<NoticeStore>();
             authStore = stub<AuthStore>();
             signOutHandler = stub<AuthHandlers.SignOut>();
+            connectionStore = stub<ConnectionStore>();
         });
 
         beforeEach(() => {
-            handler = new NoticeErrorsHandlers.AutoSignOutHandler(appStore, noticeStore, authStore, signOutHandler);
+            handler = new NoticeErrorsHandlers.AutoSignOutHandler(appStore, noticeStore, authStore, signOutHandler, connectionStore);
         });
 
         describe("onErrorCodeChange", () => {
@@ -101,6 +103,7 @@ describe("NoticeErrorsHandlers", () => {
 
                 // assert
                 expect(signOutHandler.handle).toHaveBeenCalled();
+                expect(connectionStore.closeSocket).toHaveBeenCalled();
             });
 
             it("should add expected notice into noticeStore ", () => {
