@@ -1,3 +1,10 @@
+# [1.21.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.20.0...v1.21.0) (2023-07-18)
+
+
+### Features
+
+* tolgee integration ([7b1bc66](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/7b1bc6676d89216e31c91def9159b209d807baa3))
+
 # [1.20.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.19.3...v1.20.0) (2023-07-17)
 
 

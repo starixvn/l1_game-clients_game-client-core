@@ -1,6 +1,6 @@
 {
     "name": "@sg/game-client-base",
-    "version": "1.20.0",
+    "version": "1.21.0",
     "type": "commonjs",
     "types": "dist/index.d.ts",
     "main": "dist/index.js",
