@@ -1,3 +1,10 @@
+## [1.22.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.22.0...v1.22.1) (2023-07-18)
+
+
+### Bug Fixes
+
+* correct Translation naming ([84d3554](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/84d3554ccdf1a075efce498d8ab60e305be2cc69))
+
 # [1.22.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.21.0...v1.22.0) (2023-07-18)
 
 
