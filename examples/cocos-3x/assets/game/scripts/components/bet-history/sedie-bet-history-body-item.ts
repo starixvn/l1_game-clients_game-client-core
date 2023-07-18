@@ -6,13 +6,6 @@ const { ccclass } = _decorator;
 const { property } = _decorator;
 const { DateTimeUtils, FormatUtils } = gc;
 
-interface ISedieBetHistoryLog extends gc.BetHistory.IBetHistoryLog {
-    result: any;
-    betwin: number;
-    freeBet: boolean;
-    settlementResult: any;
-}
-
 @ccclass
 export default class SedieBetHistoryBodyItem extends BetHistoryBodyItem {
     @property(Label)
@@ -66,7 +59,7 @@ export default class SedieBetHistoryBodyItem extends BetHistoryBodyItem {
     @property(SpriteFrame)
     sprIconWhite: SpriteFrame = null;
 
-    setData(data: ISedieBetHistoryLog, index: number) {
+    setData(data: gc.BetHistory.BetHistoryLog, index: number) {
         this.nodeBackground.active = index % 2 > 0;
         const { time, roundId, win, result, betwin, freeBet, settlementResult } = data;
 
@@ -100,12 +93,7 @@ export default class SedieBetHistoryBodyItem extends BetHistoryBodyItem {
         Object.keys(settlementResult).forEach((choice) => {
             const historyItem = this[choice];
             historyItem.string = freeBet ? 0 : FormatUtils.numberWithCommas(data[choice]);
-
-            if (settlementResult[choice]) {
-                historyItem.node.color = Color.YELLOW;
-            } else {
-                historyItem.node.color = Color.WHITE;
-            }
+            historyItem.node.color = settlementResult[choice] ? Color.YELLOW : Color.WHITE;
         });
     }
 }
