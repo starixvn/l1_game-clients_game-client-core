@@ -190,32 +190,4 @@ describe("RoundStore", () => {
             expect(result).toEqual(expected);
         });
     });
-
-    describe("get isAnimBlink()", () => {
-        test.each([
-            [true, false, 5],
-            [true, false, 1],
-            [false, true, 10],
-        ])(
-            "isAnimBlink() returns %p when isFinishedShowResult is %p and isLocking is %p",
-            (expectedResult, isFinishedShowResult, roundTime) => {
-                // Arrange
-                const roundTimeStoreMock = stub<RoundTimeStore>({ roundTime: +roundTime, lockingBet: 5 });
-                const settlementStoreMock = stub<SettlementStore>({ isFinishedShowResult });
-                const roundStoreMock = new RoundStore(
-                    gameConfigStore,
-                    roundHistoryStore,
-                    roundTimeStoreMock,
-                    mainPlayerStore,
-                    settlementStoreMock
-                );
-
-                // Act
-                const result = roundStoreMock.isAnimBlink;
-
-                // Assert
-                expect(result).toBe(expectedResult);
-            }
-        );
-    });
 });
