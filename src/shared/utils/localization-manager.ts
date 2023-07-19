@@ -142,7 +142,7 @@ export class TranslationManager {
         TranslationManager.changeLanguage(languageId);
     }
 
-    public static gameTranslate(key: string, options: InterpolationOptions) {
+    public static gameTranslate(key: string, options?: InterpolationOptions) {
         if (TranslationManager.options.gameNamespace) {
             return TranslationManager.translate(`${TranslationManager.options.gameNamespace}.${key}`, options);
         }
@@ -150,7 +150,7 @@ export class TranslationManager {
         return TranslationManager.translate(key, options);
     }
 
-    public static commonTranslate(key: string, options: InterpolationOptions) {
+    public static commonTranslate(key: string, options?: InterpolationOptions) {
         if (TranslationManager.options.gameNamespace) {
             return TranslationManager.translate(`Common.${key}`, options);
         }
