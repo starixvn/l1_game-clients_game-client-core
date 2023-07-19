@@ -6,13 +6,12 @@ export class TranslationOptions {
     tg?: TolgeeInstance;
     getStaticData?: (languageId) => {
         [key: string]: {
-            [key: string]: {
-                [key: string]: string;
-            };
+            [key: string]: string;
         };
     };
     onLoaded?: () => void;
     availableLanguages?: string[];
+    gameNamespace: string;
 }
 
 export class TranslationManager {
@@ -61,6 +60,8 @@ export class TranslationManager {
 
         return `Not Options: ${key}`;
     }
+
+    public static t = TranslationManager.translate;
 
     private static getTolgeeTranslation(key: string) {
         let options: TranslateOptions;
@@ -133,5 +134,21 @@ export class TranslationManager {
 
         console.log("Loaded language:" + languageId);
         TranslationManager.changeLanguage(languageId);
+    }
+
+    public static gameTranslate(key: string) {
+        if (TranslationManager.options.gameNamespace) {
+            return TranslationManager.translate(`${TranslationManager.options.gameNamespace}.${key}`);
+        }
+
+        return TranslationManager.translate(key);
+    }
+
+    public static commonTranslate(key: string) {
+        if (TranslationManager.options.gameNamespace) {
+            return TranslationManager.translate(`Common.${key}`);
+        }
+
+        return TranslationManager.translate(key);
     }
 }
