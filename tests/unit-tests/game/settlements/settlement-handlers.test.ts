@@ -20,7 +20,6 @@ describe("SettlementHandlers tests", () => {
         it("should call setSettlementStore in settlementStore", () => {
             // arrange
             settlementStore.setSettlementStore = jest.fn();
-            roundHistoryStore.updateHistories = jest.fn();
             const finish = new GameServiceMessage.Finish();
 
             // act
@@ -28,7 +27,6 @@ describe("SettlementHandlers tests", () => {
 
             // assert
             expect(settlementStore.setSettlementStore).toHaveBeenCalledWith(finish);
-            expect(roundHistoryStore.updateHistories).toHaveBeenCalledWith(finish);
         });
     });
 

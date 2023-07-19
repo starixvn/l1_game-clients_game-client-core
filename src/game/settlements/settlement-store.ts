@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import * as _ from "lodash";
 import { makeAutoObservable } from "mobx";
-import { GameServiceMessage } from "../../shared";
 import { MainPlayerStore } from "../../players/main-player-store";
+import { GameServiceMessage } from "../../shared";
 import { NumberUtils } from "../../shared/utils/number-utils";
 
 export type TPayChipInfo = {
@@ -21,6 +21,7 @@ export class SettlementStore {
     settlementResult: GameServiceMessage.TSettlementResult = null;
     private _winningPlayers: GameServiceMessage.TWinningPlayers = null;
     private _isFinishedShowResult = false;
+    currentFinish: GameServiceMessage.Finish = null;
 
     public get isFinishedShowResult() {
         return this._isFinishedShowResult;
@@ -47,6 +48,7 @@ export class SettlementStore {
     }
 
     setSettlementStore(finish: GameServiceMessage.Finish | undefined) {
+        this.currentFinish = finish;
         this.isFinishedShowResult = false;
         finish?.roundId && (this.roundId = finish.roundId);
         finish?.result && (this.result = finish.result);

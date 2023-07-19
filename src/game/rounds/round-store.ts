@@ -145,6 +145,14 @@ export class RoundStore {
         return { settlementResult };
     }
 
+    get isAnimBlink() {
+        let isAnimBlink = false;
+        if (!this.settlementStore.isFinishedShowResult && this.roundTimeStore.isLocking) {
+            isAnimBlink = true;
+        }
+        return isAnimBlink;
+    }
+
     resetForNewRound() {
         this.ownBets = {};
         this._totalBets = {};

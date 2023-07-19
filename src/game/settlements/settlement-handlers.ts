@@ -14,7 +14,6 @@ export class SettlementHandlers implements IMultipleHandlers {
 
     handleFinish(finish: GameServiceMessage.Finish | undefined) {
         this.settlementStore.setSettlementStore(finish);
-        this.roundHistoryStore.updateHistories(finish);
     }
 
     handleStatus(status: GameServiceMessage.Status) {
