@@ -1,9 +1,12 @@
+import { stub } from "jest-auto-stub";
 import { BetDetailHitoryStore, BetHistoryLog } from "../../../../src/game/bet-history";
+import { NoticeStore } from "../../../../src/game/notices/notice-store";
 import { MainPlayerStore } from "../../../../src/players";
 
 describe("BetDetailHitoryStore tests", () => {
     let store: BetDetailHitoryStore;
-    const mainPlayerStore = new MainPlayerStore();
+    const noticeStore = stub<NoticeStore>();
+    const mainPlayerStore = new MainPlayerStore(noticeStore);
     mainPlayerStore.fractionalOddsFormat = false;
 
     beforeAll(() => {

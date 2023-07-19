@@ -1,4 +1,5 @@
-import { Label, _decorator, tween } from "cc";
+import gc from "@sg/game-client-base";
+import { Label, _decorator } from "cc";
 import GameComponent from "db://shared-components/game/scripts/components/game-component";
 import { startGame } from "db://shared-components/shared/scripts/startup";
 import Observer from "observer";
@@ -27,18 +28,10 @@ export default class Sedie extends GameComponent {
     override namespace = settings.name;
     override containerOptions = containerOptions;
 
-    showResult(result: any, hasAnimation: boolean) {
+    async showResult(result: gc.GameServiceMessage.TResult, hasAnimation: boolean) {
         if (result) {
             this.cpnThePlate.setDots(result);
             this.cpnThePlate.openBowl(hasAnimation);
-            if (hasAnimation) {
-                tween(this.node)
-                    .delay(this.cpnThePlate.openPlateDuration)
-                    .call(() => {
-                        this.finishShowResult();
-                    })
-                    .start();
-            }
         }
     }
 
