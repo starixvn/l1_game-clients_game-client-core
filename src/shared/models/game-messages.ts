@@ -201,7 +201,7 @@ export namespace GameServiceMessage {
     }
 
     export type TResult = {
-        [betChoice: string]: unknown;
+        [betChoice: string]: any;
     };
 
     export type TSettlementResult = {
