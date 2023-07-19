@@ -1,5 +1,4 @@
 import { stub } from "jest-auto-stub";
-import { RoundHistoryStore } from "../../../../src/game/round-histories";
 import { SettlementHandlers, SettlementStatusStore, SettlementStore } from "../../../../src/game/settlements";
 import { GameServiceMessage } from "../../../../src/shared";
 
@@ -7,13 +6,11 @@ describe("SettlementHandlers tests", () => {
     let settlementStore: SettlementStore;
     let statusStore: SettlementStatusStore;
     let settlementHandlers: SettlementHandlers;
-    let roundHistoryStore: RoundHistoryStore;
 
     beforeEach(() => {
         settlementStore = stub<SettlementStore>();
         statusStore = new SettlementStatusStore();
-        roundHistoryStore = stub<RoundHistoryStore>();
-        settlementHandlers = new SettlementHandlers(settlementStore, statusStore, roundHistoryStore);
+        settlementHandlers = new SettlementHandlers(settlementStore, statusStore);
     });
 
     describe("handleFinish", () => {

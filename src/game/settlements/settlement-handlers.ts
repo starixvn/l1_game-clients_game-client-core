@@ -1,6 +1,5 @@
 import { inject, injectable } from "inversify";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { RoundHistoryStore } from "../round-histories";
 import { SettlementStatusStore } from "./settlement-status-store";
 import { SettlementStore } from "./settlement-store";
 
@@ -8,8 +7,7 @@ import { SettlementStore } from "./settlement-store";
 export class SettlementHandlers implements IMultipleHandlers {
     constructor(
         @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
-        @inject(SettlementStatusStore) protected readonly statusStore: SettlementStatusStore,
-        @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore
+        @inject(SettlementStatusStore) protected readonly statusStore: SettlementStatusStore
     ) {}
 
     handleFinish(finish: GameServiceMessage.Finish | undefined) {

@@ -12,10 +12,17 @@ describe("SettlementUIHandlers test", () => {
         handler = new SettlementUIHandlers.FinishedShowResult(settlementStore, roundHistoryStore);
     });
     describe("FinishedShowResult", () => {
+        let settlementStore: SettlementStore;
+        let roundHistoryStore: RoundHistoryStore;
+        let handler: SettlementUIHandlers.FinishedShowResult;
+        beforeEach(() => {
+            settlementStore = stub<SettlementStore>();
+            roundHistoryStore = stub<RoundHistoryStore>();
+            handler = new SettlementUIHandlers.FinishedShowResult(settlementStore, roundHistoryStore);
+        });
         it("should set finishedShowResult be qual true in settlementStore", () => {
             // arrange
             settlementStore.isFinishedShowResult = false;
-            const handler = new SettlementUIHandlers.FinishedShowResult(settlementStore, roundHistoryStore);
 
             // act
             handler.handle();
@@ -24,18 +31,14 @@ describe("SettlementUIHandlers test", () => {
             expect(settlementStore.isFinishedShowResult).toBe(true);
         });
 
-        describe("updateRounds", () => {
-            it("should call setSettlementStore in settlementStore", () => {
-                // arrange
-                roundHistoryStore.updateHistories = jest.fn();
-                settlementStore.isFinishedShowResult = true;
+        it("should updateHistories in roundHistoryStore", () => {
+            // arrange
+            const { roundId, result, settlementResult } = settlementStore;
+            // act
+            handler.handle();
 
-                // act
-                handler.updateRounds();
-
-                // assert
-                expect(roundHistoryStore.updateHistories).toHaveBeenCalled();
-            });
+            // assert
+            expect(roundHistoryStore.updateHistories).toHaveBeenCalledWith({ roundId, result, settlementResult });
         });
     });
 });
