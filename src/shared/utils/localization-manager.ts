@@ -1,4 +1,5 @@
 import { TolgeeInstance, TranslateOptions } from "@tolgee/web";
+import Polyglot from 'node-polyglot';
 
 export class TranslationOptions {
     languageId: string;
@@ -12,6 +13,10 @@ export class TranslationOptions {
     onLoaded?: () => void;
     availableLanguages?: string[];
     gameNamespace: string;
+}
+
+export class InterpolationOptions {
+    [key: string]: string;
 }
 
 export class TranslationManager {
@@ -45,13 +50,13 @@ export class TranslationManager {
         }
     }
 
-    public static translate(key: string) {
+    public static translate(key: string, options?: InterpolationOptions) {
         try {
             if (TranslationManager.options != null) {
                 if (TranslationManager.options.isUseTolgeeRealTime) {
-                    return TranslationManager.getTolgeeTranslation(key);
+                    return TranslationManager.getTolgeeTranslation(key, options);
                 } else {
-                    return TranslationManager.getStaticDataTranslation(key);
+                    return TranslationManager.getStaticDataTranslation(key, options);
                 }
             }
         } catch (e) {
@@ -63,34 +68,29 @@ export class TranslationManager {
 
     public static t = TranslationManager.translate;
 
-    private static getTolgeeTranslation(key: string) {
-        let options: TranslateOptions;
-        if (key.indexOf(".") > 0 && options == null) {
+    private static getTolgeeTranslation(key: string, options: InterpolationOptions) {
+        let translateOptions: TranslateOptions;
+        if (key.indexOf(".") > 0 && translateOptions == null) {
             const splittedKeyItems = key.split(".");
             if (splittedKeyItems.length > 1) {
-                options = {
+                translateOptions = {
                     ns: splittedKeyItems[0],
                 };
 
                 key = splittedKeyItems[1];
             }
         }
-        return TranslationManager.options.tg.t(key, `Not found: ${key}`, options);
+        return TranslationManager.options.tg.t(key, `Not found: ${key}`, translateOptions);
     }
 
-    private static getStaticDataTranslation(key: string) {
+    private static getStaticDataTranslation(key: string, options: InterpolationOptions) {
         if (TranslationManager.options.getStaticData == null || key == null || key === "") {
             return `Data null: ${key}`;
         }
 
         const languageData = TranslationManager.options.getStaticData(TranslationManager.options.languageId);
-        const splittedKeyItems = key.split(".");
-
-        if (splittedKeyItems.length > 1 && languageData[splittedKeyItems[0]]) {
-            return languageData[splittedKeyItems[0]][splittedKeyItems[1]];
-        }
-
-        return `Not found: ${key}`;
+        const polyInst = new Polyglot({phrases: languageData, allowMissing: true});
+        return polyInst.t(key, options);        
     }
 
     private static toLanguageId(languageCode: string) {

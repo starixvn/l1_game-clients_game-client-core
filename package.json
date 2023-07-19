@@ -41,6 +41,7 @@
         "lodash": "^4.17.21",
         "mobx-logger": "^0.7.1",
         "moment": "^2.29.4",
+        "node-polyglot": "^2.5.0",
         "sc-user-service-client": "1.5.1-beta.7",
         "socket.io-client": "4.6.1",
         "unique-names-generator": "^4.7.1"

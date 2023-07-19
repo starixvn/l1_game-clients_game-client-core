@@ -8,6 +8,7 @@ import { NoticeStore } from "../notices";
 import { OrientationStore } from "../orientation";
 import { ROUND_STATE, RoundTimeStore } from "../rounds";
 import { BetStore } from "./bet-store";
+import { i18n } from "../../shared";
 
 @injectable()
 export class BetHandler {
@@ -63,7 +64,7 @@ export class BetHandler {
         const isBetPhase = [ROUND_STATE.PLACING_BET].includes(this.roundTimeStore.roundState);
         if (!isBetPhase) {
             const warningMsg =
-                this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND ? l10n.t("cannotPlaceBet") : l10n.t("placeBetNextRound");
+                this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND ? l10n.t("cannotPlaceBet") : i18n.t("messages.placeBetNextRound");
 
             this.noticeStore.addWarning(warningMsg);
         }
