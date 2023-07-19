@@ -1,5 +1,5 @@
 import { TolgeeInstance, TranslateOptions } from "@tolgee/web";
-import Polyglot from 'node-polyglot';
+import Polyglot from "node-polyglot";
 
 export class TranslationOptions {
     languageId: string;
@@ -23,9 +23,11 @@ export class TranslationManager {
     public static defaultLanguageId = "en";
     public static options: TranslationOptions;
     public static isReady: boolean;
+    public static polygrot: Polyglot;
 
     public static init(options: TranslationOptions) {
         TranslationManager.options = options;
+        TranslationManager.loadPolygrot(options.languageId);
         TranslationManager.isReady = true;
         if (options.isUseTolgeeRealTime) {
             options.tg.run();
@@ -35,7 +37,7 @@ export class TranslationManager {
         } else {
             options.onLoaded && options.onLoaded();
         }
-        localStorage.setItem(`current_language`, TranslationManager.options.languageId);
+        localStorage.setItem(`current_language`, options.languageId);
     }
 
     public static async changeLanguage(languageId: string) {
@@ -44,10 +46,16 @@ export class TranslationManager {
         }
 
         TranslationManager.options.languageId = languageId;
+        TranslationManager.loadPolygrot(languageId);
 
         if (TranslationManager.options.isUseTolgeeRealTime) {
             await TranslationManager.options.tg.changeLanguage(languageId);
         }
+    }
+
+    public static loadPolygrot(languageId) {
+        const languageData = TranslationManager.options.getStaticData(TranslationManager.options.languageId);
+        TranslationManager.polygrot = new Polyglot({ phrases: languageData, allowMissing: true });
     }
 
     public static translate(key: string, options?: InterpolationOptions) {
@@ -88,9 +96,7 @@ export class TranslationManager {
             return `Data null: ${key}`;
         }
 
-        const languageData = TranslationManager.options.getStaticData(TranslationManager.options.languageId);
-        const polyInst = new Polyglot({phrases: languageData, allowMissing: true});
-        return polyInst.t(key, options);        
+        return TranslationManager.polygrot.t(key, options);
     }
 
     private static toLanguageId(languageCode: string) {
@@ -136,19 +142,19 @@ export class TranslationManager {
         TranslationManager.changeLanguage(languageId);
     }
 
-    public static gameTranslate(key: string) {
+    public static gameTranslate(key: string, options: InterpolationOptions) {
         if (TranslationManager.options.gameNamespace) {
-            return TranslationManager.translate(`${TranslationManager.options.gameNamespace}.${key}`);
+            return TranslationManager.translate(`${TranslationManager.options.gameNamespace}.${key}`, options);
         }
 
-        return TranslationManager.translate(key);
+        return TranslationManager.translate(key, options);
     }
 
-    public static commonTranslate(key: string) {
+    public static commonTranslate(key: string, options: InterpolationOptions) {
         if (TranslationManager.options.gameNamespace) {
-            return TranslationManager.translate(`Common.${key}`);
+            return TranslationManager.translate(`Common.${key}`, options);
         }
 
-        return TranslationManager.translate(key);
+        return TranslationManager.translate(key, options);
     }
 }
