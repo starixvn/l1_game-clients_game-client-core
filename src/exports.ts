@@ -10,5 +10,5 @@ export * as Shared from "./shared";
 export * from "./shared/constants/app-type";
 export * from "./shared/models/game-messages";
 export * from "./shared/utils";
-export { TranslationManager as Translator } from "./shared/utils/localization-manager";
+export * from "./shared/utils/localization-manager";
 export * as Undermaintenace from "./under-maintenance";

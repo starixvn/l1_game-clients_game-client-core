@@ -1,8 +1,8 @@
 
-import {TranslationManager, InterpolationOptions} from './utils/localization-manager';
+import { InterpolationOptions, Translator } from './utils/localization-manager';
 
 export const i18n = {
     t: (key: string, options?: InterpolationOptions) => {
-        return TranslationManager.translate(key, options);
+        return Translator.translate(key, options);
     }
 }
