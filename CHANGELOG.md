@@ -1,3 +1,10 @@
+# [1.25.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.24.0...v1.25.0) (2023-07-20)
+
+
+### Features
+
+* update share-component ([3b9e7fb](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/3b9e7fb8f8923ce658575b9146cefdf639161a99))
+
 # [1.24.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.23.0...v1.24.0) (2023-07-20)
 
 
