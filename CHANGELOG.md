@@ -1,3 +1,10 @@
+## [1.25.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.0...v1.25.1) (2023-07-20)
+
+
+### Bug Fixes
+
+* load tolgee realtime ([f8d4d46](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/f8d4d46b0de7e6ed9884be76f33073d58be3b8c3))
+
 # [1.25.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.24.0...v1.25.0) (2023-07-20)
 
 
