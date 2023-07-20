@@ -1,3 +1,30 @@
+# [1.24.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.23.0...v1.24.0) (2023-07-20)
+
+
+### Bug Fixes
+
+* add polyglot ([3494ecf](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/3494ecfec176110cc3e1c52717850636a1b01d2d))
+* builf code failed ([2305840](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/23058401bc5668550853cf3703355fa21726e78b))
+* refactor translation manager code ([5a57923](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/5a57923df838acc0c8fbc9891021e583426e5978))
+* refactor translation manager code ([9dfca44](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9dfca44e08f78490e94d98c1cc270d31b47823c0))
+* refactor translation manager code ([20e4326](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/20e43266b8442dc8ff72fb812aeb8d35f65f3d59))
+* remove translation manager static instance ([4f696b3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/4f696b36db0bfb13a8dd301911d99deaa38c028a))
+* update histories after finish showing result ([2079688](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/207968808c5747d05087780ed9eb1ac8570bc3b8))
+
+
+### Features
+
+* add translate tie ([431e9c9](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/431e9c92c86566a45b4977be795b20438f2c6883))
+* add warning when change user-stake-level ([e3c95db](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/e3c95db9d390a32682f514152826d9642fded8c3))
+* update fucntion format Number ([b8133ec](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b8133ec00ba69778d2a6a6ed97e10c349b3a69eb))
+* update led-light component ([b0ff36c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b0ff36c055c37dc6bd572ae320c74fce228fb6fe))
+* update load data to led-light-item ([52ef9e3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/52ef9e3bad6d3adb008f652659bab684630f94e8))
+* update message notice && socket ([b4e465d](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b4e465da475aef48ba8d8ff16f646ee69b438d03))
+* update show anim blink ([eb94291](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/eb942917b43286349c29c15f797a612961f156a6))
+* update show blink node ([11972b3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/11972b387778c39b1daafd1b7e169872701a997a))
+* update show blink node ([1e4483d](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/1e4483dcea30a476b2aef546f85a071b81c2840b))
+* update type TResult ([f9640fb](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/f9640fb9074ec8221951b55f08a2822f1822b6de))
+
 # [1.23.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.22.1...v1.23.0) (2023-07-18)
 
 
