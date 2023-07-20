@@ -129,7 +129,7 @@ export class TranslationManager {
             }
         }
 
-        if (this.options && !this.options.availableLanguages.includes(languageId)) {
+        if (this.options && !this.options.availableLanguages?.includes(languageId)) {
             return this.defaultLanguageId;
         }
 
