@@ -1,10 +1,10 @@
-import { TolgeeInstance, TranslateOptions } from "@tolgee/web";
+import * as _ from "lodash";
 import Polyglot from "node-polyglot";
 
 export class TranslationOptions {
     languageId: string;
+    tolgeeUrl: string;
     isUseTolgeeRealTime: boolean;
-    tg?: TolgeeInstance;
     getStaticData?: (languageId) => {
         [key: string]: {
             [key: string]: string;
@@ -19,25 +19,70 @@ export class InterpolationOptions {
     [key: string]: string;
 }
 
+class TolgeeLoader {
+    constructor(private tolgeeUrl) {}
+
+    public async loadTolgee(languageId: string = "en") {
+        const languages: {
+            [key: string]: {
+                [key: string]: string;
+            };
+        } = {};
+
+        try {
+            //`https://tolgee.sabagame.com/v2/projects/5/translations?ak=tgpak_gvpw45brha2xg3btoztxeytunvudc5dbn5twqodtonztc&size=1000&filterNamespace=Common,DragonTigerFight&languages=`
+            const tolgeeUrl = this.tolgeeUrl + languageId;
+            const statusResponse = await fetch(tolgeeUrl);
+            const tolgeeData = await statusResponse.json();
+            const groupedByNamespace = _.groupBy(tolgeeData._embedded.keys, (key) => key.keyNamespace);
+
+            if (Object.keys(groupedByNamespace).length > 0) {
+                Object.keys(groupedByNamespace).forEach((key) => {
+                    const namespaceTranslation = {};
+
+                    groupedByNamespace[key].forEach((element) => {
+                        namespaceTranslation[element.keyName] = element.translations[languageId].text;
+                    });
+
+                    languages[key] = namespaceTranslation;
+                });
+                console.log("loaded tolgee real time");
+            } else {
+                console.log("load tolgee real time failed!");
+            }
+        } catch (e) {
+            console.log(e);
+        }
+
+        return languages;
+    }
+}
+
 export class TranslationManager {
     public defaultLanguageId = "en";
     public options: TranslationOptions;
     public isReady: boolean;
-    public polygrot: Polyglot;
+    private _polygrot: Polyglot;
+    private _tolgeeLoader: TolgeeLoader;
 
     public init(options: TranslationOptions) {
         this.options = options;
         this.loadPolygrot();
         this.isReady = true;
         if (options.isUseTolgeeRealTime) {
-            options.tg.run();
-            options.tg.on("initialLoad", () => {
-                options.onLoaded && options.onLoaded();
-            });
+            this.loadTolgee(options);
         } else {
             options.onLoaded && options.onLoaded();
         }
         localStorage.setItem(`current_language`, options.languageId);
+    }
+
+    private loadTolgee(options: TranslationOptions) {
+        this._tolgeeLoader = new TolgeeLoader(options.tolgeeUrl);
+        this._tolgeeLoader.loadTolgee(options.languageId).then((languages) => {
+            this.loadPolygrot(languages);
+            options.onLoaded && options.onLoaded();
+        });
     }
 
     public async changeLanguage(languageId: string) {
@@ -46,28 +91,30 @@ export class TranslationManager {
         }
 
         this.options.languageId = languageId;
-        this.loadPolygrot();
 
         if (this.options.isUseTolgeeRealTime) {
-            await this.options.tg.changeLanguage(languageId);
+            this.loadTolgee(this.options);
+        } else {
+            this.loadPolygrot();
         }
     }
 
-    public loadPolygrot() {
-        if (!this.options.isUseTolgeeRealTime) {
-            const languageData = this.options.getStaticData(this.options.languageId);
-            this.polygrot = new Polyglot({ phrases: languageData, allowMissing: true });
+    public loadPolygrot(languages?: { [key: string]: { [key: string]: string } }) {
+        let languageData;
+
+        if (languages) {
+            languageData = languages;
+        } else if (!this.options.isUseTolgeeRealTime) {
+            languageData = this.options.getStaticData(this.options.languageId);
         }
+
+        this._polygrot = new Polyglot({ phrases: languageData, allowMissing: true });
     }
 
     public translate(key: string, options?: InterpolationOptions) {
         try {
             if (this.options != null) {
-                if (this.options.isUseTolgeeRealTime) {
-                    return this.getTolgeeTranslation(key, options);
-                } else {
-                    return this.getDataTranslation(key, options);
-                }
+                return this.getDataTranslation(key, options);
             }
         } catch (e) {
             console.log(e);
@@ -78,27 +125,12 @@ export class TranslationManager {
 
     public t = this.translate;
 
-    private getTolgeeTranslation(key: string, options: InterpolationOptions) {
-        let translateOptions: TranslateOptions;
-        if (key.indexOf(".") > 0 && translateOptions == null) {
-            const splittedKeyItems = key.split(".");
-            if (splittedKeyItems.length > 1) {
-                translateOptions = {
-                    ns: splittedKeyItems[0],
-                };
-
-                key = splittedKeyItems[1];
-            }
-        }
-        return this.options.tg.t(key, `Not found: ${key}`, translateOptions);
-    }
-
     private getDataTranslation(key: string, options?: InterpolationOptions) {
         if (this.options.getStaticData == null || key == null || key === "") {
             return `Data null: ${key}`;
         }
 
-        return this.polygrot.t(key, options);
+        return this._polygrot.t(key, options);
     }
 
     private toLanguageId(languageCode: string) {

@@ -16,6 +16,7 @@ describe("TranslationManager", () => {
         const options: TranslationOptions = {
             languageId: "en",
             isUseTolgeeRealTime: false,
+            tolgeeUrl: "",
             onLoaded: jest.fn(),
             availableLanguages: ["en", "vi"],
             gameNamespace: "GameNamespace",
@@ -69,6 +70,7 @@ describe("TranslationManager", () => {
         translationManager.options.isUseTolgeeRealTime = false;
         const options: TranslationOptions = {
             languageId: "en",
+            tolgeeUrl: "",
             isUseTolgeeRealTime: false,
             getStaticData: (languageId: string) => {
                 return {

@@ -19,13 +19,5 @@ export class SiteConfigs {
     notificationServiceUrlDev?: string;
     gameGuideUrlDev?: string;
     mainObserverNamespace: string;
-    tolgee?: {
-        defaultLanguage: string;
-        availableLanguages?: string[];
-        defaultNs?: string;
-        apiKey?: string;
-        apiUrl?: string;
-        projectId?: string;
-        ns?: string[];
-    };
+    tolgeeUrl?: string;
 }

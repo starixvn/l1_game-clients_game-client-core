@@ -26,7 +26,8 @@
         "betaver": "npm version prerelease --preid beta",
         "pubbeta": "npm publish --registry http://npm.lumigame.com --tag beta",
         "semantic-release": "semantic-release",
-        "generate-tolgee-data": "ts-node ./tolgee-generator/index.ts"
+        "generate-tolgee-data": "ts-node ./tolgee-generator/index.ts",
+        "load-tolgee-data": "ts-node ./tolgee-generator/load-tolgee-realtime.ts"
     },
     "jestSonar": {
         "reportPath": "reports",
@@ -34,7 +35,6 @@
         "indent": 4
     },
     "dependencies": {
-        "@tolgee/web": "^5.9.12",
         "base64-string": "^1.1.2",
         "eventemitter2": "6.4.9",
         "inversify": "6.0.1",
@@ -53,6 +53,7 @@
         "@semantic-release/gitlab": "^6.0.4",
         "@semantic-release/npm": "^7.0.5",
         "@semantic-release/release-notes-generator": "^9.0.1",
+        "@tolgee/web": "^5.10.1",
         "@types/jest": "29.5.0",
         "@types/socket.io-client": "^3.0.0",
         "jest": "29.5.0",

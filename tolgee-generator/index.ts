@@ -9,11 +9,11 @@ function writeFile(fileName, content, extension = "ts") {
 }
 
 const languageFolder = "./examples/cocos-3x/assets/resources/i18n/";
-const languageCodes = ["en", "id", "th", "vi", "zh_cn", "zh_tw"];
+const languageIds = ["en", "id", "th", "vi", "zh_cn", "zh_tw"];
 const namespaces = ["Common", "gameNames", "messages", "ui", "DragonTigerFight"];
 const tg = Tolgee().use(DevTools()).init({
     defaultLanguage: "en",
-    availableLanguages: languageCodes,
+    availableLanguages: languageIds,
     apiKey: "tgpak_gvpw45brha2xg3btoztxeytunvudc5dbn5twqodtonztc",
     apiUrl: "https://tolgee.sabagame.com/",
     projectId: "5",
@@ -26,7 +26,7 @@ tg.run();
 tg.on("initialLoad", () => {
     const languages = {};
 
-    languageCodes.forEach(async (languageId) => {
+    languageIds.forEach(async (languageId) => {
         await tg.changeLanguage(languageId);
         languages[languageId] = {};
         namespaces.forEach((ns) => {

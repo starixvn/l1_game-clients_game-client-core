@@ -13,7 +13,4 @@ window.envConfig = {
     },
     subDirectory: "uat",
     SGConnectSubDomain: "l1uatconnectsite",
-    tolgee: {
-        defaultLanguage: "en",
-    },
 };
