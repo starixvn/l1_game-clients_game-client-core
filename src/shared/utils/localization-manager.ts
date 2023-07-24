@@ -3,7 +3,7 @@ import Polyglot from "node-polyglot";
 
 export class TranslationOptions {
     languageId: string;
-    tolgeeUrl: string;
+    tolgeeUrl?: string;
     isUseTolgeeRealTime: boolean;
     getStaticData?: (languageId) => {
         [key: string]: {
@@ -16,7 +16,7 @@ export class TranslationOptions {
 }
 
 export class InterpolationOptions {
-    [key: string]: string;
+    [key: string]: string | number;
 }
 
 class TolgeeLoader {
@@ -166,6 +166,14 @@ export class TranslationManager {
         }
 
         return languageId;
+    }
+
+    public getCurrentLanguageId(){
+        return this.options.languageId;
+    }
+
+    public getGameNamespace(){
+        return this.options.gameNamespace;
     }
 
     public loadTranslationResource() {

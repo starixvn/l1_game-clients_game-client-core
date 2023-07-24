@@ -15,8 +15,9 @@ import { AppStore } from "./../app/app-store";
 import { URLParams } from "./../shared/constants/url-params";
 import { AuthStore, ISessionInfo } from "./auth-store";
 import { UserService } from "./user-service";
+import { Translator } from "../shared/utils/localization-manager";
 
-const { LocalizedUtils, ErrorUtils } = utils;
+const { ErrorUtils } = utils;
 
 interface IAuthorizeResponse {
     errorCode?: string;
@@ -105,10 +106,10 @@ export namespace AuthHandlers {
 
         private showErrorMessageSignName(errorCode: string) {
             const key = ErrorUtils.parseErrorCode(errorCode);
-            const text = LocalizedUtils.getLocalizedText(key);
+            const text = Translator.translate(key);
             this.noticeStore.addNotice({
                 message: text,
-                title: LocalizedUtils.getLocalizedText("notice"),
+                title: Translator.commonTranslate("notice"),
                 type: NoticeType.Error,
                 onClose: () => {},
                 showBtnConfirmButton: true,
@@ -136,7 +137,7 @@ export namespace AuthHandlers {
 
                 await this.handleAuthorizeWithURLParams(urlParams);
             } catch (err) {
-                this.authStore.ssoErrorMessage = LocalizedUtils.getLocalizedText("splash_connectionLost");
+                this.authStore.ssoErrorMessage = Translator.commonTranslate("splash_connection_lost");
                 sentryLogger.logError(err);
             }
         }
@@ -187,7 +188,7 @@ export namespace AuthHandlers {
                 this.saveDataSSOInStorage();
                 await this.handleAuthorize(response.ss, response.username);
             } else {
-                this.authStore.ssoErrorMessage = LocalizedUtils.getLocalizedText("splash_loginFailed");
+                this.authStore.ssoErrorMessage = Translator.commonTranslate("splash_login_failed");
             }
         }
 

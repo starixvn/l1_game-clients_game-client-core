@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { GameServiceMessage, IHandler } from "../../shared";
 import { NoticeStore, NoticeType } from "../notices";
-import { LocalizedUtils } from "../../shared/utils/localized-utils";
+import { Translator } from "../../shared/utils/localization-manager";
 import { GameSetting } from "../game-configs";
 import { AppHandlers } from "../../app/app-handlers";
 
@@ -21,10 +21,10 @@ export class NoPermissionHandlers implements IHandler<void> {
         const goToLobby = () => {
             this.backToOperatorLobby.handle();
         };
-        const gameName = LocalizedUtils.getLocalizedText(`gameNames.${this.gameSetting.id}`);            
+        const gameName = Translator.translate(`gameNames.${this.gameSetting.id}`);            
         this.noticeStore.addNotice({
-            message: LocalizedUtils.getLocalizedText("gameExcluded", { gameName }),
-            title: LocalizedUtils.getLocalizedText("notice"),
+            message: Translator.commonTranslate("game_excluded", { gameName }),
+            title: Translator.commonTranslate("notice"),
             type: NoticeType.Info,
             onClose: goToLobby,
         });  

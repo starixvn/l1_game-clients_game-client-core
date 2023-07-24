@@ -1,7 +1,7 @@
 import { stub } from "jest-auto-stub";
 import { NoticeStore } from "../../../src/game/notices/notice-store";
 import { MainPlayerStore } from "../../../src/players/main-player-store";
-import { LocalizedUtils } from "../../../src/shared/utils";
+import { Translator } from "../../../src/shared/utils";
 
 jest.mock("../../../src/shared/l10n", () => ({
     l10n: {
@@ -83,7 +83,7 @@ describe("MainPlayerStore", () => {
         afterEach(() => {
             jest.clearAllMocks();
             noticeStore.addWarning = jest.fn();
-            LocalizedUtils.getLocalizedText = jest.fn((key, option) => `Mocked ${key}`);
+            Translator.commonTranslate = jest.fn((key, option) => `Mocked ${key}`);
         });
 
         it("should add a warning when minBet and maxBet are different", () => {

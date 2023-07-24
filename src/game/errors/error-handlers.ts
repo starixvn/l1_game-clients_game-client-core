@@ -3,8 +3,9 @@ import { AuthStore } from "../../auth";
 import { MainPlayerStore } from "../../players";
 import { GameServiceMessage, IMultipleHandlers, utils } from "../../shared";
 import { NoticeStore, NoticeType } from "../notices";
+import {Translator} from '../../shared/utils/localization-manager';
 
-const { LocalizedUtils, ErrorUtils } = utils;
+const { ErrorUtils } = utils;
 
 @injectable()
 export class ErrorHandlers implements IMultipleHandlers {
@@ -37,7 +38,7 @@ export class ErrorHandlers implements IMultipleHandlers {
         const text = ErrorUtils.getErrorMessage(apiError);
         this.noticeStore.addNotice({
             message: text,
-            title: LocalizedUtils.getLocalizedText("notice"),
+            title: Translator.commonTranslate("notice"),
             type: NoticeType.Error,
             onClose: () => {},
         });

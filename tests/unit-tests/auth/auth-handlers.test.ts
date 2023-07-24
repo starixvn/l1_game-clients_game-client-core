@@ -10,7 +10,7 @@ import { Mediator } from "../../../src/shared";
 import { NoticeStore } from "../../../src/game/notices/notice-store";
 import { PlayerSelectionHandlers } from "../../../src/game/player-selections";
 import { GameUtils } from "../../../src/shared/utils/game-utils";
-import { LocalizedUtils } from "../../../src/shared/utils/localized-utils";
+import { Translator } from "../../../src/shared/utils/localization-manager";
 import { sentryLogger } from "../../../src/shared/utils/logger";
 import { NameGenerator } from "../../../src/shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
@@ -29,8 +29,8 @@ jest.mock("../../../src/shared/utils/storage-manager", () => ({
 jest.mock("../../../src/shared/utils/logger", () => ({
     sentryLogger: { logError: jest.fn() },
 }));
-jest.mock("../../../src/shared/utils/localized-utils", () => ({
-    LocalizedUtils: { getLocalizedText: jest.fn() },
+jest.mock("../../../src/shared/utils/localization-manager", () => ({
+    Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn()},
 }));
 let notificationServiceHandler: NotificationHandlers;
 
@@ -733,7 +733,7 @@ describe("AuthHandlers tests", () => {
             const urlParams = new URLSearchParams("token=a&appType=1");
             const error = new Error("error");
             beforeEach(() => {
-                (LocalizedUtils.getLocalizedText as jest.Mock).mockReturnValueOnce("connection lost when sso");
+                (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("connection lost when sso");
                 (StorageManager.get as jest.Mock).mockReturnValueOnce(undefined);
                 userService.sso = jest.fn().mockImplementationOnce(() => {
                     throw error;

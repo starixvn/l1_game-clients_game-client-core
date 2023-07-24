@@ -3,9 +3,11 @@ import { _decorator, Label } from "cc";
 import { LedLightTooltip } from "db://shared-components/game/led-light/scripts/components/led-light-tooltip";
 const { ccclass, property } = _decorator;
 
+const {Translator} = gc;
+
 enum TKeyTranslate {
-    odd = "choice_odd",
-    event = "choice_even",
+    odd = "glossary_odd",
+    event = "glossary_even",
 }
 
 @ccclass("SeDieLedLightTooltip")
@@ -24,7 +26,7 @@ export abstract class SeDieLedLightTooltip extends LedLightTooltip {
                 red++;
             }
         });
-        const key = gc.Shared.l10n.t(red % 2 === 0 ? TKeyTranslate.event : TKeyTranslate.odd);
+        const key = Translator.gameTranslate(red % 2 === 0 ? TKeyTranslate.event : TKeyTranslate.odd);
         this.result.string = key;
         this.red.string = red.toString();
         this.white.string = (4 - red).toString();

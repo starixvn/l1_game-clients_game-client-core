@@ -5,10 +5,10 @@ import { ConnectionStore } from "../../../../src/game/connection/connection-stor
 import { GameSetting } from "../../../../src/game/game-configs/game-setting";
 import { NoticeErrorsHandlers } from "../../../../src/game/notices/notice-errors-handlers";
 import { NoticeStore, NoticeType } from "../../../../src/game/notices/notice-store";
-import { ErrorUtils, LocalizedUtils } from "../../../../src/shared/utils";
+import { ErrorUtils, Translator } from "../../../../src/shared/utils";
 
 jest.mock("../../../../src/shared/utils", () => ({
-    LocalizedUtils: { getLocalizedText: jest.fn() },
+    Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn() },
     ErrorUtils: { isSessionTimeoutError: jest.fn().mockReturnValue(false) },
 }));
 jest.mock("mobx");
@@ -43,7 +43,7 @@ describe("NoticeErrorsHandlers", () => {
             it("should call handle with account closed when isDisabledAccount true", () => {
                 // arrange
                 authStore.isDisabledAccount = true;
-                (LocalizedUtils.getLocalizedText as jest.Mock).mockReturnValueOnce("accountClosed");
+                (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("accountClosed");
 
                 // act
                 handler.onErrorCodeChange("");
@@ -60,26 +60,26 @@ describe("NoticeErrorsHandlers", () => {
                 it("should call handle with sessionExpired message when app", () => {
                     // arrange
                     appStore.isApp = true;
-                    (LocalizedUtils.getLocalizedText as jest.Mock).mockReturnValueOnce("session expired");
+                    (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("session expired");
 
                     // act
                     handler.onErrorCodeChange("123");
 
                     // assert
-                    expect(LocalizedUtils.getLocalizedText).toHaveBeenCalledWith("sessionExpired");
+                    expect(Translator.commonTranslate).toHaveBeenCalledWith("sessionExpired");
                     expect(handler.showNotice).toHaveBeenCalledWith(`session expired (123)`);
                 });
 
                 it("should call handle with sessionTimeout message when not app", () => {
                     // arrange
                     appStore.isApp = false;
-                    (LocalizedUtils.getLocalizedText as jest.Mock).mockReturnValueOnce("session timeout");
+                    (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("session timeout");
 
                     // act
                     handler.onErrorCodeChange("123");
 
                     // assert
-                    expect(LocalizedUtils.getLocalizedText).toHaveBeenCalledWith("sessionTimeout");
+                    expect(Translator.commonTranslate).toHaveBeenCalledWith("sessionTimeout");
                     expect(handler.showNotice).toHaveBeenCalledWith(`session timeout (123)`);
                 });
             });
@@ -108,7 +108,7 @@ describe("NoticeErrorsHandlers", () => {
 
             it("should add expected notice into noticeStore ", () => {
                 // arrange
-                (LocalizedUtils.getLocalizedText as jest.Mock).mockReturnValueOnce("Notice");
+                (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("Notice");
 
                 // act
                 handler.showNotice("message");
@@ -142,7 +142,7 @@ describe("NoticeErrorsHandlers", () => {
                 noticeStore,
                 backToOperatorLobbyHandler
             );
-            (LocalizedUtils.getLocalizedText as jest.Mock)
+            (Translator.commonTranslate as jest.Mock)
                 .mockReturnValueOnce("Game name")
                 .mockReturnValueOnce("lost game connection")
                 .mockReturnValueOnce("Notice");
@@ -157,9 +157,9 @@ describe("NoticeErrorsHandlers", () => {
             expect((noticeStore.addNotice as jest.Mock).mock.calls[0][0].title).toBe("Notice");
             expect((noticeStore.addNotice as jest.Mock).mock.calls[0][0].type).toBe(NoticeType.Error);
             expect(typeof (noticeStore.addNotice as jest.Mock).mock.calls[0][0].onClose).toBe("function");
-            expect(LocalizedUtils.getLocalizedText).toHaveBeenCalledWith(`gameNames.${gameSetting.id}`);
-            expect(LocalizedUtils.getLocalizedText).toHaveBeenCalledWith("lostGameConnection", { gameName: "Game name" });
-            expect(LocalizedUtils.getLocalizedText).toHaveBeenCalledWith("notice");
+            expect(Translator.commonTranslate).toHaveBeenCalledWith(`gameNames.${gameSetting.id}`);
+            expect(Translator.commonTranslate).toHaveBeenCalledWith("lostGameConnection", { gameName: "Game name" });
+            expect(Translator.commonTranslate).toHaveBeenCalledWith("notice");
         });
     });
 });

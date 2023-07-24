@@ -12,10 +12,10 @@ import { gameSettings } from "../../container.test";
 import { PlayerSelectionHandlers } from "../../../../src/game/player-selections";
 import { PlayerSelectionStore } from "../../../../src/game/player-selections";
 
-jest.mock("../../../../src/shared/utils/localized-utils", () => {
+jest.mock("../../../../src/shared/utils/localization-manager", () => {
     return {
-        LocalizedUtils: {
-            getLocalizedText: jest.fn().mockImplementation((key, option) => key),
+        Translator: {
+            translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn()
         },
     };
 });

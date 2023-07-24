@@ -2,11 +2,9 @@ import { NotificationReloadHandlers } from "../../../src/notification";
 import { NoticeStore } from "../../../src/game/notices";
 import { NotificationServiceMessage } from "../../../src/shared";
 
-jest.mock("../../../src/shared/utils/localized-utils", () => {
+jest.mock("../../../src/shared/utils/localization-manager", () => {
     return {
-        LocalizedUtils: {
-            getLocalizedText: jest.fn().mockImplementation((key, option) => key),
-        },
+        Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn() },
     };
 });
 

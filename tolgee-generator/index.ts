@@ -10,7 +10,7 @@ function writeFile(fileName, content, extension = "ts") {
 
 const languageFolder = "./examples/cocos-3x/assets/resources/i18n/";
 const languageIds = ["en", "id", "th", "vi", "zh_cn", "zh_tw"];
-const namespaces = ["Common", "gameNames", "messages", "ui", "DragonTigerFight"];
+const namespaces = ["Common", "DragonTigerFight"];
 const tg = Tolgee().use(DevTools()).init({
     defaultLanguage: "en",
     availableLanguages: languageIds,

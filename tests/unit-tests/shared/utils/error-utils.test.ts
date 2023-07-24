@@ -1,12 +1,10 @@
 import { stub } from "jest-auto-stub";
 import { GameServiceMessage } from "../../../../src/shared";
 import { ErrorUtils } from "../../../../src/shared/utils";
-jest.mock("../../../../src/shared/utils/localized-utils", () => {
+jest.mock("../../../../src/shared/utils/localization-manager", () => {
     return {
-        LocalizedUtils: {
-            getLocalizedText: jest.fn().mockImplementation((key, option) => key),
-            getBetChoiceString: jest.fn().mockImplementation((key) => key),
-            getGameNameString: jest.fn().mockImplementation((key) => key),
+        Translator: {
+            translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn()
         },
     };
 });

@@ -1,5 +1,5 @@
 import { Base64 } from "base64-string";
-import { l10n } from "../l10n";
+import { Translator } from "./localization-manager";
 
 declare global {
     interface Window { ReactNativeWebView: any; }
@@ -30,15 +30,15 @@ export class GameUtils {
         try {
             if(this.isAndroidWebView(isAndroid)){
                 window.ReactNativeWebView.postMessage(JSON.stringify({eventType: 'copy_to_clipboard', data: data}));
-                showResult(l10n.t("copySuccess"));
+                showResult(Translator.commonTranslate("copy_successfully_md5"));
             }
             else{
                 await navigator.clipboard.writeText(data).then(() => {
-                    showResult(l10n.t("copySuccess"));
+                    showResult(Translator.commonTranslate("copy_successfully_md5"));
                 });
             }           
         } catch (e) {
-            showResult(l10n.t("copyMD5Failed")); //e.message
+            showResult(Translator.commonTranslate("copyfailed_md5")); //e.message
         }
     }
 

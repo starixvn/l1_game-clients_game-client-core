@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { NoticeStore } from "../game/notices/notice-store";
 import { GameServiceMessage } from "../shared";
-import { LocalizedUtils } from "../shared/utils";
+import { Translator } from "../shared/utils";
 
 export interface IStakeLevel {
     minBet: number;
@@ -64,7 +64,7 @@ export class MainPlayerStore {
             currentStakeLevel?.maxBet > 0 &&
             (stakeLevel?.minBet !== currentStakeLevel?.minBet || stakeLevel?.maxBet !== currentStakeLevel?.maxBet)
         ) {
-            this.noticeStore.addWarning(LocalizedUtils.getLocalizedText("limitBetChanged"));
+            this.noticeStore.addWarning(Translator.commonTranslate("message_bet_limit_change"));
         }
     }
 }

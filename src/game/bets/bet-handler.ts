@@ -2,13 +2,13 @@ import { inject, injectable } from "inversify";
 
 import { MainPlayerStore } from "../../players";
 import { GameClientEmitMessage } from "../../shared";
-import { l10n } from "../../shared/l10n";
 import { ConnectionStore } from "../connection";
 import { NoticeStore } from "../notices";
 import { OrientationStore } from "../orientation";
 import { ROUND_STATE, RoundTimeStore } from "../rounds";
 import { BetStore } from "./bet-store";
-import { i18n } from "../../shared";
+import {Translator} from '../../shared/utils/localization-manager'
+
 
 @injectable()
 export class BetHandler {
@@ -50,21 +50,21 @@ export class BetHandler {
     }
 
     showNoticePlaceBetFailure(freebetEnabled: boolean) {
-        const message = freebetEnabled ? l10n.t("notEnoughScoin") : l10n.t("notEnoughMoney");
+        const message = freebetEnabled ? Translator.commonTranslate("not_enough_scoin") : Translator.commonTranslate("message_insufficient_fund");
         this.noticeStore.addWarning(message);
     }
 
     clearBet() {}
 
     showWarningProcessingBet() {
-        this.noticeStore.addWarning(l10n.t("dataProcessing"));
+        this.noticeStore.addWarning(Translator.commonTranslate("message_processing_action"));
     }
 
     isInPhasePreventBet() {
         const isBetPhase = [ROUND_STATE.PLACING_BET].includes(this.roundTimeStore.roundState);
         if (!isBetPhase) {
             const warningMsg =
-                this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND ? l10n.t("cannotPlaceBet") : i18n.t("messages.placeBetNextRound");
+                this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND ? Translator.commonTranslate("message_cannot_bet") : Translator.commonTranslate("message_placebet_next_round");
 
             this.noticeStore.addWarning(warningMsg);
         }

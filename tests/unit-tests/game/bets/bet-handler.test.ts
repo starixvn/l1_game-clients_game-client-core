@@ -4,13 +4,13 @@ import { NoticeStore } from "../../../../src/game/notices";
 import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
 import { MainPlayerStore } from "../../../../src/players";
 import { GameClientEmitMessage } from "../../../../src/shared";
-import { l10n } from "../../../../src/shared/l10n";
+import { i18n } from "../../../../src/shared/i18n";
 import { gameSettings } from "../../container.test";
 import { ConnectionStore } from "./../../../../src/game/connection";
 import { OrientationStore } from "./../../../../src/game/orientation";
 
-jest.mock("../../../../src/shared/l10n", () => ({
-    l10n: jest.fn(),
+jest.mock("../../../../src/shared/i18n", () => ({
+    i18n: jest.fn(),
 }));
 
 describe("BetHandler", () => {
@@ -56,7 +56,7 @@ describe("BetHandler", () => {
         it("should show warning, please bet next round, when locking bet", () => {
             // Arrange
             roundTimeStore.roundState = ROUND_STATE.LOCKING_BET;
-            l10n.t = jest.fn(() => "Please wait for the next round.");
+            i18n.t = jest.fn(() => "Please wait for the next round.");
 
             // Act
             betHandler.handle(betChoice);
@@ -70,7 +70,7 @@ describe("BetHandler", () => {
         it("should show warning, can not bet at the moment, when starting round", () => {
             // Arrange
             roundTimeStore.roundState = ROUND_STATE.STARTING_ROUND;
-            l10n.t = jest.fn(() => "Cannot bet at the moment. Please wait for a few seconds.");
+            i18n.t = jest.fn(() => "Cannot bet at the moment. Please wait for a few seconds.");
 
             // Act
             betHandler.handle(betChoice);
@@ -98,7 +98,7 @@ describe("BetHandler", () => {
             mainPlayerStore.balance = 100;
             betStore.amount = 200;
             betStore.freebetEnabled = false;
-            l10n.t = jest.fn(() => "Your account has insufficient funds.");
+            i18n.t = jest.fn(() => "Your account has insufficient funds.");
 
             // Act
             betHandler.handle(betChoice);
@@ -113,7 +113,7 @@ describe("BetHandler", () => {
             mainPlayerStore.scoin = 100;
             betStore.amount = 200;
             betStore.freebetEnabled = true;
-            l10n.t = jest.fn(() => "Not enough Scoin to place bet.");
+            i18n.t = jest.fn(() => "Not enough Scoin to place bet.");
 
             // Act
             betHandler.handle(betChoice);
@@ -147,7 +147,7 @@ describe("BetHandler", () => {
     describe("showWarningProcessingBet", () => {
         it("should showWarningProcessingBet when isProcessingBet true", () => {
             // Arrange
-            l10n.t = jest.fn(() => "Data are being processed. Please wait...");
+            i18n.t = jest.fn(() => "Data are being processed. Please wait...");
             const text = "Data are being processed. Please wait...";
 
             // Act

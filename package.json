@@ -1,6 +1,6 @@
 {
     "name": "@sg/game-client-base",
-    "version": "1.25.2",
+    "version": "1.25.2-beta.4",
     "type": "commonjs",
     "types": "dist/index.d.ts",
     "main": "dist/index.js",
@@ -22,9 +22,9 @@
         "test:watch": "jest --watch --verbose",
         "start-simulator": "docker compose -f \"examples/server-simulator/docker-compose.yml\" up -d --build",
         "reg": "npm set registry http://npm.lumigame.com",
-        "pub": "npm publish --registry http://npm.lumigame.com",
+        "pub": "tsc && npm publish --registry http://npm.lumigame.com",
         "betaver": "npm version prerelease --preid beta",
-        "pubbeta": "npm publish --registry http://npm.lumigame.com --tag beta",
+        "pubbeta": "tsc && npm publish --registry http://npm.lumigame.com --tag beta",
         "semantic-release": "semantic-release",
         "generate-tolgee-data": "ts-node ./tolgee-generator/index.ts",
         "load-tolgee-data": "ts-node ./tolgee-generator/load-tolgee-realtime.ts"

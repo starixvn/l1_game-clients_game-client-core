@@ -6,8 +6,8 @@ import { utils } from "../../shared";
 import { ConnectionStore } from "../connection/connection-store";
 import { GameSetting } from "../game-configs";
 import { NoticeStore, NoticeType } from "./notice-store";
-
-const { LocalizedUtils, ErrorUtils } = utils;
+import {Translator} from '../../shared/utils/localization-manager';
+const { ErrorUtils } = utils;
 
 export namespace NoticeErrorsHandlers {
     @injectable()
@@ -29,12 +29,12 @@ export namespace NoticeErrorsHandlers {
 
         onErrorCodeChange(errorCode: string) {
             if (this.authStore.isDisabledAccount) {
-                const text = LocalizedUtils.getLocalizedText("accountClosed", { errorCode });
+                const text = Translator.commonTranslate("message_close_account", { errorCode });
                 this.showNotice(text);
             } else {
                 if (ErrorUtils.isSessionTimeoutError(errorCode)) {
-                    const key = this.appStore.isApp ? "sessionExpired" : "sessionTimeout";
-                    const text = LocalizedUtils.getLocalizedText(key);
+                    const key = this.appStore.isApp ? "message_session_expired" : "message_session_timeout";
+                    const text = Translator.commonTranslate(key);
                     this.showNotice(`${text} (${errorCode})`);
                 }
             }
@@ -48,7 +48,7 @@ export namespace NoticeErrorsHandlers {
             setTimeout(signOut, 10000);
             this.noticeStore.addNotice({
                 message,
-                title: LocalizedUtils.getLocalizedText("notice"),
+                title: Translator.commonTranslate("notice"),
                 type: NoticeType.Error,
                 onClose: signOut,
                 showBtnConfirmButton: true,
@@ -75,14 +75,14 @@ export namespace NoticeErrorsHandlers {
         }
 
         showNotice() {
-            const gameName = LocalizedUtils.getLocalizedText(`gameNames.${this.gameSetting.id}`);
-            const message = LocalizedUtils.getLocalizedText("lostGameConnection", { gameName });
+            const gameName = Translator.translate(`gameNames.${this.gameSetting.id}`);
+            const message = Translator.commonTranslate("message_lost_game_connection", { gameName });
             const backToLobby = () => {
                 this.backToOperatorLobbyHandler.handle();
             };
             this.noticeStore.addNotice({
                 message,
-                title: LocalizedUtils.getLocalizedText("notice"),
+                title: Translator.commonTranslate("notice"),
                 type: NoticeType.Error,
                 onClose: backToLobby,
             });
