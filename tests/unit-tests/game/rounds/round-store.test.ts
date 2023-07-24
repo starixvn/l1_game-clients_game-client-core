@@ -184,7 +184,7 @@ describe("RoundStore", () => {
             jest.spyOn(roundHistoryStore, "getLastRound").mockReturnValue(mockHistories[0]);
 
             // Act
-            const result = roundStore.highLightBorder;
+            const result = roundStore.highlightStatic;
 
             // Assert
             expect(result).toEqual(expected);

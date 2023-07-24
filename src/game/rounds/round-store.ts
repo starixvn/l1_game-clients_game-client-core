@@ -17,12 +17,12 @@ export type RoundOdds = {
     fractional: boolean;
 };
 
-export interface THighLightInfo {
+export interface THighlightAnim {
     isAnim: boolean;
     settlementResult: GameServiceMessage.TSettlementResult;
 }
 
-export interface THighLightBorder {
+export interface THighlightStatic {
     settlementResult: GameServiceMessage.TSettlementResult;
 }
 
@@ -121,7 +121,7 @@ export class RoundStore {
         return isResetHighlight;
     }
 
-    get highLightAnim(): THighLightInfo {
+    get highLightAnim(): THighlightAnim {
         const isAnim = this.settlementStore.isFinishedShowResult;
         const settlementResult = this.roundHistoryStore?.getLastRound()?.settlementResult;
 
@@ -131,7 +131,7 @@ export class RoundStore {
         };
     }
 
-    get highLightBorder(): THighLightBorder {
+    get highlightStatic(): THighlightStatic {
         let settlementResult: GameServiceMessage.TSettlementResult = null;
         const isFinishedShowResult = this.settlementStore.isFinishedShowResult;
         if (
