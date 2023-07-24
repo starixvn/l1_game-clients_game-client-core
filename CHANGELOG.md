@@ -1,3 +1,10 @@
+## [1.25.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.1...v1.25.2) (2023-07-24)
+
+
+### Bug Fixes
+
+* rename function set highlight ([d4769f8](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d4769f87078fa41ab9d05e9fb271cf108f9207d2))
+
 ## [1.25.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.0...v1.25.1) (2023-07-20)
 
 
