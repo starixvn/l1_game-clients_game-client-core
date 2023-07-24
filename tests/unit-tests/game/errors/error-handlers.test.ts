@@ -6,10 +6,8 @@ import { MainPlayerStore } from "../../../../src/players";
 import { GameServiceMessage } from "../../../../src/shared";
 import { ErrorUtils } from "../../../../src/shared/utils/error-utils";
 
-jest.mock("../../../../src/shared/l10n", () => ({
-    l10n: {
-        t: jest.fn(),
-    },
+jest.mock("../../../../src/shared/utils/localization-manager", () => ({
+    Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key) },
 }));
 
 jest.mock("../../../../src/shared/utils/error-utils", () => ({

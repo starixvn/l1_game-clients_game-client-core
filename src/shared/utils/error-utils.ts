@@ -113,12 +113,12 @@ export namespace ErrorUtils {
         }
 
         let suffix = "";
-        const errorKey = `Common.${ErrorCodeDictionary[errorCode]}`;
+        const errorKey = `${ErrorCodeDictionary[errorCode]}`;
         const isCommonErrorCode = CommonErrorList.includes(errorKey);
         if (isCommonErrorCode && isPlaceBet) {
             suffix = "_place_bet";
         }
-        return `${errorKey}${suffix}`;
+        return `Common.${errorKey}${suffix}`;
     };
 
     export const createOptionForHedgeBetGroup = (hedgeBetGroup: string[]) => {

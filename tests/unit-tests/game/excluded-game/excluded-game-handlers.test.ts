@@ -10,7 +10,7 @@ import { PlayerSelectionStore } from "../../../../src/game/player-selections";
 jest.mock("../../../../src/shared/utils/localization-manager", () => {
     return {
         Translator: {
-            translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn()
+            translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key)
         },
     };
 });
@@ -55,7 +55,7 @@ describe("ExcludedGameHandlers tests", () => {
             handler.handle();
 
             // assert
-            expect(calledArgs.message).toBe('gameExcluded');
+            expect(calledArgs.message).toBe('game_excluded');
             expect(calledArgs.title).toBe('notice');
             expect(calledArgs.type).toBe(0);
             calledArgs.onClose();

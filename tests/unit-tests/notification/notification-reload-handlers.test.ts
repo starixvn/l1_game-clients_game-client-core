@@ -4,7 +4,7 @@ import { NotificationServiceMessage } from "../../../src/shared";
 
 jest.mock("../../../src/shared/utils/localization-manager", () => {
     return {
-        Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn() },
+        Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key) },
     };
 });
 
@@ -36,7 +36,7 @@ describe("NotificationReloadHandlers", () => {
                 handler.handle();
 
                 // assert
-                expect(calledArgs.message).toBe('newUpdateAvailable');
+                expect(calledArgs.message).toBe('message_new_update_available');
                 expect(calledArgs.title).toBe('notice');
                 expect(calledArgs.type).toBe(0);
             });

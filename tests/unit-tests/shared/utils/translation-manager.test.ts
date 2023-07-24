@@ -115,7 +115,7 @@ describe("TranslationManager", () => {
         //Arrange
         // const url = "https://example.com/?lang=vi";
         // const urlSearchParamsMock = new URLSearchParams(url);
-        global.window = Object.create(window);
+        //global.window = Object.create(window);
         Object.defineProperty(window, "location", {
             value: {
                 search: `?lang=vi-VN`,
@@ -132,7 +132,7 @@ describe("TranslationManager", () => {
     it('should return languageId from decoded URL params when "params" param is provided', () => {
         //Arrange
         const encodedParams = btoa("lang=vi-VN");
-        global.window = Object.create(window);
+        //global.window = Object.create(window);
         Object.defineProperty(window, "location", {
             value: {
                 search: `?params=${encodedParams}`,

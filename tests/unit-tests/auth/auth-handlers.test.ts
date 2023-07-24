@@ -30,7 +30,7 @@ jest.mock("../../../src/shared/utils/logger", () => ({
     sentryLogger: { logError: jest.fn() },
 }));
 jest.mock("../../../src/shared/utils/localization-manager", () => ({
-    Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn()},
+    Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key)},
 }));
 let notificationServiceHandler: NotificationHandlers;
 

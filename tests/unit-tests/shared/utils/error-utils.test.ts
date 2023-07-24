@@ -4,7 +4,7 @@ import { ErrorUtils } from "../../../../src/shared/utils";
 jest.mock("../../../../src/shared/utils/localization-manager", () => {
     return {
         Translator: {
-            translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn()
+            translate: jest.fn().mockImplementation((key, option) => key), gameTranslate: jest.fn().mockImplementation((key, option) => key), commonTranslate: jest.fn().mockImplementation((key, option) => key)
         },
     };
 });
@@ -16,25 +16,25 @@ describe("ErrorUtils", () => {
     describe("parseErrorCode", () => {
         it("should return messages.errorOccurred for undefined error codes", () => {
             const result = ErrorUtils.parseErrorCode("undefined");
-            expect(result).toEqual("errorOccurred");
+            expect(result).toEqual("Common.message_error_occurred");
         });
 
         it("should return the correct error message for valid error codes", () => {
             const result = ErrorUtils.parseErrorCode("1001");
-            expect(result).toEqual("sessionTimeout");
+            expect(result).toEqual("Common.message_session_timeout");
 
             const result2 = ErrorUtils.parseErrorCode("2002");
-            expect(result2).toEqual("accountClosed");
+            expect(result2).toEqual("Common.message_close_account");
         });
 
         it("should add suffix 'PlaceBet' for CommonErrorCodeList and isPlaceBet = true", () => {
             const result = ErrorUtils.parseErrorCode("1000", true);
-            expect(result).toEqual("errorOccurredPlaceBet");
+            expect(result).toEqual("Common.message_error_occurred_place_bet");
         });
 
         it("should not add suffix 'PlaceBet' for non-CommonErrorCodeList and isPlaceBet = true", () => {
             const result = ErrorUtils.parseErrorCode("SB1939", true);
-            expect(result).toEqual("disallowHedgeBet");
+            expect(result).toEqual("Common.message_hedge_bet");
         });
     });
 
@@ -47,7 +47,8 @@ describe("ErrorUtils", () => {
 
             const result = ErrorUtils.getErrorMessage(notice);
 
-            expect(result).toBe("errorOccurredPlaceBet");
+
+            expect(result).toBe("Common.message_error_occurred_place_bet");
         });
     });
 
@@ -57,8 +58,8 @@ describe("ErrorUtils", () => {
 
             const result = ErrorUtils.createOptionForHedgeBetGroup(hedgeBetGroup);
 
-            expect(result["betChoice1"]).toEqual(hedgeBetGroup[0]);
-            expect(result["betChoice2"]).toEqual(hedgeBetGroup[1]);
+            expect(result["betChoice1"]).toEqual("glossary_choice1");
+            expect(result["betChoice2"]).toEqual("glossary_choice2");
         });
     });
 

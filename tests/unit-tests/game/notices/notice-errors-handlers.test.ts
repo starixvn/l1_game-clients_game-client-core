@@ -5,11 +5,14 @@ import { ConnectionStore } from "../../../../src/game/connection/connection-stor
 import { GameSetting } from "../../../../src/game/game-configs/game-setting";
 import { NoticeErrorsHandlers } from "../../../../src/game/notices/notice-errors-handlers";
 import { NoticeStore, NoticeType } from "../../../../src/game/notices/notice-store";
-import { ErrorUtils, Translator } from "../../../../src/shared/utils";
+import { ErrorUtils } from "../../../../src/shared/utils";
+import { Translator } from "../../../../src/shared/utils/localization-manager";
 
 jest.mock("../../../../src/shared/utils", () => ({
-    Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn() },
     ErrorUtils: { isSessionTimeoutError: jest.fn().mockReturnValue(false) },
+}));
+jest.mock("../../../../src/shared/utils/localization-manager", () => ({
+    Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key) },
 }));
 jest.mock("mobx");
 
@@ -66,7 +69,7 @@ describe("NoticeErrorsHandlers", () => {
                     handler.onErrorCodeChange("123");
 
                     // assert
-                    expect(Translator.commonTranslate).toHaveBeenCalledWith("sessionExpired");
+                    expect(Translator.commonTranslate).toHaveBeenCalledWith("message_session_expired");
                     expect(handler.showNotice).toHaveBeenCalledWith(`session expired (123)`);
                 });
 
@@ -79,7 +82,7 @@ describe("NoticeErrorsHandlers", () => {
                     handler.onErrorCodeChange("123");
 
                     // assert
-                    expect(Translator.commonTranslate).toHaveBeenCalledWith("sessionTimeout");
+                    expect(Translator.commonTranslate).toHaveBeenCalledWith("message_session_timeout");
                     expect(handler.showNotice).toHaveBeenCalledWith(`session timeout (123)`);
                 });
             });
@@ -142,8 +145,9 @@ describe("NoticeErrorsHandlers", () => {
                 noticeStore,
                 backToOperatorLobbyHandler
             );
+            (Translator.translate as jest.Mock)
+                .mockReturnValueOnce("Game name");
             (Translator.commonTranslate as jest.Mock)
-                .mockReturnValueOnce("Game name")
                 .mockReturnValueOnce("lost game connection")
                 .mockReturnValueOnce("Notice");
         });
@@ -157,8 +161,8 @@ describe("NoticeErrorsHandlers", () => {
             expect((noticeStore.addNotice as jest.Mock).mock.calls[0][0].title).toBe("Notice");
             expect((noticeStore.addNotice as jest.Mock).mock.calls[0][0].type).toBe(NoticeType.Error);
             expect(typeof (noticeStore.addNotice as jest.Mock).mock.calls[0][0].onClose).toBe("function");
-            expect(Translator.commonTranslate).toHaveBeenCalledWith(`gameNames.${gameSetting.id}`);
-            expect(Translator.commonTranslate).toHaveBeenCalledWith("lostGameConnection", { gameName: "Game name" });
+            expect(Translator.translate).toHaveBeenCalledWith(`gameNames.${gameSetting.id}`);
+            expect(Translator.commonTranslate).toHaveBeenCalledWith("message_lost_game_connection", { gameName: "Game name" });
             expect(Translator.commonTranslate).toHaveBeenCalledWith("notice");
         });
     });

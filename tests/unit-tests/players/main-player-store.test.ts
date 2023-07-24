@@ -3,11 +3,13 @@ import { NoticeStore } from "../../../src/game/notices/notice-store";
 import { MainPlayerStore } from "../../../src/players/main-player-store";
 import { Translator } from "../../../src/shared/utils";
 
-jest.mock("../../../src/shared/l10n", () => ({
-    l10n: {
-        t: jest.fn(),
-    },
-}));
+jest.mock("../../../src/shared/utils/localization-manager", () => {
+    return {
+        Translator: {
+            translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key)
+        },
+    };
+});
 
 describe("MainPlayerStore", () => {
     let mainPlayerStore: MainPlayerStore;
