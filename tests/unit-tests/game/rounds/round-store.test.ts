@@ -163,7 +163,6 @@ describe("RoundStore", () => {
 
     describe("get highLightBorder()", () => {
         test.each([
-            [ROUND_STATE.SHOW_RESULT, { settlementResult: mockHistories[0].settlementResult }],
             [
                 ROUND_STATE.PLACING_BET,
                 {

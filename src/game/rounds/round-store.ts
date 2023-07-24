@@ -133,12 +133,7 @@ export class RoundStore {
 
     get highlightStatic(): THighlightStatic {
         let settlementResult: GameServiceMessage.TSettlementResult = null;
-        const isFinishedShowResult = this.settlementStore.isFinishedShowResult;
-        if (
-            this.roundTimeStore.roundState === ROUND_STATE.PLACING_BET ||
-            this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND ||
-            isFinishedShowResult
-        ) {
+        if (this.roundTimeStore.roundState === ROUND_STATE.PLACING_BET || this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND) {
             settlementResult = this.roundHistoryStore?.getLastRound()?.settlementResult;
         }
 
