@@ -1,3 +1,20 @@
+## [1.25.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.2...v1.25.3) (2023-07-25)
+
+
+### Bug Fixes
+
+* always load static data first, will update when realtime load done ([87467bf](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/87467bf6ec586d8dc9882cbceed5b7566a778551))
+* fix sonar issues ([e424591](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/e4245914395966699d575d8f41ecadca89065819))
+* update game_name translation ([9ce0642](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9ce06429e81cad9ca0ae16ff08e0473ee770c9a4))
+* update shared-components ([7b489cc](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/7b489cc4f48b2cd6b1760aeba3d388d020fb7042))
+* update shared-components ([7288090](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/7288090cf1558658aa26c68f16581dd91285c971))
+* update shared-components ([25fccaa](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/25fccaab6eaf6dbd1cbfcaa6d7656afaa5727221))
+* update shared-components, i18n ([c95d014](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/c95d01416e051dfeb0ebf3e2fd1138330727862c))
+* update translation ([9a98b7f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9a98b7f5c9c9388343e9d28a9a55fff024d27c3d))
+* update translation data ([ee44aa0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/ee44aa0a06f173a4770ff5e01d06c51adeffa340))
+* update unit test ([be077ef](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/be077ef23c6ab4fb28a90add2f60f8683074e811))
+* update unit tests ([6fd38c8](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/6fd38c88d36f8d3f1156d7a2a68c82a2863a125a))
+
 ## [1.25.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.1...v1.25.2) (2023-07-24)
 
 
