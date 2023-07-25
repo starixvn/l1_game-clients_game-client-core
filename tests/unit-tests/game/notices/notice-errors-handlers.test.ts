@@ -145,7 +145,7 @@ describe("NoticeErrorsHandlers", () => {
                 noticeStore,
                 backToOperatorLobbyHandler
             );
-            (Translator.translate as jest.Mock)
+            (Translator.gameTranslate as jest.Mock)
                 .mockReturnValueOnce("Game name");
             (Translator.commonTranslate as jest.Mock)
                 .mockReturnValueOnce("lost game connection")
@@ -161,7 +161,7 @@ describe("NoticeErrorsHandlers", () => {
             expect((noticeStore.addNotice as jest.Mock).mock.calls[0][0].title).toBe("Notice");
             expect((noticeStore.addNotice as jest.Mock).mock.calls[0][0].type).toBe(NoticeType.Error);
             expect(typeof (noticeStore.addNotice as jest.Mock).mock.calls[0][0].onClose).toBe("function");
-            expect(Translator.translate).toHaveBeenCalledWith(`gameNames.${gameSetting.id}`);
+            expect(Translator.gameTranslate).toHaveBeenCalledWith(`game_name`);
             expect(Translator.commonTranslate).toHaveBeenCalledWith("message_lost_game_connection", { gameName: "Game name" });
             expect(Translator.commonTranslate).toHaveBeenCalledWith("notice");
         });
