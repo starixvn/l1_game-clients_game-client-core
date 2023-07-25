@@ -63,8 +63,8 @@ export class BetHandler {
     isInPhasePreventBet() {
         const isBetPhase = [ROUND_STATE.PLACING_BET].includes(this.roundTimeStore.roundState);
         if (!isBetPhase) {
-            const warningMsg =
-                this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND ? Translator.commonTranslate("message_cannot_bet") : Translator.commonTranslate("message_placebet_next_round");
+            const isStartingRound = this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND;
+            const warningMsg = isStartingRound ? Translator.commonTranslate("message_cannot_bet") : Translator.commonTranslate("message_placebet_next_round");
 
             this.noticeStore.addWarning(warningMsg);
         }

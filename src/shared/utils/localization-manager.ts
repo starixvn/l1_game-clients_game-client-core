@@ -20,9 +20,9 @@ export class InterpolationOptions {
 }
 
 class TolgeeLoader {
-    constructor(private tolgeeUrl) {}
+    constructor(private readonly tolgeeUrl) {}
 
-    public async loadTolgee(languageId: string = "en") {
+    public async loadTolgee(languageId = "en") {
         const languages: {
             [key: string]: {
                 [key: string]: string;
@@ -30,7 +30,6 @@ class TolgeeLoader {
         } = {};
 
         try {
-            //`https://tolgee.sabagame.com/v2/projects/5/translations?ak=tgpak_gvpw45brha2xg3btoztxeytunvudc5dbn5twqodtonztc&size=1000&filterNamespace=Common,DragonTigerFight&languages=`
             const tolgeeUrl = this.tolgeeUrl + languageId;
             const statusResponse = await fetch(tolgeeUrl);
             const tolgeeData = await statusResponse.json();
