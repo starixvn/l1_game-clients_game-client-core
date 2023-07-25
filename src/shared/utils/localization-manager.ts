@@ -99,13 +99,7 @@ export class TranslationManager {
     }
 
     public loadPolygrot(languages?: { [key: string]: { [key: string]: string } }) {
-        let languageData;
-
-        if (languages) {
-            languageData = languages;
-        } else if (!this.options.isUseTolgeeRealTime) {
-            languageData = this.options.getStaticData(this.options.languageId);
-        }
+        const languageData = languages ?? this.options.getStaticData(this.options.languageId);
 
         this._polygrot = new Polyglot({ phrases: languageData, allowMissing: true });
     }
@@ -167,11 +161,11 @@ export class TranslationManager {
         return languageId;
     }
 
-    public getCurrentLanguageId(){
+    public getCurrentLanguageId() {
         return this.options.languageId;
     }
 
-    public getGameNamespace(){
+    public getGameNamespace() {
         return this.options.gameNamespace;
     }
 
