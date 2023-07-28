@@ -74,11 +74,11 @@ export namespace ErrorUtils {
         SB1920: "hand_not_active",
         SB1921: "invalid_deal_hands",
         SB1922: "message_processing_action",
-        SB1923: "message_invaliddeal_dueto_runninground",
+        SB1923: "message_invalid_deal_dueto_running_round",
         SB1936: "min_bet_hand",
         SB1937: "max_stake_hand",
         SB1938: "cant_split_hand",
-        SB1924: "message_maxBet_of_oneofchoice_reached",
+        SB1924: "message_maxbet_of_oneofchoice_reached",
         SB1925: "bet_amount_of_any_choice_incorrect",
         SB1926: "message_invalid_bet_choice",
         SB1927: "one_choice_allowed",
@@ -138,7 +138,7 @@ export namespace ErrorUtils {
         }
 
         if (!!notice.gameTypeId) {
-            Object.assign(option, { gameName: Translator.translate(`gameNames.${notice.gameTypeId}`) });
+            Object.assign(option, { gameName: Translator.gameTranslate('game_name') });
         }
 
         if (!!notice.minBet) {

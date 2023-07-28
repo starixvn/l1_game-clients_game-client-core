@@ -38,7 +38,7 @@ export class GameUtils {
                 });
             }           
         } catch (e) {
-            showResult(Translator.commonTranslate("copyfailed_md5")); //e.message
+            showResult(Translator.commonTranslate("copy_failed_md5")); //e.message
         }
     }
 

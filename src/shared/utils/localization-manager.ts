@@ -1,5 +1,6 @@
 import * as _ from "lodash";
 import Polyglot from "node-polyglot";
+import { StorageManager } from "./storage-manager";
 
 export class TranslationOptions {
     languageId: string;
@@ -73,7 +74,7 @@ export class TranslationManager {
         } else {
             options.onLoaded && options.onLoaded();
         }
-        localStorage.setItem(`current_language`, options.languageId);
+        StorageManager.set(`current_language`, options.languageId);
     }
 
     private loadTolgee(options: TranslationOptions) {
@@ -141,7 +142,7 @@ export class TranslationManager {
     }
 
     public getLanguageId() {
-        let languageId = localStorage.getItem(`current_language`) ?? this.defaultLanguageId;
+        let languageId = (StorageManager.get(`current_language`) ?? this.defaultLanguageId) as string;
 
         const urlParams = new URLSearchParams(window.location.search);
 
@@ -171,7 +172,7 @@ export class TranslationManager {
 
     public loadTranslationResource() {
         const languageId = this.getLanguageId();
-        localStorage.setItem(`current_language`, languageId);
+        StorageManager.set(`current_language`, languageId);
 
         console.log("Loaded language:" + languageId);
         this.changeLanguage(languageId);
