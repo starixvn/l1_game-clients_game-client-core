@@ -1,3 +1,10 @@
+## [1.25.4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.3...v1.25.4) (2023-07-28)
+
+
+### Bug Fixes
+
+* store auth data from storage when reload ([cca6193](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/cca619302357bb508cae612441d921337467a374))
+
 ## [1.25.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.2...v1.25.3) (2023-07-25)
 
 
