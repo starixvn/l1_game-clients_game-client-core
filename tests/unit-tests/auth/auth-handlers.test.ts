@@ -38,6 +38,33 @@ describe("AuthHandlers tests", () => {
     beforeEach(() => {
         notificationServiceHandler = new NotificationHandlers(new NotificationStore(new Mediator()), new SiteConfigs());
     });
+
+    describe("SignOut", () => {
+        let appStore: AppStore;
+        let authStore: AuthStore;
+        let handler: AuthHandlers.SignOut;
+        beforeEach(() => {
+            appStore = stub<AppStore>();
+            authStore = stub<AuthStore>();
+            handler = new AuthHandlers.SignOut(appStore, authStore);
+        });
+        it("should call authStore.signOut", () => {
+            // act
+            handler.handle();
+
+            // assert
+            expect(authStore.signOut).toHaveBeenCalled();
+        });
+
+        it("should call appStore.setTimeOut", () => {
+            // act
+            handler.handle();
+
+            // assert
+            expect(appStore.setTimeOut).toHaveBeenCalled();
+        });
+    });
+
     describe("Authorize", () => {
         // arrange
         const userService = new UserService(siteConfigs);

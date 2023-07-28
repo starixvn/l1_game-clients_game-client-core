@@ -1,7 +1,8 @@
 import { inject, injectable } from "inversify";
-import { StorageManager, localStorageKeys } from "../../shared/utils";
+import { BrowserDomUtils, StorageManager, localStorageKeys } from "../../shared/utils";
 import { AudioType } from "../audios";
 import { UserSettingData, UserSettingStore } from "./user-setting-store";
+
 @injectable()
 export class UserSettingHandlers {
     constructor(@inject(UserSettingStore) private readonly userSettingStore: UserSettingStore) {}
@@ -29,8 +30,10 @@ export class UserSettingHandlers {
     handleAudioChanged(type: AudioType, enable: boolean) {
         if (type === AudioType.MUSIC) {
             this.setMusicEnable(enable);
+            BrowserDomUtils.postMessageToParent({ musicEnable: enable });
         } else if (type === AudioType.SFX) {
             this.setSfxEnable(enable);
+            BrowserDomUtils.postMessageToParent({ sfxEnable: enable });
         }
     }
 

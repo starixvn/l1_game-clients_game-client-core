@@ -1,3 +1,4 @@
+export * from "./browser-dom-utils";
 export * from "./date-time-utils";
 export * from "./error-utils";
 export * from "./format-utils";

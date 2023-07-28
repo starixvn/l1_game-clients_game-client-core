@@ -2,7 +2,8 @@ import { stub } from "jest-auto-stub";
 import { AudioType } from "../../../../src/game/audios";
 import { UserSettingHandlers } from "../../../../src/game/user-settings/user-setting-handlers";
 import { UserSettingStore } from "../../../../src/game/user-settings/user-setting-store";
-import { StorageManager, localStorageKeys } from "../../../../src/shared/utils";
+import { StorageManager, localStorageKeys, BrowserDomUtils } from "../../../../src/shared/utils";
+
 describe("UserSettingHandlers", () => {
     let userSettingHandlers: UserSettingHandlers;
     let userSettingStore: UserSettingStore;
@@ -97,26 +98,49 @@ describe("UserSettingHandlers", () => {
     });
 
     describe("handleAudioChanged", () => {
-        it("should handle audio change for music type", () => {
-            // Arrange
-            const setMusicEnableMock = jest.spyOn(userSettingHandlers, "setMusicEnable");
+        describe("when change music", () => {
+            let setMusicEnableMock: jest.SpyInstance;
+            beforeEach(() => {
+                setMusicEnableMock = jest.spyOn(userSettingHandlers, "setMusicEnable");
+                BrowserDomUtils.postMessageToParent = jest.fn();
+            });
+            it("should handle audio change for music type", () => {
+                // Act
+                userSettingHandlers.handleAudioChanged(AudioType.MUSIC, true);
 
-            // Act
-            userSettingHandlers.handleAudioChanged(AudioType.MUSIC, true);
+                // Assert
+                expect(setMusicEnableMock).toHaveBeenCalledWith(true);
+            });
 
-            // Assert
-            expect(setMusicEnableMock).toHaveBeenCalledWith(true);
+            it("should BrowserDomUtils.postMessageToParent", () => {
+                // Act
+                userSettingHandlers.handleAudioChanged(AudioType.MUSIC, true);
+
+                // Assert
+                expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ musicEnable: true });
+            });
         });
 
-        it("should handle audio change for sfx type", () => {
-            // Arrange
-            const setSfxEnableMock = jest.spyOn(userSettingHandlers, "setSfxEnable");
+        describe("when change sfx", () => {
+            let setSfxEnableMock: jest.SpyInstance;
+            beforeEach(() => {
+                setSfxEnableMock = jest.spyOn(userSettingHandlers, "setSfxEnable");
+            });
+            it("should handle audio change for sfx type", () => {
+                // Act
+                userSettingHandlers.handleAudioChanged(AudioType.SFX, true);
 
-            // Act
-            userSettingHandlers.handleAudioChanged(AudioType.SFX, true);
+                // Assert
+                expect(setSfxEnableMock).toHaveBeenCalledWith(true);
+            });
 
-            // Assert
-            expect(setSfxEnableMock).toHaveBeenCalledWith(true);
+            it("should BrowserDomUtils.postMessageToParent", () => {
+                // Act
+                userSettingHandlers.handleAudioChanged(AudioType.SFX, true);
+
+                // Assert
+                expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ sfxEnable: true });
+            });
         });
     });
 });

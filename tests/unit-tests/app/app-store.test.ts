@@ -1,6 +1,6 @@
 import { UMInfo } from "sc-user-service-client/dist/auth";
 import { AppStore } from "../../../src/app/app-store";
-import { StorageManager, localStorageKeys } from "../../../src/shared/utils";
+import { StorageManager, localStorageKeys, BrowserDomUtils } from "../../../src/shared/utils";
 
 jest.mock("../../../src/shared/utils", () => ({
     StorageManager: {
@@ -8,6 +8,8 @@ jest.mock("../../../src/shared/utils", () => ({
         set: jest.fn(),
     },
     localStorageKeys: { session: "session-key", directMode: "d-key", returnUrl: "r-key" },
+    GameUtils: { base64Decode: jest.fn() },
+    BrowserDomUtils: { postMessageToParent: jest.fn() },
 }));
 describe("appStore tests", () => {
     describe("setUM", () => {
@@ -207,6 +209,31 @@ describe("appStore tests", () => {
 
             // assert
             expect(store.urlInfo.returnUrl).toEqual("rurl");
+        });
+    });
+
+    describe("setTimeOut", () => {
+        let store: AppStore;
+        beforeEach(() => {
+            store = new AppStore();
+        });
+        it("should set isSessionTimeout true", () => {
+            // arrange
+            store.isSessionTimeout = false;
+
+            // act
+            store.setTimeOut();
+
+            // assert
+            expect(store.isSessionTimeout).toBe(true);
+        });
+
+        it("should call BrowserDomUtils.postMessageToParent", () => {
+            // act
+            store.setTimeOut();
+
+            // assert
+            expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ sessionTimeout: true });
         });
     });
 });

@@ -3,7 +3,7 @@ import { AppStore } from "../app/app-store";
 import { AuthStore } from "../auth/auth-store";
 import { SiteConfigs } from "../configs";
 import { IHandler } from "../shared";
-import { UrlUtils } from "../shared/utils";
+import { BrowserDomUtils, UrlUtils } from "../shared/utils";
 
 export namespace ConnectSiteHandlers {
     const ConnectSitePath = {
@@ -19,7 +19,7 @@ export namespace ConnectSiteHandlers {
             @inject(AuthStore) private readonly authStore: AuthStore
         ) {}
 
-        async handle() {
+        handle() {
             redirectToAppPage(this.siteConfigs, ConnectSitePath.sessionTimeout, this.authStore.language);
         }
     }
@@ -32,7 +32,7 @@ export namespace ConnectSiteHandlers {
             @inject(AppStore) private readonly appStore: AppStore
         ) {}
 
-        async handle() {
+        handle() {
             const otherQueryString = this.appStore.umInfo?.operatorId ? `operatorId=${this.appStore.umInfo?.operatorId}` : "";
             redirectToAppPage(this.siteConfigs, ConnectSitePath.underMaintenance, this.authStore.language, otherQueryString);
         }
@@ -45,15 +45,14 @@ export namespace ConnectSiteHandlers {
             @inject(AuthStore) private readonly authStore: AuthStore
         ) {}
 
-        async handle() {
+        handle() {
             redirectToAppPage(this.siteConfigs, ConnectSitePath.login, this.authStore.language);
         }
     }
 
     const redirectToAppPage = (siteConfigs: SiteConfigs, path: string, language: string, otherQueryString = ""): void => {
-        window.location.href = `${UrlUtils.buildUrlFromSubDomain(
-            siteConfigs,
-            siteConfigs.SGConnectSubDomain
-        )}${path}?language=${language}&${otherQueryString}`;
+        BrowserDomUtils.replaceParentLocation(
+            `${UrlUtils.buildUrlFromSubDomain(siteConfigs, siteConfigs.SGConnectSubDomain)}${path}?language=${language}&${otherQueryString}`
+        );
     };
 }

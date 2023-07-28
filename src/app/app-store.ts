@@ -4,7 +4,7 @@ import { UMInfo } from "sc-user-service-client/dist/auth";
 import { ISessionInfo } from "../auth/auth-store";
 import { AppTypes } from "../shared/constants/app-type";
 import { URLParams } from "../shared/constants/url-params";
-import { StorageManager, localStorageKeys } from "../shared/utils";
+import { BrowserDomUtils, StorageManager, localStorageKeys } from "../shared/utils";
 
 interface IUrlInfo {
     returnUrl?: string;
@@ -27,6 +27,7 @@ export class AppStore {
     isPlayForFun = false;
     urlInfo: IUrlInfo = {};
     isAutoCreateNickname = false;
+    isLoading = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -101,5 +102,10 @@ export class AppStore {
 
     loadReturnUrl() {
         this.urlInfo.returnUrl = StorageManager.get(localStorageKeys.returnUrl)?.toString();
+    }
+
+    setTimeOut() {
+        this.isSessionTimeout = true;
+        BrowserDomUtils.postMessageToParent({ sessionTimeout: true });
     }
 }

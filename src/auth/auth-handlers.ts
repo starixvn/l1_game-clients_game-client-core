@@ -35,7 +35,7 @@ export namespace AuthHandlers {
         constructor(@inject(AppStore) private readonly appStore: AppStore, @inject(AuthStore) private readonly authStore: AuthStore) {}
         handle() {
             this.authStore.signOut();
-            this.appStore.isSessionTimeout = true;
+            this.appStore.setTimeOut();
         }
     }
     @injectable()
