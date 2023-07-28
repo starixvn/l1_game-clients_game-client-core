@@ -170,6 +170,7 @@ export namespace AuthHandlers {
                     this.playerSelectionClearHandler.handle();
                     this.handleAuthorizeFromMainClient(urlParams);
                 } else {
+                    this.authStore.setAuthStoreFromStorage(StorageManager.get(localStorageKeys.session) as ISessionInfo);
                     this.appStore.loadReturnUrl();
                     this.appStore.loadDirectMode();
                     await this.handleAuthorize();

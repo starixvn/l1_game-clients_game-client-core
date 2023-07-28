@@ -30,7 +30,7 @@ jest.mock("../../../src/shared/utils/logger", () => ({
     sentryLogger: { logError: jest.fn() },
 }));
 jest.mock("../../../src/shared/utils/localization-manager", () => ({
-    Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key)},
+    Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key) },
 }));
 let notificationServiceHandler: NotificationHandlers;
 
@@ -680,10 +680,21 @@ describe("AuthHandlers tests", () => {
                 // @ts-ignore
                 StorageManager.get.mockReturnValueOnce({ ssoTime: new Date() });
             });
+            it("should set authStore from storage", async () => {
+                // arrange
+                // @ts-ignore
+                StorageManager.get.mockReturnValueOnce({ username: "name", language: "en" }).mockReturnValueOnce(undefined);
+
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(authStore.setAuthStoreFromStorage).toHaveBeenCalledWith({ username: "name", language: "en" });
+            });
             it("should load return url in storage", async () => {
                 // arrange
                 // @ts-ignore
-                StorageManager.get.mockReturnValueOnce(undefined);
+                StorageManager.get.mockReturnValueOnce(undefined).mockReturnValueOnce(undefined);
 
                 // act
                 await ssoHandler.handle(urlParams);
@@ -695,7 +706,7 @@ describe("AuthHandlers tests", () => {
             it("should load direct mode info in storage", async () => {
                 // arrange
                 // @ts-ignore
-                StorageManager.get.mockReturnValueOnce(undefined);
+                StorageManager.get.mockReturnValueOnce(undefined).mockReturnValueOnce(undefined);
 
                 // act
                 await ssoHandler.handle(urlParams);
@@ -707,7 +718,7 @@ describe("AuthHandlers tests", () => {
             it("should sign out when session info not exist", async () => {
                 // arrange
                 // @ts-ignore
-                StorageManager.get.mockReturnValueOnce(undefined);
+                StorageManager.get.mockReturnValueOnce(undefined).mockReturnValueOnce(undefined);
 
                 // act
                 await ssoHandler.handle(urlParams);
@@ -718,8 +729,9 @@ describe("AuthHandlers tests", () => {
 
             it("should call authorize when session info exist", async () => {
                 // arrange
-                // @ts-ignore
-                StorageManager.get.mockReturnValueOnce({ session: "session", username: "username" });
+                (StorageManager.get as jest.Mock)
+                    .mockReturnValueOnce({ session: "session", username: "username" })
+                    .mockReturnValueOnce({ session: "session", username: "username" });
 
                 // act
                 await ssoHandler.handle(urlParams);
