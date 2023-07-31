@@ -1,3 +1,10 @@
+# [1.26.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.6...v1.26.0) (2023-07-31)
+
+
+### Features
+
+* update storage manager ([62d7593](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/62d7593f3805af5e8f81d4312b88f5fe48ae76b2))
+
 ## [1.25.6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.5...v1.25.6) (2023-07-31)
 
 
