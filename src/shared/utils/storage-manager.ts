@@ -11,17 +11,21 @@ declare global {
     }
 }
 
-class LocalStorage implements IActionStorage {
+export class LocalStorage implements IActionStorage {
     remove(name: string) {
         localStorage.removeItem(name);
     }
 
     get(name: string) {
         const storage = localStorage.getItem(name);
+        if (!storage) {
+            return null;
+        }
         try {
-            return storage ? JSON.parse(storage) : null;
+            return JSON.parse(storage);
         } catch (error) {
-            return storage ?? null;
+            console.warn(`LocalStorage ${name} can not parse`);
+            return null;
         }
     }
 
@@ -42,7 +46,7 @@ class LocalStorage implements IActionStorage {
     }
 }
 
-class Memory implements IActionStorage {
+export class Memory implements IActionStorage {
     localMemory: any;
     constructor() {
         window.localMemory = {};
@@ -50,15 +54,15 @@ class Memory implements IActionStorage {
     }
 
     remove(name: string) {
-        this.localMemory[name] = "";
+        delete this.localMemory[name];
     }
 
     get(name: string) {
-        return this.localMemory[name] ? JSON.parse(this.localMemory[name]) : null;
+        return this.localMemory[name] ? this.localMemory[name] : null;
     }
 
-    set(name: string, value: string) {
-        this.localMemory[name] = JSON.stringify(value);
+    set(name: string, value: any) {
+        this.localMemory[name] = value;
     }
 
     isAvailable() {
