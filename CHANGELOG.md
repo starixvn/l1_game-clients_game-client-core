@@ -1,3 +1,10 @@
+# [1.27.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.26.0...v1.27.0) (2023-07-31)
+
+
+### Features
+
+* post message to lobby when back lobby, change audio, sign out ([5a1f8a6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/5a1f8a6f8e0066576cb369ed24d98349ef4382f2))
+
 # [1.26.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.6...v1.26.0) (2023-07-31)
 
 
