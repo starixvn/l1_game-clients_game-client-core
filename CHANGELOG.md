@@ -1,3 +1,10 @@
+## [1.25.6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.5...v1.25.6) (2023-07-31)
+
+
+### Bug Fixes
+
+* update invalid bet message ([0c2a00f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/0c2a00fd30703df655f508746713fb0c03d3bf40))
+
 ## [1.25.5](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.25.4...v1.25.5) (2023-07-28)
 
 
