@@ -89,7 +89,7 @@ export namespace ErrorUtils {
         SB1932: "invalid_bonus",
         SB1933: "game_excluded",
         SB1934: "not_enough_spin",
-        SB1935: "message_invaliddeal_dueto_runninground",
+        SB1935: "invalid_bet",
         SB1939: "message_hedge_bet",
     };
 
