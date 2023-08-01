@@ -1,3 +1,11 @@
+## [1.27.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.27.1...v1.27.2) (2023-08-01)
+
+
+### Bug Fixes
+
+* remove localization-editor ([bef2efe](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/bef2efed0837f0b054846913f5a86f549a3fade9))
+* remove localization-editor ([c58ee50](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/c58ee50b7694e156e4a328509a03a57b3979c729))
+
 ## [1.27.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.27.0...v1.27.1) (2023-08-01)
 
 
