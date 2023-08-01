@@ -1,3 +1,11 @@
+## [1.27.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.27.0...v1.27.1) (2023-08-01)
+
+
+### Bug Fixes
+
+* update translation ([80a66df](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/80a66df860414659c2e94650800f056cc8ac9c05))
+* update translation ([b85334c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b85334ca85d5a986d83a30aac64c5dcb2719981e))
+
 # [1.27.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.26.0...v1.27.0) (2023-07-31)
 
 
