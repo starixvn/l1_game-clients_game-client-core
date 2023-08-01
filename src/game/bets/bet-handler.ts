@@ -50,7 +50,7 @@ export class BetHandler {
     }
 
     showNoticePlaceBetFailure(freebetEnabled: boolean) {
-        const message = freebetEnabled ? Translator.commonTranslate("not_enough_scoin") : Translator.commonTranslate("message_insufficient_fund");
+        const message = freebetEnabled ? Translator.commonTranslate("not_enough_scoin") : Translator.commonTranslate("not_enough_money");
         this.noticeStore.addWarning(message);
     }
 
