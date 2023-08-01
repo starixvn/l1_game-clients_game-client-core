@@ -2,7 +2,7 @@
     "testEnvironment": "jsdom",
     "collectCoverage": false,
     "coverageDirectory": "coverage",
-    "coveragePathIgnorePatterns": ["localization-editor"],
+    "coveragePathIgnorePatterns": [],
     "transform": {
         "^.+\\.tsx?$": ["ts-jest", { "tsconfig": "tsconfig.test.json" }]
     },

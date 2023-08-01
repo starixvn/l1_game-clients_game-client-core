@@ -13,11 +13,6 @@
 	url = ../cocos-testing.git
 	branch = 1-12-bet-history
 
-[submodule "examples/cocos-3x/extensions/localization-editor"]
-	path = examples/cocos-3x/extensions/localization-editor
-	url = ../localization-editor.git
-	branch = main
-
 [submodule "examples/cocos-3x/build-templates"]
 	path = examples/cocos-3x/build-templates
 	url = ../build-templates.git
