@@ -1,9 +1,5 @@
 import { Base64 } from "base64-string";
-import { Translator } from "./localization-manager";
-
-declare global {
-    interface Window { ReactNativeWebView: any; }
-}
+import { BrowserDomUtils } from "./browser-dom-utils";
 
 export class GameUtils {
     static base64: Base64;
@@ -22,28 +18,7 @@ export class GameUtils {
         return GameUtils.base64.encode(data);
     }
 
-    public static async copyToClipboard(data: string, isAndroid: boolean, callback: (message: string) => void): Promise<void> {
-        const showResult = (message: string) => {
-            callback(message);
-        }
-
-        try {
-            if(this.isAndroidWebView(isAndroid)){
-                window.ReactNativeWebView.postMessage(JSON.stringify({eventType: 'copy_to_clipboard', data: data}));
-                showResult(Translator.commonTranslate("copy_successfully_md5"));
-            }
-            else{
-                await navigator.clipboard.writeText(data).then(() => {
-                    showResult(Translator.commonTranslate("copy_successfully_md5"));
-                });
-            }           
-        } catch (e) {
-            showResult(Translator.commonTranslate("copy_failed_md5")); //e.message
-        }
+    public static async copyToClipboard(data: string) {
+        BrowserDomUtils.postMessageToParent({ copyToClipboard: data });
     }
-
-    public static isAndroidWebView(isAndroid: boolean): boolean {
-        return isAndroid && window.ReactNativeWebView;
-    }
-
 }
