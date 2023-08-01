@@ -58,7 +58,7 @@ export namespace ErrorUtils {
         SB1904: "message_jackpot_processing",
         SB1905: "message_placebet_next_round",
         SB1906: "message_cannot_bet",
-        SB1907: "message_insufficient_fund",
+        SB1907: "not_enough_money",
         SB1908: "message_not_enough_scoin",
         SB1909: "message_min_bet_notice",
         SB1910: "message_option_maxbet",
