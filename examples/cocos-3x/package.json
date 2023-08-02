@@ -17,7 +17,9 @@
         "test-coverage": "jest --collect-coverage",
         "obfuscator-config-file": "ts-node ./site-configs/site-config-obfuscator.ts",
         "merge-json": "node tolgee-data/merge-tolgee-data.js",
-        "test:integration": "playwright test tests/integration-tests"
+        "test:integration": "playwright test tests/integration-tests",
+        "build-project": "C:\\ProgramData\\cocos\\editors\\Creator\\3.7.2\\CocosCreator.exe --project . --build platform=web-mobile;debug=false;webOrientation=landscape;md5Cache=true;replaceSplashScreen=true",
+        "build-integration-test": "cd ./../.. && cocos-integration-test-setup.bat"
     },
     "dependencies": {
         "@sg/game-client-base": "file:../..",
