@@ -22,7 +22,9 @@ export namespace NoticeErrorsHandlers {
             @inject(AuthHandlers.SignOut)
             protected readonly signOutHandler: AuthHandlers.SignOut,
             @inject(ConnectionStore)
-            protected readonly connectionStore: ConnectionStore
+            protected readonly connectionStore: ConnectionStore,
+            @inject(AuthHandlers.ClearRecheckInInterval)
+            protected readonly clearRecheckInInterval: AuthHandlers.ClearRecheckInInterval,
         ) {
             reaction(() => this.authStore.errorCode, this.onErrorCodeChange.bind(this));
         }
@@ -46,6 +48,7 @@ export namespace NoticeErrorsHandlers {
                 this.connectionStore.closeSocket();
             };
             setTimeout(signOut, 10000);
+            this.clearRecheckInInterval.handle();
             this.noticeStore.addNotice({
                 message,
                 title: Translator.commonTranslate("notice"),
