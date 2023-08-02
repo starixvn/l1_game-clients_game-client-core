@@ -1,3 +1,10 @@
+## [1.27.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.27.2...v1.27.3) (2023-08-02)
+
+
+### Bug Fixes
+
+* copy to clipboard ([fa205bf](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/fa205bf511764f3d190e1bf8ce505aaecf5fee05))
+
 ## [1.27.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.27.1...v1.27.2) (2023-08-01)
 
 
