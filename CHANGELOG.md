@@ -1,3 +1,11 @@
+## [1.27.4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.27.3...v1.27.4) (2023-08-02)
+
+
+### Bug Fixes
+
+* clear session when showing error messages ([cfc9eca](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/cfc9eca0dd213d0edfaf911d2e37bbe41205f2d7))
+* update unit test ([624010f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/624010f0bab0b39c598af33109e753eb6b409b88))
+
 ## [1.27.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.27.2...v1.27.3) (2023-08-02)
 
 
