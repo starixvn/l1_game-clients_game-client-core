@@ -1,3 +1,10 @@
+# [1.28.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.27.4...v1.28.0) (2023-08-03)
+
+
+### Features
+
+* add id for audio draw card ([b32683b](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b32683b8727390b9985dd476e945c17a315ec1ce))
+
 ## [1.27.4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.27.3...v1.27.4) (2023-08-02)
 
 
