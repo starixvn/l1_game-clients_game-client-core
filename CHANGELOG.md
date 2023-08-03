@@ -1,3 +1,10 @@
+# [1.29.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.28.0...v1.29.0) (2023-08-03)
+
+
+### Features
+
+* integration tests ([4a35508](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/4a35508b868c9e378c56552ee5c9f7f4226bc8cc))
+
 # [1.28.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.27.4...v1.28.0) (2023-08-03)
 
 
