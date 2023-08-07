@@ -53,7 +53,7 @@ export class ReBetStore {
     }
 
     updateStorageBetBet() {
-        if (this.roundStore.clientRoundId > 0) {
+        if (this.roundStore.clientRoundId > 0 && !this.roundTimeStore.isStartPlacingBet) {
             const ruleReBet = { roundId: this.roundStore.clientRoundId };
             this.ruleShowReBet = ruleReBet;
 
