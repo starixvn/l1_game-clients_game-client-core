@@ -1,3 +1,10 @@
+## [1.29.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.29.2...v1.29.3) (2023-08-07)
+
+
+### Bug Fixes
+
+* update unit tests ([6fb1edd](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/6fb1eddc352049a67a7d950a8935a49aad163b30))
+
 ## [1.29.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.29.1...v1.29.2) (2023-08-07)
 
 
