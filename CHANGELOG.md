@@ -1,3 +1,10 @@
+## [1.29.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.29.1...v1.29.2) (2023-08-07)
+
+
+### Bug Fixes
+
+* update disabled messages ([6161025](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/6161025b435334e48e8a02c6feac65eb05ec1c8f))
+
 ## [1.29.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.29.0...v1.29.1) (2023-08-07)
 
 
