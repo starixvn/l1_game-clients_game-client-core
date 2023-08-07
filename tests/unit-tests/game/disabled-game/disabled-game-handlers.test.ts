@@ -20,16 +20,7 @@ jest.mock("../../../../src/shared/utils/localization-manager", () => {
     };
 });
 
-describe("DisableGameHandlers tests", () => {
-    const fakeDisabledGameInfo: GameServiceMessage.DisabledGameInfo = {
-        "vi-VN": "",
-        "en-US": "Fake disabled game message",
-        "zh-CN": "",
-        "zh-TW": "",
-        "th-TH": "",
-        "id-ID": "",
-    };
-
+describe("DisableGameHandlers tests", () => {  
     let connectionStore: ConnectionStore,
         authStore: AuthStore,
         disabledGameStore: DisabledGameStore,
@@ -87,25 +78,24 @@ describe("DisableGameHandlers tests", () => {
     });
 
     describe("showPopupHandle", () => {
-        const authStoreLangs = [["en-US", fakeDisabledGameInfo["en-US"]]];
-        test.each(authStoreLangs)("should set disable game true and open popup.", (authStoreLang, expectedDisabledMessages) => {
+        it("should set disable game true and open popup.", () => {
             // arrange
             disabledGameStore.disabled = true;
-            authStore.language = authStoreLang;
+            authStore.language = "en-US";
 
             // act
-            handler.showPopupHandle(fakeDisabledGameInfo);
+            handler.showPopupHandle();
 
             // assert
             expect(disabledGameStore.setShowPopup).toBeCalledWith(true);
             expect(noticeStore.addNotice).toHaveBeenCalledWith({
-                message: expectedDisabledMessages,
+                message: "message_disabled_game",
                 title: "notice",
                 type: NoticeType.Error,
                 onClose: expect.any(Function),
                 showBtnConfirmButton: true,
             });
-        });
+        })       
     });
 
     describe("inGameHandle", () => {
@@ -122,7 +112,7 @@ describe("DisableGameHandlers tests", () => {
                     roundRunningHandlers.stopRunner = jest.fn();
 
                     // act
-                    handler.inGameHandle(fakeDisabledGameInfo);
+                    handler.inGameHandle();
 
                     // assert
                     expect(handler.showPopupHandle).toHaveBeenCalled();
@@ -142,7 +132,7 @@ describe("DisableGameHandlers tests", () => {
                     roundRunningHandlers.stopRunner = jest.fn();
 
                     // act
-                    handler.inGameHandle(fakeDisabledGameInfo);
+                    handler.inGameHandle();
 
                     // assert
                     expect(handler.showPopupHandle).not.toHaveBeenCalled();
@@ -161,7 +151,7 @@ describe("DisableGameHandlers tests", () => {
                     handler.showPopupHandle = jest.fn();
 
                     // act
-                    handler.inGameHandle(fakeDisabledGameInfo);
+                    handler.inGameHandle();
 
                     // assert
                     expect(handler.showPopupHandle).not.toHaveBeenCalled();
@@ -177,7 +167,7 @@ describe("DisableGameHandlers tests", () => {
                 roundTimeStore.roundTime = 39;
 
                 // act
-                handler.inGameHandle(fakeDisabledGameInfo);
+                handler.inGameHandle();
 
                 // assert
                 expect(disabledGameStore.setGameStatus).toBeCalledTimes(1);
@@ -192,7 +182,7 @@ describe("DisableGameHandlers tests", () => {
             handler.showPopupHandle = jest.fn();
 
             // act
-            handler.joinGameHandle(fakeDisabledGameInfo);
+            handler.joinGameHandle();
 
             // assert
             expect(handler.showPopupHandle).toHaveBeenCalled();
@@ -210,7 +200,7 @@ describe("DisableGameHandlers tests", () => {
             handler.joinGameHandle = jest.fn();
 
             // act
-            handler.handle(fakeDisabledGameInfo);
+            handler.handle();
 
             // assert
             expect(handler.inGameHandle).toBeCalledTimes(expectedNumerousInGameCall);
