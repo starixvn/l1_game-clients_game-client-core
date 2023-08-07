@@ -1,3 +1,10 @@
+## [1.29.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.29.0...v1.29.1) (2023-08-07)
+
+
+### Bug Fixes
+
+* change key audio starting-bet ([3c15c6a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/3c15c6a2aee2cf9080074b424323e8939c9b5228))
+
 # [1.29.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.28.0...v1.29.0) (2023-08-03)
 
 
