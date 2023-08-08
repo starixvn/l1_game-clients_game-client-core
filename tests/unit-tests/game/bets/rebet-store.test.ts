@@ -3,6 +3,7 @@ import { reaction } from "mobx";
 import { ReBetStore } from "../../../../src/game/bets";
 import { GameSetting } from "../../../../src/game/game-configs";
 import { RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
+import { StorageManager } from "./../../../../src/shared/utils/storage-manager";
 
 jest.mock("mobx", () => ({
     ...jest.requireActual("mobx"),
@@ -32,11 +33,37 @@ describe("ReBetStore", () => {
             }
         });
 
-        // Call the function under test
+        // Act
         reBetStore.updateStorageBetBet();
 
-        // Assert that the updateStorageBetBet function has been called
+        // Assert
         expect(updateStorageBetBetSpy).toHaveBeenCalled();
+    });
+
+    describe("updateStorageBetBet", () => {
+        test.each([
+            [1, true],
+            [0, false],
+            [2, true],
+            [3, false],
+        ])("when clientRoundId is %i and isStartPlacingBet is %p", (clientRoundId, isStartPlacingBet) => {
+            // Arrange
+            roundStore = stub<RoundStore>({ ownBets: { even: 1 }, clientRoundId: clientRoundId });
+            roundTimeStore = stub<RoundTimeStore>({ isStartPlacingBet });
+            const reBetStore = new ReBetStore(roundStore, gameSetting, roundTimeStore);
+
+            // Act
+            reBetStore.updateStorageBetBet();
+            StorageManager.set = jest.fn();
+
+            // Assert
+            if (clientRoundId > 0 && !isStartPlacingBet) {
+                expect(reBetStore.ruleShowReBet).toEqual({ roundId: clientRoundId });
+            } else {
+                expect(reBetStore.ruleShowReBet).toEqual({ roundId: 0 });
+                expect(StorageManager.set).not.toHaveBeenCalled();
+            }
+        });
     });
 
     describe("isShowBtnReBet", () => {
