@@ -31,7 +31,13 @@ export namespace AppHandlers {
             }
         }
 
-        private getParamAuthorize() {
+        handleOpenGame(gameId: number) {
+            this.playerSelectionClearHandler.handle();
+            const params = this.getParamAuthorize(gameId);
+            BrowserDomUtils.postMessageToParent({ ...params, backLobby: true });
+        }
+
+        private getParamAuthorize(gameId: number = 0) {
             const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
             return {
                 ss: sessionInfo?.session,
@@ -40,6 +46,9 @@ export namespace AppHandlers {
                 isAuthenticated: sessionInfo?.isAuthenticated,
                 memberName: sessionInfo?.memberName,
                 language: sessionInfo?.language,
+                gameId,
+                directMode: this.appStore.isDirectMode,
+                promotion: StorageManager.get(localStorageKeys.boostOdds),
             };
         }
     }

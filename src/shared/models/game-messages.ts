@@ -1,3 +1,5 @@
+import { BoostedOddsModel, PromotionModel } from "../../notification";
+
 export namespace GameClientEmitMessage {
     export class Signin {
         isAuthenticated: boolean;
@@ -283,4 +285,16 @@ export namespace NotificationServiceMessage {
         pool: number;
         static eventName = "jackpotWinner";
     }
+
+    export class PromotionNotifications {
+        promotions: Array<PromotionModel>;
+        static eventName = "promotionNotifications";
+    }
+
+    // export const promotionsEventName = "promotionNotifications";
+    export class BoostedOdd {
+        promotions: Array<BoostedOddsModel>;
+        static eventName = "promotions";
+    }
+    // export const boostedOddEventName = "promotions";
 }

@@ -11,6 +11,8 @@ export const events = {
         kickedOut: "kickedOut",
         reload: "reload",
         jackpotWinner: "jackpotWinner",
+        promotionNotifications: "promotionNotifications",
+        boostedOddPromotion: "promotions",
     },
 };
 
@@ -40,6 +42,8 @@ export class NotificationStore {
         this.connection.on(events.kickedOut, this.onHandleKickedOut.bind(this));
         this.connection.on(events.reload, this.onReload.bind(this));
         this.connection.on(events.jackpotWinner, this.onNotifyJackpotWinner.bind(this));
+        this.connection.on(events.promotionNotifications, this.onPromotionNotification.bind(this));
+        this.connection.on(events.promotionNotifications, this.onBoostedOddsPromotion.bind(this));
     }
 
     onHandleKickedOut(data: boolean | NotificationServiceMessage.UnderMaintenanceInfo) {
@@ -56,6 +60,14 @@ export class NotificationStore {
 
     onNotifyJackpotWinner(data: NotificationServiceMessage.JackpotWinner) {
         this.mediator.emit(NotificationServiceMessage.JackpotWinner.eventName, data);
+    }
+
+    onPromotionNotification(data: NotificationServiceMessage.PromotionNotifications) {
+        this.mediator.emit(NotificationServiceMessage.PromotionNotifications.eventName, data);
+    }
+
+    onBoostedOddsPromotion(data: NotificationServiceMessage.BoostedOdd) {
+        this.mediator.emit(NotificationServiceMessage.BoostedOdd.eventName, data);
     }
 
     onConnectFailed(error?: Error) {
