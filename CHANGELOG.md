@@ -1,3 +1,15 @@
+# [1.30.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.29.3...v1.30.0) (2023-08-08)
+
+
+### Bug Fixes
+
+* check show btn rebet ([7421105](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/74211057bd277a2d0d523490946bbbc655cc0833))
+
+
+### Features
+
+* update unit-test for rebet ([2f336a5](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/2f336a5f30e0aeaa4a7f768bc397070100ceacb6))
+
 ## [1.29.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.29.2...v1.29.3) (2023-08-07)
 
 
