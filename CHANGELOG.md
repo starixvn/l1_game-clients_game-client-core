@@ -1,3 +1,10 @@
+## [1.31.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.0...v1.31.1) (2023-08-11)
+
+
+### Bug Fixes
+
+* update ci build ver 3.8.0 ([6f82485](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/6f8248581bf100e61190d99d0b324a1c5d3fec60))
+
 # [1.31.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.30.0...v1.31.0) (2023-08-11)
 
 
