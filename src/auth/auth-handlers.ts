@@ -298,6 +298,7 @@ export namespace AuthHandlers {
             this.reCheckInId = setInterval(() => {
                 this.handleRecheckIn();
             }, 60 * 1000);
+            this.handleRecheckIn();
         }
 
         private async handleRecheckIn() {
