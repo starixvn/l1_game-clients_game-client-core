@@ -1,3 +1,10 @@
+## [1.31.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.1...v1.31.2) (2023-08-11)
+
+
+### Bug Fixes
+
+* default screen splash ([c797cb4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/c797cb4c3cbedc6060a1b9235180385b851efb1e))
+
 ## [1.31.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.0...v1.31.1) (2023-08-11)
 
 
