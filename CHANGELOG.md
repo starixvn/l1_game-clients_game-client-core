@@ -1,3 +1,10 @@
+## [1.31.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.2...v1.31.3) (2023-08-14)
+
+
+### Bug Fixes
+
+* update handleRecheckIn ([f446955](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/f44695567a54e2406dac980cacf61ac178607d7c))
+
 ## [1.31.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.1...v1.31.2) (2023-08-11)
 
 
