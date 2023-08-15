@@ -112,7 +112,7 @@ cocos_unit_test_js:
       - if: "$CI_COMMIT_BRANCH"
 
 publish_npm:
-  stage: publish
+  stage: deploy
   image: "$NODEJS_IMAGE"
   needs: ["sonar_js"]
 
