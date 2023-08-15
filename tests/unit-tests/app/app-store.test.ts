@@ -1,6 +1,7 @@
 import { UMInfo } from "sc-user-service-client/dist/auth";
 import { AppStore } from "../../../src/app/app-store";
 import { StorageManager, localStorageKeys, BrowserDomUtils } from "../../../src/shared/utils";
+import { makeAutoObservable } from "mobx";
 
 jest.mock("../../../src/shared/utils", () => ({
     StorageManager: {
@@ -11,7 +12,33 @@ jest.mock("../../../src/shared/utils", () => ({
     GameUtils: { base64Decode: jest.fn() },
     BrowserDomUtils: { postMessageToParent: jest.fn() },
 }));
+jest.mock("mobx");
 describe("appStore tests", () => {
+    describe("constructor", () => {
+        it("should call makeAutoObservable", () => {
+            // act
+            const store = new AppStore();
+
+            // assert
+            expect(makeAutoObservable).toHaveBeenCalledWith(store);
+        });
+
+        it("store has default value as expected", () => {
+            // act
+            const store = new AppStore();
+
+            // assert
+            expect(store.isUM).toBe(false);
+            expect(store.umInfo).toBeNull();
+            expect(store.isSessionTimeout).toBe(false);
+            expect(store.isDirectMode).toBe(false);
+            expect(store.isApp).toBe(false);
+            expect(store.isPlayForFun).toBe(false);
+            expect(store.urlInfo).toEqual({});
+            expect(store.isAutoCreateNickname).toBe(false);
+            expect(store.isLoading).toBe(true);
+        });
+    });
     describe("setUM", () => {
         it("should set isUM true", () => {
             // arrange

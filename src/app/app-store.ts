@@ -27,7 +27,7 @@ export class AppStore {
     isPlayForFun = false;
     urlInfo: IUrlInfo = {};
     isAutoCreateNickname = false;
-    isLoading = false;
+    isLoading = true;
 
     constructor() {
         makeAutoObservable(this);
