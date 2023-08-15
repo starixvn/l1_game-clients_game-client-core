@@ -87,7 +87,7 @@ export const ssoTests = () => {
                 uname: normalPlayer.username,
                 lang: normalPlayer.language,
                 appType: 1,
-                rurl: "https://game.com",
+                rurl: "aHR0cHM6Ly9nYW1lLmNvbQ==", // https://game.com
             };
             const urlSearchParams = new URLSearchParams();
             Object.keys(params).forEach((key) => params[key] && urlSearchParams.append(key, params[key]));

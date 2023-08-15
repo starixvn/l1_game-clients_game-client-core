@@ -15,9 +15,11 @@ import { sentryLogger } from "../../../src/shared/utils/logger";
 import { NameGenerator } from "../../../src/shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 import { siteConfigs } from "../container.test";
+import { BrowserDomUtils } from "../../../src/shared/utils/browser-dom-utils";
 
 jest.mock("../../../src/shared/utils/game-utils");
 jest.mock("../../../src/shared/utils/name-generator");
+jest.mock("../../../src/shared/utils/browser-dom-utils");
 jest.mock("../../../src/shared/utils/storage-manager", () => ({
     StorageManager: {
         get: jest.fn(),
@@ -32,6 +34,7 @@ jest.mock("../../../src/shared/utils/logger", () => ({
 jest.mock("../../../src/shared/utils/localization-manager", () => ({
     Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key) },
 }));
+
 let notificationServiceHandler: NotificationHandlers;
 
 describe("AuthHandlers tests", () => {
@@ -537,17 +540,27 @@ describe("AuthHandlers tests", () => {
                 StorageManager.get.mockReturnValueOnce(undefined);
             });
             const urlParams = new URLSearchParams("token=a&appType=1");
-            it("should set UM into appStore when UM", async () => {
-                // arrange
-                // @ts-ignore
-                userService.sso.mockReturnValueOnce({ isUM: true, umInfo: {} });
 
-                // act
-                await ssoHandler.handle(urlParams);
+            describe("when UM", () => {
+                beforeEach(() => {
+                    (userService.sso as jest.Mock).mockReturnValueOnce({ isUM: true, umInfo: {} });
+                });
+                it("should set UM into appStore", async () => {
+                    // act
+                    await ssoHandler.handle(urlParams);
 
-                // assert
-                expect(userService.sso).toHaveBeenCalledWith("a", 1);
-                expect(appStore.setUM).toHaveBeenCalledWith({});
+                    // assert
+                    expect(userService.sso).toHaveBeenCalledWith("a", 1);
+                    expect(appStore.setUM).toHaveBeenCalledWith({});
+                });
+
+                it("should call BrowserDomUtils.postMessageToParent after sso", async () => {
+                    // act
+                    await ssoHandler.handle(urlParams);
+
+                    // assert
+                    expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ hasSSO: true });
+                });
             });
 
             describe("when isAuthenticated true", () => {
@@ -619,6 +632,14 @@ describe("AuthHandlers tests", () => {
 
                     // assert
                     expect(authorizeHandler.handle).toHaveBeenCalledWith({ session: response.ss, username: response.username });
+                });
+
+                it("should call BrowserDomUtils.postMessageToParent after sso", async () => {
+                    // act
+                    await ssoHandler.handle(urlParams);
+
+                    // assert
+                    expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ hasSSO: true });
                 });
             });
         });

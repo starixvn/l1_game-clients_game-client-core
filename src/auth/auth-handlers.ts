@@ -16,6 +16,7 @@ import { URLParams } from "./../shared/constants/url-params";
 import { AuthStore, ISessionInfo } from "./auth-store";
 import { UserService } from "./user-service";
 import { Translator } from "../shared/utils/localization-manager";
+import { BrowserDomUtils } from "../shared/utils/browser-dom-utils";
 
 const { ErrorUtils } = utils;
 
@@ -165,6 +166,7 @@ export namespace AuthHandlers {
                 }
 
                 await this.handleSSOAndAuthorize(token, system);
+                BrowserDomUtils.postMessageToParent({ hasSSO: true });
             } else {
                 if (urlParams?.has(URLParams.params)) {
                     this.playerSelectionClearHandler.handle();
