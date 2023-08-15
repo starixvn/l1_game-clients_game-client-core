@@ -1,3 +1,10 @@
+## [1.31.4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.3...v1.31.4) (2023-08-15)
+
+
+### Bug Fixes
+
+* show loading until game config is finished setting ([442ed87](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/442ed87802daf7945f7b1d333265e80148492a6f))
+
 ## [1.31.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.2...v1.31.3) (2023-08-14)
 
 
