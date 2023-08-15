@@ -1,3 +1,10 @@
+## [1.31.7](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.6...v1.31.7) (2023-08-15)
+
+
+### Bug Fixes
+
+* run build script before publish package ([9a7f82a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9a7f82a22cfbed6343035e1947eb79f675f50f96))
+
 ## [1.31.6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.5...v1.31.6) (2023-08-15)
 
 
