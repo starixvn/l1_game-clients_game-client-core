@@ -1,3 +1,12 @@
+## [1.31.6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.5...v1.31.6) (2023-08-15)
+
+
+### Bug Fixes
+
+* correct publish npm job ([29ce7d1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/29ce7d111323dcac74ced4c966ec67f9765b269e))
+* correct publish npm job ([542b29e](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/542b29e23b6a641dfa499caba21809b382691ec8))
+* correct publish npm job ([39f6f2a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/39f6f2a410feb36ec5624e6e1b69edcd42cd6cbb))
+
 ## [1.31.5](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.4...v1.31.5) (2023-08-15)
 
 
