@@ -4,8 +4,7 @@ include:
     file: "luminet.gitlab-ci.yml"
   - project: "ci/common-ci"
     ref: master
-    file: "npm/publish-npm-ts.gitlab-ci.yml"
-
+    file: "npm/publish-npm.gitlab-ci.yml "
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
@@ -13,7 +12,6 @@ variables:
   COCOS_VERSION: "3.8.0"
   NODEJS_INTEGRATION_TEST_IMAGE_VERSION: "hub.lumigame.com/docker-hub/library/node:18.1-alpine"
   COCOS_PROJECT_DIR: examples/cocos-3x
-
 
 .build_cocos_creator_script: &build_cocos_creator_script
   stage: build-cocos-web
@@ -53,29 +51,29 @@ variables:
 integration_test:
   stage: test
   tags:
-  - docker
+    - docker
   image: "$NODEJS_INTEGRATION_TEST_IMAGE_VERSION"
   before_script:
     - npm set registry http://npm.lumigame.com
     - npm install
   script:
-  - npm run integration-test
+    - npm run integration-test
   allow_failure: false
   artifacts:
     when: always
     paths:
-    - "./coverage"
+      - "./coverage"
     reports:
       junit:
-      - junit.xml
+        - junit.xml
     expire_in: 1 day
   rules:
-  - - if: "$CI_COMMIT_TAG =~ /^deploy-/"
-      when: never
-    - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
-      when: never
-  - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: "$CI_COMMIT_BRANCH"
+    - - if: "$CI_COMMIT_TAG =~ /^deploy-/"
+        when: never
+      - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
+        when: never
+    - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      - if: "$CI_COMMIT_BRANCH"
 
 unit_test_js:
   allow_failure: false
@@ -84,37 +82,37 @@ cocos_unit_test_js:
   stage: test
   image: "$NODEJS_IMAGE"
   tags:
-  - docker
+    - docker
   before_script:
-  - npm set registry http://npm.lumigame.com
-  - yarn global add jest@29.5.0
-  - npm install
+    - npm set registry http://npm.lumigame.com
+    - yarn global add jest@29.5.0
+    - npm install
   script:
-  - npm run build
-  - cd ./examples/cocos-3x 
-  - npm install 
-  - npm run test
+    - npm run build
+    - cd ./examples/cocos-3x
+    - npm install
+    - npm run test
   allow_failure: false
   cache:
-  - key:
-      files:
-      - package.json
-      - yarn.lock
-    paths:
-    - node_modules
+    - key:
+        files:
+          - package.json
+          - yarn.lock
+      paths:
+        - node_modules
   extends: ".unit_test_js"
   rules:
-  - - if: "$CI_COMMIT_TAG =~ /^deploy-/"
+    - - if: "$CI_COMMIT_TAG =~ /^deploy-/"
+        when: never
+      - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
+        when: never
+    - if: $ENABLE_TEST_JS != "true"
       when: never
-    - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
-      when: never
-  - if: $ENABLE_TEST_JS != "true"
-    when: never
-  - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: "$CI_COMMIT_BRANCH"
+    - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      - if: "$CI_COMMIT_BRANCH"
 
 publish_npm:
-  stage: test
+  stage: publish
   image: "$NODEJS_IMAGE"
   needs: ["sonar_js"]
 
@@ -168,23 +166,23 @@ cocos_integration_tests:
   tags:
     - gpu-device
   rules:
-  - - if: "$CI_COMMIT_TAG =~ /^deploy-/"
+    - - if: "$CI_COMMIT_TAG =~ /^deploy-/"
+        when: never
+      - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
+        when: never
+    - if: $ENABLE_TEST_JS != "true"
       when: never
-    - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
-      when: never
-  - if: $ENABLE_TEST_JS != "true"
-    when: never
-  - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: "$CI_COMMIT_BRANCH"
+    - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      - if: "$CI_COMMIT_BRANCH"
   needs:
     - cocos_integration_docker_build
   cache:
-  - key:
-      files:
-      - $COCOS_PROJECT_DIR/package.json
-      - $COCOS_PROJECT_DIR/package-lock.json
-    paths:
-    - $COCOS_PROJECT_DIR/node_modules
+    - key:
+        files:
+          - $COCOS_PROJECT_DIR/package.json
+          - $COCOS_PROJECT_DIR/package-lock.json
+      paths:
+        - $COCOS_PROJECT_DIR/node_modules
 
 cocos_integration_build:
   stage: test
@@ -211,30 +209,30 @@ cocos_integration_build:
       - $COCOS_PROJECT_DIR/build/web-mobile
     expire_in: 1 day
   rules:
-  - if: "$CI_COMMIT_TAG =~ /^deploy-/"
-    when: never
-  - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
-    when: never
-  - if: $ENABLE_TEST_JS != "true"
-    when: never
-  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    when: manual
-  - if: "$CI_COMMIT_BRANCH"
-    when: manual
-    
+    - if: "$CI_COMMIT_TAG =~ /^deploy-/"
+      when: never
+    - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
+      when: never
+    - if: $ENABLE_TEST_JS != "true"
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+    - if: "$CI_COMMIT_BRANCH"
+      when: manual
+
   cache:
-  - key:
-      files:
-      - package.json
-      - package-lock.json
-    paths:
-    - node_modules
-  - key:
-      files:
-      - $COCOS_PROJECT_DIR/package.json
-      - $COCOS_PROJECT_DIR/package-lock.json
-    paths:
-    - $COCOS_PROJECT_DIR/node_modules
+    - key:
+        files:
+          - package.json
+          - package-lock.json
+      paths:
+        - node_modules
+    - key:
+        files:
+          - $COCOS_PROJECT_DIR/package.json
+          - $COCOS_PROJECT_DIR/package-lock.json
+      paths:
+        - $COCOS_PROJECT_DIR/node_modules
 
 cocos_integration_docker_build:
   image:
@@ -273,11 +271,11 @@ cocos_integration_docker_build:
   needs:
     - cocos_integration_build
   rules:
-  - - if: "$CI_COMMIT_TAG =~ /^deploy-/"
+    - - if: "$CI_COMMIT_TAG =~ /^deploy-/"
+        when: never
+      - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
+        when: never
+    - if: $ENABLE_TEST_JS != "true"
       when: never
-    - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
-      when: never
-  - if: $ENABLE_TEST_JS != "true"
-    when: never
-  - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: "$CI_COMMIT_BRANCH"
+    - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      - if: "$CI_COMMIT_BRANCH"
