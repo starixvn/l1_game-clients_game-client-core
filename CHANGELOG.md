@@ -1,3 +1,10 @@
+## [1.31.5](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.4...v1.31.5) (2023-08-15)
+
+
+### Bug Fixes
+
+* post message to parent when sso completely with token ([a465544](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/a465544312b7cb1574c689b769c48acf119403d8))
+
 ## [1.31.4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.3...v1.31.4) (2023-08-15)
 
 
