@@ -46,10 +46,10 @@ describe("ReBetStore", () => {
             [0, false],
             [2, true],
             [3, false],
-        ])("when clientRoundId is %i and isStartPlacingBet is %p", (clientRoundId, isStartPlacingBet) => {
+        ])("when clientRoundId is %i and isPlacingBet is %p", (clientRoundId, isPlacingBet) => {
             // Arrange
-            roundStore = stub<RoundStore>({ ownBets: { even: 1 }, clientRoundId: clientRoundId });
-            roundTimeStore = stub<RoundTimeStore>({ isStartPlacingBet });
+            roundStore = stub<RoundStore>({ ownBets: { even: 1 }, clientRoundId });
+            roundTimeStore = stub<RoundTimeStore>({ isPlacingBet });
             const reBetStore = new ReBetStore(roundStore, gameSetting, roundTimeStore);
 
             // Act
@@ -57,7 +57,7 @@ describe("ReBetStore", () => {
             StorageManager.set = jest.fn();
 
             // Assert
-            if (clientRoundId > 0 && !isStartPlacingBet) {
+            if (clientRoundId > 0 && isPlacingBet) {
                 expect(reBetStore.ruleShowReBet).toEqual({ roundId: clientRoundId });
             } else {
                 expect(reBetStore.ruleShowReBet).toEqual({ roundId: 0 });
