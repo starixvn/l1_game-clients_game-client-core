@@ -1,3 +1,11 @@
+## [1.31.8](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.7...v1.31.8) (2023-08-17)
+
+
+### Bug Fixes
+
+* update roundId ([9c50858](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9c50858d7edaf87d220878e0154ada545e2959ab))
+* update test ([a84a838](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/a84a838d1031e3724fb53db49a7485573d65a49d))
+
 ## [1.31.7](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.6...v1.31.7) (2023-08-15)
 
 
