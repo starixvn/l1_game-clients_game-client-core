@@ -1,3 +1,10 @@
+# [1.32.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.8...v1.32.0) (2023-08-17)
+
+
+### Features
+
+* update chip flying ([3954804](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/39548045eaf9bc365d0edb2f68f9d25930106136))
+
 ## [1.31.8](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.7...v1.31.8) (2023-08-17)
 
 
