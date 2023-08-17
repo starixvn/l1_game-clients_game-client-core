@@ -68,7 +68,7 @@ export class RoundStore {
         }
 
         // when clearing all active data in database and having data in archive collection
-        if(lastRoundId === 1 && this.roundHistoryStore.histories.length === 0 && this.roundId > 0){
+        if(this.roundHistoryStore.histories.length === 0 && this.roundId > 0){
             lastRoundId = this.roundId;
         }
 
