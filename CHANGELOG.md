@@ -1,3 +1,10 @@
+## [1.32.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.32.0...v1.32.1) (2023-08-18)
+
+
+### Bug Fixes
+
+* show rebet ([3e24fe8](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/3e24fe8f39acf1f2c2a2c6c36eb5d293209a3214))
+
 # [1.32.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.31.8...v1.32.0) (2023-08-17)
 
 
