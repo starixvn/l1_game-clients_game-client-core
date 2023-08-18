@@ -1,3 +1,10 @@
+## [1.33.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.33.1...v1.33.2) (2023-08-18)
+
+
+### Bug Fixes
+
+* move chip-setting to global container ([d1f87b7](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d1f87b7cc131b8bf4574c0af0ec2e0f5998505c6))
+
 ## [1.33.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.33.0...v1.33.1) (2023-08-18)
 
 
