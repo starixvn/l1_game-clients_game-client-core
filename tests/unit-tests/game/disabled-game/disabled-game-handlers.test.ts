@@ -21,6 +21,15 @@ jest.mock("../../../../src/shared/utils/localization-manager", () => {
 });
 
 describe("DisableGameHandlers tests", () => {  
+    const fakeDisabledGameInfo: GameServiceMessage.DisabledGameInfo = {
+        "vi-VN": "Fake disabled game message VN",
+        "en-US": "Fake disabled game message",
+        "zh-CN": "Fake disabled game message CN",
+        "zh-TW": "Fake disabled game message TW",
+        "th-TH": "Fake disabled game message TH",
+        "id-ID": "Fake disabled game message ID",
+    };
+
     let connectionStore: ConnectionStore,
         authStore: AuthStore,
         disabledGameStore: DisabledGameStore,
@@ -78,18 +87,26 @@ describe("DisableGameHandlers tests", () => {
     });
 
     describe("showPopupHandle", () => {
-        it("should set disable game true and open popup.", () => {
+        const authStoreLangs = [
+            ["vi-VN", fakeDisabledGameInfo["vi-VN"]],
+            ["en-US", fakeDisabledGameInfo["en-US"]],
+            ["zh-CN", fakeDisabledGameInfo["zh-CN"]],
+            ["zh-TW", fakeDisabledGameInfo["zh-TW"]],
+            ["th-TH", fakeDisabledGameInfo["th-TH"]],
+            ["id-ID", fakeDisabledGameInfo["id-ID"]]
+        ];
+        test.each(authStoreLangs)("should set disable game true and open popup.", (authStoreLang, expectedDisabledMessages) => {
             // arrange
             disabledGameStore.disabled = true;
-            authStore.language = "en-US";
+            authStore.language = authStoreLang;
 
             // act
-            handler.showPopupHandle();
+            handler.showPopupHandle(fakeDisabledGameInfo);
 
             // assert
             expect(disabledGameStore.setShowPopup).toBeCalledWith(true);
             expect(noticeStore.addNotice).toHaveBeenCalledWith({
-                message: "message_disabled_game",
+                message: expectedDisabledMessages,
                 title: "notice",
                 type: NoticeType.Error,
                 onClose: expect.any(Function),
@@ -112,7 +129,7 @@ describe("DisableGameHandlers tests", () => {
                     roundRunningHandlers.stopRunner = jest.fn();
 
                     // act
-                    handler.inGameHandle();
+                    handler.inGameHandle(fakeDisabledGameInfo);
 
                     // assert
                     expect(handler.showPopupHandle).toHaveBeenCalled();
@@ -132,7 +149,7 @@ describe("DisableGameHandlers tests", () => {
                     roundRunningHandlers.stopRunner = jest.fn();
 
                     // act
-                    handler.inGameHandle();
+                    handler.inGameHandle(fakeDisabledGameInfo);
 
                     // assert
                     expect(handler.showPopupHandle).not.toHaveBeenCalled();
@@ -151,7 +168,7 @@ describe("DisableGameHandlers tests", () => {
                     handler.showPopupHandle = jest.fn();
 
                     // act
-                    handler.inGameHandle();
+                    handler.inGameHandle(fakeDisabledGameInfo);
 
                     // assert
                     expect(handler.showPopupHandle).not.toHaveBeenCalled();
@@ -167,7 +184,7 @@ describe("DisableGameHandlers tests", () => {
                 roundTimeStore.roundTime = 39;
 
                 // act
-                handler.inGameHandle();
+                handler.inGameHandle(fakeDisabledGameInfo);
 
                 // assert
                 expect(disabledGameStore.setGameStatus).toBeCalledTimes(1);
@@ -182,7 +199,7 @@ describe("DisableGameHandlers tests", () => {
             handler.showPopupHandle = jest.fn();
 
             // act
-            handler.joinGameHandle();
+            handler.joinGameHandle(fakeDisabledGameInfo);
 
             // assert
             expect(handler.showPopupHandle).toHaveBeenCalled();
@@ -200,7 +217,7 @@ describe("DisableGameHandlers tests", () => {
             handler.joinGameHandle = jest.fn();
 
             // act
-            handler.handle();
+            handler.handle(fakeDisabledGameInfo);
 
             // assert
             expect(handler.inGameHandle).toBeCalledTimes(expectedNumerousInGameCall);
