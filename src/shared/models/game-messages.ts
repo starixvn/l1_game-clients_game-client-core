@@ -291,10 +291,8 @@ export namespace NotificationServiceMessage {
         static eventName = "promotionNotifications";
     }
 
-    // export const promotionsEventName = "promotionNotifications";
     export class BoostedOdd {
         promotions: Array<BoostedOddsModel>;
         static eventName = "promotions";
     }
-    // export const boostedOddEventName = "promotions";
 }
