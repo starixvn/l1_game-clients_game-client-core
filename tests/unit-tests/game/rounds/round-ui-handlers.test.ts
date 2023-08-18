@@ -1,11 +1,12 @@
 import { stub } from "jest-auto-stub";
-import { reaction } from "mobx";
+import { reaction, when } from "mobx";
 import { RoundStore, RoundTimeStore, RoundUIHandlers } from "../../../../src/game/rounds";
 import { SettlementStatusStore, SettlementStore } from "../../../../src/game/settlements";
 
 jest.mock("mobx", () => {
     return {
         reaction: jest.fn(),
+        when: jest.fn(),
     };
 });
 describe("RoundUIHandlers tests", () => {
@@ -24,13 +25,19 @@ describe("RoundUIHandlers tests", () => {
 
         describe("constructor", () => {
             it("should set reaction for this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND", () => {
-                // Arrange
-
                 // Act
                 handler = new RoundUIHandlers.StartingRoundHandler(roundTimeStore, roundStore, settlementStatusStore, settlementStore);
 
                 // Assert
                 expect(reaction).toBeCalled();
+            });
+
+            it("should set when for this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND", () => {
+                // Act
+                handler = new RoundUIHandlers.StartingRoundHandler(roundTimeStore, roundStore, settlementStatusStore, settlementStore);
+
+                // Assert
+                expect(when).toBeCalled();
             });
         });
 
