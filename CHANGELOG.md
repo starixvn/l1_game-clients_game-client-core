@@ -1,3 +1,10 @@
+## [1.33.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.33.0...v1.33.1) (2023-08-18)
+
+
+### Bug Fixes
+
+* update disabled message ([4e93510](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/4e93510c2d108c21c1bcec5604957daad39f823a))
+
 # [1.33.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.32.1...v1.33.0) (2023-08-18)
 
 
