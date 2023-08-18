@@ -1,3 +1,11 @@
+# [1.33.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.32.1...v1.33.0) (2023-08-18)
+
+
+### Features
+
+* boosted odds ([d8ebc5c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d8ebc5c64f63026a5f2be9988981f5d6dea7b114))
+* temporary disable open game on main ([5d21b53](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/5d21b53b452af25d282a6b9022ffb8009300e405))
+
 ## [1.32.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.32.0...v1.32.1) (2023-08-18)
 
 
