@@ -1,4 +1,4 @@
-import { ChipSettingStore } from "./../../../../src/game/chips/chip-setting-store";
+import { ChipSettingStore } from "../../../src/chip-setting/chip-setting-store";
 
 describe("ChipSettingStore", () => {
     let chipSettingStore: ChipSettingStore;

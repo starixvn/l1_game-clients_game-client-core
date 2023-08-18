@@ -2,6 +2,7 @@ import { Container } from "inversify";
 import * as Auth from "./auth";
 import * as SiteConfigs from "./configs";
 import * as Game from "./game";
+import * as ChipSetting from "./chip-setting";
 import * as Notification from "./notification";
 import * as Players from "./players";
 import type { AnyConstructor } from "./shared";
@@ -45,7 +46,7 @@ export function getContainer(options: IContainerOptions = {}) {
         container: container,
         disabledFeatures: disabledFeatures,
         enabledFeatures: enabledFeatures,
-        features: [Auth, Players, SiteConfigs, Game, Notification, UnderMaintenance],
+        features: [Auth, Players, SiteConfigs, Game, Notification, UnderMaintenance, ChipSetting],
     };
 
     FeatureLoader.loadFeatures(featureLoaderOptions);

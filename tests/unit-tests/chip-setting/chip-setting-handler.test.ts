@@ -1,7 +1,7 @@
 import { SettingResponse } from "sc-user-service-client/dist/setting";
-import { AuthStore, UserService } from "../../../../src/auth";
-import { ChipSettingHandler, ChipSettingStore } from "../../../../src/game/chips";
-import { siteConfigs } from "../../container.test";
+import { AuthStore, UserService } from "../../../src/auth";
+import { ChipSettingHandler, ChipSettingStore } from "../../../src/chip-setting";
+import { siteConfigs } from "../container.test";
 
 describe("ChipSettingHandler", () => {
     let userServiceMock: UserService;

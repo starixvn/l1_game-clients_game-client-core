@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
-import { AuthStore, UserService } from "../../auth";
-import { IHandler } from "../../shared/mediator";
+import { AuthStore, UserService } from "../auth";
+import { IHandler } from "../shared/mediator";
 import { ChipSettingStore } from "./chip-setting-store";
 
 @injectable()
