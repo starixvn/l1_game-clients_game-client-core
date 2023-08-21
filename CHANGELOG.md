@@ -1,3 +1,10 @@
+# [1.34.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.33.2...v1.34.0) (2023-08-21)
+
+
+### Features
+
+* open other game from micro game client ([ec7fc30](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/ec7fc30ed2d33169aac94d1156919a1e94873c3e))
+
 ## [1.33.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.33.1...v1.33.2) (2023-08-18)
 
 
