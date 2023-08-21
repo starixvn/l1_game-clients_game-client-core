@@ -41,6 +41,7 @@ export namespace BoostedOddsPromotionsHandlers {
 
                 if (haveNewPromotion || this.boostedOddsStore.showBoostedOddIcon) {
                     this.boostedOddsStore.increaseBoostedOddCounter();
+                    this.setTimeoutShowBoostedOdds();
                 }
 
                 this.boostedOddsStore.setShowBoostedOddIcon(false);
@@ -69,10 +70,6 @@ export namespace BoostedOddsPromotionsHandlers {
                 this.mainPlayerStore.offerGames?.some((game) => game.gameId === promotion.gameId)
             );
             this.boostedOddsStore.setData(newPromotions);
-        }
-
-        handleShowPopup() {
-            this.boostedOddsStore.increasePopupCounter();
         }
     }
 }

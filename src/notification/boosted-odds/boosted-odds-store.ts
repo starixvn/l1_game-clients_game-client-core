@@ -34,6 +34,7 @@ export class BoostedOddsStore {
     showBoostedOddIcon = true;
     popupCounter = 0;
     boostedOddsCounter = 0;
+    isLoadingIcon = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -53,5 +54,9 @@ export class BoostedOddsStore {
 
     increaseBoostedOddCounter() {
         this.boostedOddsCounter++;
+    }
+
+    setIsLoadingIcon(isLoadingIcon: boolean) {
+        this.isLoadingIcon = isLoadingIcon;
     }
 }

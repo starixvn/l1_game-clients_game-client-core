@@ -33,11 +33,11 @@ export namespace AppHandlers {
 
         handleOpenGame(gameId: number) {
             this.playerSelectionClearHandler.handle();
-            const params = this.getParamAuthorize();
+            const params = this.getParamAuthorize(gameId);
             BrowserDomUtils.postMessageToParent({ ...params, backLobby: true });
         }
 
-        private getParamAuthorize() {
+        private getParamAuthorize(gameId?: number) {
             const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
             return {
                 ss: sessionInfo?.session,
@@ -46,6 +46,8 @@ export namespace AppHandlers {
                 isAuthenticated: sessionInfo?.isAuthenticated,
                 memberName: sessionInfo?.memberName,
                 language: sessionInfo?.language,
+                gameId,
+                promotion: StorageManager.get(localStorageKeys.boostOdds),
             };
         }
     }
