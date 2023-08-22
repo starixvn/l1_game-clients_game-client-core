@@ -1,3 +1,10 @@
+## [1.34.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.34.0...v1.34.1) (2023-08-22)
+
+
+### Bug Fixes
+
+* get name jackpot game & fix bug post message to parent ([35c51b9](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/35c51b925de1d27fe13d0b471c59479f08e29006))
+
 # [1.34.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.33.2...v1.34.0) (2023-08-21)
 
 
