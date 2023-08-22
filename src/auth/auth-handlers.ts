@@ -161,7 +161,7 @@ export namespace AuthHandlers {
                 const token = urlParams.get(URLParams.token);
                 const system = +urlParams.get(URLParams.appType) || AppTypes.Club;
 
-                if (urlParams?.has(URLParams.rurl)) {
+                if (urlParams?.has(URLParams.returnUrl)) {
                     this.appStore.setURLStore(urlParams);
                 }
 
@@ -173,7 +173,7 @@ export namespace AuthHandlers {
                     this.handleAuthorizeFromMainClient(urlParams);
                 } else {
                     this.authStore.setAuthStoreFromStorage(StorageManager.get(localStorageKeys.session) as ISessionInfo);
-                    this.appStore.loadReturnUrl();
+                    this.appStore.loadReturnUrlAndParentUrl();
                     this.appStore.loadDirectMode();
                     await this.handleAuthorize();
                 }
@@ -212,7 +212,7 @@ export namespace AuthHandlers {
             if (this.appStore.isDirectMode) {
                 this.appStore.saveDirectModeInfo();
             }
-            this.appStore.saveReturnUrl();
+            this.appStore.saveReturnUrlAndParentUrl();
             if (urlParams) {
                 const playerSetting: UserSettingData = {
                     musicEnable: urlParams.has(URLParams.musicEnable) ? urlParams.get(URLParams.musicEnable) === "true" : true,

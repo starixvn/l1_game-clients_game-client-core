@@ -106,4 +106,5 @@ export const localStorageKeys = {
     playerIngameSelections: "player-selections",
     ruleReBet: "ruleRB",
     boostOdds: "boosted-odds",
+    parentUrl: "purl",
 };

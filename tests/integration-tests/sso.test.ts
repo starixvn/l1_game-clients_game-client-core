@@ -88,6 +88,7 @@ export const ssoTests = () => {
                 lang: normalPlayer.language,
                 appType: 1,
                 rurl: "aHR0cHM6Ly9nYW1lLmNvbQ==", // https://game.com
+                purl: "aHR0cHM6Ly9nYW1lLmNvbQ==", // https://game.com
             };
             const urlSearchParams = new URLSearchParams();
             Object.keys(params).forEach((key) => params[key] && urlSearchParams.append(key, params[key]));

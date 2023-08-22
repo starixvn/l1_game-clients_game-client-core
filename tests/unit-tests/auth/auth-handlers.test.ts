@@ -623,7 +623,7 @@ describe("AuthHandlers tests", () => {
                     await ssoHandler.handle(urlParams);
 
                     // assert
-                    expect(appStore.saveReturnUrl).toHaveBeenCalled();
+                    expect(appStore.saveReturnUrlAndParentUrl).toHaveBeenCalled();
                 });
 
                 it("should call authorize handler", async () => {
@@ -702,7 +702,7 @@ describe("AuthHandlers tests", () => {
                 await ssoHandler.handle(urlParams);
 
                 // assert
-                expect(appStore.saveReturnUrl).toHaveBeenCalled();
+                expect(appStore.saveReturnUrlAndParentUrl).toHaveBeenCalled();
             });
 
             it("should save sound settings in storage", async () => {
@@ -748,7 +748,7 @@ describe("AuthHandlers tests", () => {
                 await ssoHandler.handle(urlParams);
 
                 // assert
-                expect(appStore.loadReturnUrl).toHaveBeenCalled();
+                expect(appStore.loadReturnUrlAndParentUrl).toHaveBeenCalled();
             });
 
             it("should load direct mode info in storage", async () => {

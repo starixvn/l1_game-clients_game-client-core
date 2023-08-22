@@ -3,13 +3,13 @@ import { StorageManager, localStorageKeys } from "./storage-manager";
 
 export class BrowserDomUtils {
     public static replaceParentLocation(url: string) {
-        parent.location.replace(url);
+        this.postMessageToParent({ replaceUrl: url });
     }
 
     public static postMessageToParent(data: unknown) {
-        const returnUrl = StorageManager.get(localStorageKeys.returnUrl)?.toString();
-        if (returnUrl) {
-            const url = GameUtils.base64Decode(returnUrl);
+        const parentUrl = StorageManager.get(localStorageKeys.parentUrl)?.toString();
+        if (parentUrl) {
+            const url = GameUtils.base64Decode(parentUrl);
             window.parent?.postMessage(data, url);
         }
     }

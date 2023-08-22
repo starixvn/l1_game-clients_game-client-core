@@ -9,6 +9,7 @@ import { BrowserDomUtils, StorageManager, localStorageKeys } from "../shared/uti
 interface IUrlInfo {
     returnUrl?: string;
     ref?: string;
+    parentUrl?: string;
 }
 
 interface IDirectMode {
@@ -60,6 +61,11 @@ export class AppStore {
             this.urlInfo.returnUrl = returnUrl;
         }
 
+        const parentUrl = urlParams.get(URLParams.parentUrl);
+        if (parentUrl) {
+            this.urlInfo.parentUrl = parentUrl;
+        }
+
         if (appType === AppTypes.App.toString()) {
             this.isApp = true;
         }
@@ -85,8 +91,10 @@ export class AppStore {
         StorageManager.set(localStorageKeys.directMode, data);
     }
 
-    saveReturnUrl() {
-        this.urlInfo.returnUrl && StorageManager.set(localStorageKeys.returnUrl, this.urlInfo.returnUrl);
+    saveReturnUrlAndParentUrl() {
+        const { returnUrl, parentUrl } = this.urlInfo;
+        returnUrl && StorageManager.set(localStorageKeys.returnUrl, returnUrl);
+        parentUrl && StorageManager.set(localStorageKeys.parentUrl, parentUrl);
     }
 
     loadDirectMode() {
@@ -100,8 +108,9 @@ export class AppStore {
         }
     }
 
-    loadReturnUrl() {
+    loadReturnUrlAndParentUrl() {
         this.urlInfo.returnUrl = StorageManager.get(localStorageKeys.returnUrl)?.toString();
+        this.urlInfo.parentUrl = StorageManager.get(localStorageKeys.parentUrl)?.toString();
     }
 
     setTimeOut() {
