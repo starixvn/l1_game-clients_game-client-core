@@ -173,7 +173,7 @@ export namespace AuthHandlers {
                     this.handleAuthorizeFromMainClient(urlParams);
                 } else {
                     this.authStore.setAuthStoreFromStorage(StorageManager.get(localStorageKeys.session) as ISessionInfo);
-                    this.appStore.loadReturnUrlAndParentUrl();
+                    this.appStore.loadReturnUrlAnd();
                     this.appStore.loadDirectMode();
                     await this.handleAuthorize();
                 }
@@ -212,7 +212,7 @@ export namespace AuthHandlers {
             if (this.appStore.isDirectMode) {
                 this.appStore.saveDirectModeInfo();
             }
-            this.appStore.saveReturnUrlAndParentUrl();
+            this.appStore.saveReturnUrl();
             if (urlParams) {
                 const playerSetting: UserSettingData = {
                     musicEnable: urlParams.has(URLParams.musicEnable) ? urlParams.get(URLParams.musicEnable) === "true" : true,

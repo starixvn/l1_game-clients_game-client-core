@@ -8,7 +8,7 @@ jest.mock("../../../src/shared/utils", () => ({
         get: jest.fn(),
         set: jest.fn(),
     },
-    localStorageKeys: { session: "session-key", directMode: "d-key", returnUrl: "r-key" },
+    localStorageKeys: { session: "session-key", directMode: "d-key", returnUrl: "r-key", parentUrl: "p-url" },
     GameUtils: { base64Decode: jest.fn() },
     BrowserDomUtils: { postMessageToParent: jest.fn() },
 }));
@@ -131,6 +131,18 @@ describe("appStore tests", () => {
                 expect(store.isPlayForFun).toBe(false);
                 expect(store.isDirectMode).toBe(false);
             });
+
+            it("should store parent URL into StorageManager", () => {
+                // arrange
+                const urlParams = new URLSearchParams("purl=OWdnwgucWH");
+                const store = new AppStore();
+
+                // act
+                store.setURLStore(urlParams);
+
+                // assert
+                expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.parentUrl, "OWdnwgucWH");
+            });
         });
     });
 
@@ -156,28 +168,17 @@ describe("appStore tests", () => {
         });
     });
 
-    describe("saveReturnUrlAndParentUrl", () => {
+    describe("saveReturnUrl", () => {
         it("should set returnUrl into storage manager", () => {
             // arrange
             const store = new AppStore();
             store.urlInfo = { returnUrl: "rurl" };
 
             // act
-            store.saveReturnUrlAndParentUrl();
+            store.saveReturnUrl();
 
             // assert
             expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.returnUrl, "rurl");
-        });
-        it("should set parentUrl into storage manager", () => {
-            // arrange
-            const store = new AppStore();
-            store.urlInfo = { parentUrl: "purl" };
-
-            // act
-            store.saveReturnUrlAndParentUrl();
-
-            // assert
-            expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.parentUrl, "purl");
         });
     });
 
@@ -235,19 +236,18 @@ describe("appStore tests", () => {
         });
     });
 
-    describe("loadReturnUrlAndParentUrl", () => {
+    describe("loadReturnUrlAnd", () => {
         it("should set returnUrl when storage manager has return url", () => {
             // arrange
             const store = new AppStore();
             // @ts-ignore
-            StorageManager.get.mockReturnValueOnce("rurl").mockReturnValueOnce("purl");
+            StorageManager.get.mockReturnValueOnce("rurl");
 
             // act
-            store.loadReturnUrlAndParentUrl();
+            store.loadReturnUrlAnd();
 
             // assert
             expect(store.urlInfo.returnUrl).toEqual("rurl");
-            expect(store.urlInfo.parentUrl).toEqual("purl");
         });
     });
 
