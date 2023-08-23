@@ -43,7 +43,7 @@ export class NotificationStore {
         this.connection.on(events.reload, this.onReload.bind(this));
         this.connection.on(events.jackpotWinner, this.onNotifyJackpotWinner.bind(this));
         this.connection.on(events.promotionNotifications, this.onPromotionNotification.bind(this));
-        this.connection.on(events.promotionNotifications, this.onBoostedOddsPromotion.bind(this));
+        this.connection.on(events.boostedOddPromotion, this.onBoostedOddsPromotion.bind(this));
     }
 
     onHandleKickedOut(data: boolean | NotificationServiceMessage.UnderMaintenanceInfo) {

@@ -13,4 +13,8 @@ export class BrowserDomUtils {
             window.parent?.postMessage(data, url);
         }
     }
+
+    public static postMessageToParentBoostedOdds(data: unknown) {
+        window.parent?.postMessage(data, "http://localhost:7456");
+    }
 }
