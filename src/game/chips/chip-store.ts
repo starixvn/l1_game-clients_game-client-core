@@ -64,7 +64,7 @@ export class ChipStore {
     }
 
     set playerChip(playerChip: GameServiceMessage.PlayerChip) {
-        this._playerChip = playerChip;
+        Object.keys(this.gameConfigStore.odds).length > 0 && (this._playerChip = playerChip);
     }
 
     get reBet() {
