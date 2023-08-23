@@ -1,3 +1,11 @@
+# [1.35.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.34.2...v1.35.0) (2023-08-23)
+
+
+### Features
+
+* change way open game from boosted odds ([22396a0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/22396a023fcd2becd2ae85fa4761d3fbac71b0c0))
+* open game from boosted odds ([c293e27](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/c293e27ef9cfa0fec1b07b775f655ec622184d53))
+
 ## [1.34.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.34.1...v1.34.2) (2023-08-23)
 
 
