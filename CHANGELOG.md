@@ -1,3 +1,11 @@
+## [1.34.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.34.1...v1.34.2) (2023-08-23)
+
+
+### Bug Fixes
+
+* bug fly chip when loading game config ([77a0583](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/77a058353857c23a01a5dbfc187a7adb1d1d2757))
+* store parentUrl into storage manager before authorize ([d50b4de](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d50b4de7568e5a83db09db564ca1e2e47120867a))
+
 ## [1.34.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.34.0...v1.34.1) (2023-08-22)
 
 
