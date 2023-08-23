@@ -4,7 +4,7 @@ FROM hub.lumigame.com/base/nginx:brotli-1.20.2-zlib
 RUN chown -R nginx:nginx /usr/share/nginx && chmod -R 755 /usr/share/nginx && \
     chown -R nginx:nginx /var/cache/nginx && \
     chown -R nginx:nginx /var/log/nginx && \
-    chown -R nginx:nginx /etc/nginx/conf.d
+    chown -R nginx:nginx /etc/nginx/
 RUN touch /var/run/nginx.pid && \
     chown -R nginx:nginx /var/run/nginx.pid
 
