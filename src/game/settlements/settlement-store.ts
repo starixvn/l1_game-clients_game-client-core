@@ -57,7 +57,7 @@ export class SettlementStore {
     }
 
     get payChipInfo(): TPayChipInfo {
-        if (this.isFinishedShowResult && this.winningPlayers) {
+        if (this.isFinishedShowResult) {
             return {
                 settlementResult: this.settlementResult,
                 winningPlayers: this.winningPlayers,
