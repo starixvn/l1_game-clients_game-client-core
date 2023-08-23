@@ -15,6 +15,8 @@ export class BrowserDomUtils {
     }
 
     public static postMessageToParentBoostedOdds(data: unknown) {
-        window.parent?.postMessage(data, "http://localhost:7456");
+        const currentUrl = window.location.href;
+        const url = new URL(currentUrl);
+        window.parent?.postMessage(data, url.hostname);
     }
 }

@@ -3,6 +3,7 @@ import { IHandler, NotificationServiceMessage } from "../../shared";
 import { BoostedOddsModel, BoostedOddsStore, PromotionModel } from "./boosted-odds-store";
 import { StorageManager, localStorageKeys } from "../../shared/utils";
 import { MainPlayerStore } from "../../players/main-player-store";
+import { AppStore } from "../../app";
 
 export namespace BoostedOddsPromotionsHandlers {
     @injectable()
@@ -11,11 +12,12 @@ export namespace BoostedOddsPromotionsHandlers {
 
         timeout: any;
         minutesToMillisecond = 60 * 1000;
-        delayTime = 15 * this.minutesToMillisecond;
+        delayTime = 1.5 * this.minutesToMillisecond;
 
         constructor(
             @inject(BoostedOddsStore) private readonly boostedOddsStore: BoostedOddsStore,
-            @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore
+            @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
+            @inject(AppStore) private readonly appStore: AppStore
         ) {}
 
         handle(data: Array<BoostedOddsModel>) {
@@ -39,7 +41,7 @@ export namespace BoostedOddsPromotionsHandlers {
                     haveNewPromotion = filterNewPromotion.length > 0;
                 }
 
-                if (haveNewPromotion || this.boostedOddsStore.showBoostedOddIcon) {
+                if ((haveNewPromotion || this.boostedOddsStore.showBoostedOddIcon) && !this.appStore.isDirectMode) {
                     this.boostedOddsStore.increaseBoostedOddCounter();
                     this.setTimeoutShowBoostedOdds();
                 }
