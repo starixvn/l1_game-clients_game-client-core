@@ -1,3 +1,10 @@
+## [1.36.4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.3...v1.36.4) (2023-08-24)
+
+
+### Bug Fixes
+
+* f5 after 1st load ([c1c5604](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/c1c560456f107ba1e8b35d08f97e764d1fd14191))
+
 ## [1.36.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.2...v1.36.3) (2023-08-24)
 
 
