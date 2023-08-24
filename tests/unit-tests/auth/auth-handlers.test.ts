@@ -26,7 +26,13 @@ jest.mock("../../../src/shared/utils/storage-manager", () => ({
         set: jest.fn(),
         remove: jest.fn(),
     },
-    localStorageKeys: { session: "session-key", playerSetting: "setting-key", directMode: "directMode", returnUrl: "returnUrl" },
+    localStorageKeys: {
+        session: "session-key",
+        playerSetting: "setting-key",
+        directMode: "directMode",
+        returnUrl: "returnUrl",
+        isApp: "app",
+    },
 }));
 jest.mock("../../../src/shared/utils/logger", () => ({
     sentryLogger: { logError: jest.fn() },
@@ -604,6 +610,7 @@ describe("AuthHandlers tests", () => {
                     expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.session);
                     expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.directMode);
                     expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.returnUrl);
+                    expect(StorageManager.remove).toHaveBeenCalledWith(localStorageKeys.isApp);
                 });
 
                 it("should save session info in storage", async () => {
@@ -631,6 +638,14 @@ describe("AuthHandlers tests", () => {
 
                     // assert
                     expect(appStore.saveReturnUrl).toHaveBeenCalled();
+                });
+
+                it("should save app in storage", async () => {
+                    // act
+                    await ssoHandler.handle(urlParams);
+
+                    // assert
+                    expect(appStore.saveIsApp).toHaveBeenCalled();
                 });
 
                 it("should call authorize handler", async () => {

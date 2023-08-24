@@ -95,6 +95,15 @@ export class AppStore {
         returnUrl && StorageManager.set(localStorageKeys.returnUrl, returnUrl);
     }
 
+    saveIsApp() {
+        this.isApp && StorageManager.set(localStorageKeys.isApp, "true");
+    }
+
+    loadApp() {
+        const isApp = !!StorageManager.get(localStorageKeys.isApp);
+        this.isApp = isApp;
+    }
+
     loadDirectMode() {
         const data = StorageManager.get(localStorageKeys.directMode) as IDirectMode;
         if (data) {

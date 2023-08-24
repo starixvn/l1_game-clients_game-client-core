@@ -107,4 +107,5 @@ export const localStorageKeys = {
     ruleReBet: "ruleRB",
     boostOdds: "boosted-odds",
     parentUrl: "purl",
+    isApp: "app",
 };

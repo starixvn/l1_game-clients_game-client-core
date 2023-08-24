@@ -8,7 +8,7 @@ jest.mock("../../../src/shared/utils", () => ({
         get: jest.fn(),
         set: jest.fn(),
     },
-    localStorageKeys: { session: "session-key", directMode: "d-key", returnUrl: "r-key", parentUrl: "p-url" },
+    localStorageKeys: { session: "session-key", directMode: "d-key", returnUrl: "r-key", parentUrl: "p-url", isApp: "app" },
     GameUtils: { base64Decode: jest.fn() },
     BrowserDomUtils: { postMessageToParent: jest.fn() },
 }));
@@ -273,6 +273,49 @@ describe("appStore tests", () => {
 
             // assert
             expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ sessionTimeout: true });
+        });
+    });
+
+    describe("saveIsApp", () => {
+        let store: AppStore;
+        beforeEach(() => {
+            store = new AppStore();
+        });
+        it("should set data into storage when isApp=true", () => {
+            // arrange
+            store.isApp = true;
+
+            // act
+            store.saveIsApp();
+
+            // assert
+            expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.isApp, "true");
+        });
+
+        it("should not set data into storage when isApp=false", () => {
+            // arrange
+            store.isApp = true;
+
+            // act
+            store.saveIsApp();
+
+            // assert
+            expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.isApp, "true");
+        });
+    });
+
+    describe("loadApp", () => {
+        it("should load app from StorageManager", () => {
+            // arrange
+            const store = new AppStore();
+            store.isApp = false;
+            (StorageManager.get as jest.Mock).mockReturnValueOnce("true");
+
+            // act
+            store.loadApp();
+
+            // assert
+            expect(store.isApp).toBe(true);
         });
     });
 });
