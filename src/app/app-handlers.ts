@@ -34,7 +34,7 @@ export namespace AppHandlers {
         handleOpenGame(gameId: number) {
             this.playerSelectionClearHandler.handle();
             const params = this.getParamAuthorize(gameId);
-            BrowserDomUtils.postMessageToParentBoostedOdds({ ...params, backLobby: true });
+            BrowserDomUtils.postMessageToParent({ ...params, backLobby: true });
         }
 
         private getParamAuthorize(gameId?: number) {
