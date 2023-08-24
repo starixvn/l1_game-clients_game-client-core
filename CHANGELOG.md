@@ -1,3 +1,10 @@
+## [1.36.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.0...v1.36.1) (2023-08-24)
+
+
+### Bug Fixes
+
+* get pay chip-info ([8659ce5](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/8659ce5367b887cd8028c4f9c4fb3a9fdac96cfe))
+
 # [1.36.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.35.0...v1.36.0) (2023-08-24)
 
 
