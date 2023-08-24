@@ -1,3 +1,11 @@
+## [1.36.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.2...v1.36.3) (2023-08-24)
+
+
+### Bug Fixes
+
+* clear query string on main url ([2349f6b](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/2349f6b8d40bfe73eac6e8e7e64f72c5b438f761))
+* store value app into storage for fixing case switch app ([96f41a7](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/96f41a7899cc28a042ae9d6678e36e0dd2c5a2b9))
+
 ## [1.36.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.1...v1.36.2) (2023-08-24)
 
 
