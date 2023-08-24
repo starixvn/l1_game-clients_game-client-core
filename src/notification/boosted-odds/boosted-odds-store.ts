@@ -31,7 +31,6 @@ export class BoostedOddsModel {
 @injectable()
 export class BoostedOddsStore {
     promotions: Array<PromotionModel> = [];
-    showBoostedOddIcon = true;
     popupCounter = 0;
     boostedOddsCounter = 0;
     isLoadingIcon = false;
@@ -46,10 +45,6 @@ export class BoostedOddsStore {
 
     increasePopupCounter() {
         this.popupCounter++;
-    }
-
-    setShowBoostedOddIcon(showBoostedOddIcon: boolean) {
-        this.showBoostedOddIcon = showBoostedOddIcon;
     }
 
     increaseBoostedOddCounter() {

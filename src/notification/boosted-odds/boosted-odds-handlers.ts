@@ -13,6 +13,7 @@ export namespace BoostedOddsPromotionsHandlers {
         timeout: any;
         minutesToMillisecond = 60 * 1000;
         delayTime = 15 * this.minutesToMillisecond;
+        showBoostedOddIcon = true;
 
         constructor(
             @inject(BoostedOddsStore) private readonly boostedOddsStore: BoostedOddsStore,
@@ -41,12 +42,16 @@ export namespace BoostedOddsPromotionsHandlers {
                     haveNewPromotion = filterNewPromotion.length > 0;
                 }
 
-                if ((haveNewPromotion || this.boostedOddsStore.showBoostedOddIcon) && !this.appStore.isDirectMode) {
+                if (
+                    (haveNewPromotion || this.showBoostedOddIcon) &&
+                    this.boostedOddsStore.promotions?.length > 0 &&
+                    !this.appStore.isDirectMode
+                ) {
                     this.boostedOddsStore.increaseBoostedOddCounter();
                     this.setTimeoutShowBoostedOdds();
                 }
 
-                this.boostedOddsStore.setShowBoostedOddIcon(false);
+                this.showBoostedOddIcon = false;
                 StorageManager.set(localStorageKeys.boostOdds, JSON.stringify(newPromotions));
             }
         }
@@ -54,7 +59,7 @@ export namespace BoostedOddsPromotionsHandlers {
         setTimeoutShowBoostedOdds(): void {
             this.timeout && clearTimeout(this.timeout);
             this.timeout = setTimeout(() => {
-                this.boostedOddsStore.setShowBoostedOddIcon(true);
+                this.showBoostedOddIcon = true;
             }, this.delayTime);
         }
     }
