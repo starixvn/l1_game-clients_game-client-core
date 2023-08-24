@@ -1,3 +1,10 @@
+# [1.36.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.35.0...v1.36.0) (2023-08-24)
+
+
+### Features
+
+* update boosted odds ([8e13609](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/8e13609a9636a6aa505feb40aa711d35b8d03624))
+
 # [1.35.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.34.2...v1.35.0) (2023-08-23)
 
 
