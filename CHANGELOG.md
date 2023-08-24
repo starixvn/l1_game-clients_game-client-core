@@ -1,3 +1,10 @@
+## [1.36.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.1...v1.36.2) (2023-08-24)
+
+
+### Bug Fixes
+
+* open new game ([dc99db5](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/dc99db51b96aa6a31b416312c4610c0ebaa7168a))
+
 ## [1.36.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.0...v1.36.1) (2023-08-24)
 
 
