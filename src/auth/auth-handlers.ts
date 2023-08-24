@@ -229,7 +229,7 @@ export namespace AuthHandlers {
         }
 
         private async handleAuthorize(session?: string, username?: string) {
-            this.clearParamsOnUrl();
+            this.clearQueryStringOnUrl();
             if (!session || !username) {
                 const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
                 if (!sessionInfo) {
@@ -242,8 +242,9 @@ export namespace AuthHandlers {
             await this.authorizeHandler.handle({ session, username });
         }
 
-        private clearParamsOnUrl() {
+        private clearQueryStringOnUrl() {
             try {
+                BrowserDomUtils.postMessageToParent({ clearQueryStringOnUrl: true });
                 history.pushState(null, "", location.href.split("?")[0]);
             } catch (ex) {
                 console.log(ex);

@@ -501,6 +501,13 @@ describe("AuthHandlers tests", () => {
                 signOutHandler,
                 playerSelectionClearHandler
             );
+            Object.defineProperty(history, "pushState", { value: jest.fn(), writable: true });
+            Object.defineProperty(window, "location", {
+                value: {
+                    href: "https://microsite-1/?token=a",
+                },
+                writable: true,
+            });
         });
         afterEach(() => {
             jest.clearAllMocks();
@@ -641,6 +648,15 @@ describe("AuthHandlers tests", () => {
                     // assert
                     expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ hasSSO: true });
                 });
+
+                it("should clear query string on url", async () => {
+                    // act
+                    await ssoHandler.handle(urlParams);
+
+                    // assert
+                    expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ clearQueryStringOnUrl: true });
+                    expect(history.pushState).toHaveBeenCalledWith(null, "", "https://microsite-1/");
+                });
             });
         });
 
@@ -719,6 +735,15 @@ describe("AuthHandlers tests", () => {
 
                 // assert
                 expect(authorizeHandler.handle).toHaveBeenCalledWith({ session: "session", username: "username" });
+            });
+
+            it("should clear query string on url", async () => {
+                // act
+                await ssoHandler.handle(urlParams);
+
+                // assert
+                expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ clearQueryStringOnUrl: true });
+                expect(history.pushState).toHaveBeenCalledWith(null, "", "https://microsite-1/");
             });
         });
 
