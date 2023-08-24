@@ -8,11 +8,11 @@ import { AppStore } from "../../app";
 export namespace BoostedOddsPromotionsHandlers {
     @injectable()
     export class BoostedOddsPopupHandlers implements IHandler<Array<BoostedOddsModel>> {
-        name = NotificationServiceMessage.PromotionNotifications.eventName;
+        name = NotificationServiceMessage.BoostedOdd.eventName;
 
         timeout: any;
         minutesToMillisecond = 60 * 1000;
-        delayTime = 1.5 * this.minutesToMillisecond;
+        delayTime = 15 * this.minutesToMillisecond;
 
         constructor(
             @inject(BoostedOddsStore) private readonly boostedOddsStore: BoostedOddsStore,
@@ -61,7 +61,7 @@ export namespace BoostedOddsPromotionsHandlers {
 
     @injectable()
     export class PromotionHandlers implements IHandler<Array<PromotionModel>> {
-        name = NotificationServiceMessage.BoostedOdd.eventName;
+        name = NotificationServiceMessage.PromotionNotifications.eventName;
         constructor(
             @inject(BoostedOddsStore) private readonly boostedOddsStore: BoostedOddsStore,
             @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore
