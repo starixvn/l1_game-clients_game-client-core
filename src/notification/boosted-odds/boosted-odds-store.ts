@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { makeAutoObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 
 export class PromotionModel {
     _id: string;
@@ -35,12 +35,24 @@ export class BoostedOddsStore {
     boostedOddsCounter = 0;
     isLoadingIcon = false;
 
+    boostedOddses: Array<BoostedOddsModel> = [];
+    isAllowShowBoostedOddIcon = true;
+
     constructor() {
-        makeAutoObservable(this);
+        makeObservable(this, {
+            isLoadingIcon: observable,
+            promotions: observable,
+            popupCounter: observable,
+            boostedOddsCounter: observable,
+        });
     }
 
-    setData(promotions: Array<PromotionModel>) {
+    setPromotionModels(promotions: Array<PromotionModel>) {
         this.promotions = promotions;
+    }
+
+    setBoostedOddsModels(boostedOddses: Array<BoostedOddsModel>) {
+        this.boostedOddses = boostedOddses;
     }
 
     increasePopupCounter() {
@@ -53,5 +65,9 @@ export class BoostedOddsStore {
 
     setIsLoadingIcon(isLoadingIcon: boolean) {
         this.isLoadingIcon = isLoadingIcon;
+    }
+
+    setIsAllowShowBoostedOddIcon(isAllowShowBoostedOddIcon: boolean) {
+        this.isAllowShowBoostedOddIcon = isAllowShowBoostedOddIcon;
     }
 }

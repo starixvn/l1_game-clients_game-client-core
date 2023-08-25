@@ -1,7 +1,6 @@
 import { inject, injectable } from "inversify";
 import { IHandler, NotificationServiceMessage } from "../../shared";
 import { BoostedOddsModel, BoostedOddsStore, PromotionModel } from "./boosted-odds-store";
-import { StorageManager, localStorageKeys } from "../../shared/utils";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { AppStore } from "../../app";
 
@@ -13,7 +12,6 @@ export namespace BoostedOddsPromotionsHandlers {
         timeout: any;
         minutesToMillisecond = 60 * 1000;
         delayTime = 15 * this.minutesToMillisecond;
-        showBoostedOddIcon = true;
 
         constructor(
             @inject(BoostedOddsStore) private readonly boostedOddsStore: BoostedOddsStore,
@@ -25,14 +23,15 @@ export namespace BoostedOddsPromotionsHandlers {
             const newPromotions = data.filter((promotion) =>
                 this.mainPlayerStore.offerGames?.some((game) => game.gameId === promotion.gameId)
             );
-            const promotions: Array<BoostedOddsModel> = JSON.parse(StorageManager.get("boosted-odds") as string) || [];
+
+            const { boostedOddses, promotions, isAllowShowBoostedOddIcon } = this.boostedOddsStore;
 
             if (newPromotions.length > 0) {
-                let haveNewPromotion = newPromotions?.length > promotions?.length;
+                let haveNewPromotion = newPromotions?.length > boostedOddses?.length;
                 if (!haveNewPromotion) {
                     const filterNewPromotion = newPromotions.filter(
                         (newPromotion) =>
-                            !promotions.some(
+                            !boostedOddses.some(
                                 (currentPromotion) =>
                                     newPromotion._id === currentPromotion._id &&
                                     new Date(newPromotion.startDateTime).getTime() === new Date(currentPromotion.startDateTime).getTime() &&
@@ -42,24 +41,20 @@ export namespace BoostedOddsPromotionsHandlers {
                     haveNewPromotion = filterNewPromotion.length > 0;
                 }
 
-                if (
-                    (haveNewPromotion || this.showBoostedOddIcon) &&
-                    this.boostedOddsStore.promotions?.length > 0 &&
-                    !this.appStore.isDirectMode
-                ) {
+                if ((haveNewPromotion || isAllowShowBoostedOddIcon) && promotions?.length > 0 && !this.appStore.isDirectMode) {
                     this.boostedOddsStore.increaseBoostedOddCounter();
                     this.setTimeoutShowBoostedOdds();
                 }
 
-                this.showBoostedOddIcon = false;
-                StorageManager.set(localStorageKeys.boostOdds, JSON.stringify(newPromotions));
+                this.boostedOddsStore.setIsAllowShowBoostedOddIcon(false);
+                this.boostedOddsStore.setBoostedOddsModels(newPromotions);
             }
         }
 
         setTimeoutShowBoostedOdds(): void {
             this.timeout && clearTimeout(this.timeout);
             this.timeout = setTimeout(() => {
-                this.showBoostedOddIcon = true;
+                this.boostedOddsStore.setIsAllowShowBoostedOddIcon(true);
             }, this.delayTime);
         }
     }
@@ -76,7 +71,7 @@ export namespace BoostedOddsPromotionsHandlers {
             const newPromotions = data.filter((promotion) =>
                 this.mainPlayerStore.offerGames?.some((game) => game.gameId === promotion.gameId)
             );
-            this.boostedOddsStore.setData(newPromotions);
+            this.boostedOddsStore.setPromotionModels(newPromotions);
         }
     }
 }

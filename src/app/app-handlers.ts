@@ -47,7 +47,6 @@ export namespace AppHandlers {
                 memberName: sessionInfo?.memberName,
                 language: sessionInfo?.language,
                 gameId,
-                promotion: StorageManager.get(localStorageKeys.boostOdds),
             };
         }
     }
