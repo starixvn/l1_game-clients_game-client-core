@@ -7,6 +7,8 @@ RUN chown -R nginx:nginx /usr/share/nginx && chmod -R 755 /usr/share/nginx && \
     chown -R nginx:nginx /etc/nginx/
 RUN touch /var/run/nginx.pid && \
     chown -R nginx:nginx /var/run/nginx.pid
+    
+RUN id -u nginx
 
 # Switch to non-root user
 USER nginx
