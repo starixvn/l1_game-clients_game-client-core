@@ -4,11 +4,12 @@ FROM hub.lumigame.com/base/nginx:brotli-1.20.2-zlib
 RUN chown -R nginx:nginx /usr/share/nginx && chmod -R 755 /usr/share/nginx && \
     chown -R nginx:nginx /var/cache/nginx && \
     chown -R nginx:nginx /var/log/nginx && \
-    chown -R nginx:nginx /etc/nginx/
+    chown -R nginx:nginx /etc/nginx/conf.d
 RUN touch /var/run/nginx.pid && \
     chown -R nginx:nginx /var/run/nginx.pid
-    
-RUN id -u nginx
+
+# disable user directive
+RUN sed -i 's/user  nginx;/#user  nginx;/g' /etc/nginx/nginx.conf
 
 # Switch to non-root user
 USER nginx
