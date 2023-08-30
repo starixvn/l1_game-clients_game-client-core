@@ -1,3 +1,10 @@
+## [1.36.6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.5...v1.36.6) (2023-08-30)
+
+
+### Bug Fixes
+
+* fix msgpack for connection ([519f09c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/519f09c9adedc037c1f57e732ea0105ce871dbc0))
+
 ## [1.36.5](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.4...v1.36.5) (2023-08-30)
 
 
