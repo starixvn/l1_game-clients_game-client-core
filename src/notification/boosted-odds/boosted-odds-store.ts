@@ -36,7 +36,7 @@ export class BoostedOddsStore {
     isLoadingIcon = false;
 
     boostedOddses: Array<BoostedOddsModel> = [];
-    isAllowShowBoostedOddIcon = true;
+    isAllowShowBoostedOddIcon = false;
 
     constructor() {
         makeObservable(this, {
