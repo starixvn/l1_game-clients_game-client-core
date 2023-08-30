@@ -1,60 +1,77 @@
 import { stub } from "jest-auto-stub";
 import { PromotionModel } from "../../../../src/notification";
-import { BoostedOddsStore } from "../../../../src/notification/boosted-odds/boosted-odds-store";
+import { BoostedOddsModel, BoostedOddsStore } from "../../../../src/notification/boosted-odds/boosted-odds-store";
 
 describe("BoostedOddsStore", () => {
     let store: BoostedOddsStore;
+
     beforeEach(() => {
         store = new BoostedOddsStore();
-        store.promotions = [];
-        store.popupCounter = 0;
-        store.isLoadingIcon = false;
-        store.boostedOddsCounter = 0;
     });
 
-    describe("setData", () => {
+    describe("setPromotionModels", () => {
         it("should set promotions correctly", () => {
             // Arrange
-            const promotionModel: PromotionModel[] = stub<PromotionModel[]>([{ gameId: 1 }]);
+            const promotions: PromotionModel[] = stub<PromotionModel[]>([{ gameId: 1 }]);
 
             // Act
-            store.setPromotionModels(promotionModel);
+            store.setPromotionModels(promotions);
 
             // Assert
-            expect(store.promotions).toEqual(promotionModel);
+            expect(store.promotions).toEqual(promotions);
+        });
+    });
+
+    describe("setBoostedOddsModels", () => {
+        it("should set boosted odds correctly", () => {
+            // Arrange
+            const boostedOddses: BoostedOddsModel[] = stub<BoostedOddsModel[]>([{ gameId: 1 }]);
+
+            // Act
+            store.setBoostedOddsModels(boostedOddses);
+
+            // Assert
+            expect(store.boostedOddses).toEqual(boostedOddses);
         });
     });
 
     describe("increasePopupCounter", () => {
-        it("should increment popupCounter by 1", () => {
+        it("should increase popup counter", () => {
             // Act
             store.increasePopupCounter();
 
-            // Assert that popupCounter is incremented
+            // Assert
             expect(store.popupCounter).toBe(1);
         });
     });
 
-    describe("boostedOddsCounter", () => {
-        it("should get and set boostedOddsCounter", () => {
-            // Arrange
-            store.boostedOddsCounter = 5;
-
+    describe("increaseBoostedOddCounter", () => {
+        it("should increase boosted odds counter", () => {
             // Act
-            const counter = store.boostedOddsCounter;
+            store.increaseBoostedOddCounter();
 
             // Assert
-            expect(counter).toBe(5);
+            expect(store.boostedOddsCounter).toBe(1);
         });
     });
 
     describe("setIsLoadingIcon", () => {
-        it("should set isLoadingIcon correctly", () => {
+        it("should set loading icon state", () => {
             // Act
             store.setIsLoadingIcon(true);
 
             // Assert
             expect(store.isLoadingIcon).toBe(true);
+        });
+    });
+
+    describe("setIsAllowShowBoostedOddIcon", () => {
+        it("should set show boosted odds icon state", () => {
+            // Act
+            store.setIsAllowShowBoostedOddIcon(true);
+
+            // Assert
+            expect(store.isAllowShowBoostedOddIcon).toBe(true);
         });
     });
 });
