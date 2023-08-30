@@ -11,7 +11,7 @@ export namespace BoostedOddsPromotionsHandlers {
 
         timeout: NodeJS.Timeout;
         minutesToMillisecond = 60 * 1000;
-        delayTime = 2 * this.minutesToMillisecond;
+        delayTime = 15 * this.minutesToMillisecond;
 
         constructor(
             @inject(BoostedOddsStore) private readonly boostedOddsStore: BoostedOddsStore,
@@ -23,11 +23,13 @@ export namespace BoostedOddsPromotionsHandlers {
             const newPromotions = this.getPromotionsByOfferGames(data);
             this.boostedOddsStore.setIsAllowShowBoostedOddIcon(true);
 
-            if (newPromotions.length > 0) {
+            if (newPromotions?.length > 0) {
                 const { boostedOddses, promotions, isAllowShowBoostedOddIcon } = this.boostedOddsStore;
-                let haveNewPromotion = this.checkIfReceiveNewPromotions(newPromotions, boostedOddses);
-
-                if ((haveNewPromotion || isAllowShowBoostedOddIcon) && promotions?.length > 0 && !this.appStore.isDirectMode) {
+                if (
+                    (this.checkIfReceiveNewPromotions(newPromotions, boostedOddses) || isAllowShowBoostedOddIcon) &&
+                    promotions?.length > 0 &&
+                    !this.appStore.isDirectMode
+                ) {
                     this.boostedOddsStore.increaseBoostedOddCounter();
                     this.setTimeoutShowBoostedOdds();
                 }
@@ -83,7 +85,7 @@ export namespace BoostedOddsPromotionsHandlers {
             const newPromotions = data.filter((promotion) =>
                 this.mainPlayerStore.offerGames?.some((game) => game.gameId === promotion.gameId)
             );
-            this.boostedOddsStore.setPromotionModels(newPromotions);
+            newPromotions.length > 0 && this.boostedOddsStore.setPromotionModels(newPromotions);
         }
     }
 }
