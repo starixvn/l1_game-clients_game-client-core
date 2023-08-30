@@ -1,3 +1,10 @@
+## [1.36.7](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.6...v1.36.7) (2023-08-30)
+
+
+### Bug Fixes
+
+* update subdirectory for notification connection ([f1ffaaa](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/f1ffaaa51613bd22636a024f57fe808fb2d88f7d))
+
 ## [1.36.6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.5...v1.36.6) (2023-08-30)
 
 
