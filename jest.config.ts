@@ -26,6 +26,9 @@ const config: Config = {
     ],
     testMatch,
     verbose: true,
+    moduleNameMapper: {
+        "socket.io-client/dist/socket.io.msgpack.min.js": "socket.io-client/dist/socket.io.js",
+    },
 };
 
 export default config;

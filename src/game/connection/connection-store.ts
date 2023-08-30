@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { Socket, io } from "socket.io-client/dist/socket.io.js";
+import { io as ioMsgPack } from "socket.io-client/dist/socket.io.msgpack.min.js";
 import { ISessionInfo } from "../../auth";
 import { SiteConfigs } from "../../configs/site-configs";
 import { GameClientEmitMessage, Mediator } from "../../shared";
@@ -46,16 +47,20 @@ export class ConnectionStore {
 
         const gameId = this.gameSetting.id;
         const socketUri = UrlUtils.buildServerUrl("http", `${this.siteConfigs.websocket.proxyPath}`, gameId, this.siteConfigs);
-        const optionsDefault = {
+        const optionsDefault: ISocketOption = {
             path: UrlUtils.getProxyRoute(this.siteConfigs),
             socketUri,
             transports: ["websocket"],
             upgrade: false,
             forceNew: true,
-            parser: this.siteConfigs.enableMsgpackParserAllGames,
         };
         const options = { ...optionsDefault, ...customizeOptions };
-        this.connection = io(options.socketUri, options);
+
+        if (this.siteConfigs.enableMsgpackParserAllGames) {
+            this.connection = ioMsgPack(options.socketUri, options);
+        } else {
+            this.connection = io(options.socketUri, options);
+        }
 
         this.initBaseListener();
     }

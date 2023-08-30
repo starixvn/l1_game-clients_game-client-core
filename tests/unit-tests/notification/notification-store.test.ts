@@ -1,4 +1,4 @@
-import { io } from "socket.io-client";
+import { io } from "socket.io-client/dist/socket.io.js";
 import { NotificationStore, events } from "../../../src/notification";
 import { Mediator, NotificationServiceMessage } from "../../../src/shared";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils";
@@ -9,7 +9,7 @@ jest.mock("../../../src/shared/utils/logger", () => ({
     sentryLogger: { logError: jest.fn() },
 }));
 
-jest.mock("socket.io-client", () => ({
+jest.mock("socket.io-client/dist/socket.io.js", () => ({
     io: jest.fn().mockReturnValue({ on: jest.fn() }),
 }));
 

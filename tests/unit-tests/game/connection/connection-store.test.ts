@@ -1,5 +1,6 @@
 import { stub } from "jest-auto-stub";
 import { io } from "socket.io-client/dist/socket.io.js";
+import { io as ioMsgPack } from "socket.io-client/dist/socket.io.msgpack.min.js";
 import { ConnectionStore, events } from "../../../../src/game/connection";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
 import { StorageManager, UrlUtils, sentryLogger } from "../../../../src/shared/utils";
@@ -21,9 +22,11 @@ const optionsDefault = {
     transports: ["websocket"],
     upgrade: false,
     forceNew: true,
-    parser: siteConfigs.enableMsgpackParserAllGames,
 };
 jest.mock("socket.io-client/dist/socket.io.js", () => ({
+    io: jest.fn().mockReturnValue({}),
+}));
+jest.mock("socket.io-client/dist/socket.io.msgpack.min.js", () => ({
     io: jest.fn().mockReturnValue({}),
 }));
 
@@ -60,13 +63,6 @@ describe("ConnectionStore tests", () => {
             // assert
             expect(UrlUtils.getProxyRoute).toHaveBeenCalledWith(siteConfigs);
         });
-        it("should call io with expected arguments", () => {
-            // act
-            store.initConnection();
-
-            // assert
-            expect(io).toHaveBeenCalledWith("socketUri", optionsDefault);
-        });
         it("should set connection", () => {
             // act
             store.initConnection();
@@ -88,6 +84,31 @@ describe("ConnectionStore tests", () => {
 
             // assert
             expect(store.reset).toHaveBeenCalled();
+        });
+
+        describe("when enableMsgpackParserAllGames = true", () => {
+            it("should call ioMsgpack with expected arguments", () => {
+                // arrange
+                store["siteConfigs"].enableMsgpackParserAllGames = true;
+
+                // act
+                store.initConnection();
+
+                // assert
+                expect(ioMsgPack).toHaveBeenCalledWith("socketUri", optionsDefault);
+            });
+        });
+        describe("when enableMsgpackParserAllGames = false", () => {
+            it("should call ioMsgpack with expected arguments", () => {
+                // arrange
+                store["siteConfigs"].enableMsgpackParserAllGames = false;
+
+                // act
+                store.initConnection();
+
+                // assert
+                expect(io).toHaveBeenCalledWith("socketUri", optionsDefault);
+            });
         });
     });
 

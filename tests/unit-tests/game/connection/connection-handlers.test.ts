@@ -12,6 +12,9 @@ jest.mock("../../../../src/shared/utils", () => ({
 jest.mock("socket.io-client/dist/socket.io.js", () => ({
     io: jest.fn().mockReturnValue({}),
 }));
+jest.mock("socket.io-client/dist/socket.io.msgpack.min.js", () => ({
+    io: jest.fn().mockReturnValue({}),
+}));
 
 describe("Connection Handlers tests", () => {
     describe("Connect", () => {

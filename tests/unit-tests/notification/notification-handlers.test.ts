@@ -1,6 +1,8 @@
+import { stub } from "jest-auto-stub";
 import { NotificationStore } from "../../../src/notification";
 import { NotificationHandlers } from "../../../src/notification/notification-handlers";
-import { Mediator } from "../../../src/shared";
+import { io } from "socket.io-client/dist/socket.io.js";
+import { io as ioMsgPack } from "socket.io-client/dist/socket.io.msgpack.min.js";
 import { siteConfigs } from "../container.test";
 
 jest.mock("../../../src/shared/utils/storage-manager", () => ({
@@ -19,7 +21,12 @@ jest.mock("../../../src/shared/utils", () => ({
         buildUrl: jest.fn().mockReturnValue("https://notification.com"),
     },
 }));
-
+jest.mock("socket.io-client/dist/socket.io.js", () => ({
+    io: jest.fn().mockReturnValue({}),
+}));
+jest.mock("socket.io-client/dist/socket.io.msgpack.min.js", () => ({
+    io: jest.fn().mockReturnValue({}),
+}));
 const fakeSession = {
     isAuthenticated: true,
     username: "username",
@@ -32,39 +39,72 @@ const fakeSession = {
 
 describe("NotificationHandlers tests", () => {
     describe("handle", () => {
-        describe("when on dev mode", () => {
-            it("connect correct socket uri ", () => {
-                // arrange
-                const notificationServiceUrlDev = "https://localhost:3008";
-                const cloneSiteConfigs = { ...siteConfigs };
-                cloneSiteConfigs.isDev = true;
-                cloneSiteConfigs.notificationServiceUrlDev = notificationServiceUrlDev;
+        let cloneSiteConfigs;
+        let handler: NotificationHandlers;
+        let notificationStore: NotificationStore;
+        beforeEach(() => {
+            cloneSiteConfigs = { ...siteConfigs };
+            notificationStore = stub<NotificationStore>();
+            handler = new NotificationHandlers(notificationStore, cloneSiteConfigs);
+        });
 
-                const handler = new NotificationHandlers(new NotificationStore(new Mediator()), siteConfigs);
+        describe("when enableMsgpackParserOnNotification = true & isDev = true", () => {
+            it("should call ioMsgPack with expected arguments ", () => {
+                // arrange
+                handler["siteConfigs"].enableMsgpackParserOnNotification = true;
+                const notificationServiceUrlDev = "https://localhost:3008";
+                handler["siteConfigs"].notificationServiceUrlDev = notificationServiceUrlDev;
+                handler["siteConfigs"].isDev = true;
+                const options = {
+                    path: "/socket.io",
+                    socketUri: "https://localhost:3008",
+                    transports: ["websocket"],
+                    upgrade: false,
+                    forceNew: true,
+                    auth: {
+                        ss: fakeSession.session,
+                        username: fakeSession.username,
+                    },
+                };
+                const connection = { msgpack: true };
+                (ioMsgPack as jest.Mock).mockReturnValue(connection);
 
                 // act
                 handler.handle(fakeSession);
 
                 // assert
-                expect(handler.notificationStore.connection.io["uri"]).toEqual(notificationServiceUrlDev);
-                expect(handler.notificationStore.connection.io.opts["path"]).toEqual("/socket.io");
+                expect(ioMsgPack).toHaveBeenCalledWith(notificationServiceUrlDev, options);
+                expect(notificationStore.connection).toEqual(connection);
+                expect(notificationStore.initListener).toHaveBeenCalled();
             });
         });
 
-        describe("when on deployed mode", () => {
-            it("connect correct socket uri ", () => {
+        describe("when enableMsgpackParserOnNotification = false & isDev = false", () => {
+            it("should call io with expected arguments ", () => {
                 // arrange
-                const cloneSiteConfigs = { ...siteConfigs };
-                cloneSiteConfigs.isDev = false;
-
-                const handler = new NotificationHandlers(new NotificationStore(new Mediator()), cloneSiteConfigs);
+                handler["siteConfigs"].enableMsgpackParserOnNotification = false;
+                handler["siteConfigs"].isDev = false;
+                const options = {
+                    path: "/notification/socket.io",
+                    socketUri: "https://notification.com",
+                    transports: ["websocket"],
+                    upgrade: false,
+                    forceNew: true,
+                    auth: {
+                        ss: fakeSession.session,
+                        username: fakeSession.username,
+                    },
+                };
+                const connection = { msgpack: false };
+                (io as jest.Mock).mockReturnValue(connection);
 
                 // act
                 handler.handle(fakeSession);
 
                 // assert
-                expect(handler.notificationStore.connection.io["uri"]).toEqual("https://notification.com");
-                expect(handler.notificationStore.connection.io.opts["path"]).toEqual("/notification/socket.io");
+                expect(io).toHaveBeenCalledWith("https://notification.com", options);
+                expect(notificationStore.connection).toEqual(connection);
+                expect(notificationStore.initListener).toHaveBeenCalled();
             });
         });
     });
