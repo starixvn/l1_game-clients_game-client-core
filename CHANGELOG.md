@@ -1,3 +1,12 @@
+## [1.36.5](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.4...v1.36.5) (2023-08-30)
+
+
+### Bug Fixes
+
+* add unittest ([811ec60](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/811ec604bc6ef660ff55229c95e0223e9651d3de))
+* refactor code ([6521a7a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/6521a7a164467a3755a40e85d4bf412962ffe0e0))
+* remove redundant code ([361eabf](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/361eabfa4989786eed83c5e9b0aa0f19b6a8e962))
+
 ## [1.36.4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.3...v1.36.4) (2023-08-24)
 
 
