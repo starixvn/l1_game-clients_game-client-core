@@ -208,4 +208,21 @@ describe("UrlUtils", () => {
             expect(result).toBe("/ws/socket.io");
         });
     });
+
+    describe("getSubdirectory", () => {
+        it("should return expected when subDirectory not empty", () => {
+            // act
+            const actual = UrlUtils.getSubDirectory("sit");
+
+            // assert
+            expect(actual).toBe("sit/");
+        });
+        it("should return expected when subDirectory is empty", () => {
+            // act
+            const actual = UrlUtils.getSubDirectory("");
+
+            // assert
+            expect(actual).toBe("");
+        });
+    });
 });

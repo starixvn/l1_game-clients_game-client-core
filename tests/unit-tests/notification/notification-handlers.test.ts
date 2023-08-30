@@ -4,6 +4,7 @@ import { NotificationHandlers } from "../../../src/notification/notification-han
 import { io } from "socket.io-client/dist/socket.io.js";
 import { io as ioMsgPack } from "socket.io-client/dist/socket.io.msgpack.min.js";
 import { siteConfigs } from "../container.test";
+import { UrlUtils } from "../../../src/shared/utils";
 
 jest.mock("../../../src/shared/utils/storage-manager", () => ({
     StorageManager: {
@@ -19,6 +20,7 @@ jest.mock("../../../src/shared/utils/storage-manager", () => ({
 jest.mock("../../../src/shared/utils", () => ({
     UrlUtils: {
         buildUrl: jest.fn().mockReturnValue("https://notification.com"),
+        getSubDirectory: jest.fn().mockReturnValue(""),
     },
 }));
 jest.mock("socket.io-client/dist/socket.io.js", () => ({
@@ -55,6 +57,7 @@ describe("NotificationHandlers tests", () => {
                 const notificationServiceUrlDev = "https://localhost:3008";
                 handler["siteConfigs"].notificationServiceUrlDev = notificationServiceUrlDev;
                 handler["siteConfigs"].isDev = true;
+                (UrlUtils.getSubDirectory as jest.Mock).mockReturnValueOnce("");
                 const options = {
                     path: "/socket.io",
                     socketUri: "https://localhost:3008",
@@ -84,8 +87,9 @@ describe("NotificationHandlers tests", () => {
                 // arrange
                 handler["siteConfigs"].enableMsgpackParserOnNotification = false;
                 handler["siteConfigs"].isDev = false;
+                (UrlUtils.getSubDirectory as jest.Mock).mockReturnValueOnce("uat/");
                 const options = {
-                    path: "/notification/socket.io",
+                    path: "/uat/notification/socket.io",
                     socketUri: "https://notification.com",
                     transports: ["websocket"],
                     upgrade: false,

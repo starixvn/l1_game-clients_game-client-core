@@ -70,4 +70,8 @@ export namespace UrlUtils {
             return "";
         }
     };
+
+    export function getSubDirectory(subDirectory: string) {
+        return subDirectory.length > 0 ? `${subDirectory}/` : "";
+    }
 }

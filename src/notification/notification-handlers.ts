@@ -14,11 +14,11 @@ export class NotificationHandlers {
     ) {}
 
     handle(sessionInfo: ISessionInfo) {
-        const { isDev, enableMsgpackParserOnNotification } = this.siteConfigs;
+        const { isDev, enableMsgpackParserOnNotification, subDirectory } = this.siteConfigs;
         const socketUri = isDev ? this.siteConfigs.notificationServiceUrlDev : UrlUtils.buildUrl("http", "/", this.siteConfigs);
 
         const options = {
-            path: `${isDev ? "" : "/notification"}/socket.io`,
+            path: `/${UrlUtils.getSubDirectory(subDirectory)}${isDev ? "" : "notification/"}socket.io`,
             socketUri,
             transports: ["websocket"],
             upgrade: false,
