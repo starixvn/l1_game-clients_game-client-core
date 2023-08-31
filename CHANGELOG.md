@@ -1,3 +1,11 @@
+## [1.36.9](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.8...v1.36.9) (2023-08-31)
+
+
+### Bug Fixes
+
+* add unittest ([9933bf3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9933bf327d8406cd9221d559450c6e87a1b9c934))
+* get sub-directory ([c581f35](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/c581f35fb96e3bdbfd141d214b3becb2647e8f02))
+
 ## [1.36.8](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.7...v1.36.8) (2023-08-31)
 
 
