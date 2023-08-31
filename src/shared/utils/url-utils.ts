@@ -72,6 +72,6 @@ export namespace UrlUtils {
     };
 
     export function getSubDirectory(subDirectory: string) {
-        return subDirectory.length > 0 ? `${subDirectory}/` : "";
+        return subDirectory?.length > 0 ? `${subDirectory}/` : "";
     }
 }
