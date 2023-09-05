@@ -3,6 +3,7 @@ import { makeAutoObservable } from "mobx";
 import { GameServiceMessage } from "../../shared";
 import { GameSetting } from "../game-configs";
 import { ROUND_STATE, RoundTimeStore } from "../rounds/round-time-store";
+import { SettlementStore } from "../settlements/settlement-store";
 
 export interface RoundHistory {
     roundId: number;
@@ -20,7 +21,8 @@ export interface IRoundHistoryInfo {
 export class RoundHistoryStore {
     constructor(
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
-        @inject(GameSetting) protected readonly gameSetting: GameSetting
+        @inject(GameSetting) protected readonly gameSetting: GameSetting,
+        @inject(SettlementStore) protected readonly settlementStore: SettlementStore
     ) {
         makeAutoObservable(this, { joinGameHistory: false });
     }
@@ -52,15 +54,25 @@ export class RoundHistoryStore {
     }
 
     get joinRoomShowResult(): IRoundHistoryInfo | null {
-        if (!this.joinGameHistory && this._histories.length > 0 && this.roundTimeStore.roundState !== ROUND_STATE.STOP_GAME_LOOP) {
-            const roundState = this.roundTimeStore.roundState;
-            const isShow = roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || roundState === ROUND_STATE.SHOW_RESULT;
+        if (this.shouldShowResult()) {
             this.joinGameHistory = {
                 roundHistory: this.getLastRound(),
-                isShow: isShow,
+                isShow: true,
             };
         }
 
         return this.joinGameHistory;
+    }
+
+    private shouldShowResult(): boolean {
+        const { _histories, roundTimeStore, settlementStore } = this;
+        if (!_histories.length || roundTimeStore.roundState === ROUND_STATE.STOP_GAME_LOOP) {
+            return false;
+        }
+
+        const roundState = roundTimeStore.roundState;
+        const currentFinish = settlementStore.currentFinish;
+
+        return (roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || roundState === ROUND_STATE.SHOW_RESULT) && !currentFinish;
     }
 }

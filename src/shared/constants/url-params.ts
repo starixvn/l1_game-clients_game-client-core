@@ -10,4 +10,5 @@ export const URLParams = {
     musicEnable: "musicEnable",
     sfxEnable: "sfxEnable",
     parentUrl: "purl",
+    isUserGesture: "isUserGesture",
 };

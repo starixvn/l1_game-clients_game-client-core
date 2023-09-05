@@ -2,6 +2,7 @@ import { stub } from "jest-auto-stub";
 import { GameSetting } from "../../../../src/game/game-configs";
 import { RoundHistory, RoundHistoryStore } from "../../../../src/game/round-histories";
 import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
+import { SettlementStore } from "../../../../src/game/settlements/settlement-store";
 
 jest.mock("mobx");
 
@@ -10,12 +11,14 @@ describe("RoundHistoryStore", () => {
     let roundTimeStoreMock: RoundTimeStore;
     let mockHistories: RoundHistory[];
     let gameSetting: GameSetting;
+    let settlementStore: SettlementStore;
 
     beforeEach(() => {
         roundTimeStoreMock = stub<RoundTimeStore>();
         gameSetting = stub<GameSetting>();
+        settlementStore = stub<SettlementStore>();
 
-        roundHistoryStore = new RoundHistoryStore(roundTimeStoreMock, gameSetting);
+        roundHistoryStore = new RoundHistoryStore(roundTimeStoreMock, gameSetting, settlementStore);
         mockHistories = [
             {
                 roundId: 1,
@@ -139,17 +142,22 @@ describe("RoundHistoryStore", () => {
 
     describe("joinRoomShowResult", () => {
         test.each`
-            roundState                           | histories                                                | expected
-            ${ROUND_STATE.SHOW_ANIMATION_RESULT} | ${[{ id: 1, result: "Win" }, { id: 2, result: "Lose" }]} | ${{ roundHistory: { id: 1, result: "Win" }, isShow: true }}
-            ${ROUND_STATE.SHOW_RESULT}           | ${[{ id: 3, result: "Draw" }, { id: 4, result: "Win" }]} | ${{ roundHistory: { id: 3, result: "Draw" }, isShow: true }}
-            ${ROUND_STATE.LOCKING_BET}           | ${[{ id: 5, result: "Lose" }, { id: 6, result: "Win" }]} | ${{ roundHistory: { id: 5, result: "Lose" }, isShow: false }}
-        `("returns $expected when roundState is $roundState and histories are $histories", ({ roundState, histories, expected }) => {
-            roundHistoryStore.histories = histories;
-            roundTimeStoreMock.roundState = roundState;
+            roundState                           | histories                                                | currentFinish                                       | expected
+            ${ROUND_STATE.SHOW_ANIMATION_RESULT} | ${[{ id: 1, result: "Win" }, { id: 2, result: "Lose" }]} | ${null}                                             | ${{ roundHistory: { id: 1, result: "Win" }, isShow: true }}
+            ${ROUND_STATE.SHOW_RESULT}           | ${[{ id: 3, result: "Draw" }, { id: 4, result: "Win" }]} | ${null}                                             | ${{ roundHistory: { id: 3, result: "Draw" }, isShow: true }}
+            ${ROUND_STATE.LOCKING_BET}           | ${[{ id: 5, result: "Lose" }, { id: 6, result: "Win" }]} | ${{ result: {}, settlementResult: {}, roundId: 1 }} | ${null}
+        `(
+            "returns $expected when roundState is $roundState and histories are $histories",
+            ({ roundState, histories, currentFinish, expected }) => {
+                settlementStore = stub<SettlementStore>({ currentFinish });
+                roundHistoryStore = new RoundHistoryStore(roundTimeStoreMock, gameSetting, settlementStore);
+                roundHistoryStore.histories = histories;
+                roundTimeStoreMock.roundState = roundState;
 
-            const result = roundHistoryStore.joinRoomShowResult;
+                const result = roundHistoryStore.joinRoomShowResult;
 
-            expect(result).toEqual(expected);
-        });
+                expect(result).toEqual(expected);
+            }
+        );
     });
 });

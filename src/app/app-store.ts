@@ -28,6 +28,7 @@ export class AppStore {
     urlInfo: IUrlInfo = {};
     isAutoCreateNickname = false;
     isLoading = true;
+    isUserGesture = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -67,6 +68,10 @@ export class AppStore {
 
         if (appType === AppTypes.App.toString()) {
             this.isApp = true;
+        }
+
+        if (urlParams.get(URLParams?.isUserGesture)) {
+            this.isUserGesture = true;
         }
     }
 
