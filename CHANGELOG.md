@@ -1,3 +1,10 @@
+## [1.36.10](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.9...v1.36.10) (2023-09-06)
+
+
+### Bug Fixes
+
+* bug histories length greater than setting.numberOfRoundHistory ([640e971](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/640e97105e1903e53cb06463cb6ad2bfc66e745b))
+
 ## [1.36.9](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.8...v1.36.9) (2023-08-31)
 
 
