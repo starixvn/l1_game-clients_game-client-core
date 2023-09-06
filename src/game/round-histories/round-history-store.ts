@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, when } from "mobx";
 import { GameServiceMessage } from "../../shared";
 import { GameSetting } from "../game-configs";
 import { ROUND_STATE, RoundTimeStore } from "../rounds/round-time-store";
@@ -12,7 +12,7 @@ export interface RoundHistory {
     winningPlayers?: GameServiceMessage.TWinningPlayers;
 }
 
-export interface IRoundHistoryInfo {
+export interface IJoinGameHistory {
     roundHistory: RoundHistory;
     isShow?: boolean;
 }
@@ -24,11 +24,23 @@ export class RoundHistoryStore {
         @inject(GameSetting) protected readonly gameSetting: GameSetting,
         @inject(SettlementStore) protected readonly settlementStore: SettlementStore
     ) {
-        makeAutoObservable(this, { joinGameHistory: false });
+        makeAutoObservable(this);
+
+        when(
+            () => this.isValidHistories(),
+            () => {
+                if (this.isShowResultWhenJoinGame()) {
+                    this.joinGameHistory = {
+                        roundHistory: this.getLastRound(),
+                        isShow: true,
+                    };
+                }
+            }
+        );
     }
 
     private _histories: RoundHistory[] = [];
-    joinGameHistory: IRoundHistoryInfo = null;
+    private _joinGameHistory: IJoinGameHistory = null;
 
     get histories() {
         return this._histories;
@@ -36,6 +48,14 @@ export class RoundHistoryStore {
 
     set histories(histories: RoundHistory[]) {
         this._histories = histories;
+    }
+
+    get joinGameHistory() {
+        return this._joinGameHistory;
+    }
+
+    set joinGameHistory(joinGameHistory: IJoinGameHistory) {
+        this._joinGameHistory = joinGameHistory;
     }
 
     getLastRound() {
@@ -53,26 +73,21 @@ export class RoundHistoryStore {
         this.histories = cloneHistories;
     }
 
-    get joinRoomShowResult(): IRoundHistoryInfo | null {
-        if (this.shouldShowResult()) {
-            this.joinGameHistory = {
-                roundHistory: this.getLastRound(),
-                isShow: true,
-            };
-        }
-
-        return this.joinGameHistory;
-    }
-
-    private shouldShowResult(): boolean {
-        const { _histories, roundTimeStore, settlementStore } = this;
+    isValidHistories(): boolean {
+        const { _histories, roundTimeStore } = this;
         if (!_histories.length || roundTimeStore.roundState === ROUND_STATE.STOP_GAME_LOOP) {
             return false;
         }
 
-        const roundState = roundTimeStore.roundState;
-        const currentFinish = settlementStore.currentFinish;
+        return true;
+    }
 
-        return (roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || roundState === ROUND_STATE.SHOW_RESULT) && !currentFinish;
+    isShowResultWhenJoinGame() {
+        const { roundTimeStore, settlementStore } = this;
+        const roundState = roundTimeStore?.roundState;
+
+        return (
+            !settlementStore?.currentFinish && (roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || roundState === ROUND_STATE.SHOW_RESULT)
+        );
     }
 }

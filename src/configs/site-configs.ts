@@ -20,4 +20,5 @@ export class SiteConfigs {
     gameGuideUrlDev?: string;
     mainObserverNamespace: string;
     tolgeeUrl?: string;
+    backgroundNoTranslate?: boolean;
 }

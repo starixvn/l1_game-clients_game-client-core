@@ -1,4 +1,5 @@
 import { stub } from "jest-auto-stub";
+import { when } from "mobx";
 import { GameSetting } from "../../../../src/game/game-configs";
 import { RoundHistory, RoundHistoryStore } from "../../../../src/game/round-histories";
 import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
@@ -140,24 +141,37 @@ describe("RoundHistoryStore", () => {
         });
     });
 
-    describe("joinRoomShowResult", () => {
+    describe("shouldShowResultWhenJoinGame", () => {
         test.each`
-            roundState                           | histories                                                | currentFinish                                       | expected
-            ${ROUND_STATE.SHOW_ANIMATION_RESULT} | ${[{ id: 1, result: "Win" }, { id: 2, result: "Lose" }]} | ${null}                                             | ${{ roundHistory: { id: 1, result: "Win" }, isShow: true }}
-            ${ROUND_STATE.SHOW_RESULT}           | ${[{ id: 3, result: "Draw" }, { id: 4, result: "Win" }]} | ${null}                                             | ${{ roundHistory: { id: 3, result: "Draw" }, isShow: true }}
-            ${ROUND_STATE.LOCKING_BET}           | ${[{ id: 5, result: "Lose" }, { id: 6, result: "Win" }]} | ${{ result: {}, settlementResult: {}, roundId: 1 }} | ${null}
+            roundState                           | histories                                                | currentFinish | expected
+            ${ROUND_STATE.SHOW_ANIMATION_RESULT} | ${[{ id: 1, result: "Win" }, { id: 2, result: "Lose" }]} | ${null}       | ${true}
+            ${ROUND_STATE.SHOW_RESULT}           | ${[{ id: 3, result: "Draw" }, { id: 4, result: "Win" }]} | ${null}       | ${true}
+            ${ROUND_STATE.LOCKING_BET}           | ${[{ id: 5, result: "Lose" }, { id: 6, result: "Win" }]} | ${{}}         | ${false}
         `(
             "returns $expected when roundState is $roundState and histories are $histories",
             ({ roundState, histories, currentFinish, expected }) => {
+                // Arrange
                 settlementStore = stub<SettlementStore>({ currentFinish });
                 roundHistoryStore = new RoundHistoryStore(roundTimeStoreMock, gameSetting, settlementStore);
+
                 roundHistoryStore.histories = histories;
                 roundTimeStoreMock.roundState = roundState;
+                roundHistoryStore.joinGameHistory = expected;
 
-                const result = roundHistoryStore.joinRoomShowResult;
+                // Act
+                const result = roundHistoryStore.isShowResultWhenJoinGame();
 
+                // Assert
                 expect(result).toEqual(expected);
             }
         );
+    });
+
+    it("should call mobx.when with the expected conditions", () => {
+        // Act
+        roundHistoryStore.isValidHistories = jest.fn(() => true);
+
+        // Assert
+        expect(when).toHaveBeenCalledWith(expect.any(Function), expect.any(Function));
     });
 });
