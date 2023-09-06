@@ -36,7 +36,7 @@ export class BoostedOddsStore {
     isLoadingIcon = false;
 
     boostedOddses: Array<BoostedOddsModel> = [];
-    isAllowShowBoostedOddIcon = false;
+    isAllowShowBoostedOddIcon = true;
 
     constructor() {
         makeObservable(this, {
@@ -69,5 +69,10 @@ export class BoostedOddsStore {
 
     setIsAllowShowBoostedOddIcon(isAllowShowBoostedOddIcon: boolean) {
         this.isAllowShowBoostedOddIcon = isAllowShowBoostedOddIcon;
+    }
+
+    resetBoostedOddsData() {
+        this.boostedOddses = [];
+        this.isAllowShowBoostedOddIcon = true;
     }
 }

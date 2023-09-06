@@ -20,6 +20,11 @@ describe("Booted Odds tests", () => {
             );
         });
 
+        test("constructor should call resetBoostedOddsData", () => {
+            // Assert
+            expect(mockedBoostedOddsStore.resetBoostedOddsData).toHaveBeenCalledTimes(1);
+        });
+
         describe("handle", () => {
             beforeEach(() => {
                 mockedMainPlayerStore.offerGames = [{ gameId: 2 }, { gameId: 3 }, { gameId: 1 }];
@@ -41,7 +46,6 @@ describe("Booted Odds tests", () => {
                 boostedOddsPopupHandlers.handle(newPromotions);
 
                 // Assert
-                expect(mockedBoostedOddsStore.setIsAllowShowBoostedOddIcon).toHaveBeenCalledWith(true);
                 expect(mockedBoostedOddsStore.increaseBoostedOddCounter).toHaveBeenCalled();
                 expect(boostedOddsPopupHandlers.setTimeoutShowBoostedOdds).toHaveBeenCalled();
                 expect(mockedBoostedOddsStore.setIsAllowShowBoostedOddIcon).toHaveBeenCalledWith(false);
@@ -57,7 +61,7 @@ describe("Booted Odds tests", () => {
                 boostedOddsPopupHandlers.handle(newPromotions);
 
                 // Assert
-                expect(mockedBoostedOddsStore.setIsAllowShowBoostedOddIcon).toHaveBeenCalledTimes(1);
+                expect(mockedBoostedOddsStore.setIsAllowShowBoostedOddIcon).not.toHaveBeenCalled();
                 expect(mockedBoostedOddsStore.increaseBoostedOddCounter).not.toHaveBeenCalled();
                 expect(boostedOddsPopupHandlers.setTimeoutShowBoostedOdds).not.toHaveBeenCalled();
                 expect(mockedBoostedOddsStore.setBoostedOddsModels).not.toHaveBeenCalled();
@@ -98,7 +102,7 @@ describe("Booted Odds tests", () => {
 
                 // Assert
                 expect(mockedBoostedOddsStore.increaseBoostedOddCounter).not.toHaveBeenCalled();
-                expect(boostedOddsPopupHandlers.setTimeoutShowBoostedOdds).not.toHaveBeenCalled();
+                expect(boostedOddsPopupHandlers.setTimeoutShowBoostedOdds).toBeCalledTimes(1);
             });
 
             it("should not allow show boosted odds icon when it is direct mode", () => {

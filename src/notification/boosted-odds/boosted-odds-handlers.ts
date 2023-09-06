@@ -17,20 +17,20 @@ export namespace BoostedOddsPromotionsHandlers {
             @inject(BoostedOddsStore) private readonly boostedOddsStore: BoostedOddsStore,
             @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
             @inject(AppStore) private readonly appStore: AppStore
-        ) {}
+        ) {
+            this.boostedOddsStore.resetBoostedOddsData();
+        }
 
         handle(data: Array<BoostedOddsModel>) {
             const newPromotions = this.getPromotionsByOfferGames(data);
-            this.boostedOddsStore.setIsAllowShowBoostedOddIcon(true);
 
             if (newPromotions?.length > 0) {
                 const { boostedOddses, promotions, isAllowShowBoostedOddIcon } = this.boostedOddsStore;
                 if (
                     (this.checkIfReceiveNewPromotions(newPromotions, boostedOddses) || isAllowShowBoostedOddIcon) &&
-                    promotions?.length > 0 &&
                     !this.appStore.isDirectMode
                 ) {
-                    this.boostedOddsStore.increaseBoostedOddCounter();
+                    promotions?.length > 0 && this.boostedOddsStore.increaseBoostedOddCounter();
                     this.setTimeoutShowBoostedOdds();
                 }
 

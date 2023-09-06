@@ -1,12 +1,27 @@
 import { stub } from "jest-auto-stub";
 import { PromotionModel } from "../../../../src/notification";
 import { BoostedOddsModel, BoostedOddsStore } from "../../../../src/notification/boosted-odds/boosted-odds-store";
+import { observable, makeObservable } from "mobx";
+
+jest.mock("mobx", () => ({
+    observable: jest.fn(),
+    makeObservable: jest.fn(),
+}));
 
 describe("BoostedOddsStore", () => {
     let store: BoostedOddsStore;
 
     beforeEach(() => {
         store = new BoostedOddsStore();
+    });
+
+    test("constructor should call makeObservable with the correct properties", () => {
+        expect(makeObservable).toHaveBeenCalledWith(store, {
+            isLoadingIcon: observable,
+            promotions: observable,
+            popupCounter: observable,
+            boostedOddsCounter: observable,
+        });
     });
 
     describe("setPromotionModels", () => {
@@ -71,6 +86,21 @@ describe("BoostedOddsStore", () => {
             store.setIsAllowShowBoostedOddIcon(true);
 
             // Assert
+            expect(store.isAllowShowBoostedOddIcon).toBe(true);
+        });
+    });
+
+    describe("resetBoostedOddsData", () => {
+        it(" should reset boostedOddses and isAllowShowBoostedOddIcon", () => {
+            // Arrange
+            store.boostedOddses = [];
+            store.isAllowShowBoostedOddIcon = false;
+
+            // Act
+            store.resetBoostedOddsData();
+
+            // Assert
+            expect(store.boostedOddses).toEqual([]);
             expect(store.isAllowShowBoostedOddIcon).toBe(true);
         });
     });
