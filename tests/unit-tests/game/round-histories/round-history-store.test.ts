@@ -59,7 +59,7 @@ describe("RoundHistoryStore", () => {
             expect(roundHistoryStore.histories).toEqual([finish]);
         });
 
-        it("should update histories correctly when numberOfRoundHistory is 0", () => {
+        it("roundHistoryStore.histories = 0 when numberOfRoundHistory is 0", () => {
             // Arrange
             gameSetting.numberOfRoundHistory = 0;
             const finish = {
@@ -76,7 +76,7 @@ describe("RoundHistoryStore", () => {
             roundHistoryStore.updateHistories(finish);
 
             // Assert
-            expect(roundHistoryStore.histories).toEqual([finish]);
+            expect(roundHistoryStore.histories).toEqual([]);
         });
     });
 
@@ -132,7 +132,8 @@ describe("RoundHistoryStore", () => {
             roundHistoryStore.updateHistories(finish);
 
             // Assert
-            expect(roundHistoryStore.histories).toEqual([finish, ...initialHistories.slice(0, 2)]);
+            expect(roundHistoryStore.histories.length).toBe(gameSetting.numberOfRoundHistory);
+            expect(roundHistoryStore.histories).toEqual([finish, initialHistories[0]]);
         });
     });
 

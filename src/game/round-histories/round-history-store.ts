@@ -44,7 +44,7 @@ export class RoundHistoryStore {
         const currentRound = finish as RoundHistory;
         const cloneHistories = JSON.parse(JSON.stringify(this.histories));
         cloneHistories.unshift(currentRound);
-        if (this.histories.length > this.gameSetting.numberOfRoundHistory) {
+        if (cloneHistories.length > this.gameSetting.numberOfRoundHistory) {
             cloneHistories.pop();
         }
 
