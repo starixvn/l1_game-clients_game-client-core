@@ -1,3 +1,13 @@
+# [1.37.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.11...v1.37.0) (2023-09-07)
+
+
+### Features
+
+* add handle user gesture ([83cdca7](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/83cdca767e76dfc1baa6f2b792ad1ce0c19bb322))
+* update get history when join room ([0412f57](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/0412f57c0cb0e859cb56d0139561c321aac11525))
+* update handle user gesture and highlight ([3587a9a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/3587a9ad0209098d4fcd2f0b9520f4b9480fabcf))
+* upgrade cocos test && build template ([b65865c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b65865cdd8b910966073f6695c7ecb41ed5271e4))
+
 ## [1.36.11](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.10...v1.36.11) (2023-09-07)
 
 
