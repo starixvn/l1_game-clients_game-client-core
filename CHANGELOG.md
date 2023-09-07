@@ -1,3 +1,10 @@
+## [1.36.11](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.10...v1.36.11) (2023-09-07)
+
+
+### Bug Fixes
+
+* promotions ([75b9b84](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/75b9b84e23cd6a91bd7a9d178e4b96980fa43a98))
+
 ## [1.36.10](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.9...v1.36.10) (2023-09-06)
 
 
