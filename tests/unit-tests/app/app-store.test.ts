@@ -1,7 +1,7 @@
+import { makeAutoObservable } from "mobx";
 import { UMInfo } from "sc-user-service-client/dist/auth";
 import { AppStore } from "../../../src/app/app-store";
-import { StorageManager, localStorageKeys, BrowserDomUtils } from "../../../src/shared/utils";
-import { makeAutoObservable } from "mobx";
+import { BrowserDomUtils, StorageManager, localStorageKeys } from "../../../src/shared/utils";
 
 jest.mock("../../../src/shared/utils", () => ({
     StorageManager: {
@@ -142,6 +142,30 @@ describe("appStore tests", () => {
 
                 // assert
                 expect(StorageManager.set).toHaveBeenCalledWith(localStorageKeys.parentUrl, "OWdnwgucWH");
+            });
+
+            it("should set isUserGesture when isUserGesture is true ", () => {
+                // arrange
+                const urlParams = new URLSearchParams("isUserGesture=true");
+                const store = new AppStore();
+
+                // act
+                store.setURLStore(urlParams);
+
+                // assert
+                expect(store.isUserGesture).toBe(true);
+            });
+
+            it("should set isUserGesture when isUserGesture is false ", () => {
+                // arrange
+                const urlParams = new URLSearchParams("isUserGesture=false");
+                const store = new AppStore();
+
+                // act
+                store.setURLStore(urlParams);
+
+                // assert
+                expect(store.isUserGesture).toBe(false);
             });
         });
     });

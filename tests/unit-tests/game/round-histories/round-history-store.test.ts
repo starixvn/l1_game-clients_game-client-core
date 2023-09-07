@@ -1,5 +1,4 @@
 import { stub } from "jest-auto-stub";
-import { when } from "mobx";
 import { GameSetting } from "../../../../src/game/game-configs";
 import { RoundHistory, RoundHistoryStore } from "../../../../src/game/round-histories";
 import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
@@ -159,7 +158,7 @@ describe("RoundHistoryStore", () => {
                 roundHistoryStore.joinGameHistory = expected;
 
                 // Act
-                const result = roundHistoryStore.isShowResultWhenJoinGame();
+                const result = roundHistoryStore.isShowResultWhenJoinGame;
 
                 // Assert
                 expect(result).toEqual(expected);
@@ -167,11 +166,49 @@ describe("RoundHistoryStore", () => {
         );
     });
 
-    it("should call mobx.when with the expected conditions", () => {
-        // Act
-        roundHistoryStore.isValidHistories = jest.fn(() => true);
+    describe("isValidHistories", () => {
+        it("returns false when _histories is empty", () => {
+            // Arrange
+            roundHistoryStore.histories = []; // Set _histories to an empty array
 
-        // Assert
-        expect(when).toHaveBeenCalledWith(expect.any(Function), expect.any(Function));
+            // Act
+            const result = roundHistoryStore.isValidHistories;
+
+            // Assert
+            expect(result).toBe(false);
+        });
+
+        it("returns false when roundState is STOP_GAME_LOOP", () => {
+            // Arrange
+            roundTimeStoreMock.roundState = ROUND_STATE.STOP_GAME_LOOP;
+
+            // Act
+            const result = roundHistoryStore.isValidHistories;
+
+            // Assert
+            expect(result).toBe(false);
+        });
+
+        it("returns true when _histories is not empty and roundState is not STOP_GAME_LOOP", () => {
+            // Arrange
+            roundHistoryStore.histories = [
+                {
+                    roundId: 1,
+                    result: {
+                        choice: 1,
+                    },
+                    settlementResult: {
+                        test: true,
+                    },
+                },
+            ];
+            roundTimeStoreMock.roundState = ROUND_STATE.START_GAME_LOOP;
+
+            // Act
+            const result = roundHistoryStore.isValidHistories;
+
+            // Assert
+            expect(result).toBe(true);
+        });
     });
 });

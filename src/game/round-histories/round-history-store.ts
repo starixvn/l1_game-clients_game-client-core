@@ -27,9 +27,9 @@ export class RoundHistoryStore {
         makeAutoObservable(this);
 
         when(
-            () => this.isValidHistories(),
+            () => this.isValidHistories,
             () => {
-                if (this.isShowResultWhenJoinGame()) {
+                if (this.isShowResultWhenJoinGame) {
                     this.joinGameHistory = {
                         roundHistory: this.getLastRound(),
                         isShow: true,
@@ -58,6 +58,24 @@ export class RoundHistoryStore {
         this._joinGameHistory = joinGameHistory;
     }
 
+    get isValidHistories(): boolean {
+        const { _histories, roundTimeStore } = this;
+        if (!_histories.length || roundTimeStore.roundState === ROUND_STATE.STOP_GAME_LOOP) {
+            return false;
+        }
+
+        return true;
+    }
+
+    get isShowResultWhenJoinGame() {
+        const { roundTimeStore, settlementStore } = this;
+        const roundState = roundTimeStore?.roundState;
+
+        return (
+            !settlementStore?.currentFinish && (roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || roundState === ROUND_STATE.SHOW_RESULT)
+        );
+    }
+
     getLastRound() {
         return this.histories?.[0];
     }
@@ -71,23 +89,5 @@ export class RoundHistoryStore {
         }
 
         this.histories = cloneHistories;
-    }
-
-    isValidHistories(): boolean {
-        const { _histories, roundTimeStore } = this;
-        if (!_histories.length || roundTimeStore.roundState === ROUND_STATE.STOP_GAME_LOOP) {
-            return false;
-        }
-
-        return true;
-    }
-
-    isShowResultWhenJoinGame() {
-        const { roundTimeStore, settlementStore } = this;
-        const roundState = roundTimeStore?.roundState;
-
-        return (
-            !settlementStore?.currentFinish && (roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || roundState === ROUND_STATE.SHOW_RESULT)
-        );
     }
 }

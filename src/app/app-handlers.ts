@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
 import { ISessionInfo } from "../auth";
-import { IHandler } from "../shared";
-import { GameUtils, BrowserDomUtils, StorageManager, localStorageKeys, sentryLogger } from "../shared/utils";
-import { AppStore } from "./app-store";
 import { PlayerSelectionHandlers } from "../game/player-selections";
+import { IHandler } from "../shared";
+import { BrowserDomUtils, GameUtils, StorageManager, localStorageKeys, sentryLogger } from "../shared/utils";
+import { AppStore } from "./app-store";
 
 export namespace AppHandlers {
     @injectable()
@@ -48,6 +48,15 @@ export namespace AppHandlers {
                 language: sessionInfo?.language,
                 gameId,
             };
+        }
+    }
+
+    @injectable()
+    export class UserGesturePage implements IHandler<boolean> {
+        constructor(@inject(AppStore) private readonly appStore: AppStore) {}
+
+        handle(isUserGesture: boolean) {
+            this.appStore.isUserGesture = isUserGesture;
         }
     }
 }

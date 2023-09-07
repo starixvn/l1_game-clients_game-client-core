@@ -1,6 +1,6 @@
 import { AppHandlers, AppStore } from "../../../src/app";
-import { GameUtils, StorageManager, BrowserDomUtils } from "../../../src/shared/utils";
 import { PlayerSelectionHandlers, PlayerSelectionStore } from "../../../src/game/player-selections";
+import { BrowserDomUtils, GameUtils, StorageManager } from "../../../src/shared/utils";
 
 jest.mock("../../../src/shared/utils");
 
@@ -90,6 +90,32 @@ describe("AppHandlers", () => {
                 expect(BrowserDomUtils.replaceParentLocation).not.toHaveBeenCalled();
                 expect(BrowserDomUtils.postMessageToParent).not.toHaveBeenCalled();
             });
+        });
+    });
+
+    describe("UserGesturePage", () => {
+        let userGesturePage: AppHandlers.UserGesturePage;
+        let appStore: AppStore;
+
+        beforeEach(() => {
+            appStore = new AppStore();
+            userGesturePage = new AppHandlers.UserGesturePage(appStore);
+        });
+
+        it("should update isUserGesture to true", () => {
+            // act
+            userGesturePage.handle(true);
+
+            // assert
+            expect(appStore.isUserGesture).toBe(true);
+        });
+
+        it("should update isUserGesture to false", () => {
+            // act
+            userGesturePage.handle(false);
+
+            // assert
+            expect(appStore.isUserGesture).toBe(false);
         });
     });
 });

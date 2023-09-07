@@ -70,7 +70,7 @@ export class AppStore {
             this.isApp = true;
         }
 
-        if (urlParams.get(URLParams?.isUserGesture)) {
+        if (JSON.parse(urlParams.get(URLParams?.isUserGesture))) {
             this.isUserGesture = true;
         }
     }
