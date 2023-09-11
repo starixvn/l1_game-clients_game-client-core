@@ -24,6 +24,7 @@ export interface THighlightAnim {
 
 export interface THighlightStatic {
     settlementResult: GameServiceMessage.TSettlementResult;
+    result: GameServiceMessage.TResult;
 }
 
 @injectable()
@@ -68,7 +69,7 @@ export class RoundStore {
         }
 
         // when clearing all active data in database and having data in archive collection
-        if(this.roundHistoryStore.histories.length === 0 && this.roundId > 0){
+        if (this.roundHistoryStore.histories.length === 0 && this.roundId > 0) {
             lastRoundId = this.roundId;
         }
 
@@ -138,11 +139,13 @@ export class RoundStore {
 
     get highlightStatic(): THighlightStatic {
         let settlementResult: GameServiceMessage.TSettlementResult = null;
+        let result: GameServiceMessage.TResult = null;
         if (this.roundTimeStore.roundState === ROUND_STATE.PLACING_BET || this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND) {
             settlementResult = this.roundHistoryStore?.getLastRound()?.settlementResult;
+            result = this.roundHistoryStore?.getLastRound()?.result;
         }
 
-        return { settlementResult };
+        return { settlementResult, result };
     }
 
     resetForNewRound() {

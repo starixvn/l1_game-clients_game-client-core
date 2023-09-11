@@ -167,12 +167,14 @@ describe("RoundStore", () => {
                 ROUND_STATE.PLACING_BET,
                 {
                     settlementResult: mockHistories[0].settlementResult,
+                    result: mockHistories[0].result,
                 },
             ],
             [
                 ROUND_STATE.STARTING_ROUND,
                 {
                     settlementResult: mockHistories[0].settlementResult,
+                    result: mockHistories[0].result,
                 },
             ],
             // Add more test cases as needed
@@ -193,118 +195,111 @@ describe("RoundStore", () => {
     describe("clientRoundId", () => {
         describe("when round history is NOT empty", () => {
             describe("when clientRoundId < lastRoundId", () => {
-                test.each([
-                    [ ROUND_STATE.STARTING_ROUND],
-                    [ ROUND_STATE.PLACING_BET],
-                    [ ROUND_STATE.LOCKING_BET],
-                    [ ROUND_STATE.WAITING],                    
-                ])("when roundState is %s, should return lastRoundId + 1", (roundState) => {
-                    // Arrange
-                    roundTimeStore.roundState = roundState;
-                    roundHistoryStore.histories = [
-                        {roundId: 11, result: {}, settlementResult: {}, winningPlayers: {}},
-                        {roundId: 12, result: {}, settlementResult: {}, winningPlayers: {}},
-                    ];      
-                    roundStore._clientRoundId = 0;  
-        
-                    // Act
-                    const result = roundStore.clientRoundId;
-        
-                    // Assert
-                    expect(result).toEqual(12);
-                });
+                test.each([[ROUND_STATE.STARTING_ROUND], [ROUND_STATE.PLACING_BET], [ROUND_STATE.LOCKING_BET], [ROUND_STATE.WAITING]])(
+                    "when roundState is %s, should return lastRoundId + 1",
+                    (roundState) => {
+                        // Arrange
+                        roundTimeStore.roundState = roundState;
+                        roundHistoryStore.histories = [
+                            { roundId: 11, result: {}, settlementResult: {}, winningPlayers: {} },
+                            { roundId: 12, result: {}, settlementResult: {}, winningPlayers: {} },
+                        ];
+                        roundStore._clientRoundId = 0;
+
+                        // Act
+                        const result = roundStore.clientRoundId;
+
+                        // Assert
+                        expect(result).toEqual(12);
+                    }
+                );
 
                 it("when roundState after settle time, should return lastRoundId", () => {
                     // Arrange
                     roundTimeStore.roundState = ROUND_STATE.SHOW_ANIMATION_RESULT;
                     roundHistoryStore.histories = [
-                        {roundId: 11, result: {}, settlementResult: {}, winningPlayers: {}},
-                        {roundId: 12, result: {}, settlementResult: {}, winningPlayers: {}},
-                    ];      
-                    roundStore._clientRoundId = 0;  
-        
+                        { roundId: 11, result: {}, settlementResult: {}, winningPlayers: {} },
+                        { roundId: 12, result: {}, settlementResult: {}, winningPlayers: {} },
+                    ];
+                    roundStore._clientRoundId = 0;
+
                     // Act
                     const result = roundStore.clientRoundId;
-        
+
                     // Assert
                     expect(result).toEqual(11);
-                })
-            })
+                });
+            });
 
             describe("when clientRoundId >= lastRoundId", () => {
-                test.each([
-                    [ ROUND_STATE.STARTING_ROUND],
-                    [ ROUND_STATE.PLACING_BET],
-                    [ ROUND_STATE.LOCKING_BET],
-                    [ ROUND_STATE.WAITING],                    
-                ])("when roundState is %s, should return clientRoundId", (roundState) => {
-                    // Arrange
-                    roundTimeStore.roundState = roundState;
-                    roundHistoryStore.histories = [
-                        {roundId: 11, result: {}, settlementResult: {}, winningPlayers: {}},
-                        {roundId: 12, result: {}, settlementResult: {}, winningPlayers: {}},
-                    ];      
-                    roundStore._clientRoundId = 15;  
-        
-                    // Act
-                    const result = roundStore.clientRoundId;
-        
-                    // Assert
-                    expect(result).toEqual(15);
-                });
+                test.each([[ROUND_STATE.STARTING_ROUND], [ROUND_STATE.PLACING_BET], [ROUND_STATE.LOCKING_BET], [ROUND_STATE.WAITING]])(
+                    "when roundState is %s, should return clientRoundId",
+                    (roundState) => {
+                        // Arrange
+                        roundTimeStore.roundState = roundState;
+                        roundHistoryStore.histories = [
+                            { roundId: 11, result: {}, settlementResult: {}, winningPlayers: {} },
+                            { roundId: 12, result: {}, settlementResult: {}, winningPlayers: {} },
+                        ];
+                        roundStore._clientRoundId = 15;
+
+                        // Act
+                        const result = roundStore.clientRoundId;
+
+                        // Assert
+                        expect(result).toEqual(15);
+                    }
+                );
 
                 it("when roundState after settle time, should return clientRoundId", () => {
                     // Arrange
                     roundTimeStore.roundState = ROUND_STATE.SHOW_ANIMATION_RESULT;
                     roundHistoryStore.histories = [
-                        {roundId: 11, result: {}, settlementResult: {}, winningPlayers: {}},
-                        {roundId: 12, result: {}, settlementResult: {}, winningPlayers: {}},
-                    ];      
-                    roundStore._clientRoundId = 15;  
-        
+                        { roundId: 11, result: {}, settlementResult: {}, winningPlayers: {} },
+                        { roundId: 12, result: {}, settlementResult: {}, winningPlayers: {} },
+                    ];
+                    roundStore._clientRoundId = 15;
+
                     // Act
                     const result = roundStore.clientRoundId;
-        
+
                     // Assert
                     expect(result).toEqual(15);
-                })
-            })
-        })
+                });
+            });
+        });
 
         describe("when round history is empty", () => {
             describe("when clientRoundId < lastRoundId", () => {
-                it("when roundId > 0, should return roundId", () => {                   
-    
-                        // Arrange
-                        roundTimeStore.roundState = ROUND_STATE.SHOW_ANIMATION_RESULT;
-                        roundHistoryStore.histories =  [];      
-                        roundStore._clientRoundId = 0;  
-                        roundStore.roundId = 20;
-            
-                        // Act
-                        const result = roundStore.clientRoundId;
-            
-                        // Assert
-                        expect(result).toEqual(20);
-                })
-                
-            })
+                it("when roundId > 0, should return roundId", () => {
+                    // Arrange
+                    roundTimeStore.roundState = ROUND_STATE.SHOW_ANIMATION_RESULT;
+                    roundHistoryStore.histories = [];
+                    roundStore._clientRoundId = 0;
+                    roundStore.roundId = 20;
+
+                    // Act
+                    const result = roundStore.clientRoundId;
+
+                    // Assert
+                    expect(result).toEqual(20);
+                });
+            });
             describe("when clientRoundId > lastRoundId", () => {
-                it("when roundId > 0, should return clientRoundId", () => {                   
-    
-                        // Arrange
-                        roundTimeStore.roundState = ROUND_STATE.SHOW_ANIMATION_RESULT;
-                        roundHistoryStore.histories =  [];      
-                        roundStore._clientRoundId = 30;  
-                        roundStore.roundId = 20;
-            
-                        // Act
-                        const result = roundStore.clientRoundId;
-            
-                        // Assert
-                        expect(result).toEqual(30);
-                })                
-            })
-        })
-    })
+                it("when roundId > 0, should return clientRoundId", () => {
+                    // Arrange
+                    roundTimeStore.roundState = ROUND_STATE.SHOW_ANIMATION_RESULT;
+                    roundHistoryStore.histories = [];
+                    roundStore._clientRoundId = 30;
+                    roundStore.roundId = 20;
+
+                    // Act
+                    const result = roundStore.clientRoundId;
+
+                    // Assert
+                    expect(result).toEqual(30);
+                });
+            });
+        });
+    });
 });
