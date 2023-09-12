@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { reaction } from "mobx";
+import { reaction, when } from "mobx";
 import { IHandler } from "../../shared";
 import { SettlementStatusStore, SettlementStore } from "../settlements";
 import { RoundStore } from "./round-store";
@@ -17,6 +17,14 @@ export namespace RoundUIHandlers {
             reaction(
                 () => this.roundTimeStore.isStartRound,
                 (isStartRound) => isStartRound && this.handle()
+            );
+
+            when(
+                () => !!this.roundTimeStore?.isStartingRound,
+                () => {
+                    console.log("resetSettlementStore------------------");
+                    this.handle();
+                }
             );
         }
 
