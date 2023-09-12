@@ -1,3 +1,10 @@
+# [1.38.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.37.0...v1.38.0) (2023-09-12)
+
+
+### Features
+
+* update get highlightStatic ([03e3e3c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/03e3e3c52fb34338376715e14e62bb2fe87183ac))
+
 # [1.37.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.36.11...v1.37.0) (2023-09-07)
 
 
