@@ -22,7 +22,6 @@ export namespace RoundUIHandlers {
             when(
                 () => !!this.roundTimeStore?.isStartingRound,
                 () => {
-                    console.log("resetSettlementStore------------------");
                     this.handle();
                 }
             );
