@@ -56,6 +56,7 @@ export class SettlementStore {
         finish?.winningPlayers && (this.winningPlayers = finish.winningPlayers);
     }
 
+
     get payChipInfo(): TPayChipInfo {
         if (this.isFinishedShowResult) {
             return {
@@ -70,6 +71,7 @@ export class SettlementStore {
     resetSettlementStore() {
         this._winningPlayers = null;
         this.settlementResult = null;
+        this.result = null;
         this.isFinishedShowResult = false;
     }
 }

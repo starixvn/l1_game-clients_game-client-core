@@ -1,9 +1,9 @@
 import { stub } from "jest-auto-stub";
 import { makeAutoObservable } from "mobx";
 import { SettlementStore } from "../../../../src/game/settlements";
+import { MainPlayerStore } from "../../../../src/players/main-player-store";
 import { GameServiceMessage } from "../../../../src/shared";
 import { NumberUtils } from "../../../../src/shared/utils/number-utils";
-import { MainPlayerStore } from "../../../../src/players/main-player-store";
 
 jest.mock("../../../../src/shared/utils/number-utils", () => ({ NumberUtils: { getValueByCurrency: jest.fn() } }));
 jest.mock("mobx");
@@ -134,13 +134,14 @@ describe("SettlementStore tests", () => {
             expect(store.settlementResult).toBeNull();
         });
 
-        it("should reset winningPlayers and settlementResult to null even if they are already null", () => {
+        it("should reset winningPlayers, settlementResult and result to null even if they are already null", () => {
             // Arrange
             store.resetSettlementStore();
 
             // Assert
             expect(store.winningPlayers).toBeNull();
             expect(store.settlementResult).toBeNull();
+            expect(store.result).toBeNull();
         });
     });
 });
