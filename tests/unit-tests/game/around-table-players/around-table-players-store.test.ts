@@ -75,7 +75,7 @@ describe("AroundTablePlayersStore", () => {
         const aroundTablePlayerOutGame = { playerId };
         aroundTablePlayersStore.removeAroundTablePlayer(aroundTablePlayerOutGame);
 
-        expect(aroundTablePlayersStore.outGamePlayerId).toBe(playerId);
+        expect(aroundTablePlayersStore.outGamePlayerId).toEqual({"id": "player1"});
         expect(aroundTablePlayersStore.aroundTablePlayers[playerId]).toBeUndefined();
     });
 
