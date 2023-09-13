@@ -17,7 +17,7 @@ export class AroundTablePlayersStore {
 
     aroundTablePlayer: GameServiceMessage.AroundTablePlayer = null;
     aroundTablePlayers: GameServiceMessage.AroundTablePlayers = {};
-    outGamePlayerId = "";
+    outGamePlayerId : GameServiceMessage.RemoveAroundTablePlayer = null;
     maxBalanceDisplay = SystemConfigs.SG.maxBalanceDisplay;
 
     setAroundTablePlayers(players: GameServiceMessage.AroundTablePlayers) {
@@ -45,7 +45,10 @@ export class AroundTablePlayersStore {
 
     removeAroundTablePlayer(aroundTablePlayer: GameServiceMessage.OutGame) {
         if (aroundTablePlayer?.playerId) {
-            this.outGamePlayerId = aroundTablePlayer.playerId;
+            this.outGamePlayerId = new GameServiceMessage.RemoveAroundTablePlayer({
+                id: aroundTablePlayer.playerId
+            });
+            console.log("removeAroundTablePlayer ", this.outGamePlayerId);
             delete this.aroundTablePlayers[aroundTablePlayer.playerId];
         }
     }

@@ -149,6 +149,13 @@ export namespace GameServiceMessage {
         static eventName = "player";
     }
 
+    export class RemoveAroundTablePlayer {
+        id: string; 
+        constructor(init?:Partial<RemoveAroundTablePlayer>) {
+            Object.assign(this, init);
+        }      
+    }
+
     export class AroundTablePlayers {
         [playerId: string]: AroundTablePlayer;
 
