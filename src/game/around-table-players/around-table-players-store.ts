@@ -48,7 +48,6 @@ export class AroundTablePlayersStore {
             this.outGamePlayerId = new GameServiceMessage.RemoveAroundTablePlayer({
                 id: aroundTablePlayer.playerId
             });
-            console.log("removeAroundTablePlayer ", this.outGamePlayerId);
             delete this.aroundTablePlayers[aroundTablePlayer.playerId];
         }
     }
