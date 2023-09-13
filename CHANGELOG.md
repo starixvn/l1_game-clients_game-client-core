@@ -1,3 +1,11 @@
+## [1.38.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.38.0...v1.38.1) (2023-09-13)
+
+
+### Bug Fixes
+
+* add beta 1.38.1-beta.2 ([dea4124](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/dea41247289de0c26a4c5851eb6d7f204f401c7a))
+* reset settlement store ([49eb6ef](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/49eb6efb5ec53650f4ab5606641d7737bd41f874))
+
 # [1.38.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.37.0...v1.38.0) (2023-09-12)
 
 
