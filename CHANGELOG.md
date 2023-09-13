@@ -1,3 +1,12 @@
+## [1.38.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.38.1...v1.38.2) (2023-09-13)
+
+
+### Bug Fixes
+
+* remove console log ([e92c3ac](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/e92c3acf30b4a961726ab2dd5a86f7417d890952))
+* update outGamePlayerId ([b3a0c39](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b3a0c39f034c2eb80d0b2c3f1ae52265122c1b76))
+* update unit test ([9ac0938](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9ac0938fc25864e81bb5c335dbd233f8980ec2a4))
+
 ## [1.38.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.38.0...v1.38.1) (2023-09-13)
 
 
