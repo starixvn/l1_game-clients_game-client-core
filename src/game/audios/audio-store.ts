@@ -16,9 +16,21 @@ export enum MusicState {
     ENDED,
 }
 
+export enum SFXState {
+    NONE = -1,
+    STARTED = 0,
+    ENDED,
+    END,
+}
+
 export interface AudioData {
     id: string;
     action: AudioAction;
+}
+
+export interface ISFXState {
+    id: string;
+    state: SFXState;
 }
 
 @injectable()
@@ -31,6 +43,16 @@ export class AudioStore {
 
     musicIds: string[] = [];
     private _musicState: number = MusicState.NONE;
+    private _sfxState: ISFXState = { id: "", state: SFXState.NONE };
+
+    public get sfxState() {
+        return this._sfxState;
+    }
+
+    public set sfxState(clipSfxInfo: ISFXState) {
+        this._sfxState = clipSfxInfo;
+    }
+
     public get musicState(): number {
         return this._musicState;
     }
