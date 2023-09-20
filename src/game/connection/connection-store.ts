@@ -6,7 +6,7 @@ import { ISessionInfo } from "../../auth";
 import { SiteConfigs } from "../../configs/site-configs";
 import { GameClientEmitMessage, Mediator } from "../../shared";
 import { SocketEvents } from "../../shared/constants/socket-event";
-import { StorageManager, UrlUtils, localStorageKeys, sentryLogger } from "../../shared/utils";
+import { BrowserDomUtils, StorageManager, UrlUtils, localStorageKeys, sentryLogger } from "../../shared/utils";
 import { GameSetting } from "../game-configs";
 
 export const events = {
@@ -121,6 +121,9 @@ export class ConnectionStore {
     }
 
     setConnectFailed(reason = "") {
+        if (!reason || reason === "io server disconnect") {
+            BrowserDomUtils.postMessageToParent({ isDisconnect: true });
+        }
         if (reason && reason !== "io client disconnect") {
             this.isConnectFailed = true;
             sentryLogger.logError(reason);

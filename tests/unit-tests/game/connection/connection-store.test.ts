@@ -3,7 +3,7 @@ import { io } from "socket.io-client/dist/socket.io.js";
 import { io as ioMsgPack } from "socket.io-client/dist/socket.io.msgpack.min.js";
 import { ConnectionStore, events } from "../../../../src/game/connection";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
-import { StorageManager, UrlUtils, sentryLogger } from "../../../../src/shared/utils";
+import { BrowserDomUtils, StorageManager, UrlUtils, sentryLogger } from "../../../../src/shared/utils";
 import { gameSettings, siteConfigs } from "../../container.test";
 
 jest.mock("../../../../src/shared/utils", () => ({
@@ -14,6 +14,7 @@ jest.mock("../../../../src/shared/utils", () => ({
         buildServerUrl: jest.fn().mockReturnValue("socketUri"),
         getProxyRoute: jest.fn().mockReturnValue("/socket.io"),
     },
+    BrowserDomUtils: { postMessageToParent: jest.fn() },
 }));
 jest.mock("mobx");
 const optionsDefault = {
@@ -386,6 +387,25 @@ describe("ConnectionStore tests", () => {
 
                 // assert
                 expect(store.isConnectFailed).toBe(true);
+            });
+
+            it("should post isDisconnect = true to parent", () => {
+                // arrange
+                const reason = "io server disconnect";
+
+                // act
+                store.onDisconnected(reason);
+
+                // assert
+                expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ isDisconnect: true });
+            });
+
+            it("should post isDisconnect = true to parent when no reason", () => {
+                // act
+                store.onDisconnected();
+
+                // assert
+                expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ isDisconnect: true });
             });
         });
 
