@@ -1,3 +1,11 @@
+# [1.39.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.38.2...v1.39.0) (2023-09-21)
+
+
+### Features
+
+* fix sonar ([abe2b5f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/abe2b5fceecf1d9b5ad7baa42e90a0ede0e18fa5))
+* store state play sfx ([4640aef](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/4640aef8051af3fa851b3326cb35f6e8151dc863))
+
 ## [1.38.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.38.1...v1.38.2) (2023-09-13)
 
 
