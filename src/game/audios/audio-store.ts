@@ -20,7 +20,6 @@ export enum SFXState {
     NONE = -1,
     STARTED = 0,
     ENDED,
-    END,
 }
 
 export interface AudioData {
@@ -49,8 +48,8 @@ export class AudioStore {
         return this._sfxState;
     }
 
-    public set sfxState(clipSfxInfo: ISFXState) {
-        this._sfxState = clipSfxInfo;
+    public set sfxState(sfxState: ISFXState) {
+        this._sfxState = sfxState;
     }
 
     public get musicState(): number {

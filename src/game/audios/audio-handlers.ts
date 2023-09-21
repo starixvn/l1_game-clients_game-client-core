@@ -50,7 +50,7 @@ export class AudioHandler {
         this.audioStore.startMusicPlayer = this.userSettingsStore.musicEnable;
     }
 
-    updateSFXState(clipSfxInfo: ISFXState) {
-        this.audioStore.sfxState = clipSfxInfo;
+    updateSFXState(sfxState: ISFXState) {
+        this.audioStore.sfxState = sfxState;
     }
 }
