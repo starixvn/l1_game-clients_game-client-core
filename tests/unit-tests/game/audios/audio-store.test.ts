@@ -1,4 +1,4 @@
-import { AudioAction, AudioStore, MusicState, SFXState } from "./../../../../src/game/audios/audio-store";
+import { AudioAction, AudioStore, MusicState } from "./../../../../src/game/audios/audio-store";
 
 describe("AudioStore", () => {
     let audioStore: AudioStore;
@@ -13,12 +13,6 @@ describe("AudioStore", () => {
 
     it("should initialize musicState to MusicState.NONE", () => {
         expect(audioStore.musicState).toBe(MusicState.NONE);
-    });
-
-    it("should set and get sfxState correctly", () => {
-        const sfxState = { id: "example", state: SFXState.STARTED };
-        audioStore.sfxState = sfxState;
-        expect(audioStore.sfxState).toEqual(sfxState);
     });
 
     it("should set and get musicState correctly", () => {

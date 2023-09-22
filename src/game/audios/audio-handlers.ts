@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import * as _ from "lodash";
 import { UserSettingStore } from "../user-settings";
-import { AudioAction, AudioStore, IClipSfxInfo, ISFXState, MusicState } from "./audio-store";
+import { AudioAction, AudioStore, MusicState } from "./audio-store";
 @injectable()
 export class AudioHandler {
     constructor(
@@ -48,13 +48,5 @@ export class AudioHandler {
 
     audiosLoaded() {
         this.audioStore.startMusicPlayer = this.userSettingsStore.musicEnable;
-    }
-
-    updateSFXState(sfxState: ISFXState) {
-        this.audioStore.sfxState = sfxState;
-    }
-
-    updateClipSfxInfo(clipSfxInfo: IClipSfxInfo) {
-        this.audioStore.updateClipsSfx(clipSfxInfo);
     }
 }

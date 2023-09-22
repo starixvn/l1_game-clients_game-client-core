@@ -16,27 +16,9 @@ export enum MusicState {
     ENDED,
 }
 
-export enum SFXState {
-    NONE = -1,
-    STARTED = 0,
-    ENDED,
-}
-
 export interface AudioData {
     id: string;
     action: AudioAction;
-}
-
-export interface ISFXState {
-    id: string;
-    state?: SFXState;
-    duration?: number;
-}
-
-export interface IClipSfxInfo extends ISFXState {}
-
-export interface IClipsSfx {
-    clips: IClipSfxInfo[];
 }
 
 @injectable()
@@ -49,16 +31,6 @@ export class AudioStore {
 
     musicIds: string[] = [];
     private _musicState: number = MusicState.NONE;
-    private _sfxState: ISFXState = { id: "", state: SFXState.NONE };
-    clipsSfx: IClipsSfx = { clips: [] };
-
-    public get sfxState() {
-        return this._sfxState;
-    }
-
-    public set sfxState(sfxState: ISFXState) {
-        this._sfxState = sfxState;
-    }
 
     public get musicState(): number {
         return this._musicState;
@@ -96,12 +68,5 @@ export class AudioStore {
 
     set startMusicPlayer(value: boolean) {
         this._startMusicPlayer = value;
-    }
-
-    updateClipsSfx(clipSfxInfo: IClipSfxInfo) {
-        const isExisting = this.clipsSfx.clips.find((obj) => obj.id === clipSfxInfo.id);
-        if (!isExisting) {
-            this.clipsSfx = { clips: [...this.clipsSfx.clips, ...[clipSfxInfo]] };
-        }
     }
 }
