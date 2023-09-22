@@ -1,3 +1,11 @@
+## [1.39.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.0...v1.39.1) (2023-09-22)
+
+
+### Bug Fixes
+
+* remove check state when play sfx ([cc95f50](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/cc95f500e3a3b38ac71b7bb2acd2b90f9584634c))
+* store sfx info when play ([0799de2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/0799de2a0d2462f0e057d0b49d2b77df0ae9bd4b))
+
 # [1.39.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.38.2...v1.39.0) (2023-09-21)
 
 
