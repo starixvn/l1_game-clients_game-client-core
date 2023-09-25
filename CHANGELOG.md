@@ -1,3 +1,10 @@
+## [1.39.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.1...v1.39.2) (2023-09-25)
+
+
+### Bug Fixes
+
+* update histories when join game while result is showing ([e8be671](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/e8be671f28d00d9064caeeb22e983c918eaf8fac))
+
 ## [1.39.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.0...v1.39.1) (2023-09-22)
 
 
