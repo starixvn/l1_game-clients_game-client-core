@@ -82,6 +82,9 @@ export class RoundHistoryStore {
 
     updateHistories(finish: GameServiceMessage.Finish) {
         const currentRound = finish as RoundHistory;
+        if (this.histories[0]?.roundId === currentRound.roundId) {
+            return;
+        }
         const cloneHistories = JSON.parse(JSON.stringify(this.histories));
         cloneHistories.unshift(currentRound);
         if (cloneHistories.length > this.gameSetting.numberOfRoundHistory) {

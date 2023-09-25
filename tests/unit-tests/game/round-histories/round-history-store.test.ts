@@ -42,6 +42,36 @@ describe("RoundHistoryStore", () => {
     });
 
     describe("updateHistories", () => {
+        it("should not update histories when currentRound has the same roundId as the lastRound", () => {
+            // arrange
+            const histories = [
+                {
+                    roundId: 1,
+                    result: {
+                        red: true,
+                    },
+                    settlementResult: {
+                        red: true,
+                    },
+                },
+            ];
+            roundHistoryStore.histories = histories;
+            const currentRound = {
+                roundId: 1,
+                result: {
+                    red: true,
+                },
+                settlementResult: {
+                    red: true,
+                },
+            };
+
+            // Act
+            roundHistoryStore.updateHistories(currentRound);
+
+            // Assert
+            expect(roundHistoryStore.histories).toEqual(histories);
+        });
         it("should update histories correctly when numberOfRoundHistory is greater than 0", () => {
             // Arrange
             gameSetting.numberOfRoundHistory = 3;
