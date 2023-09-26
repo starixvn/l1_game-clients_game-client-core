@@ -1,3 +1,10 @@
+## [1.39.4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.3...v1.39.4) (2023-09-26)
+
+
+### Bug Fixes
+
+* change retry interval time ([138dec9](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/138dec9a232a4d2c879439ab9b39a70149dc9d1b))
+
 ## [1.39.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.2...v1.39.3) (2023-09-26)
 
 
