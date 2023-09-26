@@ -4,12 +4,12 @@ import { NoticeStore } from "../../../../src/game/notices";
 import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
 import { MainPlayerStore } from "../../../../src/players";
 import { GameClientEmitMessage } from "../../../../src/shared";
+import { Translator } from "../../../../src/shared/utils/localization-manager";
 import { gameSettings } from "../../container.test";
-import { ConnectionStore } from "./../../../../src/game/connection";
+import { ConnectionHandlers, ConnectionStore } from "./../../../../src/game/connection";
 import { OrientationStore } from "./../../../../src/game/orientation";
-import {Translator} from '../../../../src/shared/utils/localization-manager'
 
-jest.mock('../../../../src/shared/utils/localization-manager', () => ({
+jest.mock("../../../../src/shared/utils/localization-manager", () => ({
     Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key) },
 }));
 
@@ -21,6 +21,7 @@ describe("BetHandler", () => {
     let roundTimeStore: RoundTimeStore;
     let noticeStore: NoticeStore;
     let betHandler: BetHandler;
+    let retryHandler: ConnectionHandlers.RetryGameHandler;
     let betChoice: string;
     let showWarningProcessingBet;
 
@@ -30,12 +31,21 @@ describe("BetHandler", () => {
         connectionStore = stub<ConnectionStore>();
         betStore = new BetStore();
         orientationStore = new OrientationStore();
+        retryHandler = stub<ConnectionHandlers.RetryGameHandler>();
 
         roundTimeStore = new RoundTimeStore(gameSettings);
     });
 
     beforeEach(() => {
-        betHandler = new BetHandler(connectionStore, betStore, mainPlayerStore, orientationStore, roundTimeStore, noticeStore);
+        betHandler = new BetHandler(
+            connectionStore,
+            betStore,
+            mainPlayerStore,
+            orientationStore,
+            roundTimeStore,
+            noticeStore,
+            retryHandler
+        );
         showWarningProcessingBet = jest.spyOn(betHandler, "showWarningProcessingBet");
 
         betChoice = "even";
@@ -141,6 +151,7 @@ describe("BetHandler", () => {
                 amount: betStore.amount,
                 freeBet: betStore.freebetEnabled,
             });
+            expect(retryHandler.handle).toBeCalled();
         });
     });
 
