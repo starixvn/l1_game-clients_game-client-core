@@ -1,3 +1,10 @@
+## [1.39.3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.2...v1.39.3) (2023-09-26)
+
+
+### Bug Fixes
+
+* send retry after bet ([d9de783](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d9de7835abaaa5c2a4a6d13d610492844db9059b))
+
 ## [1.39.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.1...v1.39.2) (2023-09-25)
 
 
