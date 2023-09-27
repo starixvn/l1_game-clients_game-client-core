@@ -1,3 +1,10 @@
+## [1.39.5](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.4...v1.39.5) (2023-09-27)
+
+
+### Bug Fixes
+
+* post message to parent when disconnect service connection ([13b984b](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/13b984bd9a18ff15aeae20461bcfdfab7a4f8526))
+
 ## [1.39.4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.3...v1.39.4) (2023-09-26)
 
 
