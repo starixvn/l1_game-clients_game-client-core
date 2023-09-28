@@ -1,6 +1,7 @@
 import { stub } from "jest-auto-stub";
 import { io } from "socket.io-client/dist/socket.io.js";
 import { io as ioMsgPack } from "socket.io-client/dist/socket.io.msgpack.min.js";
+import { AuthStore } from "../../../../src/auth/auth-store";
 import { ConnectionStore, events } from "../../../../src/game/connection";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
 import { BrowserDomUtils, StorageManager, UrlUtils, sentryLogger } from "../../../../src/shared/utils";
@@ -34,9 +35,11 @@ jest.mock("socket.io-client/dist/socket.io.msgpack.min.js", () => ({
 describe("ConnectionStore tests", () => {
     let store: ConnectionStore;
     let mediator: Mediator;
+    let authStore: AuthStore;
     beforeEach(() => {
         mediator = stub<Mediator>();
-        store = new ConnectionStore(mediator, gameSettings, siteConfigs);
+        authStore = stub<AuthStore>();
+        store = new ConnectionStore(mediator, gameSettings, siteConfigs, authStore);
         console.log(store);
     });
 
@@ -399,14 +402,24 @@ describe("ConnectionStore tests", () => {
                 // assert
                 expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ isDisconnect: true });
             });
+            it("should post isDisconnect = true to parent", () => {
+                // arrange
+                const reason = "transport close";
 
-            it("should post isDisconnect = true to parent when no reason", () => {
                 // act
-                store.onDisconnected();
+                store.onDisconnected(reason);
 
                 // assert
                 expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ isDisconnect: true });
             });
+
+            // it("should post isDisconnect = true to parent when no reason", () => {
+            //     // act
+            //     store.onDisconnected();
+
+            //     // assert
+            //     expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ isDisconnect: true });
+            // });
         });
 
         describe("when disconnect with reason is from client", () => {

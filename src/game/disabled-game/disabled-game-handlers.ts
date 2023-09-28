@@ -7,6 +7,7 @@ import { ConnectionStore } from "../connection/connection-store";
 import { NoticeStore, NoticeType } from "../notices";
 import { RoundRunningHandlers } from "../rounds";
 import { RoundTimeStore } from "../rounds/round-time-store";
+import { AppTypes } from "./../../shared/constants/app-type";
 import { DisabledGameStore } from "./disabled-game-store";
 
 @injectable()
@@ -26,8 +27,10 @@ export class DisableGameHandlers implements IHandler<GameServiceMessage.Disabled
     }
 
     onClosedHandle() {
-        this.connectionStore.onDisconnected();
-        this.backToOperatorLobby.handle();
+        if (this.authStore.system != AppTypes.Instant) {
+            this.connectionStore.onDisconnected();
+            this.backToOperatorLobby.handle();
+        }
     }
 
     showPopupHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
@@ -55,7 +58,7 @@ export class DisableGameHandlers implements IHandler<GameServiceMessage.Disabled
     }
 
     joinGameHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
-        this.showPopupHandle(disabledGameInfo);
+        !this.disabledGameStore.showPopup && this.showPopupHandle(disabledGameInfo);
     }
 
     handle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {

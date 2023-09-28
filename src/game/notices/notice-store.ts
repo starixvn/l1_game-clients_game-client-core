@@ -37,4 +37,8 @@ export class NoticeStore {
     addNotice(notice: Notice) {
         this.notice = notice;
     }
+
+    hideNotice() {
+        this.notice = null;
+    }
 }

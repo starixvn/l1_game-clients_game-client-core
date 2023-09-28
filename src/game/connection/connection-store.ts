@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { Socket, io } from "socket.io-client/dist/socket.io.js";
 import { io as ioMsgPack } from "socket.io-client/dist/socket.io.msgpack.min.js";
-import { ISessionInfo } from "../../auth";
+import { AuthStore, ISessionInfo } from "../../auth";
 import { SiteConfigs } from "../../configs/site-configs";
 import { GameClientEmitMessage, Mediator } from "../../shared";
 import { SocketEvents } from "../../shared/constants/socket-event";
@@ -32,7 +32,8 @@ export class ConnectionStore {
     constructor(
         @inject(Mediator) protected readonly mediator: Mediator,
         @inject(GameSetting) protected readonly gameSetting: GameSetting,
-        @inject(SiteConfigs) protected readonly siteConfigs: SiteConfigs
+        @inject(SiteConfigs) protected readonly siteConfigs: SiteConfigs,
+        @inject(AuthStore) protected readonly authStore: AuthStore
     ) {
         makeAutoObservable(this);
     }
@@ -114,20 +115,30 @@ export class ConnectionStore {
     }
 
     onDisconnected(reason = "") {
-        this.setConnectFailed(reason);
-        this.isConnected = false;
-        this.signedIn = false;
-        this.connection.disconnect();
+        this.handleConnectionFailure(reason);
+
+        if (this.shouldPostDisconnectMessage(reason)) {
+            BrowserDomUtils.postMessageToParent({ isDisconnect: true });
+        } else {
+            this.isConnected = false;
+            this.signedIn = false;
+            this.connection.disconnect();
+        }
     }
 
-    setConnectFailed(reason = "") {
-        if (!reason || reason === "io server disconnect") {
-            BrowserDomUtils.postMessageToParent({ isDisconnect: true });
-        }
-        if (reason && reason !== "io client disconnect") {
+    handleConnectionFailure(reason = "") {
+        if (this.shouldLogConnectionFailure(reason)) {
             this.isConnectFailed = true;
             sentryLogger.logError(reason);
         }
+    }
+
+    shouldPostDisconnectMessage(reason: string | unknown) {
+        return reason === "io server disconnect" || reason === "transport close";
+    }
+
+    shouldLogConnectionFailure(reason: string | unknown) {
+        return reason && reason !== "io client disconnect";
     }
 
     send(eventName: string, data: any) {
