@@ -27,10 +27,14 @@ export class DisableGameHandlers implements IHandler<GameServiceMessage.Disabled
     }
 
     onClosedHandle() {
-        if (this.authStore.system != AppTypes.Instant) {
+        if (!this.isInstantApp()) {
             this.connectionStore.onDisconnected();
             this.backToOperatorLobby.handle();
         }
+    }
+
+    isInstantApp() {
+        return this.authStore.system === AppTypes.Instant;
     }
 
     showPopupHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {

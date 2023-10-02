@@ -5,22 +5,24 @@ import { AuthStore } from "../../../../src/auth/auth-store";
 import { ConnectionStore } from "../../../../src/game/connection";
 import { DisableGameHandlers, DisabledGameStore } from "../../../../src/game/disabled-game";
 import { NoticeStore, NoticeType } from "../../../../src/game/notices";
+import { PlayerSelectionHandlers, PlayerSelectionStore } from "../../../../src/game/player-selections";
 import { RoundRunningHandlers } from "../../../../src/game/rounds";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
 import { GameServiceMessage } from "../../../../src/shared";
 import { gameSettings } from "../../container.test";
-import { PlayerSelectionHandlers } from "../../../../src/game/player-selections";
-import { PlayerSelectionStore } from "../../../../src/game/player-selections";
+import { AppTypes } from "./../../../../src/shared/constants/app-type";
 
 jest.mock("../../../../src/shared/utils/localization-manager", () => {
     return {
         Translator: {
-            translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key)
+            translate: jest.fn(),
+            gameTranslate: jest.fn(),
+            commonTranslate: jest.fn().mockImplementation((key, option) => key),
         },
     };
 });
 
-describe("DisableGameHandlers tests", () => {  
+describe("DisableGameHandlers tests", () => {
     const fakeDisabledGameInfo: GameServiceMessage.DisabledGameInfo = {
         "vi-VN": "Fake disabled game message VN",
         "en-US": "Fake disabled game message",
@@ -56,7 +58,10 @@ describe("DisableGameHandlers tests", () => {
 
         roundRunningHandlers = new RoundRunningHandlers(roundTimeStore, gameSettings);
 
-        backToOperatorLobby = new AppHandlers.BackToOperatorLobby(new AppStore(), new PlayerSelectionHandlers.ClearHandlers(new PlayerSelectionStore()));
+        backToOperatorLobby = new AppHandlers.BackToOperatorLobby(
+            new AppStore(),
+            new PlayerSelectionHandlers.ClearHandlers(new PlayerSelectionStore())
+        );
 
         handler = new DisableGameHandlers(
             connectionStore,
@@ -70,12 +75,12 @@ describe("DisableGameHandlers tests", () => {
     });
 
     describe("onClosedHandle", () => {
+        beforeEach(() => {
+            connectionStore.onDisconnected = jest.fn();
+            backToOperatorLobby.handle = jest.fn();
+        });
         describe("when already disable game", () => {
             it("should disconnect socket and back to lobby", () => {
-                // arrange
-                connectionStore.onDisconnected = jest.fn();
-                backToOperatorLobby.handle = jest.fn();
-
                 // act
                 handler.onClosedHandle();
 
@@ -83,6 +88,18 @@ describe("DisableGameHandlers tests", () => {
                 expect(connectionStore.onDisconnected).toBeCalledTimes(1);
                 expect(backToOperatorLobby.handle).toBeCalledTimes(1);
             });
+        });
+
+        it("should not call onDisconnected and handle when instant app", () => {
+            // arrange
+            authStore.system = AppTypes.Instant;
+            
+            // act
+            handler.onClosedHandle();
+
+            // assert
+            expect(connectionStore.onDisconnected).not.toHaveBeenCalled();
+            expect(backToOperatorLobby.handle).not.toHaveBeenCalled();
         });
     });
 
@@ -93,7 +110,7 @@ describe("DisableGameHandlers tests", () => {
             ["zh-CN", fakeDisabledGameInfo["zh-CN"]],
             ["zh-TW", fakeDisabledGameInfo["zh-TW"]],
             ["th-TH", fakeDisabledGameInfo["th-TH"]],
-            ["id-ID", fakeDisabledGameInfo["id-ID"]]
+            ["id-ID", fakeDisabledGameInfo["id-ID"]],
         ];
         test.each(authStoreLangs)("should set disable game true and open popup.", (authStoreLang, expectedDisabledMessages) => {
             // arrange
@@ -112,7 +129,7 @@ describe("DisableGameHandlers tests", () => {
                 onClose: expect.any(Function),
                 showBtnConfirmButton: true,
             });
-        })       
+        });
     });
 
     describe("inGameHandle", () => {
