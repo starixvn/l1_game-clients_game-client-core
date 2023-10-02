@@ -7,6 +7,7 @@ import { NoticeErrorsHandlers } from "../../../../src/game/notices/notice-errors
 import { NoticeStore, NoticeType } from "../../../../src/game/notices/notice-store";
 import { ErrorUtils } from "../../../../src/shared/utils";
 import { Translator } from "../../../../src/shared/utils/localization-manager";
+import { AppTypes } from "./../../../../src/shared/constants/app-type";
 
 jest.mock("../../../../src/shared/utils", () => ({
     ErrorUtils: { isSessionTimeoutError: jest.fn().mockReturnValue(false) },
@@ -38,7 +39,14 @@ describe("NoticeErrorsHandlers", () => {
         });
 
         beforeEach(() => {
-            handler = new NoticeErrorsHandlers.AutoSignOutHandler(appStore, noticeStore, authStore, signOutHandler, connectionStore, clearRecheckInInterval);
+            handler = new NoticeErrorsHandlers.AutoSignOutHandler(
+                appStore,
+                noticeStore,
+                authStore,
+                signOutHandler,
+                connectionStore,
+                clearRecheckInInterval
+            );
         });
 
         describe("onErrorCodeChange", () => {
@@ -134,11 +142,13 @@ describe("NoticeErrorsHandlers", () => {
         let connectionStore: ConnectionStore;
         let noticeStore: NoticeStore;
         let backToOperatorLobbyHandler: AppHandlers.BackToOperatorLobby;
+        let authStore: AuthStore;
         beforeAll(() => {
             gameSetting = stub<GameSetting>();
             noticeStore = stub<NoticeStore>();
             connectionStore = stub<ConnectionStore>();
             backToOperatorLobbyHandler = stub<AppHandlers.BackToOperatorLobby>();
+            authStore = stub<AuthStore>({ system: AppTypes.App });
         });
 
         beforeEach(() => {
@@ -146,13 +156,11 @@ describe("NoticeErrorsHandlers", () => {
                 gameSetting,
                 connectionStore,
                 noticeStore,
-                backToOperatorLobbyHandler
+                backToOperatorLobbyHandler,
+                authStore
             );
-            (Translator.gameTranslate as jest.Mock)
-                .mockReturnValueOnce("Game name");
-            (Translator.commonTranslate as jest.Mock)
-                .mockReturnValueOnce("lost game connection")
-                .mockReturnValueOnce("Notice");
+            (Translator.gameTranslate as jest.Mock).mockReturnValueOnce("Game name");
+            (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("lost game connection").mockReturnValueOnce("Notice");
         });
 
         it("should add notice when connection is lost", () => {

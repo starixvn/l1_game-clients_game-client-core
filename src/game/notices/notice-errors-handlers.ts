@@ -3,10 +3,11 @@ import { reaction } from "mobx";
 import { AppHandlers, AppStore } from "../../app";
 import { AuthHandlers, AuthStore } from "../../auth";
 import { utils } from "../../shared";
+import { Translator } from "../../shared/utils/localization-manager";
 import { ConnectionStore } from "../connection/connection-store";
 import { GameSetting } from "../game-configs";
+import { AppTypes } from "./../../shared/constants/app-type";
 import { NoticeStore, NoticeType } from "./notice-store";
-import {Translator} from '../../shared/utils/localization-manager';
 const { ErrorUtils } = utils;
 
 export namespace NoticeErrorsHandlers {
@@ -24,7 +25,7 @@ export namespace NoticeErrorsHandlers {
             @inject(ConnectionStore)
             protected readonly connectionStore: ConnectionStore,
             @inject(AuthHandlers.ClearRecheckInInterval)
-            protected readonly clearRecheckInInterval: AuthHandlers.ClearRecheckInInterval,
+            protected readonly clearRecheckInInterval: AuthHandlers.ClearRecheckInInterval
         ) {
             reaction(() => this.authStore.errorCode, this.onErrorCodeChange.bind(this));
         }
@@ -69,16 +70,22 @@ export namespace NoticeErrorsHandlers {
             @inject(NoticeStore)
             protected readonly noticeStore: NoticeStore,
             @inject(AppHandlers.BackToOperatorLobby)
-            protected readonly backToOperatorLobbyHandler: AppHandlers.BackToOperatorLobby
+            protected readonly backToOperatorLobbyHandler: AppHandlers.BackToOperatorLobby,
+            @inject(AuthStore)
+            protected readonly authStore: AuthStore
         ) {
             reaction(
                 () => this.connectionStore.isConnectFailed,
-                (isConnectFailed) => isConnectFailed && this.showNotice()
+                (isConnectFailed) => isConnectFailed && !this.isInstantApp() && this.showNotice()
             );
         }
 
+        isInstantApp() {
+            return this.authStore.system === AppTypes.Instant;
+        }
+
         showNotice() {
-            const gameName = Translator.gameTranslate('game_name');
+            const gameName = Translator.gameTranslate("game_name");
             const message = Translator.commonTranslate("message_lost_game_connection", { gameName });
             const backToLobby = () => {
                 this.backToOperatorLobbyHandler.handle();

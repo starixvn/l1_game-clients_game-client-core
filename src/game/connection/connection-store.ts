@@ -110,6 +110,9 @@ export class ConnectionStore {
 
     onConnectFailed(error?: Error) {
         this.isConnectFailed = true;
+
+        // handle SI
+        BrowserDomUtils.postMessageToParent({ isDisconnect: true });
         this.onDisconnected();
         error && sentryLogger.logError(error);
     }
