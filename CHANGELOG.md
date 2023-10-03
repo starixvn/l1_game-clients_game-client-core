@@ -1,3 +1,10 @@
+# [1.40.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.5...v1.40.0) (2023-10-03)
+
+
+### Features
+
+* add season disconnect service ([9b14522](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9b14522d47fbf02e68d2d25ede95d686ef7e916a))
+
 ## [1.39.5](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.4...v1.39.5) (2023-09-27)
 
 
