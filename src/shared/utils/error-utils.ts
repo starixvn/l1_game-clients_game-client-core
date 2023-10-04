@@ -1,3 +1,4 @@
+import { AppTypes } from "../constants/app-type";
 import { GameServiceMessage } from "../models";
 import { FormatUtils } from "./format-utils";
 import { Translator } from "./localization-manager";
@@ -106,19 +107,35 @@ export namespace ErrorUtils {
         "message_network_error",
     ];
 
-    export const parseErrorCode = (errorCode: string, isPlaceBet = false) => {
-        if (!ErrorCodeDictionary[errorCode]) {
-            console.warn(`NOT found error code ${errorCode}`);
-            return "Common.message_error_occurred";
+    export const parseErrorCode = (errorCode: string, isPlaceBet = false, system?: number) => {
+        let message = getErrorCodeMessage(errorCode, system);
+        const errorKey = `${ErrorCodeDictionary[errorCode]}`;
+        if (isPlaceBet && CommonErrorList.includes(errorKey)) {
+            message += "_place_bet";
         }
 
-        let suffix = "";
-        const errorKey = `${ErrorCodeDictionary[errorCode]}`;
-        const isCommonErrorCode = CommonErrorList.includes(errorKey);
-        if (isCommonErrorCode && isPlaceBet) {
-            suffix = "_place_bet";
+        return message;
+    };
+
+    const getErrorCodeMessage = (errorCode: string, system: number) => {
+        const keyPrefix = getKeyPrefix(system);
+
+        if (!ErrorCodeDictionary[errorCode]) {
+            console.warn(`Error code not found: ${errorCode}`);
+            return `${keyPrefix}.message_error_occurred`;
         }
-        return `Common.${errorKey}${suffix}`;
+
+        const errorMessage = ErrorCodeDictionary[errorCode];
+
+        return `${keyPrefix}.${errorMessage}`;
+    };
+
+    const getKeyPrefix = (system: number) => {
+        if (system === AppTypes.Instant) {
+            return "InstantGame";
+        }
+
+        return "Common";
     };
 
     export const createOptionForHedgeBetGroup = (hedgeBetGroup: string[]) => {
@@ -129,7 +146,7 @@ export namespace ErrorUtils {
         return option;
     };
 
-    export const getErrorMessage = (notice: GameServiceMessage.Notice) => {
+    export const getErrorMessage = (notice: GameServiceMessage.Notice, system: number) => {
         const { errorCode, hedgeBetGroup, gameRoundId } = notice;
         const option = { errorCode };
 
@@ -138,7 +155,7 @@ export namespace ErrorUtils {
         }
 
         if (!!notice.gameTypeId) {
-            Object.assign(option, { gameName: Translator.gameTranslate('game_name') });
+            Object.assign(option, { gameName: Translator.gameTranslate("game_name") });
         }
 
         if (!!notice.minBet) {
@@ -153,7 +170,7 @@ export namespace ErrorUtils {
             Object.assign(option, { gameRoundId });
         }
 
-        const key = parseErrorCode(errorCode, !!notice.isPlaceBetFailed);
+        const key = parseErrorCode(errorCode, !!notice.isPlaceBetFailed, system);
         return Translator.translate(key, option);
     };
 

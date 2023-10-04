@@ -1,10 +1,13 @@
 import { stub } from "jest-auto-stub";
 import { GameServiceMessage } from "../../../../src/shared";
 import { ErrorUtils } from "../../../../src/shared/utils";
+import { AppTypes } from "./../../../../src/shared/constants/app-type";
 jest.mock("../../../../src/shared/utils/localization-manager", () => {
     return {
         Translator: {
-            translate: jest.fn().mockImplementation((key, option) => key), gameTranslate: jest.fn().mockImplementation((key, option) => key), commonTranslate: jest.fn().mockImplementation((key, option) => key)
+            translate: jest.fn().mockImplementation((key, option) => key),
+            gameTranslate: jest.fn().mockImplementation((key, option) => key),
+            commonTranslate: jest.fn().mockImplementation((key, option) => key),
         },
     };
 });
@@ -14,9 +17,14 @@ describe("ErrorUtils", () => {
     });
 
     describe("parseErrorCode", () => {
-        it("should return messages.errorOccurred for undefined error codes", () => {
-            const result = ErrorUtils.parseErrorCode("undefined");
-            expect(result).toEqual("Common.message_error_occurred");
+        const testCases = [
+            { system: AppTypes.Club, expected: "Common.message_error_occurred" },
+            { system: AppTypes.Instant, expected: "InstantGame.message_error_occurred" },
+        ];
+
+        it.each(testCases)("should return $expected for undefined error code", ({ system, expected }) => {
+            const result = ErrorUtils.parseErrorCode("undefined", false, system);
+            expect(result).toEqual(expected);
         });
 
         it("should return the correct error message for valid error codes", () => {
@@ -39,16 +47,26 @@ describe("ErrorUtils", () => {
     });
 
     describe("getErrorMessage", () => {
-        it("should return a string with the correct error message", () => {
+        const testCases = [
+            {
+                system: AppTypes.Club,
+                expected: "Common.message_error_occurred_place_bet",
+            },
+            {
+                system: AppTypes.Instant,
+                expected: "InstantGame.message_error_occurred_place_bet",
+            },
+        ];
+
+        it.each(testCases)("should return correct error message when AppTypes = %s", ({ system, expected }) => {
             const notice = stub<GameServiceMessage.Notice>({
                 hedgeBetGroup: ["choice1", "choice2"],
                 errorCode: "1000",
             });
 
-            const result = ErrorUtils.getErrorMessage(notice);
+            const result = ErrorUtils.getErrorMessage(notice, system);
 
-
-            expect(result).toBe("Common.message_error_occurred_place_bet");
+            expect(result).toBe(expected);
         });
     });
 

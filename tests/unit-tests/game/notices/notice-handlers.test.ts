@@ -1,4 +1,5 @@
 import { stub } from "jest-auto-stub";
+import { AuthStore } from "../../../../src/auth/auth-store";
 import { NoticeHandlers, NoticeStore } from "../../../../src/game/notices";
 import { RoundStore } from "../../../../src/game/rounds/round-store";
 import { GameServiceMessage } from "../../../../src/shared";
@@ -10,10 +11,11 @@ describe("NoticeHandlers test", () => {
     let instance: NoticeHandlers;
     let roundStore: RoundStore;
     let noticeStore: NoticeStore;
+    let authStore: AuthStore;
     beforeAll(() => {
         roundStore = stub<RoundStore>();
         noticeStore = stub<NoticeStore>();
-        instance = new NoticeHandlers(roundStore, noticeStore);
+        instance = new NoticeHandlers(roundStore, noticeStore, authStore);
     });
 
     afterEach(() => {

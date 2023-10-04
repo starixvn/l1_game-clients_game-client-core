@@ -1,6 +1,8 @@
 import { inject, injectable } from "inversify";
+import { AuthStore } from "../../auth/auth-store";
 import { GameServiceMessage, IMultipleHandlers, utils } from "../../shared";
 import { RoundStore } from "../rounds";
+import { AppTypes } from "./../../shared/constants/app-type";
 import { NoticeStore } from "./notice-store";
 
 const { ErrorUtils } = utils;
@@ -11,8 +13,14 @@ export class NoticeHandlers implements IMultipleHandlers {
         @inject(RoundStore)
         protected readonly roundStore: RoundStore,
         @inject(NoticeStore)
-        protected readonly noticeStore: NoticeStore
+        protected readonly noticeStore: NoticeStore,
+        @inject(AuthStore)
+        protected readonly authStore: AuthStore
     ) {}
+
+    getSystem = () => {
+        return this.authStore?.system || AppTypes.Club;
+    };
 
     handleNotice(notice: GameServiceMessage.Notice) {
         const { gameRoundId } = notice;
@@ -20,7 +28,7 @@ export class NoticeHandlers implements IMultipleHandlers {
             return;
         }
 
-        const text = ErrorUtils.getErrorMessage(notice);
+        const text = ErrorUtils.getErrorMessage(notice, this.getSystem());
         this.noticeStore.addWarning(text);
     }
 

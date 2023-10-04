@@ -2,8 +2,9 @@ import { inject, injectable } from "inversify";
 import { AuthStore } from "../../auth";
 import { MainPlayerStore } from "../../players";
 import { GameServiceMessage, IMultipleHandlers, utils } from "../../shared";
+import { Translator } from "../../shared/utils/localization-manager";
 import { NoticeStore, NoticeType } from "../notices";
-import {Translator} from '../../shared/utils/localization-manager';
+import { AppTypes } from "./../../shared/constants/app-type";
 
 const { ErrorUtils } = utils;
 
@@ -17,6 +18,10 @@ export class ErrorHandlers implements IMultipleHandlers {
         @inject(AuthStore)
         protected readonly authStore: AuthStore
     ) {}
+
+    getSystem = () => {
+        return this.authStore?.system || AppTypes.Club;
+    };
 
     handleApiError(apiError: GameServiceMessage.ApiError) {
         const { minBet, maxBet, errorCode } = apiError;
@@ -35,7 +40,7 @@ export class ErrorHandlers implements IMultipleHandlers {
             this.mainPlayerStore.stakeLevel.maxBet = maxBet;
         }
 
-        const text = ErrorUtils.getErrorMessage(apiError);
+        const text = ErrorUtils.getErrorMessage(apiError, this.getSystem());
         this.noticeStore.addNotice({
             message: text,
             title: Translator.commonTranslate("notice"),
