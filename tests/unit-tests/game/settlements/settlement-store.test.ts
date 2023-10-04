@@ -75,51 +75,6 @@ describe("SettlementStore tests", () => {
         });
     });
 
-    describe("payChipInfo", () => {
-        it("should return the finish info when isFinishedShowResult is true", () => {
-            // Arrange
-            mainPlayerStore.rate = 1;
-            (NumberUtils.getValueByCurrency as jest.Mock).mockReturnValueOnce(1);
-            const mockWinningPlayers = {
-                "1234": {
-                    bet: 1,
-                    rate: 1,
-                    win: true,
-                    winningByChoices: {
-                        choice1: 2,
-                    },
-                },
-            };
-            const mockIsFinishedShowResult = true;
-            const mockSettlementResult = {
-                choice1: true,
-            };
-            store.isFinishedShowResult = mockIsFinishedShowResult;
-            store.settlementResult = mockSettlementResult;
-            store.winningPlayers = mockWinningPlayers;
-
-            // Act
-            const finishInfo = store.payChipInfo;
-
-            // Assert
-            expect(finishInfo).toEqual({
-                settlementResult: mockSettlementResult,
-                winningPlayers: mockWinningPlayers,
-            });
-        });
-
-        it("should return null when isFinishedShowResult is false", () => {
-            // ArrangeeMessage
-            store.isFinishedShowResult = false;
-
-            // Act
-            const finishInfo = store.payChipInfo;
-
-            // Assert
-            expect(finishInfo).toBeNull();
-        });
-    });
-
     describe("resetSettlementStore", () => {
         it("should reset winningPlayers and settlementResult to null", () => {
             // Act

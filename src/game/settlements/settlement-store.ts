@@ -5,11 +5,6 @@ import { MainPlayerStore } from "../../players/main-player-store";
 import { GameServiceMessage } from "../../shared";
 import { NumberUtils } from "../../shared/utils/number-utils";
 
-export type TPayChipInfo = {
-    settlementResult: GameServiceMessage.TSettlementResult;
-    winningPlayers: GameServiceMessage.TWinningPlayers;
-};
-
 @injectable()
 export class SettlementStore {
     constructor(@inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore) {
@@ -54,18 +49,6 @@ export class SettlementStore {
         finish?.result && (this.result = finish.result);
         finish?.settlementResult && (this.settlementResult = finish.settlementResult);
         finish?.winningPlayers && (this.winningPlayers = finish.winningPlayers);
-    }
-
-
-    get payChipInfo(): TPayChipInfo {
-        if (this.isFinishedShowResult) {
-            return {
-                settlementResult: this.settlementResult,
-                winningPlayers: this.winningPlayers,
-            };
-        }
-
-        return null;
     }
 
     resetSettlementStore() {
