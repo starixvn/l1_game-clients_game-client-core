@@ -1,3 +1,10 @@
+## [1.40.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.40.0...v1.40.1) (2023-10-04)
+
+
+### Bug Fixes
+
+* handle winning players ([52810d4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/52810d4f2ed89fab630e0b948c15bfd98c051aee))
+
 # [1.40.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.39.5...v1.40.0) (2023-10-03)
 
 
