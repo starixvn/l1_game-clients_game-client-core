@@ -8,6 +8,7 @@ import { GameClientEmitMessage, Mediator } from "../../shared";
 import { SocketEvents } from "../../shared/constants/socket-event";
 import { BrowserDomUtils, StorageManager, UrlUtils, localStorageKeys, sentryLogger } from "../../shared/utils";
 import { GameSetting } from "../game-configs";
+import { AppTypes } from "./../../shared/constants/app-type";
 
 export const events = {
     ...SocketEvents,
@@ -119,13 +120,16 @@ export class ConnectionStore {
 
     onDisconnected(reason = "") {
         this.handleConnectionFailure(reason);
+        this.handleDisconnectInstant(reason);
+        
+        this.isConnected = false;
+        this.signedIn = false;
+        this.connection.disconnect();
+    }
 
-        if (this.shouldPostDisconnectMessage(reason)) {
+    handleDisconnectInstant(reason: string | unknown) {
+        if (this.authStore.system === AppTypes.Instant && this.shouldPostDisconnectMessage(reason)) {
             BrowserDomUtils.postMessageToParent({ isDisconnect: true });
-        } else {
-            this.isConnected = false;
-            this.signedIn = false;
-            this.connection.disconnect();
         }
     }
 

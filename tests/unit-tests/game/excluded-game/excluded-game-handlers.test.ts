@@ -1,52 +1,55 @@
 import { AppHandlers } from "../../../../src/app";
 import { AppStore } from "../../../../src/app/app-store";
-import { NoticeStore } from "../../../../src/game/notices";
-import { gameSettings } from "../../container.test";
+import { AuthStore } from "../../../../src/auth/auth-store";
 import { NoPermissionHandlers } from "../../../../src/game/excluded-game";
+import { NoticeStore } from "../../../../src/game/notices";
+import { PlayerSelectionHandlers, PlayerSelectionStore } from "../../../../src/game/player-selections";
 import { GameServiceMessage } from "../../../../src/shared";
-import { PlayerSelectionHandlers } from "../../../../src/game/player-selections";
-import { PlayerSelectionStore } from "../../../../src/game/player-selections";
+import { gameSettings } from "../../container.test";
+import { AppTypes } from "./../../../../src/shared/constants/app-type";
 
 jest.mock("../../../../src/shared/utils/localization-manager", () => {
     return {
         Translator: {
-            translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key)
+            translate: jest.fn(),
+            gameTranslate: jest.fn(),
+            commonTranslate: jest.fn().mockImplementation((key, option) => key),
+            getMessageFollowSystem: jest.fn().mockImplementation((system, key, option) => key),
         },
     };
 });
 
-describe("ExcludedGameHandlers tests", () => {  
-    let noticeStore: NoticeStore,
-        backToOperatorLobby: AppHandlers.BackToOperatorLobby,
-        handler: NoPermissionHandlers; 
-    
+describe("ExcludedGameHandlers tests", () => {
+    let noticeStore: NoticeStore, backToOperatorLobby: AppHandlers.BackToOperatorLobby, handler: NoPermissionHandlers, authStore: AuthStore;
+
     it("has name is equal notpermitted", () => {
         // arrange
         noticeStore = new NoticeStore();
-        backToOperatorLobby = new AppHandlers.BackToOperatorLobby(new AppStore(), new PlayerSelectionHandlers.ClearHandlers(new PlayerSelectionStore()));
+        authStore = new AuthStore();
+        backToOperatorLobby = new AppHandlers.BackToOperatorLobby(
+            new AppStore(),
+            new PlayerSelectionHandlers.ClearHandlers(new PlayerSelectionStore())
+        );
 
-        handler = new NoPermissionHandlers(
-            noticeStore,
-            gameSettings,
-            backToOperatorLobby,            
-        );      
+        handler = new NoPermissionHandlers(noticeStore, gameSettings, backToOperatorLobby, authStore);
 
         // assert
         expect(handler.name).toEqual(GameServiceMessage.notPermittedToPlay);
     });
-   
+
     describe("handle", () => {
         test("should add notice", () => {
             // arrange
             noticeStore = new NoticeStore();
-            backToOperatorLobby = new AppHandlers.BackToOperatorLobby(new AppStore(),  new PlayerSelectionHandlers.ClearHandlers(new PlayerSelectionStore()));
+            authStore = new AuthStore();
+            authStore.system = AppTypes.Club;
+            backToOperatorLobby = new AppHandlers.BackToOperatorLobby(
+                new AppStore(),
+                new PlayerSelectionHandlers.ClearHandlers(new PlayerSelectionStore())
+            );
             backToOperatorLobby.handle = jest.fn();
 
-            handler = new NoPermissionHandlers(
-                noticeStore,
-                gameSettings,
-                backToOperatorLobby,            
-            );            
+            handler = new NoPermissionHandlers(noticeStore, gameSettings, backToOperatorLobby, authStore);
 
             let calledArgs;
             jest.spyOn(noticeStore, "addNotice").mockImplementation((args) => (calledArgs = args));
@@ -55,11 +58,11 @@ describe("ExcludedGameHandlers tests", () => {
             handler.handle();
 
             // assert
-            expect(calledArgs.message).toBe('game_excluded');
-            expect(calledArgs.title).toBe('notice');
+            expect(calledArgs.message).toBe("game_excluded");
+            expect(calledArgs.title).toBe("notice");
             expect(calledArgs.type).toBe(0);
             calledArgs.onClose();
             expect(backToOperatorLobby.handle).toBeCalled();
-        })       
+        });
     });
 });

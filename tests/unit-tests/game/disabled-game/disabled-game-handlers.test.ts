@@ -4,7 +4,7 @@ import { AppStore } from "../../../../src/app/app-store";
 import { AuthStore } from "../../../../src/auth/auth-store";
 import { ConnectionStore } from "../../../../src/game/connection";
 import { DisableGameHandlers, DisabledGameStore } from "../../../../src/game/disabled-game";
-import { NoticeStore, NoticeType } from "../../../../src/game/notices";
+import { NoticeInfo, NoticeStore, NoticeType } from "../../../../src/game/notices";
 import { PlayerSelectionHandlers, PlayerSelectionStore } from "../../../../src/game/player-selections";
 import { RoundRunningHandlers } from "../../../../src/game/rounds";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
@@ -93,7 +93,7 @@ describe("DisableGameHandlers tests", () => {
         it("should not call onDisconnected and handle when instant app", () => {
             // arrange
             authStore.system = AppTypes.Instant;
-            
+
             // act
             handler.onClosedHandle();
 
@@ -128,6 +128,7 @@ describe("DisableGameHandlers tests", () => {
                 type: NoticeType.Error,
                 onClose: expect.any(Function),
                 showBtnConfirmButton: true,
+                noticeInfo: NoticeInfo.DisabledGame,
             });
         });
     });

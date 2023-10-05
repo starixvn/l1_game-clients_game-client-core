@@ -1,32 +1,33 @@
 import { inject, injectable } from "inversify";
+import { AppHandlers } from "../../app/app-handlers";
+import { AuthStore } from "../../auth/auth-store";
 import { GameServiceMessage, IHandler } from "../../shared";
-import { NoticeStore, NoticeType } from "../notices";
 import { Translator } from "../../shared/utils/localization-manager";
 import { GameSetting } from "../game-configs";
-import { AppHandlers } from "../../app/app-handlers";
-
+import { NoticeInfo, NoticeStore, NoticeType } from "../notices";
 
 @injectable()
 export class NoPermissionHandlers implements IHandler<void> {
     name = GameServiceMessage.notPermittedToPlay;
 
     constructor(
-        @inject(NoticeStore) protected readonly noticeStore: NoticeStore,        
-        @inject(GameSetting) protected readonly gameSetting: GameSetting,        
+        @inject(NoticeStore) protected readonly noticeStore: NoticeStore,
+        @inject(GameSetting) protected readonly gameSetting: GameSetting,
         @inject(AppHandlers.BackToOperatorLobby) protected readonly backToOperatorLobby: AppHandlers.BackToOperatorLobby,
-    ) {
-    }    
+        @inject(AuthStore) protected readonly authStore: AuthStore
+    ) {}
 
     handle() {
         const goToLobby = () => {
             this.backToOperatorLobby.handle();
         };
-        const gameName = Translator.gameTranslate('game_name');            
+        const gameName = Translator.gameTranslate("game_name");
         this.noticeStore.addNotice({
-            message: Translator.commonTranslate("game_excluded", { gameName }),
+            message: Translator.getMessageFollowSystem(this.authStore.system, "game_excluded", { gameName }),
             title: Translator.commonTranslate("notice"),
             type: NoticeType.Info,
             onClose: goToLobby,
-        });  
+            noticeInfo: NoticeInfo.ExcludedGame,
+        });
     }
 }

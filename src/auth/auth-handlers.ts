@@ -1,13 +1,15 @@
 import { inject, injectable } from "inversify";
 import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
-import { NoticeStore, NoticeType } from "../game/notices/notice-store";
+import { NoticeInfo, NoticeStore, NoticeType } from "../game/notices/notice-store";
 import { PlayerSelectionHandlers } from "../game/player-selections";
 import { UserSettingData } from "../game/user-settings/user-setting-store";
 import { NotificationHandlers } from "../notification/notification-handlers";
 import { MainPlayerStore } from "../players";
 import { GameServiceMessage, IHandler, utils } from "../shared";
 import { AppTypes } from "../shared/constants/app-type";
+import { BrowserDomUtils } from "../shared/utils/browser-dom-utils";
 import { GameUtils } from "../shared/utils/game-utils";
+import { Translator } from "../shared/utils/localization-manager";
 import { sentryLogger } from "../shared/utils/logger";
 import { NameGenerator } from "../shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
@@ -15,8 +17,6 @@ import { AppStore } from "./../app/app-store";
 import { URLParams } from "./../shared/constants/url-params";
 import { AuthStore, ISessionInfo } from "./auth-store";
 import { UserService } from "./user-service";
-import { Translator } from "../shared/utils/localization-manager";
-import { BrowserDomUtils } from "../shared/utils/browser-dom-utils";
 
 const { ErrorUtils } = utils;
 
@@ -114,6 +114,7 @@ export namespace AuthHandlers {
                 type: NoticeType.Error,
                 onClose: () => {},
                 showBtnConfirmButton: true,
+                noticeInfo: NoticeInfo.SignName,
             });
         }
     }

@@ -7,7 +7,7 @@ import { Translator } from "../../shared/utils/localization-manager";
 import { ConnectionStore } from "../connection/connection-store";
 import { GameSetting } from "../game-configs";
 import { AppTypes } from "./../../shared/constants/app-type";
-import { NoticeStore, NoticeType } from "./notice-store";
+import { NoticeInfo, NoticeStore, NoticeType } from "./notice-store";
 const { ErrorUtils } = utils;
 
 export namespace NoticeErrorsHandlers {
@@ -32,18 +32,26 @@ export namespace NoticeErrorsHandlers {
 
         onErrorCodeChange(errorCode: string) {
             if (this.authStore.isDisabledAccount) {
-                const text = Translator.commonTranslate("message_close_account", { errorCode });
-                this.showNotice(text);
+                this.showDisabledAccountNotice(errorCode);
             } else {
                 if (ErrorUtils.isSessionTimeoutError(errorCode)) {
-                    const key = this.appStore.isApp ? "message_session_expired" : "message_session_timeout";
-                    const text = Translator.commonTranslate(key);
-                    this.showNotice(`${text} (${errorCode})`);
+                    this.showSessionNotice(errorCode);
                 }
             }
         }
 
-        showNotice(message = "") {
+        showDisabledAccountNotice(errorCode: string) {
+            const text = Translator.getMessageFollowSystem(this.authStore.system, "message_close_account", { errorCode });
+            this.showNotice(text, NoticeInfo.DisabledAccount);
+        }
+
+        showSessionNotice(errorCode: string) {
+            const key = this.appStore.isApp ? "message_session_expired" : "message_session_timeout";
+            const text = Translator.getMessageFollowSystem(this.authStore.system, key);
+            this.showNotice(`${text} (${errorCode})`, NoticeInfo.SessionTimeout);
+        }
+
+        showNotice(message = "", noticeInfo?: NoticeInfo) {
             const signOut = () => {
                 this.signOutHandler.handle();
                 this.connectionStore.closeSocket();
@@ -56,6 +64,7 @@ export namespace NoticeErrorsHandlers {
                 type: NoticeType.Error,
                 onClose: signOut,
                 showBtnConfirmButton: true,
+                noticeInfo: noticeInfo,
             });
         }
     }
@@ -86,7 +95,7 @@ export namespace NoticeErrorsHandlers {
 
         showNotice() {
             const gameName = Translator.gameTranslate("game_name");
-            const message = Translator.commonTranslate("message_lost_game_connection", { gameName });
+            const message = Translator.getMessageFollowSystem(this.authStore.system, "message_lost_game_connection", { gameName });
             const backToLobby = () => {
                 this.backToOperatorLobbyHandler.handle();
             };
@@ -95,6 +104,7 @@ export namespace NoticeErrorsHandlers {
                 title: Translator.commonTranslate("notice"),
                 type: NoticeType.Error,
                 onClose: backToLobby,
+                noticeInfo: NoticeInfo.LostGameConnection,
             });
         }
     }

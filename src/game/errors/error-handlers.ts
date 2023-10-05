@@ -3,7 +3,7 @@ import { AuthStore } from "../../auth";
 import { MainPlayerStore } from "../../players";
 import { GameServiceMessage, IMultipleHandlers, utils } from "../../shared";
 import { Translator } from "../../shared/utils/localization-manager";
-import { NoticeStore, NoticeType } from "../notices";
+import { NoticeInfo, NoticeStore, NoticeType } from "../notices";
 import { AppTypes } from "./../../shared/constants/app-type";
 
 const { ErrorUtils } = utils;
@@ -46,6 +46,7 @@ export class ErrorHandlers implements IMultipleHandlers {
             title: Translator.commonTranslate("notice"),
             type: NoticeType.Error,
             onClose: () => {},
+            noticeInfo: NoticeInfo.ApiError,
         });
     }
 

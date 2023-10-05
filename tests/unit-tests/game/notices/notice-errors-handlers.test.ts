@@ -4,7 +4,7 @@ import { AuthHandlers, AuthStore } from "../../../../src/auth";
 import { ConnectionStore } from "../../../../src/game/connection/connection-store";
 import { GameSetting } from "../../../../src/game/game-configs/game-setting";
 import { NoticeErrorsHandlers } from "../../../../src/game/notices/notice-errors-handlers";
-import { NoticeStore, NoticeType } from "../../../../src/game/notices/notice-store";
+import { NoticeInfo, NoticeStore, NoticeType } from "../../../../src/game/notices/notice-store";
 import { ErrorUtils } from "../../../../src/shared/utils";
 import { Translator } from "../../../../src/shared/utils/localization-manager";
 import { AppTypes } from "./../../../../src/shared/constants/app-type";
@@ -13,7 +13,12 @@ jest.mock("../../../../src/shared/utils", () => ({
     ErrorUtils: { isSessionTimeoutError: jest.fn().mockReturnValue(false) },
 }));
 jest.mock("../../../../src/shared/utils/localization-manager", () => ({
-    Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key) },
+    Translator: {
+        translate: jest.fn(),
+        gameTranslate: jest.fn(),
+        commonTranslate: jest.fn().mockImplementation((key, option) => key),
+        getMessageFollowSystem: jest.fn().mockImplementation((system, key, option) => key),
+    },
 }));
 jest.mock("mobx");
 
@@ -56,13 +61,13 @@ describe("NoticeErrorsHandlers", () => {
             it("should call handle with account closed when isDisabledAccount true", () => {
                 // arrange
                 authStore.isDisabledAccount = true;
-                (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("accountClosed");
+                (Translator.getMessageFollowSystem as jest.Mock).mockReturnValueOnce("accountClosed");
 
                 // act
                 handler.onErrorCodeChange("");
 
                 // assert
-                expect(handler.showNotice).toHaveBeenCalledWith("accountClosed");
+                expect(handler.showNotice).toHaveBeenCalledWith("accountClosed", NoticeInfo.DisabledAccount);
             });
 
             describe("when error code is session timeout error", () => {
@@ -73,27 +78,26 @@ describe("NoticeErrorsHandlers", () => {
                 it("should call handle with sessionExpired message when app", () => {
                     // arrange
                     appStore.isApp = true;
-                    (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("session expired");
+                    (Translator.getMessageFollowSystem as jest.Mock).mockReturnValueOnce("message_session_expired");
 
                     // act
                     handler.onErrorCodeChange("123");
 
                     // assert
-                    expect(Translator.commonTranslate).toHaveBeenCalledWith("message_session_expired");
-                    expect(handler.showNotice).toHaveBeenCalledWith(`session expired (123)`);
+
+                    expect(handler.showNotice).toHaveBeenCalledWith(`message_session_expired (123)`, NoticeInfo.SessionTimeout);
                 });
 
                 it("should call handle with sessionTimeout message when not app", () => {
                     // arrange
                     appStore.isApp = false;
-                    (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("session timeout");
+                    (Translator.getMessageFollowSystem as jest.Mock).mockReturnValueOnce("message_session_timeout");
 
                     // act
                     handler.onErrorCodeChange("123");
 
                     // assert
-                    expect(Translator.commonTranslate).toHaveBeenCalledWith("message_session_timeout");
-                    expect(handler.showNotice).toHaveBeenCalledWith(`session timeout (123)`);
+                    expect(handler.showNotice).toHaveBeenCalledWith(`message_session_timeout (123)`, NoticeInfo.SessionTimeout);
                 });
             });
         });
@@ -160,12 +164,15 @@ describe("NoticeErrorsHandlers", () => {
                 authStore
             );
             (Translator.gameTranslate as jest.Mock).mockReturnValueOnce("Game name");
-            (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("lost game connection").mockReturnValueOnce("Notice");
+            (Translator.getMessageFollowSystem as jest.Mock).mockReturnValueOnce("lost game connection");
+            (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("Notice");
         });
 
         it("should add notice when connection is lost", () => {
             // act
             handler.showNotice();
+            console.log((noticeStore.addNotice as jest.Mock).mock.calls);
+            console.log((noticeStore.addNotice as jest.Mock).mock.calls[0][0].message);
 
             // assert
             expect((noticeStore.addNotice as jest.Mock).mock.calls[0][0].message).toBe("lost game connection");
@@ -173,7 +180,9 @@ describe("NoticeErrorsHandlers", () => {
             expect((noticeStore.addNotice as jest.Mock).mock.calls[0][0].type).toBe(NoticeType.Error);
             expect(typeof (noticeStore.addNotice as jest.Mock).mock.calls[0][0].onClose).toBe("function");
             expect(Translator.gameTranslate).toHaveBeenCalledWith(`game_name`);
-            expect(Translator.commonTranslate).toHaveBeenCalledWith("message_lost_game_connection", { gameName: "Game name" });
+            expect(Translator.getMessageFollowSystem).toHaveBeenCalledWith(AppTypes.App, "message_lost_game_connection", {
+                gameName: "Game name",
+            });
             expect(Translator.commonTranslate).toHaveBeenCalledWith("notice");
         });
     });

@@ -4,7 +4,7 @@ import { AuthStore } from "../../auth";
 import { GameServiceMessage, IHandler } from "../../shared";
 import { Translator } from "../../shared/utils/localization-manager";
 import { ConnectionStore } from "../connection/connection-store";
-import { NoticeStore, NoticeType } from "../notices";
+import { NoticeInfo, NoticeStore, NoticeType } from "../notices";
 import { RoundRunningHandlers } from "../rounds";
 import { RoundTimeStore } from "../rounds/round-time-store";
 import { AppTypes } from "./../../shared/constants/app-type";
@@ -44,6 +44,7 @@ export class DisableGameHandlers implements IHandler<GameServiceMessage.Disabled
             type: NoticeType.Error,
             onClose: this.onClosedHandle,
             showBtnConfirmButton: true,
+            noticeInfo: NoticeInfo.DisabledGame,
         });
 
         this.disabledGameStore.setShowPopup(true);

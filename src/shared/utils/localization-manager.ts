@@ -1,5 +1,6 @@
 import * as _ from "lodash";
 import Polyglot from "node-polyglot";
+import { AppTypes } from "./../constants/app-type";
 import { StorageManager } from "./storage-manager";
 
 export class TranslationOptions {
@@ -189,6 +190,27 @@ export class TranslationManager {
     public commonTranslate(key: string, options?: InterpolationOptions) {
         if (this.options.gameNamespace) {
             return this.translate(`Common.${key}`, options);
+        }
+
+        return this.translate(key, options);
+    }
+
+    public getMessageFollowSystem(system: number, key: string, options?: InterpolationOptions) {
+        const mode: "common" | "instant" = system === AppTypes.Instant ? "instant" : "common";
+        return Translator.getTranslate(key, mode, options);
+    }
+
+    private getTranslate(key: string, mode?: "game" | "common" | "instant", options?: InterpolationOptions) {
+        const namespace = {
+            game: this.options.gameNamespace,
+            common: "Common",
+            instant: "InstantGame",
+        };
+
+        const prefix = namespace[mode];
+
+        if (prefix) {
+            key = `${prefix}.${key}`;
         }
 
         return this.translate(key, options);

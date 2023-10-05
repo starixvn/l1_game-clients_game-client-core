@@ -10,6 +10,18 @@ export enum NoticeType {
     Error = 1,
 }
 
+export enum NoticeInfo {
+    None = "",
+    DisabledAccount = "DisabledAccount",
+    DisabledGame = "DisabledGame",
+    ExcludedGame = "ExcludedGame",
+    NotificationReload = "NotificationReload",
+    LostGameConnection = "LostGameConnection",
+    SessionTimeout = "SessionTimeout",
+    ApiError = "ApiError",
+    SignName = "SignName",
+}
+
 export interface Notice extends Warning {
     title: string;
 
@@ -18,6 +30,8 @@ export interface Notice extends Warning {
     onClose: () => void;
 
     showBtnConfirmButton?: boolean;
+
+    noticeInfo?: NoticeInfo;
 }
 
 @injectable()

@@ -6,6 +6,7 @@ import { ConnectionStore, events } from "../../../../src/game/connection";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";
 import { BrowserDomUtils, StorageManager, UrlUtils, sentryLogger } from "../../../../src/shared/utils";
 import { gameSettings, siteConfigs } from "../../container.test";
+import { AppTypes } from "./../../../../src/shared/constants/app-type";
 
 jest.mock("../../../../src/shared/utils", () => ({
     StorageManager: { get: jest.fn() },
@@ -392,9 +393,10 @@ describe("ConnectionStore tests", () => {
                 expect(store.isConnectFailed).toBe(true);
             });
 
-            it("should post isDisconnect = true to parent", () => {
+            it("should post isDisconnect = true to parent when system Instant", () => {
                 // arrange
                 const reason = "io server disconnect";
+                authStore.system = AppTypes.Instant;
 
                 // act
                 store.onDisconnected(reason);
@@ -402,9 +404,10 @@ describe("ConnectionStore tests", () => {
                 // assert
                 expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ isDisconnect: true });
             });
-            it("should post isDisconnect = true to parent", () => {
+            it("should post isDisconnect = true to parent when system Instant", () => {
                 // arrange
                 const reason = "transport close";
+                authStore.system = AppTypes.Instant;
 
                 // act
                 store.onDisconnected(reason);
@@ -412,14 +415,6 @@ describe("ConnectionStore tests", () => {
                 // assert
                 expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ isDisconnect: true });
             });
-
-            // it("should post isDisconnect = true to parent when no reason", () => {
-            //     // act
-            //     store.onDisconnected();
-
-            //     // assert
-            //     expect(BrowserDomUtils.postMessageToParent).toHaveBeenCalledWith({ isDisconnect: true });
-            // });
         });
 
         describe("when disconnect with reason is from client", () => {
