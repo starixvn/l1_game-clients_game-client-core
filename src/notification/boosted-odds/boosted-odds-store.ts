@@ -1,24 +1,27 @@
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 import { makeObservable, observable } from "mobx";
+import { AuthStore } from "../../auth";
+import { AppTypes } from "../../shared/constants/app-type";
 
-export class PromotionModel {
+export class BaseBoostedOddsModel {
+    gameId: number;
+}
+export class PromotionModel extends BaseBoostedOddsModel {
     _id: string;
     time: string;
     message: string;
-    gameName: string;
     messages: object;
     title: object;
     startTime: string;
     endTime: string;
     promotionId: string;
     enabled: boolean;
-    gameId: number;
     isActive: boolean;
     displayKind: number;
+    gameName: string;
 }
 
-export class BoostedOddsModel {
-    gameId: number;
+export class BoostedOddsModel extends BaseBoostedOddsModel {
     _id: string;
     endDateTime: string;
     isDaily: boolean;
@@ -34,11 +37,16 @@ export class BoostedOddsStore {
     popupCounter = 0;
     boostedOddsCounter = 0;
     isLoadingIcon = false;
+    boostedOddsIconShowedTimeInMiliseconds = 10;
 
     boostedOddses: Array<BoostedOddsModel> = [];
     isAllowShowBoostedOddIcon = true;
 
-    constructor() {
+    constructor(@inject(AuthStore) private readonly authStore: AuthStore) {
+        if (this.authStore.system === AppTypes.Instant) {
+            this.boostedOddsIconShowedTimeInMiliseconds = 15;
+        }
+
         makeObservable(this, {
             isLoadingIcon: observable,
             promotions: observable,

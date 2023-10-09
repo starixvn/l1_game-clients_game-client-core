@@ -21,4 +21,6 @@ export class SiteConfigs {
     mainObserverNamespace: string;
     tolgeeUrl?: string;
     backgroundNoTranslate?: boolean;
+    boostedOddsDelayTimeByMinutes?: number;
+    gameIdsSupportBoostedOddsForInstantSite?: Array<number>;
 }

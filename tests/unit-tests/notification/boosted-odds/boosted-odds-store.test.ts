@@ -2,6 +2,7 @@ import { stub } from "jest-auto-stub";
 import { PromotionModel } from "../../../../src/notification";
 import { BoostedOddsModel, BoostedOddsStore } from "../../../../src/notification/boosted-odds/boosted-odds-store";
 import { observable, makeObservable } from "mobx";
+import { AuthStore } from "../../../../src/auth";
 
 jest.mock("mobx", () => ({
     observable: jest.fn(),
@@ -10,9 +11,38 @@ jest.mock("mobx", () => ({
 
 describe("BoostedOddsStore", () => {
     let store: BoostedOddsStore;
+    const authStore = stub<AuthStore>();
 
     beforeEach(() => {
-        store = new BoostedOddsStore();
+        store = new BoostedOddsStore(authStore);
+    });
+
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+
+    it("should initialize properties correctly for Instant system", () => {
+        // Arrange
+        authStore.system = 1;
+        const expectedIconShowedTime = 10;
+
+        // Act
+        store = new BoostedOddsStore(authStore);
+
+        // Assert
+        expect(store.boostedOddsIconShowedTimeInMiliseconds).toEqual(expectedIconShowedTime);
+    });
+
+    it("should initialize properties correctly for non-Instant system", () => {
+        // Arrange
+        authStore.system = 3;
+        const expectedIconShowedTime = 15;
+
+        // Act
+        store = new BoostedOddsStore(authStore);
+
+        // Assert
+        expect(store.boostedOddsIconShowedTimeInMiliseconds).toEqual(expectedIconShowedTime);
     });
 
     test("constructor should call makeObservable with the correct properties", () => {

@@ -1,28 +1,57 @@
 import { inject, injectable } from "inversify";
 import { IHandler, NotificationServiceMessage } from "../../shared";
-import { BoostedOddsModel, BoostedOddsStore, PromotionModel } from "./boosted-odds-store";
+import { BaseBoostedOddsModel, BoostedOddsModel, BoostedOddsStore, PromotionModel } from "./boosted-odds-store";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { AppStore } from "../../app";
+import { SiteConfigs } from "../../configs";
+import { AuthStore } from "../../auth";
+import { AppTypes } from "../../shared/constants/app-type";
 
 export namespace BoostedOddsPromotionsHandlers {
     @injectable()
+    export class PromotionHelperHandlers implements IHandler<Array<BaseBoostedOddsModel>> {
+        constructor(
+            @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
+            @inject(AuthStore) private readonly authStore: AuthStore,
+            @inject(SiteConfigs) private readonly siteConfigs: SiteConfigs
+        ) {}
+
+        handle(data: Array<BaseBoostedOddsModel>) {
+            return this.authStore.system === AppTypes.Instant
+                ? this.getPromotionsByOfferGamesForInstantVersion(data)
+                : this.getPromotionsByOfferGames(data);
+        }
+
+        getPromotionsByOfferGames(data: Array<BaseBoostedOddsModel>) {
+            return data.filter((promotion) => this.mainPlayerStore.offerGames?.some((game) => game.gameId === promotion.gameId));
+        }
+
+        getPromotionsByOfferGamesForInstantVersion(data: Array<BaseBoostedOddsModel>) {
+            return this.getPromotionsByOfferGames(data).filter((promotion) =>
+                this.siteConfigs.gameIdsSupportBoostedOddsForInstantSite.some((gameId) => {
+                    return gameId === promotion.gameId;
+                })
+            );
+        }
+    }
+
+    @injectable()
     export class BoostedOddsPopupHandlers implements IHandler<Array<BoostedOddsModel>> {
         name = NotificationServiceMessage.BoostedOdd.eventName;
-
         timeout: NodeJS.Timeout;
         minutesToMillisecond = 60 * 1000;
-        delayTime = 15 * this.minutesToMillisecond;
 
         constructor(
             @inject(BoostedOddsStore) private readonly boostedOddsStore: BoostedOddsStore,
-            @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
-            @inject(AppStore) private readonly appStore: AppStore
+            @inject(AppStore) private readonly appStore: AppStore,
+            @inject(SiteConfigs) private readonly siteConfigs: SiteConfigs,
+            @inject(PromotionHelperHandlers) private readonly promotionHelperHandlers: PromotionHelperHandlers
         ) {
             this.boostedOddsStore.resetBoostedOddsData();
         }
 
         handle(data: Array<BoostedOddsModel>) {
-            const newPromotions = this.getPromotionsByOfferGames(data);
+            const newPromotions = this.promotionHelperHandlers.handle(data) as Array<BoostedOddsModel>;
 
             if (newPromotions?.length > 0) {
                 const { boostedOddses, promotions, isAllowShowBoostedOddIcon } = this.boostedOddsStore;
@@ -57,15 +86,11 @@ export namespace BoostedOddsPromotionsHandlers {
             return promotion1._id === promotion2._id && startTimeEqual && endTimeEqual;
         }
 
-        getPromotionsByOfferGames(data: Array<BoostedOddsModel>) {
-            return data.filter((promotion) => this.mainPlayerStore.offerGames?.some((game) => game.gameId === promotion.gameId));
-        }
-
         setTimeoutShowBoostedOdds(): void {
             this.clearTimeout();
             this.timeout = setTimeout(() => {
                 this.boostedOddsStore.setIsAllowShowBoostedOddIcon(true);
-            }, this.delayTime);
+            }, this.siteConfigs.boostedOddsDelayTimeByMinutes * this.minutesToMillisecond);
         }
 
         clearTimeout() {
@@ -78,13 +103,11 @@ export namespace BoostedOddsPromotionsHandlers {
         name = NotificationServiceMessage.PromotionNotifications.eventName;
         constructor(
             @inject(BoostedOddsStore) private readonly boostedOddsStore: BoostedOddsStore,
-            @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore
+            @inject(PromotionHelperHandlers) private readonly promotionHelperHandlers: PromotionHelperHandlers
         ) {}
 
         handle(data: Array<PromotionModel>) {
-            const newPromotions = data.filter((promotion) =>
-                this.mainPlayerStore.offerGames?.some((game) => game.gameId === promotion.gameId)
-            );
+            const newPromotions = this.promotionHelperHandlers.handle(data) as Array<PromotionModel>;
             newPromotions.length > 0 && this.boostedOddsStore.setPromotionModels(newPromotions);
         }
     }
