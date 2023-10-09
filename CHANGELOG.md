@@ -1,3 +1,10 @@
+# [1.41.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.40.1...v1.41.0) (2023-10-09)
+
+
+### Features
+
+* boosted odds for instant site ([87d566a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/87d566a022fb25fa412fc3f35e2b05c4d40c2c75))
+
 ## [1.40.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.40.0...v1.40.1) (2023-10-04)
 
 
