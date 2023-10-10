@@ -1,3 +1,10 @@
+# [1.43.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.42.0...v1.43.0) (2023-10-10)
+
+
+### Features
+
+* support add custom extension to game client base ([d753b94](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d753b946746243d5ae8c75c5caf6e0adc1148428))
+
 # [1.42.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.41.0...v1.42.0) (2023-10-10)
 
 
