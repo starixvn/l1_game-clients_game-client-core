@@ -17,7 +17,10 @@ echo     enableMsgpackParserAllGames: false,
 echo     enableMsgpackParserOnNotification: false,
 echo     userServiceUrlDev: "http://localhost:9998/",
 echo     proxyRoute: "",
-echo     wsPath: "sedie",
+echo     websocket: {
+echo       proxyPath: "sedie",
+echo       route: "",
+echo     },
 echo };
 ) > ./examples/cocos-3x/build/web-mobile/c/c.js
 :: 3) Build game client image
