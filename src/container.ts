@@ -1,11 +1,12 @@
+import type { AnyConstructor } from "./shared";
+
 import { Container } from "inversify";
 import * as Auth from "./auth";
+import * as ChipSetting from "./chip-setting";
 import * as SiteConfigs from "./configs";
 import * as Game from "./game";
-import * as ChipSetting from "./chip-setting";
 import * as Notification from "./notification";
 import * as Players from "./players";
-import type { AnyConstructor } from "./shared";
 import { FeatureLoader } from "./shared";
 import * as UnderMaintenance from "./under-maintenance";
 
@@ -17,6 +18,8 @@ export interface IContainerOptions {
     enabledFeatures?: string[];
 
     globalContainer?: Container;
+
+    extensions?: Record<string, AnyConstructor | string>[];
 }
 
 function serializeOptions(input: IContainerOptions): IContainerOptions {
@@ -25,13 +28,14 @@ function serializeOptions(input: IContainerOptions): IContainerOptions {
         disabledFeatures: [],
         globalContainer: null,
         enabledFeatures: [],
+        extensions: [],
     };
 
     return Object.assign(defaultOptions, input);
 }
 
 export function getContainer(options: IContainerOptions = {}) {
-    const { onContainerCreated, disabledFeatures, globalContainer, enabledFeatures } = serializeOptions(options);
+    const { onContainerCreated, disabledFeatures, globalContainer, enabledFeatures, extensions } = serializeOptions(options);
 
     const container = new Container({
         autoBindInjectable: true,
@@ -46,7 +50,7 @@ export function getContainer(options: IContainerOptions = {}) {
         container: container,
         disabledFeatures: disabledFeatures,
         enabledFeatures: enabledFeatures,
-        features: [Auth, Players, SiteConfigs, Game, Notification, UnderMaintenance, ChipSetting],
+        features: [Auth, Players, SiteConfigs, Game, Notification, UnderMaintenance, ChipSetting, ...extensions],
     };
 
     FeatureLoader.loadFeatures(featureLoaderOptions);

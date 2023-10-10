@@ -1,6 +1,7 @@
 import gc from "@sg/game-client-base";
 import { LogStore } from "db://shared-components/game/scripts/stores/log-store";
 import { sharedContainer } from "../../scripts/shared-container";
+import { ExampleHandler } from "./extensions/example-handler";
 
 export const settings = {
     id: 2,
@@ -21,4 +22,5 @@ export const containerOptions: gc.IContainerOptions = {
         container.bind(gc.GameConfigs.GameSetting).toConstantValue(settings);
         container.bind(LogStore).to(LogStore);
     },
+    extensions: [{ FEATURE_NAME: "example", ExampleHandler }],
 };
