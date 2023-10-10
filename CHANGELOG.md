@@ -1,3 +1,11 @@
+# [1.42.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.41.0...v1.42.0) (2023-10-10)
+
+
+### Features
+
+* handle error message for SI ([e1cccf9](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/e1cccf9b84e8986a3f77d8fe8f9939de1a79a10c))
+* update notice info when return ([0ece4b4](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/0ece4b463e412b7aa8163a27323ec08b3a1fc0f6))
+
 # [1.41.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.40.1...v1.41.0) (2023-10-09)
 
 
