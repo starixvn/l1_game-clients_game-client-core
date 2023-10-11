@@ -382,7 +382,7 @@ describe("ConnectionStore tests", () => {
         });
 
         describe("when disconnect with reason is not from client", () => {
-            it("should set isConnectFailed is true", () => {
+            it("should set isDisconnect is true", () => {
                 // arrange
                 const reason = "io server disconnect";
 
@@ -390,7 +390,7 @@ describe("ConnectionStore tests", () => {
                 store.onDisconnected(reason);
 
                 // assert
-                expect(store.isConnectFailed).toBe(true);
+                expect(store.isDisconnect).toBe(true);
             });
 
             it("should post isDisconnect = true to parent when system Instant", () => {

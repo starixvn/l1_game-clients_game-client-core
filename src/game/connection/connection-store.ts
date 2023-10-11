@@ -43,6 +43,7 @@ export class ConnectionStore {
     isConnected: boolean = null;
     isConnectFailed = false;
     signedIn = false;
+    isDisconnect = false;
 
     initConnection(customizeOptions?: ISocketOption) {
         this.reset();
@@ -121,7 +122,7 @@ export class ConnectionStore {
     onDisconnected(reason = "") {
         this.handleConnectionFailure(reason);
         this.handleDisconnectInstant(reason);
-        
+
         this.isConnected = false;
         this.signedIn = false;
         this.connection.disconnect();
@@ -135,7 +136,7 @@ export class ConnectionStore {
 
     handleConnectionFailure(reason = "") {
         if (this.shouldLogConnectionFailure(reason)) {
-            this.isConnectFailed = true;
+            this.isDisconnect = true;
             sentryLogger.logError(reason);
         }
     }
@@ -161,5 +162,6 @@ export class ConnectionStore {
         this.isConnected = null;
         this.isConnectFailed = false;
         this.signedIn = false;
+        this.isDisconnect = false;
     }
 }
