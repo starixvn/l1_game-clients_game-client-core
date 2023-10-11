@@ -2,13 +2,12 @@ import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
 import { AppHandlers, AppStore } from "../../app";
 import { AuthHandlers, AuthStore } from "../../auth";
-import { utils } from "../../shared";
+import { ErrorUtils } from "../../shared/utils";
 import { Translator } from "../../shared/utils/localization-manager";
 import { ConnectionStore } from "../connection/connection-store";
 import { GameSetting } from "../game-configs";
 import { AppTypes } from "./../../shared/constants/app-type";
 import { NoticeInfo, NoticeStore, NoticeType } from "./notice-store";
-const { ErrorUtils } = utils;
 
 export namespace NoticeErrorsHandlers {
     @injectable()
@@ -36,22 +35,37 @@ export namespace NoticeErrorsHandlers {
             } else {
                 if (ErrorUtils.isSessionTimeoutError(errorCode)) {
                     this.showSessionNotice(errorCode);
+                } else {
+                    this.showErrorNotice(errorCode);
                 }
             }
         }
 
+        showErrorNotice(errorCode: string) {
+            const key = ErrorUtils.parseErrorCode(errorCode);
+            const message = Translator.translate(key);
+            this.noticeStore.addNotice({
+                message,
+                title: Translator.commonTranslate("notice"),
+                type: NoticeType.Error,
+                onClose: null,
+                showBtnConfirmButton: true,
+                noticeInfo: NoticeInfo.ApiError,
+            });
+        }
+
         showDisabledAccountNotice(errorCode: string) {
             const text = Translator.getMessageFollowSystem(this.authStore.system, "message_close_account", { errorCode });
-            this.showNotice(text, NoticeInfo.DisabledAccount);
+            this.showErrorNoticeAndSignOut(text, NoticeInfo.DisabledAccount);
         }
 
         showSessionNotice(errorCode: string) {
             const key = this.appStore.isApp ? "message_session_expired" : "message_session_timeout";
             const text = Translator.getMessageFollowSystem(this.authStore.system, key);
-            this.showNotice(`${text} (${errorCode})`, NoticeInfo.SessionTimeout);
+            this.showErrorNoticeAndSignOut(`${text} (${errorCode})`, NoticeInfo.SessionTimeout);
         }
 
-        showNotice(message = "", noticeInfo?: NoticeInfo) {
+        showErrorNoticeAndSignOut(message = "", noticeInfo?: NoticeInfo) {
             const signOut = () => {
                 this.signOutHandler.handle();
                 this.connectionStore.closeSocket();

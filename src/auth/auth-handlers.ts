@@ -286,11 +286,11 @@ export namespace AuthHandlers {
         }
 
         private handleError(response: ReCheckInResponse) {
-            const errorCode = response.apiError.errorCode.toString();
-            this.authStore.errorCode = errorCode;
             if (response.isDisableAccount) {
                 this.authStore.isDisabledAccount = response.isDisableAccount;
             }
+            const errorCode = response.apiError.errorCode.toString();
+            this.authStore.errorCode = errorCode;
         }
     }
 

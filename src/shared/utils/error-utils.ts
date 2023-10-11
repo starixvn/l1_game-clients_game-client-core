@@ -110,7 +110,7 @@ export namespace ErrorUtils {
     export const parseErrorCode = (errorCode: string, isPlaceBet = false, system?: number) => {
         let message = getErrorCodeMessage(errorCode, system);
         const errorKey = `${ErrorCodeDictionary[errorCode]}`;
-        if (isPlaceBet && CommonErrorList.includes(errorKey)) {
+        if (isPlaceBet && CommonErrorList.includes(errorKey) && system === AppTypes.Instant) {
             message += "_place_bet";
         }
 

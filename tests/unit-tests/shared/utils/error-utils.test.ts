@@ -36,8 +36,8 @@ describe("ErrorUtils", () => {
         });
 
         it("should add suffix 'PlaceBet' for CommonErrorCodeList and isPlaceBet = true", () => {
-            const result = ErrorUtils.parseErrorCode("1000", true);
-            expect(result).toEqual("Common.message_error_occurred_place_bet");
+            const result = ErrorUtils.parseErrorCode("1000", true, AppTypes.Instant);
+            expect(result).toEqual("InstantGame.message_error_occurred_place_bet");
         });
 
         it("should not add suffix 'PlaceBet' for non-CommonErrorCodeList and isPlaceBet = true", () => {
@@ -50,7 +50,7 @@ describe("ErrorUtils", () => {
         const testCases = [
             {
                 system: AppTypes.Club,
-                expected: "Common.message_error_occurred_place_bet",
+                expected: "Common.message_error_occurred",
             },
             {
                 system: AppTypes.Instant,

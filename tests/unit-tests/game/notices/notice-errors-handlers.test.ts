@@ -10,7 +10,7 @@ import { Translator } from "../../../../src/shared/utils/localization-manager";
 import { AppTypes } from "./../../../../src/shared/constants/app-type";
 
 jest.mock("../../../../src/shared/utils", () => ({
-    ErrorUtils: { isSessionTimeoutError: jest.fn().mockReturnValue(false) },
+    ErrorUtils: { isSessionTimeoutError: jest.fn().mockReturnValue(false), parseErrorCode: jest.fn().mockReturnValue("") },
 }));
 jest.mock("../../../../src/shared/utils/localization-manager", () => ({
     Translator: {
@@ -56,7 +56,7 @@ describe("NoticeErrorsHandlers", () => {
 
         describe("onErrorCodeChange", () => {
             beforeEach(() => {
-                handler.showNotice = jest.fn();
+                handler.showErrorNoticeAndSignOut = jest.fn();
             });
             it("should call handle with account closed when isDisabledAccount true", () => {
                 // arrange
@@ -67,7 +67,7 @@ describe("NoticeErrorsHandlers", () => {
                 handler.onErrorCodeChange("");
 
                 // assert
-                expect(handler.showNotice).toHaveBeenCalledWith("accountClosed", NoticeInfo.DisabledAccount);
+                expect(handler.showErrorNoticeAndSignOut).toHaveBeenCalledWith("accountClosed", NoticeInfo.DisabledAccount);
             });
 
             describe("when error code is session timeout error", () => {
@@ -85,7 +85,10 @@ describe("NoticeErrorsHandlers", () => {
 
                     // assert
 
-                    expect(handler.showNotice).toHaveBeenCalledWith(`message_session_expired (123)`, NoticeInfo.SessionTimeout);
+                    expect(handler.showErrorNoticeAndSignOut).toHaveBeenCalledWith(
+                        `message_session_expired (123)`,
+                        NoticeInfo.SessionTimeout
+                    );
                 });
 
                 it("should call handle with sessionTimeout message when not app", () => {
@@ -97,12 +100,42 @@ describe("NoticeErrorsHandlers", () => {
                     handler.onErrorCodeChange("123");
 
                     // assert
-                    expect(handler.showNotice).toHaveBeenCalledWith(`message_session_timeout (123)`, NoticeInfo.SessionTimeout);
+                    expect(handler.showErrorNoticeAndSignOut).toHaveBeenCalledWith(
+                        `message_session_timeout (123)`,
+                        NoticeInfo.SessionTimeout
+                    );
+                });
+            });
+
+            describe("when error code is not session timeout error", () => {
+                beforeEach(() => {
+                    authStore.isDisabledAccount = false;
+                    (ErrorUtils.isSessionTimeoutError as jest.Mock).mockReturnValueOnce(false);
+                });
+                it("should addNotice", () => {
+                    // arrange
+                    (ErrorUtils.parseErrorCode as jest.Mock).mockReturnValueOnce("key");
+                    (Translator.translate as jest.Mock).mockReturnValueOnce("message");
+                    (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("notice");
+                    const errorCode = "2005";
+
+                    // act
+                    handler.onErrorCodeChange(errorCode);
+
+                    // assert
+                    expect(noticeStore.addNotice).toHaveBeenCalledWith({
+                        message: "message",
+                        title: "notice",
+                        type: NoticeType.Error,
+                        onClose: null,
+                        showBtnConfirmButton: true,
+                        noticeInfo: NoticeInfo.ApiError,
+                    });
                 });
             });
         });
 
-        describe("handle", () => {
+        describe("showErrorNoticeAndSignOut", () => {
             beforeEach(() => {
                 jest.useFakeTimers();
                 jest.spyOn(global, "setTimeout");
@@ -115,7 +148,7 @@ describe("NoticeErrorsHandlers", () => {
 
             it("should call sign out handler after 10s", () => {
                 // act
-                handler.showNotice();
+                handler.showErrorNoticeAndSignOut();
                 jest.advanceTimersByTime(10000);
 
                 // assert
@@ -129,7 +162,7 @@ describe("NoticeErrorsHandlers", () => {
                 (Translator.commonTranslate as jest.Mock).mockReturnValueOnce("Notice");
 
                 // act
-                handler.showNotice("message");
+                handler.showErrorNoticeAndSignOut("message");
 
                 // assert
                 expect((noticeStore.addNotice as jest.Mock).mock.calls[0][0].message).toBe("message");
