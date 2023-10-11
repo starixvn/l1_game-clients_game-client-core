@@ -1,3 +1,10 @@
+## [1.44.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.44.0...v1.44.1) (2023-10-11)
+
+
+### Bug Fixes
+
+* show error code ([5123c5e](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/5123c5ec12a49abb7c030f179ed79e57a3bc9f78))
+
 # [1.44.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.43.0...v1.44.0) (2023-10-11)
 
 
