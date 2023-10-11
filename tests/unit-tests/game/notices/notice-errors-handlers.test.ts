@@ -123,6 +123,7 @@ describe("NoticeErrorsHandlers", () => {
                     handler.onErrorCodeChange(errorCode);
 
                     // assert
+                    expect(Translator.translate).toHaveBeenCalledWith("key", { errorCode });
                     expect(noticeStore.addNotice).toHaveBeenCalledWith({
                         message: "message",
                         title: "notice",

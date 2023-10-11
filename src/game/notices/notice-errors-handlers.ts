@@ -43,7 +43,7 @@ export namespace NoticeErrorsHandlers {
 
         showErrorNotice(errorCode: string) {
             const key = ErrorUtils.parseErrorCode(errorCode);
-            const message = Translator.translate(key);
+            const message = Translator.translate(key, { errorCode });
             this.noticeStore.addNotice({
                 message,
                 title: Translator.commonTranslate("notice"),
