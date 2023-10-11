@@ -101,6 +101,10 @@ export namespace NoticeErrorsHandlers {
                 () => this.connectionStore.isConnectFailed,
                 (isConnectFailed) => isConnectFailed && !this.isInstantApp() && this.showNotice()
             );
+            reaction(
+                () => this.connectionStore.isDisconnect,
+                (isDisconnect) => isDisconnect && this.handleDisConnect()
+            );
         }
 
         isInstantApp() {
@@ -120,6 +124,10 @@ export namespace NoticeErrorsHandlers {
                 onClose: backToLobby,
                 noticeInfo: NoticeInfo.LostGameConnection,
             });
+        }
+
+        handleDisConnect() {
+            this.backToOperatorLobbyHandler.handle();
         }
     }
 }

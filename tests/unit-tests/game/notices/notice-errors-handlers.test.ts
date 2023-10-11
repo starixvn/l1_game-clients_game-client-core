@@ -219,5 +219,16 @@ describe("NoticeErrorsHandlers", () => {
             });
             expect(Translator.commonTranslate).toHaveBeenCalledWith("notice");
         });
+
+        it("should call backToOperatorLobbyHandler when isDisconnect", () => {
+            // arrange
+            connectionStore.isDisconnect = true;
+
+            // act
+            handler.handleDisConnect();
+
+            // assert
+            expect(backToOperatorLobbyHandler.handle).toHaveBeenCalled();
+        });
     });
 });

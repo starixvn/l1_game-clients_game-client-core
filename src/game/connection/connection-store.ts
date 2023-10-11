@@ -112,41 +112,67 @@ export class ConnectionStore {
 
     onConnectFailed(error?: Error) {
         this.isConnectFailed = true;
-
-        // handle SI
-        BrowserDomUtils.postMessageToParent({ isDisconnect: true });
-        this.onDisconnected();
-        error && sentryLogger.logError(error);
+        this.isInstant() && this.postDisconnectMessage();
+        this.handleConnectionStatus(false, error);
     }
 
     onDisconnected(reason = "") {
-        this.handleConnectionFailure(reason);
-        this.handleDisconnectInstant(reason);
+        this.handleDisconnectionReason(reason);
+        this.isInstant() && this.handleDisconnectInstant(reason);
+        this.handleConnectionStatus(false);
+    }
 
-        this.isConnected = false;
-        this.signedIn = false;
+    handleDisconnectionReason(reason = "") {
+        !!reason && this.logError(reason);
+        if (this.isServerDisconnect(reason)) {
+            this.isDisconnect = true;
+            return;
+        }
+
+        if (this.shouldLogDisconnection(reason)) {
+            this.isConnectFailed = true;
+        }
+    }
+
+    handleConnectionStatus(connected: boolean, error?: Error) {
+        this.isConnected = connected;
+        this.signedIn = connected;
         this.connection.disconnect();
+        error && this.logError(error);
     }
 
     handleDisconnectInstant(reason: string | unknown) {
-        if (this.authStore.system === AppTypes.Instant && this.shouldPostDisconnectMessage(reason)) {
-            BrowserDomUtils.postMessageToParent({ isDisconnect: true });
+        if (this.shouldPostDisconnectMessage(reason)) {
+            this.postDisconnectMessage();
         }
     }
 
-    handleConnectionFailure(reason = "") {
-        if (this.shouldLogConnectionFailure(reason)) {
-            this.isDisconnect = true;
-            sentryLogger.logError(reason);
-        }
+    private shouldPostDisconnectMessage(reason: string | unknown) {
+        return this.isServerDisconnect(reason) || this.isTransportClose(reason);
     }
 
-    shouldPostDisconnectMessage(reason: string | unknown) {
-        return reason === "io server disconnect" || reason === "transport close";
+    private isServerDisconnect(reason: string | unknown) {
+        return reason === "io server disconnect";
     }
 
-    shouldLogConnectionFailure(reason: string | unknown) {
+    private isTransportClose(reason: string | unknown) {
+        return reason === "transport close";
+    }
+
+    private postDisconnectMessage() {
+        BrowserDomUtils.postMessageToParent({ isDisconnect: true });
+    }
+
+    private shouldLogDisconnection(reason: string | unknown) {
         return reason && reason !== "io client disconnect";
+    }
+
+    private logError(reason: string | Error) {
+        sentryLogger.logError(reason);
+    }
+
+    private isInstant() {
+        return this.authStore.system === AppTypes.Instant;
     }
 
     send(eventName: string, data: any) {
