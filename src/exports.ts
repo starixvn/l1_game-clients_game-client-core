@@ -5,6 +5,7 @@ export * as Configs from "./configs";
 export * as ConnectSite from "./connect-site";
 export * from "./container";
 export * from "./game";
+export * from "./game-crash";
 export * as Notification from "./notification";
 export * as Player from "./players";
 export * as Shared from "./shared";

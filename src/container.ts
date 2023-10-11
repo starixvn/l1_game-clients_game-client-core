@@ -1,14 +1,16 @@
-import type { AnyConstructor } from "./shared";
-
 import { Container } from "inversify";
+
 import * as Auth from "./auth";
 import * as ChipSetting from "./chip-setting";
 import * as SiteConfigs from "./configs";
 import * as Game from "./game";
+import * as GameCrash from "./game-crash";
 import * as Notification from "./notification";
 import * as Players from "./players";
 import { FeatureLoader } from "./shared";
 import * as UnderMaintenance from "./under-maintenance";
+
+import type { AnyConstructor } from "./shared";
 
 export interface IContainerOptions {
     onContainerCreated?: (container: Container) => void;
@@ -50,7 +52,7 @@ export function getContainer(options: IContainerOptions = {}) {
         container: container,
         disabledFeatures: disabledFeatures,
         enabledFeatures: enabledFeatures,
-        features: [Auth, Players, SiteConfigs, Game, Notification, UnderMaintenance, ChipSetting, ...extensions],
+        features: [Auth, Players, SiteConfigs, Game, GameCrash, Notification, UnderMaintenance, ChipSetting, ...extensions],
     };
 
     FeatureLoader.loadFeatures(featureLoaderOptions);
