@@ -1,3 +1,10 @@
+# [1.44.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.43.0...v1.44.0) (2023-10-11)
+
+
+### Features
+
+* show error when error code exist during recheck in & update error message when place bet ([40aed54](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/40aed543d515fd32f4151920f77874a1260dbc2b))
+
 # [1.43.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.42.0...v1.43.0) (2023-10-10)
 
 
