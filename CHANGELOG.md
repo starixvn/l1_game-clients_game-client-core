@@ -1,3 +1,10 @@
+# [1.45.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.44.1...v1.45.0) (2023-10-12)
+
+
+### Features
+
+* handle disconnect ([3e3bd6b](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/3e3bd6b371aab85fac251d6137cf296a4fe9e016))
+
 ## [1.44.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.44.0...v1.44.1) (2023-10-11)
 
 
