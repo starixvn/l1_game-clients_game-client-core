@@ -5,12 +5,7 @@ export namespace GameCrashServiceMessage {
         static eventName = "c";
     }
 
-    export class CrashCashoutHalfInfo {
-        win: number;
-        static eventName = "halfCashOut";
-    }
-
-    export class CrashCashoutFullInfo {
+    export class CrashCashoutInfo {
         win: number;
         static eventName = "cashOut";
     }
