@@ -106,6 +106,7 @@ describe("Booted Odds tests", () => {
             boostedOddsPopupHandlers = new BoostedOddsPromotionsHandlers.BoostedOddsPopupHandlers(
                 mockedBoostedOddsStore,
                 mockedAppStore,
+                authStore,
                 siteConfigs,
                 mockpromotionHelperHandlers
             );

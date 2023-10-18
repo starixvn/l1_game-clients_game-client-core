@@ -44,10 +44,11 @@ export namespace BoostedOddsPromotionsHandlers {
         constructor(
             @inject(BoostedOddsStore) private readonly boostedOddsStore: BoostedOddsStore,
             @inject(AppStore) private readonly appStore: AppStore,
+            @inject(AuthStore) private readonly authStore: AuthStore,
             @inject(SiteConfigs) private readonly siteConfigs: SiteConfigs,
             @inject(PromotionHelperHandlers) private readonly promotionHelperHandlers: PromotionHelperHandlers
         ) {
-            this.boostedOddsStore.resetBoostedOddsData();
+            this.boostedOddsStore.resetBoostedOddsData(this.authStore.system === AppTypes.Instant);
         }
 
         handle(data: Array<BoostedOddsModel>) {
@@ -95,6 +96,10 @@ export namespace BoostedOddsPromotionsHandlers {
 
         clearTimeout() {
             this.timeout && clearTimeout(this.timeout);
+        }
+
+        setIsLoadedPrefab(isLoadedPrefab: boolean) {
+            this.boostedOddsStore.setIsLoadedPrefab(isLoadedPrefab);
         }
     }
 

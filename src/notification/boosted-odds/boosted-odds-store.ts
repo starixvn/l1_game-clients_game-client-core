@@ -1,7 +1,5 @@
-import { injectable, inject } from "inversify";
-import { makeObservable, observable } from "mobx";
-import { AuthStore } from "../../auth";
-import { AppTypes } from "../../shared/constants/app-type";
+import { injectable } from "inversify";
+import { computed, makeObservable, observable } from "mobx";
 
 export class BaseBoostedOddsModel {
     gameId: number;
@@ -31,27 +29,33 @@ export class BoostedOddsModel extends BaseBoostedOddsModel {
     time: string;
 }
 
+export const BoostedOddsConstant = {
+    timeOutIconDesktop: 10,
+    timeOutIconInstant: 15,
+    loadPrefabIndex: 1,
+};
+
 @injectable()
 export class BoostedOddsStore {
     promotions: Array<PromotionModel> = [];
     popupCounter = 0;
     boostedOddsCounter = 0;
     isLoadingIcon = false;
-    boostedOddsIconShowedTimeInMiliseconds = 10;
+    boostedOddsIconShowedTimeInMiliseconds = BoostedOddsConstant.timeOutIconDesktop;
+    isLoadedPrefab = false;
 
     boostedOddses: Array<BoostedOddsModel> = [];
     isAllowShowBoostedOddIcon = true;
+    isInstantVersion = false;
 
-    constructor(@inject(AuthStore) private readonly authStore: AuthStore) {
-        if (this.authStore.system === AppTypes.Instant) {
-            this.boostedOddsIconShowedTimeInMiliseconds = 15;
-        }
-
+    constructor() {
         makeObservable(this, {
+            isLoadedPrefab: observable,
             isLoadingIcon: observable,
             promotions: observable,
             popupCounter: observable,
             boostedOddsCounter: observable,
+            shouldAddBoostedOddPrefab: computed,
         });
     }
 
@@ -79,8 +83,20 @@ export class BoostedOddsStore {
         this.isAllowShowBoostedOddIcon = isAllowShowBoostedOddIcon;
     }
 
-    resetBoostedOddsData() {
+    resetBoostedOddsData(isInstantVersion: boolean) {
         this.boostedOddses = [];
         this.isAllowShowBoostedOddIcon = true;
+        this.isInstantVersion = isInstantVersion;
+
+        const { timeOutIconDesktop, timeOutIconInstant } = BoostedOddsConstant;
+        this.boostedOddsIconShowedTimeInMiliseconds = isInstantVersion ? timeOutIconInstant : timeOutIconDesktop;
+    }
+
+    setIsLoadedPrefab(isLoadedPrefab: boolean) {
+        this.isLoadedPrefab = isLoadedPrefab;
+    }
+
+    get shouldAddBoostedOddPrefab() {
+        return this.boostedOddsCounter === BoostedOddsConstant.loadPrefabIndex;
     }
 }

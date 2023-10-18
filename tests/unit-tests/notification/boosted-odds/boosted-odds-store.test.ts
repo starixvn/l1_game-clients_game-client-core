@@ -1,8 +1,7 @@
 import { stub } from "jest-auto-stub";
 import { PromotionModel } from "../../../../src/notification";
-import { BoostedOddsModel, BoostedOddsStore } from "../../../../src/notification/boosted-odds/boosted-odds-store";
-import { observable, makeObservable } from "mobx";
-import { AuthStore } from "../../../../src/auth";
+import { BoostedOddsConstant, BoostedOddsModel, BoostedOddsStore } from "../../../../src/notification/boosted-odds/boosted-odds-store";
+import { observable, makeObservable, computed } from "mobx";
 
 jest.mock("mobx", () => ({
     observable: jest.fn(),
@@ -11,46 +10,23 @@ jest.mock("mobx", () => ({
 
 describe("BoostedOddsStore", () => {
     let store: BoostedOddsStore;
-    const authStore = stub<AuthStore>();
 
     beforeEach(() => {
-        store = new BoostedOddsStore(authStore);
+        store = new BoostedOddsStore();
     });
 
     afterEach(() => {
         jest.resetAllMocks();
     });
 
-    it("should initialize properties correctly for Instant system", () => {
-        // Arrange
-        authStore.system = 1;
-        const expectedIconShowedTime = 10;
-
-        // Act
-        store = new BoostedOddsStore(authStore);
-
-        // Assert
-        expect(store.boostedOddsIconShowedTimeInMiliseconds).toEqual(expectedIconShowedTime);
-    });
-
-    it("should initialize properties correctly for non-Instant system", () => {
-        // Arrange
-        authStore.system = 3;
-        const expectedIconShowedTime = 15;
-
-        // Act
-        store = new BoostedOddsStore(authStore);
-
-        // Assert
-        expect(store.boostedOddsIconShowedTimeInMiliseconds).toEqual(expectedIconShowedTime);
-    });
-
     test("constructor should call makeObservable with the correct properties", () => {
         expect(makeObservable).toHaveBeenCalledWith(store, {
+            isLoadedPrefab: observable,
             isLoadingIcon: observable,
             promotions: observable,
             popupCounter: observable,
             boostedOddsCounter: observable,
+            shouldAddBoostedOddPrefab: computed,
         });
     });
 
@@ -120,18 +96,73 @@ describe("BoostedOddsStore", () => {
         });
     });
 
-    describe("resetBoostedOddsData", () => {
-        it(" should reset boostedOddses and isAllowShowBoostedOddIcon", () => {
+    describe("resetBoostedOddsData()", () => {
+        it("should reset boostedOdds data and set isAllowShowBoostedOddIcon to true", () => {
             // Arrange
-            store.boostedOddses = [];
-            store.isAllowShowBoostedOddIcon = false;
+            const isInstantVersion = false;
 
             // Act
-            store.resetBoostedOddsData();
+            store.resetBoostedOddsData(isInstantVersion);
 
             // Assert
             expect(store.boostedOddses).toEqual([]);
             expect(store.isAllowShowBoostedOddIcon).toBe(true);
+        });
+
+        it("should set isInstantVersion based on the provided argument", () => {
+            // Arrange
+            const isInstantVersion = true;
+
+            // Act
+            store.resetBoostedOddsData(isInstantVersion);
+
+            // Assert
+            expect(store.isInstantVersion).toBe(true);
+        });
+
+        it("should set boostedOddsIconShowedTimeInMiliseconds based on the isInstantVersion argument", () => {
+            // Arrange
+            const isInstantVersion = true;
+
+            // Act
+            store.resetBoostedOddsData(isInstantVersion);
+
+            // Assert
+            expect(store.boostedOddsIconShowedTimeInMiliseconds).toBe(BoostedOddsConstant.timeOutIconInstant);
+        });
+
+        it("should set boostedOddsIconShowedTimeInMiliseconds based on the isInstantVersion argument", () => {
+            // Arrange
+            const isInstantVersion = false;
+
+            // Act
+            store.resetBoostedOddsData(isInstantVersion);
+
+            // Assert
+            expect(store.boostedOddsIconShowedTimeInMiliseconds).toBe(BoostedOddsConstant.timeOutIconDesktop);
+        });
+    });
+    describe("shouldAddBoostedOddPrefab", () => {
+        it("returns true when boostedOddsCounter is equal to BoostedOddsConstant.loadPrefabIndex", () => {
+            // Arrange
+            store.boostedOddsCounter = BoostedOddsConstant.loadPrefabIndex;
+
+            // Act
+            const result = store.shouldAddBoostedOddPrefab;
+
+            // Assert
+            expect(result).toBe(true);
+        });
+
+        it("returns false when boostedOddsCounter is not equal to BoostedOddsConstant.loadPrefabIndex", () => {
+            // Arrange
+            store.boostedOddsCounter = 0;
+
+            // Act
+            const result = store.shouldAddBoostedOddPrefab;
+
+            // Assert
+            expect(result).toBe(false);
         });
     });
 });
