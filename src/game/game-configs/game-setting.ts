@@ -13,5 +13,5 @@ export class GameSetting {
     choices?: string[];
     hedgeBetGroups?: string[][];
     numberOfRoundHistory: number;
-    clientCheckBalanceWhenBet?: boolean;
+    validateBalanceWhenBet?: boolean;
 }

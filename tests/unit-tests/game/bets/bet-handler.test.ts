@@ -111,11 +111,11 @@ describe("BetHandler", () => {
             beforeEach(() => {
                 mainPlayerStore.balance = 100;
                 betStore.amount = 200;
-                gameSetting.clientCheckBalanceWhenBet = true;
+                gameSetting.validateBalanceWhenBet = true;
             });
 
             afterEach(() => {
-                gameSetting.clientCheckBalanceWhenBet = false;
+                gameSetting.validateBalanceWhenBet = false;
             });
 
             it("should show error notice when amount is greater than balance", () => {
