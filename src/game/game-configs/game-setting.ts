@@ -12,6 +12,6 @@ export class GameSetting {
     };
     choices?: string[];
     hedgeBetGroups?: string[][];
-    numberOfRoundHistory:number;
-   
+    numberOfRoundHistory: number;
+    clientCheckBalanceWhenBet?: boolean;
 }

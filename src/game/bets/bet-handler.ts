@@ -4,6 +4,7 @@ import { MainPlayerStore } from "../../players";
 import { GameClientEmitMessage } from "../../shared";
 import { Translator } from "../../shared/utils/localization-manager";
 import { ConnectionHandlers, ConnectionStore } from "../connection";
+import { GameSetting } from "../game-configs/game-setting";
 import { NoticeStore } from "../notices";
 import { OrientationStore } from "../orientation";
 import { ROUND_STATE, RoundTimeStore } from "../rounds";
@@ -18,7 +19,8 @@ export class BetHandler {
         @inject(OrientationStore) private readonly orientationStore: OrientationStore,
         @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
         @inject(NoticeStore) private readonly noticeStore: NoticeStore,
-        @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler
+        @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler,
+        @inject(GameSetting) private readonly gameSetting: GameSetting
     ) {}
 
     handle(betChoice: string) {
@@ -33,7 +35,7 @@ export class BetHandler {
         }
         const availableBalance = freebetEnabled ? this.mainPlayerStore.scoin : this.mainPlayerStore.balance;
 
-        if (amount > availableBalance) {
+        if (this.gameSetting?.clientCheckBalanceWhenBet && amount > availableBalance) {
             this.showNoticePlaceBetFailure(freebetEnabled);
             return;
         }

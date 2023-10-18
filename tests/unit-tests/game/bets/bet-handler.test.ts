@@ -1,5 +1,6 @@
 import { stub } from "jest-auto-stub";
 import { BetHandler, BetStore } from "../../../../src/game/bets";
+import { GameSetting } from "../../../../src/game/game-configs/game-setting";
 import { NoticeStore } from "../../../../src/game/notices";
 import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
 import { MainPlayerStore } from "../../../../src/players";
@@ -24,6 +25,7 @@ describe("BetHandler", () => {
     let retryHandler: ConnectionHandlers.RetryGameHandler;
     let betChoice: string;
     let showWarningProcessingBet;
+    let gameSetting: GameSetting;
 
     beforeAll(() => {
         noticeStore = new NoticeStore();
@@ -34,6 +36,7 @@ describe("BetHandler", () => {
         retryHandler = stub<ConnectionHandlers.RetryGameHandler>();
 
         roundTimeStore = new RoundTimeStore(gameSettings);
+        gameSetting = new GameSetting();
     });
 
     beforeEach(() => {
@@ -44,7 +47,8 @@ describe("BetHandler", () => {
             orientationStore,
             roundTimeStore,
             noticeStore,
-            retryHandler
+            retryHandler,
+            gameSetting
         );
         showWarningProcessingBet = jest.spyOn(betHandler, "showWarningProcessingBet");
 
@@ -103,34 +107,75 @@ describe("BetHandler", () => {
             expect(connectionStore.send).not.toBeCalled();
         });
 
-        it("should show error notice when amount is greater than balance", () => {
-            // Arrange
-            mainPlayerStore.balance = 100;
-            betStore.amount = 200;
-            betStore.freebetEnabled = false;
-            Translator.commonTranslate = jest.fn(() => "Your account has insufficient funds.");
+        describe("BetHandler when game client check balance", () => {
+            beforeEach(() => {
+                mainPlayerStore.balance = 100;
+                betStore.amount = 200;
+                gameSetting.clientCheckBalanceWhenBet = true;
+            });
 
-            // Act
-            betHandler.handle(betChoice);
+            afterEach(() => {
+                gameSetting.clientCheckBalanceWhenBet = false;
+            });
 
-            // Assert
-            expect(noticeStore.addWarning).toBeCalledWith("Your account has insufficient funds.");
-            expect(connectionStore.send).not.toBeCalled();
+            it("should show error notice when amount is greater than balance", () => {
+                // Arrange
+                betStore.freebetEnabled = false;
+                Translator.commonTranslate = jest.fn(() => "Your account has insufficient funds.");
+
+                // Act
+                betHandler.handle(betChoice);
+
+                // Assert
+                expect(noticeStore.addWarning).toBeCalledWith("Your account has insufficient funds.");
+                expect(connectionStore.send).not.toBeCalled();
+            });
+
+            it("should show error notice when freebet is enabled and scoin is less than amount", () => {
+                // Arrange
+                betStore.freebetEnabled = true;
+                Translator.commonTranslate = jest.fn(() => "Not enough Scoin to place bet.");
+
+                // Act
+                betHandler.handle(betChoice);
+
+                // Assert
+                expect(noticeStore.addWarning).toBeCalledWith("Not enough Scoin to place bet.");
+                expect(connectionStore.send).not.toBeCalled();
+            });
         });
 
-        it("should show error notice when freebet is enabled and scoin is less than amount", () => {
-            // Arrange
-            mainPlayerStore.scoin = 100;
-            betStore.amount = 200;
-            betStore.freebetEnabled = true;
-            Translator.commonTranslate = jest.fn(() => "Not enough Scoin to place bet.");
+        describe("BetHandler when game client without check balance", () => {
+            beforeEach(() => {
+                mainPlayerStore.balance = 100;
+                betStore.amount = 200;
+            });
 
-            // Act
-            betHandler.handle(betChoice);
+            it("without show error notice when amount is greater than balance and game client without check balance", () => {
+                // Arrange
+                betStore.freebetEnabled = false;
+                Translator.commonTranslate = jest.fn(() => "Your account has insufficient funds.");
 
-            // Assert
-            expect(noticeStore.addWarning).toBeCalledWith("Not enough Scoin to place bet.");
-            expect(connectionStore.send).not.toBeCalled();
+                // Act
+                betHandler.handle(betChoice);
+
+                // Assert
+                expect(noticeStore.addWarning).not.toBeCalled();
+                expect(connectionStore.send).toBeCalled();
+            });
+
+            it("without show error notice when freebet is enabled and scoin is less than amount and game client without check balance", () => {
+                // Arrange
+                betStore.freebetEnabled = true;
+                Translator.commonTranslate = jest.fn(() => "Not enough Scoin to place bet.");
+
+                // Act
+                betHandler.handle(betChoice);
+
+                // Assert
+                expect(noticeStore.addWarning).not.toBeCalled();
+                expect(connectionStore.send).toBeCalled();
+            });
         });
 
         it("should send bet data to server when amount is less than scoin or balance ", () => {
