@@ -1,13 +1,12 @@
 import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
 import { RoundTimeStore } from "../../game/rounds";
-import { IHandler } from "../../shared";
+import { IMultipleHandlers } from "../../shared";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 import { CrashCashoutStore } from "./crash-cashout-store";
 
 @injectable()
-export class CrashCashOutHandlers implements IHandler<GameCrashServiceMessage.CrashCashoutInfo> {
-    name = GameCrashServiceMessage.CrashCashoutInfo.eventName;
+export class CrashCashOutHandlers implements IMultipleHandlers {
     constructor(
         @inject(CrashCashoutStore) protected readonly cashoutStore: CrashCashoutStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore
@@ -16,14 +15,30 @@ export class CrashCashOutHandlers implements IHandler<GameCrashServiceMessage.Cr
             () => this.roundTimeStore.isPlacingBet,
             (isPlacingBet) => {
                 if (isPlacingBet) {
-                    console.log("isPlacingBet");
-                    this.cashoutStore.isCashedOut = false;
+                    this.cashoutStore.isCashedOutHalf = false;
+                    this.cashoutStore.isCashedOutFull = false;
                 }
             }
         );
     }
-    handle(cashOut: GameCrashServiceMessage.CrashCashoutInfo | undefined) {
+    handleCashoutFull(cashOut: GameCrashServiceMessage.CrashCashoutFull | undefined) {
         this.cashoutStore.cashoutAmount = cashOut.win;
-        this.cashoutStore.isCashedOut = true;
+        this.cashoutStore.isCashedOutFull = true;
     }
+
+    handleCashoutHalf(cashOut: GameCrashServiceMessage.CrashCashoutHalf | undefined) {
+        this.cashoutStore.cashoutAmount = cashOut.win;
+        this.cashoutStore.isCashedOutHalf = true;
+    }
+
+    eventHandleList = [
+        {
+            name: GameCrashServiceMessage.CrashCashoutFull.eventName,
+            handle: this.handleCashoutFull,
+        },
+        {
+            name: GameCrashServiceMessage.CrashCashoutHalf.eventName,
+            handle: this.handleCashoutHalf,
+        },
+    ];
 }

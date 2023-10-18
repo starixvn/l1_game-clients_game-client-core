@@ -4,7 +4,8 @@ import { makeAutoObservable } from "mobx";
 @injectable()
 export class CrashCashoutStore {
     cashoutAmount = 0;
-    isCashedOut = false;
+    isCashedOutFull = false;
+    isCashedOutHalf = false;
 
     constructor() {
         makeAutoObservable(this);

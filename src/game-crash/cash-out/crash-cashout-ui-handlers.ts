@@ -27,10 +27,7 @@ export class CrashCashOutUIHandlers {
             halfCashOut: halfCashOut ? true : false,
             m: cashOutValue,
         };
-        this.connectionStore.send(
-            halfCashOut ? GameCrashEmitMessage.HalfCashOut.eventName : GameCrashEmitMessage.CashOut.eventName,
-            cashOutData
-        );
+        this.connectionStore.send(GameCrashEmitMessage.CashOut.eventName, cashOutData);
         this.retryGameHandler.handle();
     }
 }
