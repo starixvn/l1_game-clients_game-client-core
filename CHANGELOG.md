@@ -1,3 +1,10 @@
+# [1.46.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.45.0...v1.46.0) (2023-10-18)
+
+
+### Features
+
+* update show message when bet ([532803d](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/532803dadc0e9b57e024a7c18d589064bd9575c4))
+
 # [1.45.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.44.1...v1.45.0) (2023-10-12)
 
 
