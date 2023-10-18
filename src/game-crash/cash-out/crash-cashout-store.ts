@@ -10,4 +10,8 @@ export class CrashCashoutStore {
     constructor() {
         makeAutoObservable(this);
     }
+
+    get showCashoutNotice() {
+        return this.isCashedOutFull || this.isCashedOutHalf;
+    }
 }

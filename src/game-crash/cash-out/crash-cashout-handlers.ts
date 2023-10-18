@@ -24,6 +24,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     handleCashoutFull(cashOut: GameCrashServiceMessage.CrashCashoutFull | undefined) {
         this.cashoutStore.cashoutAmount = cashOut.win;
         this.cashoutStore.isCashedOutFull = true;
+        this.cashoutStore.isCashedOutHalf = true;
     }
 
     handleCashoutHalf(cashOut: GameCrashServiceMessage.CrashCashoutHalf | undefined) {
