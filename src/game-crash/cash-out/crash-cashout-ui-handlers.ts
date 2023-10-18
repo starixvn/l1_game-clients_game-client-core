@@ -20,6 +20,9 @@ export class CrashCashOutUIHandlers {
     ) {}
     handle(cashOutValue: number, halfCashOut: boolean) {
         this.betStore.isProcessingBet = true;
+        if (this.cashoutStore.isCashedOutHalf) {
+            cashOutValue = cashOutValue / 2;
+        }
         const cashOutData = {
             username: this.mainPlayerStore.name,
             roundId: this.roundStore.clientRoundId,
