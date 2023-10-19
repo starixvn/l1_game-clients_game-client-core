@@ -19,6 +19,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
                 if (isPlacingBet) {
                     this.cashoutStore.isCashedOutHalf = false;
                     this.cashoutStore.isCashedOutFull = false;
+                    this.cashoutStore.ratio = 1;
                 }
             }
         );
@@ -33,7 +34,6 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashoutStore.cashoutHalfAmount = cashOut.win;
         this.cashoutStore.isCashedOutHalf = true;
         this.betStore.lastReceivedBet.value = this.betStore.lastReceivedBet.value / 2;
-        console.log("handleCashoutHalf", this.betStore.lastReceivedBet.value);
     }
 
     eventHandleList = [

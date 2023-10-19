@@ -7,6 +7,7 @@ export class CrashCashoutStore {
     cashoutHalfAmount = 0;
     isCashedOutFull = false;
     isCashedOutHalf = false;
+    ratio = 1;
 
     constructor() {
         makeAutoObservable(this);
