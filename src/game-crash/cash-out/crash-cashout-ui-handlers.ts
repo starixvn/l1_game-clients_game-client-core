@@ -31,4 +31,8 @@ export class CrashCashOutUIHandlers {
         this.connectionStore.send(GameCrashEmitMessage.CashOut.eventName, cashOutData);
         this.retryGameHandler.handle();
     }
+
+    handleBetRatio() {
+        this.cashoutStore.ratio = 1;
+    }
 }

@@ -31,7 +31,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashoutStore.cashOutNotice = {
             value: cashOut.win,
         };
-        console.log("handleCashoutFull", this.cashoutStore.cashOutNotice.value);
+        setTimeout(() => {
+            this.cashoutStore.ratio = 1;
+        }, 2700);
     }
 
     handleCashoutHalf(cashOut: GameCrashServiceMessage.CrashCashoutHalf | undefined) {
@@ -42,7 +44,6 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         };
         this.cashoutStore.isCashedOutHalf = true;
         this.betStore.lastReceivedBet.value = this.betStore.lastReceivedBet.value / 2;
-        console.log("handleCashoutHalf", this.cashoutStore.cashOutNotice.value);
     }
 
     eventHandleList = [
