@@ -156,8 +156,49 @@ describe("Storage Manger", () => {
 
             // Act
             StorageManager.remove("foo");
+
             // Assert
             expect(mockStorage.remove).toHaveBeenCalledWith("foo");
+        });
+
+        describe("setPrefixKey", () => {
+            it("should set the prefix key", () => {
+                // Arrange
+                const prefixKey = "testPrefix";
+
+                // Act
+                StorageManager.setPrefixKey(prefixKey);
+
+                // Assert
+                expect(StorageManager.prefixKey).toBe(prefixKey);
+            });
+        });
+
+        describe("getName", () => {
+            it("should return the name with the prefix when a prefix is set", () => {
+                // Arrange
+                const prefixKey = "testPrefix";
+                const name = "testName";
+                StorageManager.setPrefixKey(prefixKey);
+
+                // Act
+                const result = StorageManager.getName(name);
+
+                // Assert
+                expect(result).toBe(`${name}_${prefixKey}`);
+            });
+
+            it("should return the name without the prefix when no prefix is set", () => {
+                // Arrange
+                const name = "testName";
+                StorageManager.setPrefixKey("");
+
+                // Act
+                const result = StorageManager.getName(name);
+
+                // Assert
+                expect(result).toBe(name);
+            });
         });
     });
 });

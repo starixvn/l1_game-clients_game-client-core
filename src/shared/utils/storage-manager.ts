@@ -72,6 +72,7 @@ export class Memory implements IActionStorage {
 
 export class StorageManager {
     static supportStorage: IActionStorage;
+    static prefixKey: string;
 
     private static initialize() {
         if (!StorageManager.supportStorage) {
@@ -86,15 +87,23 @@ export class StorageManager {
     }
 
     static get(name: string) {
-        return StorageManager.getCurrentStorage().get(name);
+        return StorageManager.getCurrentStorage().get(StorageManager.getName(name));
     }
 
     static set(name: string, value: string | object) {
-        StorageManager.getCurrentStorage().set(name, value);
+        StorageManager.getCurrentStorage().set(StorageManager.getName(name), value);
     }
 
     static remove(name: string) {
-        StorageManager.getCurrentStorage().remove(name);
+        StorageManager.getCurrentStorage().remove(StorageManager.getName(name));
+    }
+
+    static setPrefixKey(prefixKey: string) {
+        StorageManager.prefixKey = prefixKey;
+    }
+
+    static getName(name: string) {
+        return StorageManager.prefixKey ? `${name}_${StorageManager.prefixKey}` : name;
     }
 }
 
