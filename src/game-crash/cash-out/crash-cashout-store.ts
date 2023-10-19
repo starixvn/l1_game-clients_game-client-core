@@ -9,11 +9,11 @@ export class CrashCashoutStore {
     isCashedOutHalf = false;
     ratio = 1;
 
+    cashOutNotice: {
+        value: number;
+    } = null;
+
     constructor() {
         makeAutoObservable(this);
-    }
-
-    get showCashoutNotice() {
-        return this.isCashedOutFull || this.isCashedOutHalf;
     }
 }

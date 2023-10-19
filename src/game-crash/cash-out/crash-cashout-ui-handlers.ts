@@ -20,18 +20,12 @@ export class CrashCashOutUIHandlers {
     ) {}
     handle(cashOutValue: number, halfCashOut: boolean) {
         this.betStore.isProcessingBet = true;
-        if (halfCashOut) {
-            cashOutValue = cashOutValue / 2;
-            this.cashoutStore.ratio = 1 / 2;
-        } else {
-            this.cashoutStore.ratio = 1;
-        }
 
         const cashOutData = {
             username: this.mainPlayerStore.name,
             roundId: this.roundStore.clientRoundId,
             clientSendTime: new Date(),
-            halfCashOut: halfCashOut ? true : false,
+            halfCashOut,
             m: cashOutValue,
         };
         this.connectionStore.send(GameCrashEmitMessage.CashOut.eventName, cashOutData);

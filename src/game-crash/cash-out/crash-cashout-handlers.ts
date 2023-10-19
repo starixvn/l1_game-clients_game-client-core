@@ -28,12 +28,21 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashoutStore.cashoutAmount = cashOut.win;
         this.cashoutStore.isCashedOutFull = true;
         this.cashoutStore.isCashedOutHalf = true;
+        this.cashoutStore.cashOutNotice = {
+            value: cashOut.win,
+        };
+        console.log("handleCashoutFull", this.cashoutStore.cashOutNotice.value);
     }
 
     handleCashoutHalf(cashOut: GameCrashServiceMessage.CrashCashoutHalf | undefined) {
+        this.cashoutStore.ratio = 0.5;
         this.cashoutStore.cashoutHalfAmount = cashOut.win;
+        this.cashoutStore.cashOutNotice = {
+            value: cashOut.win,
+        };
         this.cashoutStore.isCashedOutHalf = true;
         this.betStore.lastReceivedBet.value = this.betStore.lastReceivedBet.value / 2;
+        console.log("handleCashoutHalf", this.cashoutStore.cashOutNotice.value);
     }
 
     eventHandleList = [
