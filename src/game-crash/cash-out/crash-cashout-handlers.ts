@@ -43,7 +43,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             value: cashOut.win,
         };
         this.cashoutStore.isCashedOutHalf = true;
-        this.betStore.lastReceivedBet = { value: this.betStore.lastReceivedBet.value / 2 };
+        this.betStore.cashoutBet = { value: this.betStore.cashoutBet.value / 2 };
     }
 
     eventHandleList = [

@@ -20,7 +20,7 @@ export class BetResponseHandlers implements IMultipleHandlers {
 
     handleBetResponse(endBet: number) {
         this.stopProcessingBetAndClearInterval();
-        this.betStore.lastReceivedBet = { value: endBet };
+        this.betStore.lastReceivedBet = this.betStore.cashoutBet = { value: endBet };
     }
 
     stopProcessingBetAndClearInterval() {
