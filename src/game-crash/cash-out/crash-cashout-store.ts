@@ -13,7 +13,17 @@ export class CrashCashoutStore {
         value: number;
     } = null;
 
+    private _cashoutBet: { value: number } = null;
+
     constructor() {
         makeAutoObservable(this);
+    }
+
+    get cashoutBet() {
+        return this._cashoutBet;
+    }
+
+    set cashoutBet(cashoutBet: any) {
+        this._cashoutBet = cashoutBet;
     }
 }

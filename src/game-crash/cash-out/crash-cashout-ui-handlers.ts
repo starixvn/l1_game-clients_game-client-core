@@ -35,4 +35,8 @@ export class CrashCashOutUIHandlers {
     handleBetRatio() {
         this.cashoutStore.ratio = 1;
     }
+
+    updateCashoutBetValue(value: number) {
+        this.cashoutStore.cashoutBet = { value };
+    }
 }

@@ -1,6 +1,5 @@
 import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
-import { BetStore } from "../../game/bets";
 import { RoundTimeStore } from "../../game/rounds";
 import { IMultipleHandlers } from "../../shared";
 import { GameCrashServiceMessage } from "../game-crash-messages";
@@ -10,8 +9,7 @@ import { CrashCashoutStore } from "./crash-cashout-store";
 export class CrashCashOutHandlers implements IMultipleHandlers {
     constructor(
         @inject(CrashCashoutStore) protected readonly cashoutStore: CrashCashoutStore,
-        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
-        @inject(BetStore) protected readonly betStore: BetStore
+        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore
     ) {
         reaction(
             () => this.roundTimeStore.isPlacingBet,
@@ -43,7 +41,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             value: cashOut.win,
         };
         this.cashoutStore.isCashedOutHalf = true;
-        this.betStore.cashoutBet = { value: this.betStore.cashoutBet.value / 2 };
+        this.cashoutStore.cashoutBet = { value: this.cashoutStore.cashoutBet.value / 2 };
     }
 
     eventHandleList = [
