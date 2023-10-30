@@ -1,3 +1,11 @@
+# [1.47.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.46.0...v1.47.0) (2023-10-30)
+
+
+### Features
+
+* load boosted odds resources dynamic ([519231c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/519231c372d079e28d2553b7be6692cdda15b77e))
+* update storage manager include prefix key ([ffe2dce](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/ffe2dce7c9264c7c6d687c2b84bfef0aa90e2da7))
+
 # [1.46.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.45.0...v1.46.0) (2023-10-18)
 
 
