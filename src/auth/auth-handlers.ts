@@ -222,6 +222,13 @@ export namespace AuthHandlers {
                     sfxEnable: urlParams.has(URLParams.sfxEnable) ? urlParams.get(URLParams.sfxEnable) === "true" : true,
                 };
                 StorageManager.set(localStorageKeys.playerSetting, playerSetting);
+
+                if (urlParams.has(URLParams.gameIdsSupportBoostedOddsForInstantSite)) {
+                    StorageManager.set(
+                        localStorageKeys.gameIdsSupportBoostedOddsForInstantSite,
+                        urlParams.get(URLParams.gameIdsSupportBoostedOddsForInstantSite)
+                    );
+                }
             }
         }
 

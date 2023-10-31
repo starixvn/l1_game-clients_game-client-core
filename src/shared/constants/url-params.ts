@@ -11,4 +11,5 @@ export const URLParams = {
     sfxEnable: "sfxEnable",
     parentUrl: "purl",
     isUserGesture: "isUserGesture",
+    gameIdsSupportBoostedOddsForInstantSite: "gameIdsSupportBoostedOddsForInstantSite",
 };

@@ -6,14 +6,14 @@ import { AppStore } from "../../app";
 import { SiteConfigs } from "../../configs";
 import { AuthStore } from "../../auth";
 import { AppTypes } from "../../shared/constants/app-type";
+import { StorageManager, localStorageKeys } from "../../shared/utils/storage-manager";
 
 export namespace BoostedOddsPromotionsHandlers {
     @injectable()
     export class PromotionHelperHandlers implements IHandler<Array<BaseBoostedOddsModel>> {
         constructor(
             @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
-            @inject(AuthStore) private readonly authStore: AuthStore,
-            @inject(SiteConfigs) private readonly siteConfigs: SiteConfigs
+            @inject(AuthStore) private readonly authStore: AuthStore
         ) {}
 
         handle(data: Array<BaseBoostedOddsModel>) {
@@ -27,10 +27,12 @@ export namespace BoostedOddsPromotionsHandlers {
         }
 
         getPromotionsByOfferGamesForInstantVersion(data: Array<BaseBoostedOddsModel>) {
+            const gameIdsSupportBoostedOddsForInstantSite = StorageManager.get(localStorageKeys.gameIdsSupportBoostedOddsForInstantSite)
+                ?.toString()
+                .split(",");
+
             return this.getPromotionsByOfferGames(data).filter((promotion) =>
-                this.siteConfigs.gameIdsSupportBoostedOddsForInstantSite.some((gameId) => {
-                    return gameId === promotion.gameId;
-                })
+                gameIdsSupportBoostedOddsForInstantSite.some((gameId) => parseInt(gameId) === promotion.gameId)
             );
         }
     }
@@ -40,6 +42,7 @@ export namespace BoostedOddsPromotionsHandlers {
         name = NotificationServiceMessage.BoostedOdd.eventName;
         timeout: NodeJS.Timeout;
         minutesToMillisecond = 60 * 1000;
+        defaultDelayTimeByMinutes = 15;
 
         constructor(
             @inject(BoostedOddsStore) private readonly boostedOddsStore: BoostedOddsStore,
@@ -89,9 +92,14 @@ export namespace BoostedOddsPromotionsHandlers {
 
         setTimeoutShowBoostedOdds(): void {
             this.clearTimeout();
+
             this.timeout = setTimeout(() => {
                 this.boostedOddsStore.setIsAllowShowBoostedOddIcon(true);
-            }, this.siteConfigs.boostedOddsDelayTimeByMinutes * this.minutesToMillisecond);
+            }, this.getDelayTime());
+        }
+
+        getDelayTime() {
+            return (this.siteConfigs.boostedOddsDelayTimeByMinutes || this.defaultDelayTimeByMinutes) * this.minutesToMillisecond;
         }
 
         clearTimeout() {

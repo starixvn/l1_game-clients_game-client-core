@@ -5,82 +5,141 @@ import { MainPlayerStore } from "../../../../src/players";
 import { BoostedOddsPromotionsHandlers } from "../../../../src/notification/boosted-odds/boosted-odds-handlers";
 import { AuthStore } from "../../../../src/auth";
 import { SiteConfigs } from "../../../../src/configs";
+import { StorageManager } from "../../../../src/shared/utils/storage-manager";
 
 describe("Booted Odds tests", () => {
     describe("PromotionHandlers", () => {
         let mockedMainPlayerStore: MainPlayerStore;
         let mockpromotionHelperHandlers: BoostedOddsPromotionsHandlers.PromotionHelperHandlers;
         const authStore = stub<AuthStore>();
-        const siteConfigs = stub<SiteConfigs>();
 
         beforeEach(() => {
             jest.clearAllMocks();
             mockedMainPlayerStore = stub<MainPlayerStore>();
-            mockpromotionHelperHandlers = new BoostedOddsPromotionsHandlers.PromotionHelperHandlers(
-                mockedMainPlayerStore,
-                authStore,
-                siteConfigs
-            );
+            mockpromotionHelperHandlers = new BoostedOddsPromotionsHandlers.PromotionHelperHandlers(mockedMainPlayerStore, authStore);
         });
 
         afterEach(() => {
             jest.resetAllMocks();
         });
 
-        it("should call getPromotionsByOfferGames if authStore.system is not Instant", () => {
-            // Arrange
-            authStore.system = 1;
-            const mockData: BaseBoostedOddsModel[] = [{ gameId: 1 }];
-            mockedMainPlayerStore.offerGames = [{ gameId: 1 }, { gameId: 2 }];
-            mockpromotionHelperHandlers.getPromotionsByOfferGames = jest.fn();
+        describe("handle", () => {
+            it("should call getPromotionsByOfferGamesForInstantVersion when authStore system is Instant", () => {
+                // Arrange
+                const mockData: Array<BaseBoostedOddsModel> = [{ gameId: 1 }];
+                authStore.system = 3;
+                mockpromotionHelperHandlers.getPromotionsByOfferGamesForInstantVersion = jest.fn();
 
-            // Act
-            mockpromotionHelperHandlers.handle(mockData);
+                // Act
+                mockpromotionHelperHandlers.handle(mockData);
 
-            // Assert
-            expect(mockpromotionHelperHandlers.getPromotionsByOfferGames).toHaveBeenCalledWith(mockData);
+                // Assert
+                expect(mockpromotionHelperHandlers.getPromotionsByOfferGamesForInstantVersion).toHaveBeenCalledWith(mockData);
+            });
+
+            it("should call getPromotionsByOfferGames when authStore system is not Instant", () => {
+                // Arrange
+                const mockData: Array<BaseBoostedOddsModel> = [{ gameId: 1 }];
+                authStore.system = 1;
+                mockpromotionHelperHandlers.getPromotionsByOfferGames = jest.fn();
+
+                // Act
+                mockpromotionHelperHandlers.handle(mockData);
+
+                // Assert
+                expect(mockpromotionHelperHandlers.getPromotionsByOfferGames).toHaveBeenCalledWith(mockData);
+            });
         });
 
-        it("should call getPromotionsByOfferGamesForInstantVersion if authStore.system is Instant", () => {
-            // Arrange
-            authStore.system = 3;
-            siteConfigs.gameIdsSupportBoostedOddsForInstantSite = [1];
-            const mockData: BaseBoostedOddsModel[] = [{ gameId: 1 }];
-            const offerGames = [{ gameId: 1 }, { gameId: 2 }];
-            mockpromotionHelperHandlers.getPromotionsByOfferGames = jest.fn(() => offerGames);
-            mockedMainPlayerStore.offerGames = offerGames;
-            mockpromotionHelperHandlers.getPromotionsByOfferGamesForInstantVersion = jest.fn();
+        describe("getPromotionsByOfferGames", () => {
+            it("should return an empty array when the input data is empty", () => {
+                // Arrange
+                const mockData: Array<BaseBoostedOddsModel> = [];
 
-            // Act
-            mockpromotionHelperHandlers.handle(mockData);
+                // Act
+                const result = mockpromotionHelperHandlers.getPromotionsByOfferGames(mockData);
 
-            // Assert
-            expect(mockpromotionHelperHandlers.getPromotionsByOfferGamesForInstantVersion).toHaveBeenCalledWith(mockData);
+                // Assert
+                expect(result).toEqual([]);
+            });
+
+            it("should return an empty array when the input data does not contain any promotion with matching game IDs", () => {
+                // Arrange
+                const mockData: Array<BaseBoostedOddsModel> = [{ gameId: 4 }, { gameId: 5 }, { gameId: 6 }];
+                mockedMainPlayerStore.offerGames = [{ gameId: 1 }, { gameId: 2 }];
+
+                // Act
+                const result = mockpromotionHelperHandlers.getPromotionsByOfferGames(mockData);
+
+                // Assert
+                expect(result).toEqual([]);
+            });
+
+            it("should return an array with the promotions that have matching game IDs with the offer games", () => {
+                // Arrange
+                const mockData: Array<BaseBoostedOddsModel> = [{ gameId: 1 }, { gameId: 2 }, { gameId: 3 }];
+                mockedMainPlayerStore.offerGames = [{ gameId: 1 }, { gameId: 2 }];
+
+                // Act
+                const result = mockpromotionHelperHandlers.getPromotionsByOfferGames(mockData);
+
+                // Assert
+                expect(result).toEqual([{ gameId: 1 }, { gameId: 2 }]);
+            });
         });
 
-        it("getPromotionsByOfferGames should filter promotions correctly", () => {
-            // Arrange
-            mockedMainPlayerStore.offerGames = [{ gameId: 1 }, { gameId: 2 }];
-            const mockData: BaseBoostedOddsModel[] = [{ gameId: 1 }, { gameId: 3 }];
+        describe("getPromotionsByOfferGamesForInstantVersion", () => {
+            it("should return an empty array if data is empty", () => {
+                // Arrange
+                const mockData: Array<BaseBoostedOddsModel> = [];
 
-            // Act
-            const result = mockpromotionHelperHandlers.getPromotionsByOfferGames(mockData);
+                // Act
+                const result = mockpromotionHelperHandlers.getPromotionsByOfferGamesForInstantVersion(mockData);
 
-            // Assert
-            expect(result).toEqual([{ gameId: 1 }]);
-        });
+                // Assert
+                expect(result).toEqual([]);
+            });
 
-        it("getPromotionsByOfferGamesForInstantVersion should filter promotions correctly", () => {
-            // Arrange
-            mockedMainPlayerStore.offerGames = [{ gameId: 1 }, { gameId: 2 }];
-            siteConfigs.gameIdsSupportBoostedOddsForInstantSite = [1, 3];
-            const mockData: BaseBoostedOddsModel[] = [{ gameId: 1 }, { gameId: 2 }, { gameId: 3 }];
+            it("should return an empty array if gameIdsSupportBoostedOddsForInstantSite is empty", () => {
+                // Arrange
+                const mockData: Array<BaseBoostedOddsModel> = [{ gameId: 1 }, { gameId: 2 }, { gameId: 3 }];
+                mockpromotionHelperHandlers.getPromotionsByOfferGames = jest.fn(() => [{ gameId: 1 }, { gameId: 2 }]);
+                StorageManager.get = jest.fn().mockReturnValue("");
 
-            // Act
-            const result = mockpromotionHelperHandlers.getPromotionsByOfferGamesForInstantVersion(mockData);
+                // Act
+                const result = mockpromotionHelperHandlers.getPromotionsByOfferGamesForInstantVersion(mockData);
 
-            // Assert
-            expect(result).toEqual([{ gameId: 1 }]);
+                // Assert
+                expect(result).toEqual([]);
+            });
+
+            it("should return an empty array if no promotions match the supported game IDs", () => {
+                // Arrange
+                const mockData: Array<BaseBoostedOddsModel> = [{ gameId: 1 }, { gameId: 2 }, { gameId: 3 }];
+                mockpromotionHelperHandlers.getPromotionsByOfferGames = jest.fn(() => [{ gameId: 1 }, { gameId: 2 }]);
+                StorageManager.get = jest.fn().mockReturnValue("4,5");
+
+                // Act
+                const result = mockpromotionHelperHandlers.getPromotionsByOfferGamesForInstantVersion(mockData);
+
+                // Assert
+                expect(result).toEqual([]);
+            });
+
+            it("should return an array of promotions that match the supported game IDs", () => {
+                // Arrange
+                const mockData: Array<BaseBoostedOddsModel> = [{ gameId: 1 }, { gameId: 2 }, { gameId: 3 }];
+                StorageManager.get = jest.fn().mockReturnValue("2,3");
+
+                const newPromotions = stub<BaseBoostedOddsModel[]>([{ gameId: 2 }, { gameId: 3 }]);
+                mockpromotionHelperHandlers.getPromotionsByOfferGames = jest.fn(() => newPromotions);
+
+                // Act
+                const result = mockpromotionHelperHandlers.getPromotionsByOfferGamesForInstantVersion(mockData);
+
+                // Assert
+                expect(result).toEqual([{ gameId: 2 }, { gameId: 3 }]);
+            });
         });
     });
 
@@ -97,11 +156,7 @@ describe("Booted Odds tests", () => {
 
         beforeEach(() => {
             jest.clearAllMocks();
-            mockpromotionHelperHandlers = new BoostedOddsPromotionsHandlers.PromotionHelperHandlers(
-                mockedMainPlayerStore,
-                authStore,
-                siteConfigs
-            );
+            mockpromotionHelperHandlers = new BoostedOddsPromotionsHandlers.PromotionHelperHandlers(mockedMainPlayerStore, authStore);
 
             boostedOddsPopupHandlers = new BoostedOddsPromotionsHandlers.BoostedOddsPopupHandlers(
                 mockedBoostedOddsStore,
@@ -358,6 +413,33 @@ describe("Booted Odds tests", () => {
             });
         });
 
+        describe("getDelayTime", () => {
+            const data = [
+                [undefined, 900000],
+                [5, 300000],
+            ];
+            test.each(data)(
+                "should return the boostedOddsDelayTimeByMinutes multiplied by minutesToMillisecond correctly",
+                (delaytimeMinutesByConfig, explectedDelayTimeByMillisecond) => {
+                    // Arrange
+                    siteConfigs.boostedOddsDelayTimeByMinutes = delaytimeMinutesByConfig;
+                    const handler = new BoostedOddsPromotionsHandlers.BoostedOddsPopupHandlers(
+                        mockedBoostedOddsStore,
+                        mockedAppStore,
+                        authStore,
+                        siteConfigs,
+                        mockpromotionHelperHandlers
+                    );
+
+                    // Act
+                    const result = handler.getDelayTime();
+
+                    // Assert
+                    expect(result).toBe(explectedDelayTimeByMillisecond);
+                }
+            );
+        });
+
         describe("clearTimeout", () => {
             let clearTimeoutSpy: jest.SpyInstance<void, [timeoutId: string | number | NodeJS.Timeout | undefined], any>;
 
@@ -388,6 +470,14 @@ describe("Booted Odds tests", () => {
                 clearTimeoutSpy.mockRestore();
             });
         });
+
+        describe("setIsLoadedPrefab", () => {
+            const data = [true, false];
+            test.each(data)("should call setIsLoadedPrefab function correctly", (inputedValue) => {
+                mockedBoostedOddsStore.setIsLoadedPrefab(inputedValue);
+                expect(mockedBoostedOddsStore.setIsLoadedPrefab).toHaveBeenCalledWith(inputedValue);
+            });
+        });
     });
 
     describe("PromotionHandlers", () => {
@@ -396,18 +486,13 @@ describe("Booted Odds tests", () => {
         let mockedMainPlayerStore: MainPlayerStore;
         let mockpromotionHelperHandlers: BoostedOddsPromotionsHandlers.PromotionHelperHandlers;
         const authStore = stub<AuthStore>();
-        const siteConfigs = stub<SiteConfigs>();
         const mockPromotions: PromotionModel[] = stub<PromotionModel[]>([{ gameId: 1 }]);
 
         beforeEach(() => {
             jest.clearAllMocks();
             mockedBoostedOddsStore = stub<BoostedOddsStore>();
             mockedMainPlayerStore = stub<MainPlayerStore>();
-            mockpromotionHelperHandlers = new BoostedOddsPromotionsHandlers.PromotionHelperHandlers(
-                mockedMainPlayerStore,
-                authStore,
-                siteConfigs
-            );
+            mockpromotionHelperHandlers = new BoostedOddsPromotionsHandlers.PromotionHelperHandlers(mockedMainPlayerStore, authStore);
         });
 
         it("handle method should set promotion models", () => {

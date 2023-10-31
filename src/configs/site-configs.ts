@@ -22,6 +22,5 @@ export class SiteConfigs {
     tolgeeUrl?: string;
     backgroundNoTranslate?: boolean;
     boostedOddsDelayTimeByMinutes?: number;
-    gameIdsSupportBoostedOddsForInstantSite?: Array<number>;
     storagePrefixKey?: string;
 }

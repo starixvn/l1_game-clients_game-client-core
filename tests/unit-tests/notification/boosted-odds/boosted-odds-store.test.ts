@@ -165,4 +165,12 @@ describe("BoostedOddsStore", () => {
             expect(result).toBe(false);
         });
     });
+
+    describe("setIsLoadedPrefab", () => {
+        const data = [true, false];
+        test.each(data)("should set isLoadedPrefab correctly", (inputedValue) => {
+            store.setIsLoadedPrefab(inputedValue);
+            expect(store.isLoadedPrefab).toBe(inputedValue);
+        });
+    });
 });

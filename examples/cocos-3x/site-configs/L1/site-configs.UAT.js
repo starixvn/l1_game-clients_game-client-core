@@ -14,5 +14,4 @@ window.envConfig = {
     subDirectory: "uat",
     SGConnectSubDomain: "l1uatconnectsite",
     boostedOddsDelayTimeByMinutes: 15,
-    gameIdsSupportBoostedOddsForInstantSite: [1, 9],
 };
