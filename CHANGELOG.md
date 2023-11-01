@@ -1,3 +1,10 @@
+# [1.48.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.47.0...v1.48.0) (2023-11-01)
+
+
+### Features
+
+* add config for games offer promotions ([43b5141](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/43b5141147eda550f99916edc666ab9d0d3cb09a))
+
 # [1.47.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.46.0...v1.47.0) (2023-10-30)
 
 
