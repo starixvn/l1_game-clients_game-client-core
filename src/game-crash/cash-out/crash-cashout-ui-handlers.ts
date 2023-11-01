@@ -39,4 +39,9 @@ export class CrashCashOutUIHandlers {
     updateCashoutBetValue(value: number) {
         this.cashoutStore.cashoutBet = { value };
     }
+
+    resetCashoutVaue() {
+        this.cashoutStore.cashoutAmount = 0;
+        this.cashoutStore.cashoutHalfAmount = 0;
+    }
 }
