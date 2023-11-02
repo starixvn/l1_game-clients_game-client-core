@@ -14,6 +14,23 @@ export namespace GameCrashServiceMessage {
         win: number;
         static eventName = "halfCashOut";
     }
+
+    export class CrashOtherPlayer {
+        name: string;
+        
+        playerId: string;
+
+        cashOut?: CashOutReceive;
+
+        halfCashOut?: CashOutReceive;
+
+        static eventName = "otherPlayer";
+    }
+
+    export type CashOutReceive = {
+        amount: number;
+        win: number;
+    };
 }
 
 export namespace GameCrashEmitMessage {
