@@ -13,7 +13,7 @@ export class GameConfigStore {
     enableFreeBet = false;
     originalOdds?: GameServiceMessage.Odds = null;
     boostedChoices?: string[] = [];
-    maxMultiplier: number;
+    maxMultiplier: number = 0;
 
     constructor() {
         makeAutoObservable(this);
