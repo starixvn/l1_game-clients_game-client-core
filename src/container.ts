@@ -4,13 +4,11 @@ import * as Auth from "./auth";
 import * as ChipSetting from "./chip-setting";
 import * as SiteConfigs from "./configs";
 import * as Game from "./game";
-import * as GameCrash from "./game-crash";
 import * as Notification from "./notification";
 import * as Players from "./players";
+import type { AnyConstructor } from "./shared";
 import { FeatureLoader } from "./shared";
 import * as UnderMaintenance from "./under-maintenance";
-
-import type { AnyConstructor } from "./shared";
 
 export interface IContainerOptions {
     onContainerCreated?: (container: Container) => void;
@@ -21,7 +19,7 @@ export interface IContainerOptions {
 
     globalContainer?: Container;
 
-    extensions?: Record<string, AnyConstructor | string>[];
+    features?: object[];
 }
 
 function serializeOptions(input: IContainerOptions): IContainerOptions {
@@ -30,14 +28,15 @@ function serializeOptions(input: IContainerOptions): IContainerOptions {
         disabledFeatures: [],
         globalContainer: null,
         enabledFeatures: [],
-        extensions: [],
     };
 
     return Object.assign(defaultOptions, input);
 }
 
+export const defaultFeatures = [Auth, Players, SiteConfigs, Game, Notification, UnderMaintenance, ChipSetting];
+
 export function getContainer(options: IContainerOptions = {}) {
-    const { onContainerCreated, disabledFeatures, globalContainer, enabledFeatures, extensions } = serializeOptions(options);
+    const { onContainerCreated, disabledFeatures, globalContainer, enabledFeatures, features } = serializeOptions(options);
 
     const container = new Container({
         autoBindInjectable: true,
@@ -52,7 +51,7 @@ export function getContainer(options: IContainerOptions = {}) {
         container: container,
         disabledFeatures: disabledFeatures,
         enabledFeatures: enabledFeatures,
-        features: [Auth, Players, SiteConfigs, Game, GameCrash, Notification, UnderMaintenance, ChipSetting, ...extensions],
+        features: features ?? defaultFeatures,
     };
 
     FeatureLoader.loadFeatures(featureLoaderOptions);
