@@ -265,6 +265,12 @@ export namespace GameServiceMessage {
 
         static eventName = "rebet";
     }
+
+    export class CrashGameConfigs {
+        maxMultiplier: number;
+
+        static eventName = "gameConfigs";
+    }
 }
 
 export namespace NotificationServiceMessage {
