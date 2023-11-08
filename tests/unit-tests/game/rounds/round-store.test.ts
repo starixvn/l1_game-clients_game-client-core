@@ -74,7 +74,7 @@ describe("RoundStore", () => {
         expect(roundStore.roundId).toEqual(0);
         expect(roundStore.ownBets).toEqual({});
         expect(roundStore.totalBets).toEqual({});
-        expect(roundStore.resultHash).toEqual({});
+        expect(roundStore.resultHash).toEqual(null);
     });
 
     it("should have minBet and maxBet from gameConfigStore and mainPlayerStore", () => {
@@ -123,7 +123,7 @@ describe("RoundStore", () => {
         // Assert
         expect(roundStore.ownBets).toEqual({});
         expect(roundStore.totalBets).toEqual({});
-        expect(roundStore.resultHash).toEqual({});
+        expect(roundStore.resultHash).toEqual(null);
     });
 
     describe("isResetHighlight", () => {
