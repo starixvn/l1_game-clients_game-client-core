@@ -44,7 +44,7 @@ export class RoundStore {
     roundId = 0;
     private _ownBets: GameServiceMessage.OwnBets = {};
     private _totalBets: GameServiceMessage.TotalBets = {};
-    resultHash: GameServiceMessage.ResultHash = {};
+    resultHash: GameServiceMessage.ResultHash = null;
 
     _clientRoundId = 0;
 
@@ -155,6 +155,6 @@ export class RoundStore {
 
     resetRoundStore() {
         this.resetForNewRound();
-        this.resultHash = {};
+        this.resultHash = null;
     }
 }
