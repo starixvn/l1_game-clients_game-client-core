@@ -5,14 +5,6 @@ export type DynamicObject<T> = {
     [key: string]: T;
 };
 
-export type BetDetailsLog = {
-    amount: number;
-    time: string;
-    choice: string;
-    rate: number;
-    rebet: boolean;
-};
-
 export type BetHistoryLog = {
     time: string;
     roundId: number;
@@ -23,7 +15,7 @@ export type BetHistoryLog = {
     odds: DynamicObject<number>;
     result: DynamicObject<object>;
     settlementResult: DynamicObject<boolean>;
-    betLogDetails?: Array<BetDetailsLog>;
+    betLogDetails?: Array<DynamicObject<object>>;
 };
 
 export type BetHistoryModel = {

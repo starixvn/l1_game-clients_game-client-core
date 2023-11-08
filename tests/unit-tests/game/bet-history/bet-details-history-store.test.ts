@@ -1,7 +1,15 @@
 import { stub } from "jest-auto-stub";
-import { BetDetailHitoryStore, BetHistoryLog } from "../../../../src/game/bet-history";
+import { BetDetailHitoryStore, BetHistoryLog, DynamicObject } from "../../../../src/game/bet-history";
 import { NoticeStore } from "../../../../src/game/notices/notice-store";
 import { MainPlayerStore } from "../../../../src/players";
+
+export interface BetDetailsLog {
+    amount: number;
+    time: string;
+    choice: string;
+    rate: number;
+    rebet: boolean;
+}
 
 describe("BetDetailHitoryStore tests", () => {
     let store: BetDetailHitoryStore;
@@ -16,6 +24,23 @@ describe("BetDetailHitoryStore tests", () => {
 
     describe("setData", () => {
         it("should set disabled value correctly", () => {
+            const betLogDetails = [
+                {
+                    amount: 5,
+                    rebet: false,
+                    time: "2023-07-10T08:39:31.236Z",
+                    choice: "blackDragon",
+                    rate: 1,
+                },
+                {
+                    amount: 5,
+                    rebet: false,
+                    time: "2023-07-10T08:39:30.490Z",
+                    choice: "redTiger",
+                    rate: 1,
+                },
+            ];
+
             const betHistoryLog: BetHistoryLog = {
                 freeBet: false,
                 roundId: 29707,
@@ -52,22 +77,7 @@ describe("BetDetailHitoryStore tests", () => {
                     blackTiger: true,
                     redTiger: false,
                 },
-                betLogDetails: [
-                    {
-                        amount: 5,
-                        rebet: false,
-                        time: "2023-07-10T08:39:31.236Z",
-                        choice: "blackDragon",
-                        rate: 1,
-                    },
-                    {
-                        amount: 5,
-                        rebet: false,
-                        time: "2023-07-10T08:39:30.490Z",
-                        choice: "redTiger",
-                        rate: 1,
-                    },
-                ],
+                betLogDetails: betLogDetails as Array<BetDetailsLog & DynamicObject<object>>,
             };
 
             // act
