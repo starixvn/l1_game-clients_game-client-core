@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable, toJS } from "mobx";
+
 import { MainPlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared/models/game-messages";
 import { NumberUtils } from "../../shared/utils";
@@ -64,7 +65,7 @@ export class ChipStore {
     }
 
     set playerChip(playerChip: GameServiceMessage.PlayerChip) {
-        Object.keys(this.gameConfigStore.odds).length > 0 && (this._playerChip = playerChip);
+        this.gameConfigStore.chips.length > 0 && (this._playerChip = playerChip);
     }
 
     get reBet() {
