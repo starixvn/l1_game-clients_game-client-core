@@ -12,8 +12,8 @@ export namespace SettlementUIHandlers {
         ) {}
         handle() {
             this.settlementStore.isFinishedShowResult = true;
-            const { roundId, result, settlementResult } = this.settlementStore;
-            this.roundHistoryStore.updateHistories({ roundId, result, settlementResult });
+            const { roundId, result, settlementResult, md5Result } = this.settlementStore;
+            this.roundHistoryStore.updateHistories({ roundId, result, settlementResult, md5Result });
         }
     }
 }

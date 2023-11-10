@@ -17,6 +17,7 @@ export class SettlementStore {
     private _winningPlayers: GameServiceMessage.TWinningPlayers = null;
     private _isFinishedShowResult = false;
     currentFinish: GameServiceMessage.Finish = null;
+    md5Result: GameServiceMessage.ResultHash;
 
     public get isFinishedShowResult() {
         return this._isFinishedShowResult;
@@ -49,6 +50,7 @@ export class SettlementStore {
         finish?.result && (this.result = finish.result);
         finish?.settlementResult && (this.settlementResult = finish.settlementResult);
         finish?.winningPlayers && (this.winningPlayers = finish.winningPlayers);
+        finish?.md5Result && (this.md5Result = finish.md5Result);
     }
 
     resetSettlementStore() {

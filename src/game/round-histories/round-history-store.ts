@@ -10,6 +10,7 @@ export interface RoundHistory {
     result: GameServiceMessage.TResult;
     settlementResult: GameServiceMessage.TSettlementResult;
     winningPlayers?: GameServiceMessage.TWinningPlayers;
+    md5Result?: GameServiceMessage.ResultHash;
 }
 
 export interface IJoinGameHistory {

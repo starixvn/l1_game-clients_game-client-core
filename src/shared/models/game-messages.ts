@@ -150,10 +150,10 @@ export namespace GameServiceMessage {
     }
 
     export class RemoveAroundTablePlayer {
-        id: string; 
-        constructor(init?:Partial<RemoveAroundTablePlayer>) {
+        id: string;
+        constructor(init?: Partial<RemoveAroundTablePlayer>) {
             Object.assign(this, init);
-        }      
+        }
     }
 
     export class AroundTablePlayers {
@@ -205,6 +205,7 @@ export namespace GameServiceMessage {
         settlementResult?: TSettlementResult;
         roundId?: number;
         winningPlayers?: TWinningPlayers;
+        md5Result?: GameServiceMessage.ResultHash;
 
         static eventName = "finish";
     }
