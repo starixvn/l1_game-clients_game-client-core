@@ -5,8 +5,8 @@ import { GameCrashServiceMessage } from "../game-crash-messages";
 
 @injectable()
 export class CrashCashoutStore {
-    cashOut: GameCrashServiceMessage.CrashCashout;
-    halfCashOut: GameCrashServiceMessage.CrashCashout;
+    cashOut: GameCrashServiceMessage.CrashCashout = null;
+    halfCashOut: GameCrashServiceMessage.CrashCashout = null;
     isCashedOutFull = false;
     isCashedOutHalf = false;
     ratio = 1;
