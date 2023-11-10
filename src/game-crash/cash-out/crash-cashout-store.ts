@@ -1,10 +1,12 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 
+import { GameCrashServiceMessage } from "../game-crash-messages";
+
 @injectable()
 export class CrashCashoutStore {
-    cashoutAmount = 0;
-    cashoutHalfAmount = 0;
+    cashOut: GameCrashServiceMessage.CrashCashout;
+    halfCashOut: GameCrashServiceMessage.CrashCashout;
     isCashedOutFull = false;
     isCashedOutHalf = false;
     ratio = 1;

@@ -1,4 +1,5 @@
 import { inject, injectable } from "inversify";
+
 import { BetStore } from "../../game/bets/bet-store";
 import { ConnectionHandlers, ConnectionStore } from "../../game/connection";
 import { RoundStore } from "../../game/rounds";
@@ -41,7 +42,7 @@ export class CrashCashOutUIHandlers {
     }
 
     resetCashoutVaue() {
-        this.cashoutStore.cashoutAmount = 0;
-        this.cashoutStore.cashoutHalfAmount = 0;
+        this.cashoutStore.cashOut && (this.cashoutStore.cashOut.win = 0);
+        this.cashoutStore.halfCashOut && (this.cashoutStore.halfCashOut.win = 0);
     }
 }

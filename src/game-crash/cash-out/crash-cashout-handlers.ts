@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
+
 import { RoundTimeStore } from "../../game/rounds";
 import { IMultipleHandlers } from "../../shared";
 import { GameCrashServiceMessage } from "../game-crash-messages";
@@ -22,8 +23,8 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             }
         );
     }
-    handleCashoutFull(cashOut: GameCrashServiceMessage.CrashCashoutFull | undefined) {
-        this.cashoutStore.cashoutAmount = cashOut.win;
+    handleCashoutFull(cashOut: GameCrashServiceMessage.CrashCashout | undefined) {
+        this.cashoutStore.cashOut = cashOut;
         this.cashoutStore.isCashedOutFull = true;
         this.cashoutStore.isCashedOutHalf = true;
         this.cashoutStore.cashOutNotice = {
@@ -34,9 +35,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         }, 2700);
     }
 
-    handleCashoutHalf(cashOut: GameCrashServiceMessage.CrashCashoutHalf | undefined) {
+    handleCashoutHalf(cashOut: GameCrashServiceMessage.CrashCashout | undefined) {
         this.cashoutStore.ratio = 0.5;
-        this.cashoutStore.cashoutHalfAmount = cashOut.win;
+        this.cashoutStore.halfCashOut = cashOut;
         this.cashoutStore.cashOutNotice = {
             value: cashOut.win,
         };
@@ -46,11 +47,11 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
 
     eventHandleList = [
         {
-            name: GameCrashServiceMessage.CrashCashoutFull.eventName,
+            name: GameCrashServiceMessage.CrashCashout.cashOutEventName,
             handle: this.handleCashoutFull,
         },
         {
-            name: GameCrashServiceMessage.CrashCashoutHalf.eventName,
+            name: GameCrashServiceMessage.CrashCashout.halfCashOutEventNam,
             handle: this.handleCashoutHalf,
         },
     ];

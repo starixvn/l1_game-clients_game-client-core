@@ -1,19 +1,16 @@
 import { inject, injectable } from "inversify";
-import { OtherPlayerStore } from "./other-player-store";
-import { IMultipleHandlers } from "../../shared";
+
+import { IHandler } from "../../shared";
 import { GameCrashServiceMessage } from "../game-crash-messages";
+import { OtherPlayerStore } from "./other-player-store";
 
 @injectable()
-export class OtherPlayerHandlers implements IMultipleHandlers {
+export class OtherPlayerHandlers implements IHandler<GameCrashServiceMessage.CrashOtherPlayer> {
+    name = GameCrashServiceMessage.CrashOtherPlayer.eventName;
+
     constructor(@inject(OtherPlayerStore) protected readonly otherPlayerStore: OtherPlayerStore) {}
 
-    handleOtherPlayer(otherPlayer: GameCrashServiceMessage.CrashOtherPlayer) {
+    handle(otherPlayer: GameCrashServiceMessage.CrashOtherPlayer) {
         this.otherPlayerStore.otherPlayer = otherPlayer;
     }
-    eventHandleList = [
-        {
-            name: GameCrashServiceMessage.CrashOtherPlayer.eventName,
-            handle: this.handleOtherPlayer,
-        },
-    ];
 }
