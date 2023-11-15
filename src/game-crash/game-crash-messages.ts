@@ -22,6 +22,8 @@ export namespace GameCrashServiceMessage {
 
         halfCashOut?: CashOutReceive;
 
+        rate: number;
+
         static eventName = "otherPlayer";
     }
 
