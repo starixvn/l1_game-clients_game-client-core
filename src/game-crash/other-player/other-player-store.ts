@@ -14,7 +14,16 @@ export class OtherPlayerStore {
     _otherPlayer: GameCrashServiceMessage.CrashOtherPlayer = null;
 
     public set otherPlayer(data: GameCrashServiceMessage.CrashOtherPlayer) {
-        data.cashOut.win = NumberUtils.getValueByCurrency(data.cashOut.win, this.mainPlayerStore.rate, data.rate);
+        const { halfCashOut, cashOut } = data;
+
+        if (halfCashOut) {
+            halfCashOut.win = NumberUtils.getValueByCurrency(halfCashOut.win, this.mainPlayerStore.rate, data.rate);
+        }
+
+        if (cashOut) {
+            cashOut.win = NumberUtils.getValueByCurrency(cashOut.win, this.mainPlayerStore.rate, data.rate);
+        }
+
         this._otherPlayer = data;
     }
 
