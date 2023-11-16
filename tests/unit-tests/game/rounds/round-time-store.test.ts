@@ -509,4 +509,34 @@ describe("RoundTimeStore Unit Tests", () => {
             }
         });
     });
+
+    describe("ShowStartBetMessage", () => {
+        test("isShowStartBetMessage is true within the specified time range", () => {
+            // Arrange
+            roundTimeStore.roundTime = 31;
+
+            // Assert
+            expect(roundTimeStore.isShowStartBetMessage).toBe(true);
+        });
+
+        test("isShowStartBetMessage is false outside the specified time range", () => {
+            // Arrange
+            roundTimeStore.roundTime = 35;
+
+            // Assert
+            expect(roundTimeStore.isShowStartBetMessage).toBe(false);
+        });
+
+        test("isShowStartBetMessage is true within the specified time range and update duration from game setting", () => {
+            // Arrange
+            const durationShowPromptMessage = 3;
+            roundTimeStore.roundTime = 32;
+
+            // Act
+            roundTimeStore.setDurationShowPromptMessage(durationShowPromptMessage);
+
+            // Assert
+            expect(roundTimeStore.isShowStartBetMessage).toBe(true);
+        });
+    });
 });

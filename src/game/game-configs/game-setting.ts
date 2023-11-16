@@ -14,4 +14,5 @@ export class GameSetting {
     hedgeBetGroups?: string[][];
     numberOfRoundHistory: number;
     validateBalanceWhenBet?: boolean;
+    durationShowPromptMessage?: number;
 }

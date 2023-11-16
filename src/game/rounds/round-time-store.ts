@@ -52,10 +52,12 @@ export class RoundTimeStore {
     endRound = false;
     startPlacingBet = false;
     endPlacingBet = false;
+    durationShowPromptMessage = 2;
 
     constructor(@inject(GameSetting) gameSetting: GameSetting) {
         makeAutoObservable(this);
         this.setRoundTimeSetting(gameSetting.durations as RoundTimeSetting);
+        this.setDurationShowPromptMessage(gameSetting?.durationShowPromptMessage);
     }
 
     get isWaiting() {
@@ -126,6 +128,10 @@ export class RoundTimeStore {
         return this.isStartingRound || this.isLocking || this.isWaiting;
     }
 
+    get isShowStartBetMessage() {
+        return this.roundTime <= this.placingBet + this.durationShowPromptMessage && this.roundTime > this.placingBet;
+    }
+
     resetRoundTime() {
         this._roundTime = this.wholeRound;
     }
@@ -136,6 +142,10 @@ export class RoundTimeStore {
         this.lockingBet = setting.lockingBet;
         this.generatingResult = setting.generatingResult;
         this.startRound = setting.startRound;
+    }
+
+    setDurationShowPromptMessage(durationShowPromptMessage?: number) {
+        durationShowPromptMessage && (this.durationShowPromptMessage = durationShowPromptMessage);
     }
 
     countdown() {
