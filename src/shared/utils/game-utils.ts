@@ -1,4 +1,5 @@
 import { Base64 } from "base64-string";
+
 import { BrowserDomUtils } from "./browser-dom-utils";
 
 export class GameUtils {
