@@ -63,8 +63,7 @@ export class RoundStore {
             this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND ||
             this.roundTimeStore.roundState === ROUND_STATE.PLACING_BET ||
             this.roundTimeStore.roundState === ROUND_STATE.LOCKING_BET ||
-            this.roundTimeStore.roundState === ROUND_STATE.WAITING ||
-            this.roundTimeStore.isTimeOut
+            this.roundTimeStore.roundState === ROUND_STATE.WAITING
         ) {
             lastRoundId++;
         }

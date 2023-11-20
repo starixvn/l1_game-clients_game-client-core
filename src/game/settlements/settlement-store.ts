@@ -58,5 +58,6 @@ export class SettlementStore {
         this.settlementResult = null;
         this.result = null;
         this.isFinishedShowResult = false;
+        this.currentFinish = null;
     }
 }
