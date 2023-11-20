@@ -14,4 +14,13 @@ export class MultiplierHandlers implements IHandler<GameCrashServiceMessage.Cras
         this.multiplierStore.multiplier = multiplierInfo.m;
         this.multiplierStore.time = multiplierInfo.t;
     }
+
+    handleMultiplierCrashed(multiplier: number) {
+        this.multiplierStore.multiplier = multiplier;
+        this.multiplierStore.isCrashed = true;
+    }
+
+    handleIsCrashed(isCrashed: boolean) {
+        this.multiplierStore.isCrashed = isCrashed;
+    }
 }
