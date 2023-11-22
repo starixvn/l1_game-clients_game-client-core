@@ -22,7 +22,9 @@ export namespace GameCrashServiceMessage {
 
         halfCashOut?: CashOutReceive;
 
-        rate: number;
+        rate?: number;
+
+        amount?: number;
 
         static eventName = "otherPlayer";
     }
@@ -30,7 +32,16 @@ export namespace GameCrashServiceMessage {
     export type CashOutReceive = {
         amount: number;
         win: number;
+        multiplier: number;
     };
+
+    export interface CrashOtherPlayerList {
+        players: CrashOtherPlayer[];
+    }
+
+    export class BetList {
+        static eventName = "betList";
+    }
 }
 
 export namespace GameCrashEmitMessage {
