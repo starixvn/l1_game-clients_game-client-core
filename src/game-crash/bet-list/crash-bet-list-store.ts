@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 
+import { NumberUtils } from "../../exports";
 import { BetStore } from "../../game/bets/bet-store";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { CrashCashoutStore } from "../cash-out/crash-cashout-store";
@@ -40,6 +41,7 @@ export class CrashBetListStore {
     addBetList(data: ICrashBetList) {
         let players = [];
         Object.keys(data).forEach((key) => {
+            data[key].amount = NumberUtils.getValueByCurrency(data[key].amount, this.mainPlayerStore.rate, data[key].rate);
             players.push(data[key]);
         });
         const playerList = players.concat(...this._betList.players).sort((a, b) => b.amount - a.amount);
