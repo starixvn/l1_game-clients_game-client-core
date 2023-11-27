@@ -4,7 +4,7 @@ import { SiteConfigs } from "../../configs";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { IHandler } from "../../shared";
 import { AppTypes } from "../../shared/constants/app-type";
-import { UrlUtils, StorageManager, localStorageKeys } from "../../shared/utils";
+import { StorageManager, UrlUtils, localStorageKeys } from "../../shared/utils";
 import { GameConfigStore, GameSetting } from "../game-configs";
 import { RoundStore } from "../rounds/round-store";
 import { GameGuideStore } from "./game-guide-store";
@@ -22,7 +22,7 @@ export namespace GameGuideHandlers {
             @inject(GameGuideStore) private readonly guideStore: GameGuideStore
         ) {}
 
-        handle({ theme, specialDirection }: { theme: string; specialDirection: string }) {
+        handle({ theme, specialDirection, isScrollMd5 }: { theme: string; specialDirection: string; isScrollMd5: boolean }) {
             const domain = UrlUtils.buildGameGuideUrl(this.siteConfigs);
             const params = {
                 gId: this.gameSetting.id,
@@ -33,6 +33,7 @@ export namespace GameGuideHandlers {
                 fof: this.playerStore.fractionalOddsFormat,
                 minBet: this.roundStore.minBet,
                 maxBet: this.roundStore.maxBet,
+                md5: isScrollMd5 ? 1 : 0,
             };
             const queryString = Object.keys(params)
                 .map((key) => `${key}=${params[key]}`)
