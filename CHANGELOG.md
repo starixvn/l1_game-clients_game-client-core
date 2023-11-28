@@ -1,3 +1,10 @@
+## [1.48.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.48.0...v1.48.1) (2023-11-28)
+
+
+### Bug Fixes
+
+* increase version ([42e06ca](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/42e06ca05f2b9bf2f776025821494c4cfa57c216))
+
 # [1.48.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.47.0...v1.48.0) (2023-11-01)
 
 
