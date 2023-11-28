@@ -29,7 +29,7 @@ export class BetHandler {
         }
 
         const { amount, freebetEnabled, isProcessingBet } = this.betStore;
-        if (!isProcessingBet) {
+        if (isProcessingBet) {
             this.showWarningProcessingBet();
             return;
         }
