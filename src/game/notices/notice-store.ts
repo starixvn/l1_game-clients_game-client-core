@@ -44,6 +44,8 @@ export class NoticeStore {
 
     notice: Notice = null;
 
+    processingWarning: Warning = null;
+
     addWarning(message: string) {
         this.warning = { message };
     }
@@ -54,5 +56,9 @@ export class NoticeStore {
 
     hideNotice() {
         this.notice = null;
+    }
+
+    addProcessWarning(message: string) {
+        this.processingWarning = { message };
     }
 }

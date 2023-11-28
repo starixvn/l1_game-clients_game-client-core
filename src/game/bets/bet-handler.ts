@@ -60,7 +60,7 @@ export class BetHandler {
     clearBet() {}
 
     showWarningProcessingBet() {
-        this.noticeStore.addWarning(Translator.commonTranslate("message_processing_action"));
+        this.noticeStore.addProcessWarning(Translator.commonTranslate("message_processing_action"));
     }
 
     isInPhasePreventBet() {
