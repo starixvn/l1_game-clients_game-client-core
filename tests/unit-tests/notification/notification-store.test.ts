@@ -121,13 +121,12 @@ describe("NotificationStore tests", () => {
     });
 
     describe("onDisconnected", () => {
-        const reason = "disconnect";
         beforeAll(() => {
             // arrange
             store.connection.disconnect = jest.fn();
 
             // act
-            store.onDisconnected(reason);
+            store.onDisconnected();
         });
         it("should set isConnected is false", () => {
             // assert
@@ -137,11 +136,6 @@ describe("NotificationStore tests", () => {
         it("should call connection disconnect", () => {
             // assert
             expect(store.connection.disconnect).toHaveBeenCalled();
-        });
-
-        it("should log reason", () => {
-            // assert
-            expect(sentryLogger.logError).toHaveBeenCalledWith(reason);
         });
     });
 

@@ -123,7 +123,6 @@ export class ConnectionStore {
     }
 
     handleDisconnectionReason(reason = "") {
-        !!reason && this.logError(reason);
         if (this.isServerDisconnect(reason)) {
             this.isDisconnect = true;
             return;

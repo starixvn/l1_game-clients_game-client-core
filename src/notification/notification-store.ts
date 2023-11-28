@@ -76,9 +76,8 @@ export class NotificationStore {
         error && sentryLogger.logError(error);
     }
 
-    onDisconnected(reason = "") {
+    onDisconnected() {
         this.isConnected = false;
         this.connection.disconnect();
-        reason && sentryLogger.logError(reason);
     }
 }

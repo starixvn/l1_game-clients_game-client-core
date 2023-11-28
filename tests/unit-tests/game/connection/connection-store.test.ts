@@ -370,17 +370,6 @@ describe("ConnectionStore tests", () => {
             expect(store.connection.disconnect).toHaveBeenCalled();
         });
 
-        it("should log error", () => {
-            // arrange
-            const reason = "io server disconnect";
-
-            // act
-            store.onDisconnected(reason);
-
-            // assert
-            expect(sentryLogger.logError).toHaveBeenCalledWith(reason);
-        });
-
         describe("when disconnect with reason is not from client", () => {
             it("should set isDisconnect is true", () => {
                 // arrange
