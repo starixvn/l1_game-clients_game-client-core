@@ -38,6 +38,19 @@ export class CrashBetListStore {
         };
     }
 
+    get noOfPlayerBet(): number {
+        const countMainPlayer = this.mainPlayer.amount ? 1 : 0;
+        return this._betList.players.length + countMainPlayer;
+    }
+
+    get noOfPlayerCashOut() {
+        const players = [];
+        this._betList.players.forEach((player) => {
+            (player["cashOut"] || player["halfCashOut"]) && players.push(player);
+        });
+        return players.length;
+    }
+
     addBetList(data: ICrashBetList) {
         let players = [];
         Object.keys(data).forEach((key) => {
