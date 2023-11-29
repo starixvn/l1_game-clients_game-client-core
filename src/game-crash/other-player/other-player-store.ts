@@ -7,7 +7,9 @@ import { GameCrashServiceMessage } from "../game-crash-messages";
 
 @injectable()
 export class OtherPlayerStore {
-    constructor(@inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore) {
+    constructor(
+        @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore
+    ) {
         makeAutoObservable(this);
     }
 

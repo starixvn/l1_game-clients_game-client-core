@@ -64,4 +64,22 @@ export class CrashBetListStore {
     resetOtherPlayerList() {
         this._betList = { players: [] };
     }
+
+    updateBetListCashOut(otherPlayer: GameCrashServiceMessage.CrashOtherPlayer) {
+        const existedPlayer = this._betList.players.find((player) => player.playerId === otherPlayer.playerId);
+        if (!existedPlayer) {
+            return;
+        }
+
+        if (otherPlayer.halfCashOut) {
+            existedPlayer["halfCashOut"] = otherPlayer.halfCashOut;
+        }
+
+        if (otherPlayer.cashOut) {
+            existedPlayer["cashOut"] = otherPlayer.cashOut;
+        }
+
+        const newPlayers = this._betList.players.filter((player) => player.playerId !== otherPlayer.playerId);
+        this._betList = { players: [existedPlayer, ...newPlayers] };
+    }
 }
