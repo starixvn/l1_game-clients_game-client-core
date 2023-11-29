@@ -58,4 +58,26 @@ describe("NoticeStore test", () => {
             expect(store.notice.type).toEqual(sample.type);
         });
     });
+
+    describe("addProcessWarning function", () => {
+        it("should add a process warning message to the object", () => {
+            // Arrange
+            const sampleMessage = "This is a process warning message";
+
+            // Act
+            store.addProcessWarning(sampleMessage);
+
+            // Assert
+            expect(store.processingWarning.message).toBe(sampleMessage);
+        });
+    });
+    describe("hideNotice function", () => {
+        it("should reset notice message", () => {
+            // Act
+            store.hideNotice();
+
+            // Assert
+            expect(store.notice).toBe(null);
+        });
+    });
 });

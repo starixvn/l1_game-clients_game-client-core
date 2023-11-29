@@ -55,6 +55,7 @@ describe("BetHandler", () => {
         betChoice = "even";
         connectionStore.send = jest.fn();
         noticeStore.addWarning = jest.fn();
+        noticeStore.addProcessWarning = jest.fn();
         mainPlayerStore.name = "player";
         mainPlayerStore.balance = 100;
         mainPlayerStore.scoin = 100;
@@ -210,7 +211,7 @@ describe("BetHandler", () => {
             betHandler.showWarningProcessingBet();
 
             // Assert
-            expect(noticeStore.addWarning).toBeCalledWith(text);
+            expect(noticeStore.addProcessWarning).toBeCalledWith(text);
         });
     });
 
