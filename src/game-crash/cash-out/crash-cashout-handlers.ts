@@ -27,7 +27,6 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashoutStore.cashOut = cashOut;
         this.cashoutStore.isCashedOutFull = true;
         this.cashoutStore.isCashedOutHalf = true;
-        this.cashoutStore.halfCashOut = { win: cashOut.win / 2, multiplier: cashOut.multiplier, amount: cashOut.amount };
         this.cashoutStore.cashOutNotice = {
             value: cashOut.win,
         };
