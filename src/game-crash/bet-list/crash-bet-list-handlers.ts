@@ -15,7 +15,7 @@ export class CrashBetListHandlers implements IMultipleHandlers {
     ) {}
 
     handleBetList(betList: ICrashBetList) {
-        this.betListStore.addBetList(betList);
+        this.betListStore.addBetList(betList, true);
     }
 
     handlePlayerChip(playerChip: GameServiceMessage.PlayerChip) {

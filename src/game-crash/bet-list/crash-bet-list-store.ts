@@ -8,8 +8,18 @@ import { MainPlayerStore } from "../../players/main-player-store";
 import { CrashCashoutStore } from "../cash-out/crash-cashout-store";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 
-export interface ICrashBetList {
+interface ICrashBetList {
     [playerId: string]: any;
+}
+
+interface IPlayer {
+    playerId: string;
+    name: string;
+    amount: number;
+    cashOut?: GameCrashServiceMessage.CashOutReceive;
+    halfCashOut?: GameCrashServiceMessage.CashOutReceive;
+    rate?: number;
+    time?: string | number | Date;
 }
 
 @injectable()
@@ -51,19 +61,31 @@ export class CrashBetListStore {
 
     get noOfPlayerCashOut() {
         const players = [];
-        this._betList.players.forEach((player) => {
+        this._betList.players.forEach((player: IPlayer) => {
             (player["cashOut"] || player["halfCashOut"]) && players.push(player);
         });
         return players.length;
     }
 
-    addBetList(data: ICrashBetList) {
+    addBetList(data: ICrashBetList, isReceivedBetListData = false) {
         let players = [];
         Object.keys(data).forEach((key) => {
             data[key].amount = NumberUtils.getValueByCurrency(data[key].amount, this.mainPlayerStore.rate, data[key].rate);
             players.push(data[key]);
         });
-        const playerList = players.concat(...this._betList.players).sort((a, b) => b.amount - a.amount);
+
+        let playerList = [];
+
+        if (isReceivedBetListData) {
+            playerList = players.concat(...this._betList.players).sort((player1: IPlayer, player2: IPlayer) => {
+                const time1 = new Date(player1.time).getTime();
+                const time2 = new Date(player2.time).getTime();
+                return time2 - time1;
+            });
+        } else {
+            playerList = players.concat(...this._betList.players).sort((player1, player2) => player2.amount - player1.amount);
+        }
+
         this._betList = {
             players: playerList,
         };
