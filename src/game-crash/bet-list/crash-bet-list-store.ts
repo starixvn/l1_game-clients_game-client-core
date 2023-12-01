@@ -8,7 +8,7 @@ import { MainPlayerStore } from "../../players/main-player-store";
 import { CrashCashoutStore } from "../cash-out/crash-cashout-store";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 
-interface ICrashBetList {
+export interface ICrashBetList {
     [playerId: string]: any;
 }
 
