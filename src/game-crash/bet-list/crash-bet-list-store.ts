@@ -3,6 +3,7 @@ import { makeAutoObservable } from "mobx";
 
 import { NumberUtils } from "../../exports";
 import { BetStore } from "../../game/bets/bet-store";
+import { RoundTimeStore } from "../../game/rounds";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { CrashCashoutStore } from "../cash-out/crash-cashout-store";
 import { GameCrashServiceMessage } from "../game-crash-messages";
@@ -18,13 +19,18 @@ export class CrashBetListStore {
     constructor(
         @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
         @inject(CrashCashoutStore) private readonly crashCashoutStore: CrashCashoutStore,
+        @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
         @inject(BetStore) private readonly betStore: BetStore
     ) {
         makeAutoObservable(this);
     }
 
-    get betList() {
+    get betList(): GameCrashServiceMessage.CrashOtherPlayerList {
         return this._betList;
+    }
+
+    get roundTime(): number {
+        return this.roundTimeStore.roundTime;
     }
 
     get mainPlayer(): GameCrashServiceMessage.CrashOtherPlayer {
@@ -58,7 +64,9 @@ export class CrashBetListStore {
             players.push(data[key]);
         });
         const playerList = players.concat(...this._betList.players).sort((a, b) => b.amount - a.amount);
-        this._betList = { players: playerList };
+        this._betList = {
+            players: playerList,
+        };
     }
 
     resetOtherPlayerList() {
@@ -80,6 +88,8 @@ export class CrashBetListStore {
         }
 
         const newPlayers = this._betList.players.filter((player) => player.playerId !== otherPlayer.playerId);
-        this._betList = { players: [existedPlayer, ...newPlayers] };
+        this._betList = {
+            players: [existedPlayer, ...newPlayers],
+        };
     }
 }
