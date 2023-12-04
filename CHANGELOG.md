@@ -1,3 +1,10 @@
+## [1.48.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.48.1...v1.48.2) (2023-12-04)
+
+
+### Bug Fixes
+
+* update show message process bet ([b6a4a7b](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b6a4a7b5b8e816ed02c4dbd0fff5e3cb56fe935d))
+
 ## [1.48.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.48.0...v1.48.1) (2023-11-28)
 
 
