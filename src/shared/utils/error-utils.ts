@@ -92,8 +92,8 @@ export namespace ErrorUtils {
         SB1934: "not_enough_spin",
         SB1935: "invalid_bet",
         SB1939: "message_hedge_bet",
-        SB1940: "invalid_cash_out",
-        SB1941: "invalid_value_cash_out",
+        SB1940: "message_invalid_cashout",
+        SB1941: "message_invalid_value_cashout",
     };
 
     const CommonErrorList = [
