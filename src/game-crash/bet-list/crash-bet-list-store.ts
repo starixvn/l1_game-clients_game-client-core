@@ -79,11 +79,19 @@ export class CrashBetListStore {
         let playerList = [];
 
         if (isReceivedBetListData) {
-            playerList = players.concat(...this._betList.players).sort((player1: IPlayer, player2: IPlayer) => {
+            const newPlayers = players.concat(...this._betList.players);
+
+            const cashOutPlayers = newPlayers.filter((player) => player.cashOut || player.halfCashOut);
+            cashOutPlayers.sort((player1: IPlayer, player2: IPlayer) => {
                 const time1 = new Date(player1.time).getTime();
                 const time2 = new Date(player2.time).getTime();
                 return time2 - time1;
             });
+
+            const betPlayers = newPlayers.filter((player) => !player.halfCashOut && !player.cashOut);
+            betPlayers.sort((player1, player2) => player2.amount - player1.amount);
+
+            playerList = cashOutPlayers.concat(betPlayers);
         } else {
             playerList = players.concat(...this._betList.players).sort((player1, player2) => player2.amount - player1.amount);
         }
