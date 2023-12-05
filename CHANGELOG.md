@@ -1,3 +1,17 @@
+# [1.49.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.48.2...v1.49.0) (2023-12-05)
+
+
+### Bug Fixes
+
+* update show message process bet ([72a173b](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/72a173b365f42683ef8f78b519263f64353bc3fc))
+
+
+### Features
+
+* add duration for show PromptMessage ([5a0f34b](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/5a0f34b3c1d63af7de3112828cbcb8adcd2bd976))
+* Change BetDetailLog to dynamic type ([3207ba2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/3207ba2ce1bf44300dd90c55cfd4dd511e1d497b))
+* update audio ids ([ad59049](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/ad59049673c80d03224fe22e516aa335ca675136))
+
 ## [1.48.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.48.1...v1.48.2) (2023-12-04)
 
 
