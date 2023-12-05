@@ -64,7 +64,9 @@ export class CrashBetListStore {
         this._betList.players.forEach((player: IPlayer) => {
             (player["cashOut"] || player["halfCashOut"]) && players.push(player);
         });
-        return players.length;
+
+        const countMainPlayer = this.mainPlayer.cashOut || this.mainPlayer.halfCashOut ? 1 : 0;
+        return players.length + countMainPlayer;
     }
 
     addBetList(data: ICrashBetList, isReceivedBetListData = false) {
