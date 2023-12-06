@@ -10,7 +10,9 @@ export class CrashCashoutStore {
     ratio = 1;
 
     cashOutNotice: {
-        value: number;
+        win: number;
+        cashOutWin: number;
+        reachMaxWin: boolean;
     } = null;
 
     private _cashoutBet: { value: number } = null;

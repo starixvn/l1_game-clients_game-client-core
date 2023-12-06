@@ -28,7 +28,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashoutStore.isCashedOutFull = true;
         this.cashoutStore.isCashedOutHalf = true;
         this.cashoutStore.cashOutNotice = {
-            value: cashOut.win,
+            win: cashOut.win,
+            cashOutWin: cashOut.cashOutWin,
+            reachMaxWin: cashOut.reachMaxWin,
         };
         setTimeout(() => {
             this.cashoutStore.ratio = 1;
@@ -39,7 +41,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashoutStore.ratio = 0.5;
         this.cashoutStore.halfCashOut = cashOut;
         this.cashoutStore.cashOutNotice = {
-            value: cashOut.win,
+            win: cashOut.win,
+            cashOutWin: cashOut.cashOutWin,
+            reachMaxWin: cashOut.reachMaxWin,
         };
         this.cashoutStore.isCashedOutHalf = true;
         this.cashoutStore.cashoutBet = { value: this.cashoutStore.cashoutBet.value / 2 };

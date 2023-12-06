@@ -9,6 +9,8 @@ export namespace GameCrashServiceMessage {
         amount: number;
         win: number;
         multiplier: number;
+        reachMaxWin: boolean;
+        cashOutWin: number;
         static cashOutEventName = "cashOut";
         static halfCashOutEventName = "halfCashOut";
     }

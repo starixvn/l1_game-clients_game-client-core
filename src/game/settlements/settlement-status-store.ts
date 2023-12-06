@@ -7,6 +7,7 @@ export class SettlementStatusStore {
     win = false;
     bet = 0;
     winningByChoices: GameServiceMessage.WinningByChoices = {};
+    reachMaxWin = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -16,11 +17,13 @@ export class SettlementStatusStore {
         this.win = status.win;
         this.bet = status.bet;
         this.winningByChoices = status.winningByChoices;
+        this.reachMaxWin = status?.reachMaxWin;
     }
 
     resetSettlementStatus() {
         this.win = false;
         this.bet = 0;
+        this.reachMaxWin = false;
     }
 
     get settlementStatus(): GameServiceMessage.Status {
@@ -28,6 +31,7 @@ export class SettlementStatusStore {
             win: this.win,
             bet: this.bet,
             winningByChoices: this.winningByChoices,
+            reachMaxWin: this.reachMaxWin,
         };
     }
 }

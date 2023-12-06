@@ -197,6 +197,7 @@ export namespace GameServiceMessage {
         winningByChoices: WinningByChoices;
         win: boolean;
         bet: number;
+        reachMaxWin?: boolean;
 
         static eventName = "status";
     }
