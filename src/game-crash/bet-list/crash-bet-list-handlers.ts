@@ -27,9 +27,7 @@ export class CrashBetListHandlers implements IMultipleHandlers {
     }
 
     resetMainPlayer() {
-        this.betStore.lastReceivedBet = { value: -1 };
-        this.crashCashoutStore.cashOut = null;
-        this.crashCashoutStore.halfCashOut = null;
+        this.betListStore.resetMainPlayer();
     }
 
     eventHandleList = [

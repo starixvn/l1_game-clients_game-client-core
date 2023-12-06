@@ -79,7 +79,18 @@ export class CrashBetListStore {
     addBetList(data: ICrashBetList, isReceivedBetListData = false) {
         let players = [];
         Object.keys(data).forEach((key) => {
-            data[key].amount = NumberUtils.getValueByCurrency(data[key].amount, this.mainPlayerStore.rate, data[key].rate);
+            let { halfCashOut, cashOut, amount } = data[key];
+
+            amount = NumberUtils.getValueByCurrency(data[key].amount, this.mainPlayerStore.rate, data[key].rate);
+
+            if (halfCashOut) {
+                halfCashOut.win = NumberUtils.getValueByCurrency(halfCashOut.win, this.mainPlayerStore.rate, data.rate);
+            }
+
+            if (cashOut) {
+                cashOut.win = NumberUtils.getValueByCurrency(cashOut.win, this.mainPlayerStore.rate, data.rate);
+            }
+
             players.push(data[key]);
         });
 
@@ -110,6 +121,12 @@ export class CrashBetListStore {
 
     resetOtherPlayerList() {
         this._betList = { players: [] };
+    }
+
+    resetMainPlayer() {
+        this.betStore.lastReceivedBet = { value: -1 };
+        this.crashCashoutStore.cashOut = null;
+        this.crashCashoutStore.halfCashOut = null;
     }
 
     updateBetListCashOut(otherPlayer: GameCrashServiceMessage.CrashOtherPlayer) {

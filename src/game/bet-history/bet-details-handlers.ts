@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
 
 import { IHandler } from "../../shared";
-import { BetDetailHitoryStore } from "./bet-details-history-store";
+import { BetDetailHistoryStore } from "./bet-details-history-store";
 import { BetHistoryLog } from "./bet-history-store";
 
 @injectable()
 export class BetDetailsHandlers implements IHandler<BetHistoryLog> {
     constructor(
-        @inject(BetDetailHitoryStore)
-        private readonly betDetailStore: BetDetailHitoryStore
+        @inject(BetDetailHistoryStore)
+        private readonly betDetailStore: BetDetailHistoryStore
     ) {}
 
     handle(betHistoryLog: BetHistoryLog) {

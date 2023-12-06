@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+
 import { MainPlayerStore } from "../../players";
 import { BetHistoryLog } from "./bet-history-store";
 
@@ -9,7 +10,7 @@ export type BetDetailModel = {
 };
 
 @injectable()
-export class BetDetailHitoryStore {
+export class BetDetailHistoryStore {
     constructor(@inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore) {
         makeAutoObservable(this);
     }
