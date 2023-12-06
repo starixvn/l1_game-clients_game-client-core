@@ -125,8 +125,8 @@ export class CrashBetListStore {
 
     resetMainPlayer() {
         this.betStore.lastReceivedBet = { value: -1 };
-        this.crashCashoutStore.cashOut = null;
-        this.crashCashoutStore.halfCashOut = null;
+        this.crashCashOutStore.cashOut = null;
+        this.crashCashOutStore.halfCashOut = null;
     }
 
     updateBetListCashOut(otherPlayer: GameCrashServiceMessage.CrashOtherPlayer) {

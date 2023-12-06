@@ -1,18 +1,12 @@
 import { inject, injectable } from "inversify";
 
-import { BetStore } from "../../game/bets/bet-store";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { CrashCashOutStore } from "../cash-out/crash-cash-out-store";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 import { CrashBetListStore, ICrashBetList } from "./crash-bet-list-store";
 
 @injectable()
 export class CrashBetListHandlers implements IMultipleHandlers {
-    constructor(
-        @inject(CrashBetListStore) protected readonly betListStore: CrashBetListStore,
-        @inject(CrashCashOutStore) private readonly crashCashoutStore: CrashCashOutStore,
-        @inject(BetStore) private readonly betStore: BetStore
-    ) {}
+    constructor(@inject(CrashBetListStore) protected readonly betListStore: CrashBetListStore) {}
 
     handleBetList(betList: ICrashBetList) {
         this.betListStore.addBetList(betList, true);
