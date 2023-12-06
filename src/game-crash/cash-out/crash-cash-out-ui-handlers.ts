@@ -6,12 +6,12 @@ import { RoundStore } from "../../game/rounds";
 import { MainPlayerStore } from "../../players";
 import { GameCrashEmitMessage } from "../game-crash-messages";
 import { MultiplierStore } from "../multiplier";
-import { CrashCashoutStore } from "./crash-cashout-store";
+import { CrashCashOutStore } from "./crash-cash-out-store";
 
 @injectable()
 export class CrashCashOutUIHandlers {
     constructor(
-        @inject(CrashCashoutStore) protected readonly cashoutStore: CrashCashoutStore,
+        @inject(CrashCashOutStore) protected readonly cashOutStore: CrashCashOutStore,
         @inject(MultiplierStore) protected readonly multiplierStore: MultiplierStore,
         @inject(BetStore) protected readonly betStore: BetStore,
         @inject(ConnectionStore) private readonly connectionStore: ConnectionStore,
@@ -34,15 +34,15 @@ export class CrashCashOutUIHandlers {
     }
 
     handleBetRatio() {
-        this.cashoutStore.ratio = 1;
+        this.cashOutStore.ratio = 1;
     }
 
-    updateCashoutBetValue(value: number) {
-        this.cashoutStore.cashoutBet = { value };
+    updateCashOutBetValue(value: number) {
+        this.cashOutStore.cashOutBet = { value };
     }
 
-    resetCashoutVaue() {
-        this.cashoutStore.cashOut && (this.cashoutStore.cashOut.win = 0);
-        this.cashoutStore.halfCashOut && (this.cashoutStore.halfCashOut.win = 0);
+    resetCashOutValue() {
+        this.cashOutStore.cashOut && (this.cashOutStore.cashOut.win = 0);
+        this.cashOutStore.halfCashOut && (this.cashOutStore.halfCashOut.win = 0);
     }
 }

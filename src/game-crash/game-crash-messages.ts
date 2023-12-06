@@ -5,7 +5,7 @@ export namespace GameCrashServiceMessage {
         static eventName = "c";
     }
 
-    export class CrashCashout {
+    export class CrashCashOut {
         amount: number;
         win: number;
         multiplier: number;

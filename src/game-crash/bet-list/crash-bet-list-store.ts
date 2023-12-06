@@ -5,7 +5,7 @@ import { NumberUtils } from "../../exports";
 import { BetStore } from "../../game/bets/bet-store";
 import { RoundStore, RoundTimeStore } from "../../game/rounds";
 import { MainPlayerStore } from "../../players/main-player-store";
-import { CrashCashoutStore } from "../cash-out/crash-cashout-store";
+import { CrashCashOutStore } from "../cash-out/crash-cash-out-store";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 
 export interface ICrashBetList {
@@ -29,7 +29,7 @@ export class CrashBetListStore {
     constructor(
         @inject(RoundStore) protected readonly roundStore: RoundStore,
         @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
-        @inject(CrashCashoutStore) private readonly crashCashoutStore: CrashCashoutStore,
+        @inject(CrashCashOutStore) private readonly crashCashOutStore: CrashCashOutStore,
         @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
         @inject(BetStore) private readonly betStore: BetStore
     ) {
@@ -47,9 +47,9 @@ export class CrashBetListStore {
     get mainPlayer(): GameCrashServiceMessage.CrashOtherPlayer {
         const bet = this.betStore.lastReceivedBet?.value || this.roundStore.ownBets.amount;
         const cashOut =
-            this.crashCashoutStore.cashOut || (this.roundStore.ownBets.cashOut as unknown as GameCrashServiceMessage.CashOutReceive);
+            this.crashCashOutStore.cashOut || (this.roundStore.ownBets.cashOut as unknown as GameCrashServiceMessage.CashOutReceive);
         const halfCashOut =
-            this.crashCashoutStore.halfCashOut ||
+            this.crashCashOutStore.halfCashOut ||
             (this.roundStore.ownBets.halfCashOut as unknown as GameCrashServiceMessage.CashOutReceive);
 
         return {

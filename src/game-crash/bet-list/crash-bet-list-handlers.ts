@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 
 import { BetStore } from "../../game/bets/bet-store";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { CrashCashoutStore } from "../cash-out/crash-cashout-store";
+import { CrashCashOutStore } from "../cash-out/crash-cash-out-store";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 import { CrashBetListStore, ICrashBetList } from "./crash-bet-list-store";
 
@@ -10,7 +10,7 @@ import { CrashBetListStore, ICrashBetList } from "./crash-bet-list-store";
 export class CrashBetListHandlers implements IMultipleHandlers {
     constructor(
         @inject(CrashBetListStore) protected readonly betListStore: CrashBetListStore,
-        @inject(CrashCashoutStore) private readonly crashCashoutStore: CrashCashoutStore,
+        @inject(CrashCashOutStore) private readonly crashCashoutStore: CrashCashOutStore,
         @inject(BetStore) private readonly betStore: BetStore
     ) {}
 

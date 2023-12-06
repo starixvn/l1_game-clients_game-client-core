@@ -31,7 +31,7 @@ export class BetStore {
 
     private _isReceivedBet = false;
     isProcessingBet = false;
-    private _cashoutBet: ILastReceivedBet = null;
+    private _cashOutBet: ILastReceivedBet = null;
 
     get lastReceivedBet() {
         return this._lastReceivedBet;
@@ -49,11 +49,11 @@ export class BetStore {
         this._isReceivedBet = isReceived;
     }
 
-    get cashoutBet() {
-        return this._cashoutBet;
+    get cashOutBet() {
+        return this._cashOutBet;
     }
 
-    set cashoutBet(cashoutBet: ILastReceivedBet) {
-        this._cashoutBet = cashoutBet;
+    set cashOutBet(cashOutBet: ILastReceivedBet) {
+        this._cashOutBet = cashOutBet;
     }
 }
