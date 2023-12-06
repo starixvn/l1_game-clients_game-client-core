@@ -3,7 +3,7 @@ import { makeAutoObservable } from "mobx";
 
 import { NumberUtils } from "../../exports";
 import { BetStore } from "../../game/bets/bet-store";
-import { RoundTimeStore } from "../../game/rounds";
+import { RoundStore, RoundTimeStore } from "../../game/rounds";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { CrashCashoutStore } from "../cash-out/crash-cashout-store";
 import { GameCrashServiceMessage } from "../game-crash-messages";
@@ -27,6 +27,7 @@ export class CrashBetListStore {
     private _betList: GameCrashServiceMessage.CrashOtherPlayerList = { players: [] };
 
     constructor(
+        @inject(RoundStore) protected readonly roundStore: RoundStore,
         @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
         @inject(CrashCashoutStore) private readonly crashCashoutStore: CrashCashoutStore,
         @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
@@ -44,13 +45,19 @@ export class CrashBetListStore {
     }
 
     get mainPlayer(): GameCrashServiceMessage.CrashOtherPlayer {
-        const bet = this.betStore.lastReceivedBet?.value;
+        const bet = this.betStore.lastReceivedBet?.value || this.roundStore.ownBets.amount;
+        const cashOut =
+            this.crashCashoutStore.cashOut || (this.roundStore.ownBets.cashOut as unknown as GameCrashServiceMessage.CashOutReceive);
+        const halfCashOut =
+            this.crashCashoutStore.halfCashOut ||
+            (this.roundStore.ownBets.halfCashOut as unknown as GameCrashServiceMessage.CashOutReceive);
+
         return {
             playerId: null,
             name: this.mainPlayerStore.name,
             amount: bet !== -1 ? bet : null,
-            cashOut: this.crashCashoutStore.cashOut,
-            halfCashOut: this.crashCashoutStore.halfCashOut,
+            cashOut,
+            halfCashOut,
         };
     }
 
