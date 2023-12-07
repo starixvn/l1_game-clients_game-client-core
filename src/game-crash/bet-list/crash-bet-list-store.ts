@@ -79,16 +79,14 @@ export class CrashBetListStore {
     addBetList(data: ICrashBetList, isReceivedBetListData = false) {
         let players = [];
         Object.keys(data).forEach((key) => {
-            let { halfCashOut, cashOut } = data[key];
-
             data[key].amount = NumberUtils.getValueByCurrency(data[key].amount, this.mainPlayerStore.rate, data[key].rate);
 
             if (data[key].halfCashOut) {
-                data[key].halfCashOut.win = NumberUtils.getValueByCurrency(halfCashOut.win, this.mainPlayerStore.rate, data.rate);
+                data[key].halfCashOut.win = NumberUtils.getValueByCurrency(data[key].win, this.mainPlayerStore.rate, data.rate);
             }
 
-            if (cashOut) {
-                data[key].cashOut.win = NumberUtils.getValueByCurrency(cashOut.win, this.mainPlayerStore.rate, data.rate);
+            if (data[key].cashOut) {
+                data[key].cashOut.win = NumberUtils.getValueByCurrency(data[key].win, this.mainPlayerStore.rate, data.rate);
             }
 
             players.push(data[key]);
