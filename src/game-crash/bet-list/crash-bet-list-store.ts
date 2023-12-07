@@ -82,11 +82,15 @@ export class CrashBetListStore {
             data[key].amount = NumberUtils.getValueByCurrency(data[key].amount, this.mainPlayerStore.rate, data[key].rate);
 
             if (data[key].halfCashOut) {
-                data[key].halfCashOut.win = NumberUtils.getValueByCurrency(data[key].win, this.mainPlayerStore.rate, data[key].rate);
+                data[key].halfCashOut.win = NumberUtils.getValueByCurrency(
+                    data[key].halfCashOut.win,
+                    this.mainPlayerStore.rate,
+                    data[key].rate
+                );
             }
 
             if (data[key].cashOut) {
-                data[key].cashOut.win = NumberUtils.getValueByCurrency(data[key].win, this.mainPlayerStore.rate, data[key].rate);
+                data[key].cashOut.win = NumberUtils.getValueByCurrency(data[key].cashOut.win, this.mainPlayerStore.rate, data[key].rate);
             }
 
             players.push(data[key]);
