@@ -29,6 +29,7 @@ export class AppStore {
     isAutoCreateNickname = false;
     isLoading = true;
     isUserGesture = false;
+    isTouchedScreen = false;
 
     constructor() {
         makeAutoObservable(this);

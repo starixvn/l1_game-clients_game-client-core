@@ -30,6 +30,7 @@ export class AudioStore {
     }
 
     musicIds: string[] = [];
+    musicGameIds: string[] = [];
     private _musicState: number = MusicState.NONE;
 
     public get musicState(): number {

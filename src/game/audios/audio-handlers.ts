@@ -37,12 +37,23 @@ export class AudioHandler {
         this.audioStore.musicIds = [...ids];
     }
 
+    setMusicGameIds(ids: string[]) {
+        this.audioStore.musicGameIds = [...ids];
+    }
+
     playRandomMusic() {
         const musicIds = this.audioStore.musicIds;
-        if (!musicIds.length) {
-            return;
+        const musicGameIds = this.audioStore.musicGameIds;
+        let musicTmp = [];
+        if (musicGameIds.length > 0) {
+            musicTmp = musicGameIds;
+        } else {
+            if (!musicIds.length) {
+                return;
+            }
+            musicTmp = musicIds;
         }
-        const id = musicIds.length === 1 ? musicIds[0] : musicIds[_.random(musicIds.length - 1)];
+        const id = musicTmp.length === 1 ? musicTmp[0] : musicTmp[_.random(musicTmp.length - 1)];
         this.playMusic(id);
     }
 

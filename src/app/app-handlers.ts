@@ -49,6 +49,7 @@ export namespace AppHandlers {
                 gameId,
             };
         }
+
     }
 
     @injectable()
@@ -58,5 +59,12 @@ export namespace AppHandlers {
         handle(isUserGesture: boolean) {
             this.appStore.isUserGesture = isUserGesture;
         }
+
+        
+        handleTouchScreen(isTouchedScreen: boolean) {
+            this.appStore.isTouchedScreen = isTouchedScreen;
+        }
+
+
     }
 }
