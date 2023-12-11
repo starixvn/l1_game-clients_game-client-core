@@ -23,4 +23,5 @@ export class SiteConfigs {
     backgroundNoTranslate?: boolean;
     boostedOddsDelayTimeByMinutes?: number;
     storagePrefixKey?: string;
+    gameServiceSubDomain?: string;
 }

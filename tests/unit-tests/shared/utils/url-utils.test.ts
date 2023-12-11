@@ -46,6 +46,17 @@ describe("UrlUtils", () => {
             // Assert
             expect(url).toBe(expected);
         });
+
+        it("should build a URL with overrided game service url", () => {
+            //Arrange
+            const expected = "https://overrided.unittest.com/about";
+
+            // Act
+            const url = UrlUtils.buildUrl("https", "/about", siteConfigs, "overrided");
+
+            // Assert
+            expect(url).toBe(expected);
+        });
     });
 
     describe("getRootDomain", () => {

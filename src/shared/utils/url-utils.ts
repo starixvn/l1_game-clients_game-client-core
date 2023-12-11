@@ -2,10 +2,10 @@ import { SiteConfigs } from "../../configs";
 import { sentryLogger } from "./logger";
 
 export namespace UrlUtils {
-    export const buildUrl = (protocol = "http", path = "/", configs: SiteConfigs) => {
+    export const buildUrl = (protocol = "http", path = "/", configs: SiteConfigs, overideSubDomain: string = null) => {
         const ssl = configs.ssl;
         const domain = getRootDomain(configs);
-        const subDomain = configs.subDomain;
+        const subDomain = overideSubDomain ?? configs.subDomain;
         const subDomainText = `${subDomain}.`;
 
         return `${protocol}${ssl ? "s" : ""}://${subDomain === "" ? "" : subDomainText}${domain}${path}`;
@@ -38,7 +38,7 @@ export namespace UrlUtils {
 
     export const buildServerUrl = (protocol = "http", path = "/", gameId = 0, configs: SiteConfigs) => {
         const gamePath = getPath(gameId, path);
-        return buildUrl(protocol, gamePath, configs);
+        return buildUrl(protocol, gamePath, configs, configs.gameServiceSubDomain);
     };
 
     export const getPath = (gameId: number, path: string) => {
