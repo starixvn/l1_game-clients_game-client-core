@@ -1,8 +1,9 @@
 import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
 
+import { BetStore } from "../../game/bets/bet-store";
 import { RoundTimeStore } from "../../game/rounds";
-import { IMultipleHandlers } from "../../shared";
+import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 import { CrashCashOutStore } from "./crash-cash-out-store";
 
@@ -10,7 +11,8 @@ import { CrashCashOutStore } from "./crash-cash-out-store";
 export class CrashCashOutHandlers implements IMultipleHandlers {
     constructor(
         @inject(CrashCashOutStore) protected readonly cashOutStore: CrashCashOutStore,
-        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore
+        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
+        @inject(BetStore) protected readonly betStore: BetStore
     ) {
         reaction(
             () => this.roundTimeStore.isPlacingBet,
@@ -49,6 +51,15 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashOutStore.cashOutBet = { value: this.cashOutStore.cashOutBet.value / 2 };
     }
 
+    handleOwnBets(ownBets: GameServiceMessage.OwnBets) {
+        this.cashOutStore.isCashedOutFull = !!ownBets.cashOut;
+        this.cashOutStore.isCashedOutHalf = !!ownBets.halfCashOut;
+        this.cashOutStore.cashOutBet = { value: ownBets.amount };
+        ownBets.amount && (this.betStore.isReceivedBet = true);
+        ownBets.halfCashOut && this.handleCashOutHalf(ownBets.halfCashOut as undefined as GameCrashServiceMessage.CrashCashOut);
+        ownBets.cashOut && this.handleCashOutFull(ownBets.cashOut as undefined as GameCrashServiceMessage.CrashCashOut);
+    }
+
     eventHandleList = [
         {
             name: GameCrashServiceMessage.CrashCashOut.cashOutEventName,
@@ -57,6 +68,10 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         {
             name: GameCrashServiceMessage.CrashCashOut.halfCashOutEventName,
             handle: this.handleCashOutHalf,
+        },
+        {
+            name: GameServiceMessage.OwnBets.eventName,
+            handle: this.handleOwnBets,
         },
     ];
 }

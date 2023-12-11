@@ -79,6 +79,10 @@ export class CrashBetListStore {
     addBetList(data: ICrashBetList, isReceivedBetListData = false) {
         let players = [];
         Object.keys(data).forEach((key) => {
+            if (!data[key]) {
+                return;
+            }
+
             data[key].amount = NumberUtils.getValueByCurrency(data[key].amount, this.mainPlayerStore.rate, data[key].rate);
 
             if (data[key].halfCashOut) {
