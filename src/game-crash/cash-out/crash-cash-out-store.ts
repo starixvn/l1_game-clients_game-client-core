@@ -46,4 +46,12 @@ export class CrashCashOutStore {
     get halfCashOut(): GameCrashServiceMessage.CrashCashOut {
         return this._halfCashOut;
     }
+
+    setCashOutNotice(cashOut) {
+        this.cashOutNotice = {
+            win: cashOut.win,
+            cashOutWin: cashOut.cashOutWin,
+            reachMaxWin: cashOut.reachMaxWin,
+        };
+    }
 }

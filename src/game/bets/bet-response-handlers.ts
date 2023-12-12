@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
+
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { ConnectionHandlers } from "../connection";
 import { RoundTimeStore } from "../rounds";
@@ -17,8 +18,8 @@ export class BetResponseHandlers implements IMultipleHandlers {
             (isWaiting) => isWaiting && this.stopProcessingBetAndClearInterval()
         );
         reaction(
-            () => this.roundTimeStore.isStartPlacingBet,
-            (isStartPlacingBet) => isStartPlacingBet && this.resetIsReceivedBet()
+            () => this.roundTimeStore.isStartRound,
+            (isStartRound) => isStartRound && this.resetIsReceivedBet()
         );
     }
 

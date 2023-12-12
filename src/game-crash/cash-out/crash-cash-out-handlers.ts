@@ -29,25 +29,17 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashOutStore.cashOut = cashOut;
         this.cashOutStore.isCashedOutFull = true;
         this.cashOutStore.isCashedOutHalf = true;
-        this.cashOutStore.cashOutNotice = {
-            win: cashOut.win,
-            cashOutWin: cashOut.cashOutWin,
-            reachMaxWin: cashOut.reachMaxWin,
-        };
+        this.cashOutStore.setCashOutNotice(cashOut);
         setTimeout(() => {
             this.cashOutStore.ratio = 1;
         }, 2700);
     }
 
     handleCashOutHalf(cashOut: GameCrashServiceMessage.CrashCashOut | undefined) {
-        this.cashOutStore.ratio = 0.5;
         this.cashOutStore.halfCashOut = cashOut;
-        this.cashOutStore.cashOutNotice = {
-            win: cashOut.win,
-            cashOutWin: cashOut.cashOutWin,
-            reachMaxWin: cashOut.reachMaxWin,
-        };
         this.cashOutStore.isCashedOutHalf = true;
+        this.cashOutStore.setCashOutNotice(cashOut);
+        this.cashOutStore.ratio = 0.5;
         this.cashOutStore.cashOutBet = { value: this.cashOutStore.cashOutBet.value / 2 };
     }
 
