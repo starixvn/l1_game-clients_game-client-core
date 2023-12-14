@@ -1,10 +1,12 @@
 import { inject, injectable } from "inversify";
+
 import { AuthStore, ISessionInfo } from "../../auth/auth-store";
 import { SiteConfigs } from "../../configs";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { IHandler } from "../../shared";
 import { AppTypes } from "../../shared/constants/app-type";
-import { StorageManager, UrlUtils, localStorageKeys } from "../../shared/utils";
+import { localStorageKeys, StorageManager, UrlUtils } from "../../shared/utils";
+import { Translator } from "../../shared/utils/localization-manager";
 import { GameConfigStore, GameSetting } from "../game-configs";
 import { RoundStore } from "../rounds/round-store";
 import { GameGuideStore } from "./game-guide-store";
@@ -34,6 +36,7 @@ export namespace GameGuideHandlers {
                 minBet: this.roundStore.minBet,
                 maxBet: this.roundStore.maxBet,
                 md5: isScrollMd5 ? 1 : 0,
+                displayName: Translator.gameTranslate("game_name"),
             };
             const queryString = Object.keys(params)
                 .map((key) => `${key}=${params[key]}`)
