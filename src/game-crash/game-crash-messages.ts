@@ -27,6 +27,8 @@ export namespace GameCrashServiceMessage {
         rate?: number;
 
         amount?: number;
+        
+        win?: number;
 
         static eventName = "otherPlayer";
     }
