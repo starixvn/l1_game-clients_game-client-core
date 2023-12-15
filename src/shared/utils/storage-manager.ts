@@ -103,7 +103,7 @@ export class StorageManager {
     }
 
     static getName(name: string) {
-        return StorageManager.prefixKey ? `${name}_${StorageManager.prefixKey}` : name;
+        return StorageManager.prefixKey ? `${StorageManager.prefixKey}_${name}` : name;
     }
 }
 
@@ -117,4 +117,5 @@ export const localStorageKeys = {
     parentUrl: "purl",
     isApp: "app",
     gameIdsSupportBoostedOddsForInstantSite: "gameIdsSupportBoostedOddsForInstantSite",
+    userSetting: "user-setting",
 };
