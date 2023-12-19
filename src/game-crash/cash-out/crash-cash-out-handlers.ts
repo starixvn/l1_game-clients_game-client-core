@@ -25,20 +25,20 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             }
         );
     }
-    handleCashOutFull(cashOut: GameCrashServiceMessage.CrashCashOut | undefined) {
+    handleCashOutFull(cashOut: GameCrashServiceMessage.CrashCashOut | undefined, isReceiveOwnBets = false) {
         this.cashOutStore.cashOut = cashOut;
         this.cashOutStore.isCashedOutFull = true;
         this.cashOutStore.isCashedOutHalf = true;
-        this.cashOutStore.setCashOutNotice(cashOut);
+        !isReceiveOwnBets && this.cashOutStore.setCashOutNotice(cashOut);
         setTimeout(() => {
             this.cashOutStore.ratio = 1;
         }, 2700);
     }
 
-    handleCashOutHalf(cashOut: GameCrashServiceMessage.CrashCashOut | undefined) {
+    handleCashOutHalf(cashOut: GameCrashServiceMessage.CrashCashOut | undefined, isReceiveOwnBets = false) {
         this.cashOutStore.halfCashOut = cashOut;
         this.cashOutStore.isCashedOutHalf = true;
-        this.cashOutStore.setCashOutNotice(cashOut);
+        !isReceiveOwnBets && this.cashOutStore.setCashOutNotice(cashOut);
         this.cashOutStore.ratio = 0.5;
         this.cashOutStore.cashOutBet = { value: this.cashOutStore.cashOutBet.value / 2 };
     }
@@ -48,8 +48,8 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashOutStore.isCashedOutHalf = !!ownBets.halfCashOut;
         this.cashOutStore.cashOutBet = { value: ownBets.amount };
         ownBets.amount && (this.betStore.isReceivedBet = true);
-        ownBets.halfCashOut && this.handleCashOutHalf(ownBets.halfCashOut as undefined as GameCrashServiceMessage.CrashCashOut);
-        ownBets.cashOut && this.handleCashOutFull(ownBets.cashOut as undefined as GameCrashServiceMessage.CrashCashOut);
+        ownBets.halfCashOut && this.handleCashOutHalf(ownBets.halfCashOut as undefined as GameCrashServiceMessage.CrashCashOut, true);
+        ownBets.cashOut && this.handleCashOutFull(ownBets.cashOut as undefined as GameCrashServiceMessage.CrashCashOut, true);
     }
 
     eventHandleList = [
