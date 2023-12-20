@@ -77,7 +77,7 @@ export namespace GameServiceMessage {
     };
 
     class Bets {
-        [betChoice: string]: number;
+        [betChoice: string]: number | any;
     }
 
     export class OwnBets extends Bets {

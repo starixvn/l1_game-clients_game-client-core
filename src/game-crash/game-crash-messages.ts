@@ -1,3 +1,5 @@
+import { GameServiceMessage } from "../shared";
+
 export namespace GameCrashServiceMessage {
     export class CrashMultiplierInfo {
         m: number;
@@ -27,7 +29,7 @@ export namespace GameCrashServiceMessage {
         rate?: number;
 
         amount?: number;
-        
+
         win?: number;
 
         static eventName = "otherPlayer";
@@ -45,6 +47,17 @@ export namespace GameCrashServiceMessage {
 
     export class BetList {
         static eventName = "betList";
+    }
+
+    export class CrashOwnBets extends GameServiceMessage.OwnBets {
+        amount: number;
+        autoCashOut: number;
+        name: string;
+        playerId: string;
+        rate: number;
+        time: string;
+        cashOut?: CrashCashOut;
+        halfCashOut?: CrashCashOut;
     }
 }
 
