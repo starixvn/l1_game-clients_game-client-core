@@ -44,7 +44,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     }
 
     handleOwnBets(ownBets: GameServiceMessage.OwnBets) {
-        if (ownBets.cashOut) {
+        if (ownBets?.cashOut) {
             return;
         }
 
