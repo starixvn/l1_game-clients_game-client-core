@@ -45,18 +45,13 @@ export class CrashBetListStore {
     }
 
     get mainPlayer(): GameCrashServiceMessage.CrashOtherPlayer {
-        const bet = this.betStore.lastReceivedBet?.value || this.roundStore.ownBets?.amount;
-        const cashOut =
-            this.crashCashOutStore?.cashOut || (this.roundStore.ownBets?.cashOut as GameCrashServiceMessage.CashOutReceive) || null;
-        const halfCashOut =
-            this.crashCashOutStore?.halfCashOut || (this.roundStore.ownBets?.halfCashOut as GameCrashServiceMessage.CashOutReceive) || null;
-
+        const bet = this.betStore.lastReceivedBet?.value;
         return {
             playerId: null,
             name: this.mainPlayerStore.name,
             amount: bet !== -1 ? bet : null,
-            cashOut,
-            halfCashOut,
+            cashOut: this.crashCashOutStore?.cashOut,
+            halfCashOut: this.crashCashOutStore?.halfCashOut,
         };
     }
 
