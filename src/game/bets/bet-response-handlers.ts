@@ -18,8 +18,8 @@ export class BetResponseHandlers implements IMultipleHandlers {
             (isWaiting) => isWaiting && this.stopProcessingBetAndClearInterval()
         );
         reaction(
-            () => this.roundTimeStore.isStartRound,
-            (isStartRound) => isStartRound && this.resetIsReceivedBet()
+            () => this.roundTimeStore.isStartPlacingBet,
+            (isStartPlacingBet) => isStartPlacingBet && this.resetIsReceivedBet()
         );
     }
 

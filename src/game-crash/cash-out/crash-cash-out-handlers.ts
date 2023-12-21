@@ -44,13 +44,14 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     }
 
     handleOwnBets(ownBets: GameCrashServiceMessage.CrashOwnBets) {
+        ownBets?.amount && (this.betStore.isReceivedBet = true);
+        this.cashOutStore.isCashedOutFull = false;
+        this.cashOutStore.cashOutBet = { value: ownBets.amount };
+
         if (ownBets?.cashOut || !ownBets?.halfCashOut) {
             return;
         }
 
-        this.cashOutStore.isCashedOutFull = false;
-        this.cashOutStore.cashOutBet = { value: ownBets.amount };
-        ownBets.amount && (this.betStore.isReceivedBet = true);
         this.handleCashOutHalf(ownBets.halfCashOut, true);
     }
 
