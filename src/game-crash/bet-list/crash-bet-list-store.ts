@@ -45,12 +45,11 @@ export class CrashBetListStore {
     }
 
     get mainPlayer(): GameCrashServiceMessage.CrashOtherPlayer {
-        const bet = this.betStore.lastReceivedBet?.value || this.roundStore.ownBets.amount;
+        const bet = this.betStore.lastReceivedBet?.value || this.roundStore.ownBets?.amount;
         const cashOut =
-            this.crashCashOutStore.cashOut || (this.roundStore.ownBets.cashOut as unknown as GameCrashServiceMessage.CashOutReceive);
+            this.crashCashOutStore?.cashOut || (this.roundStore.ownBets?.cashOut as GameCrashServiceMessage.CashOutReceive) || null;
         const halfCashOut =
-            this.crashCashOutStore.halfCashOut ||
-            (this.roundStore.ownBets.halfCashOut as unknown as GameCrashServiceMessage.CashOutReceive);
+            this.crashCashOutStore?.halfCashOut || (this.roundStore.ownBets?.halfCashOut as GameCrashServiceMessage.CashOutReceive) || null;
 
         return {
             playerId: null,
@@ -62,7 +61,7 @@ export class CrashBetListStore {
     }
 
     get noOfPlayerBet(): number {
-        const countMainPlayer = this.mainPlayer.amount ? 1 : 0;
+        const countMainPlayer = this.mainPlayer?.amount ? 1 : 0;
         return this._betList.players.length + countMainPlayer;
     }
 
@@ -72,7 +71,7 @@ export class CrashBetListStore {
             (player["cashOut"] || player["halfCashOut"]) && players.push(player);
         });
 
-        const countMainPlayer = this.mainPlayer.cashOut || this.mainPlayer.halfCashOut ? 1 : 0;
+        const countMainPlayer = this.mainPlayer?.cashOut || this.mainPlayer?.halfCashOut ? 1 : 0;
         return players.length + countMainPlayer;
     }
 
