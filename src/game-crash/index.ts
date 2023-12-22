@@ -1,4 +1,11 @@
+export * as AutoCashOut from "./auto-cash-out";
+export * as AutoPlay from "./auto-play";
+export * as BetInput from "./bet-input";
 export * as CrashBet from "./bet";
+export * as Md5Popup from "./md5-popup";
+export * as Popups from "./popups";
+export * as RoundHistory from "./round-history";
+export * as PlayerActions from "./player-actions";
 export * as CrashCashOut from "./cash-out";
 export * as CrashGameConfigs from "./game-configs";
 export * as CrashMultiplier from "./multiplier";

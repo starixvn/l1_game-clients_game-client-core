@@ -93,3 +93,25 @@ export namespace GameCrashEmitMessage {
         static eventName = "halfCashOut";
     }
 }
+
+export interface IGameCrashUserSettings {
+    betAmount: number;
+    enableAutoCashOut: boolean;
+    autoCashOutMultiplier: number;
+}
+
+export const BET_STATE = {
+    NONE: "none",
+    BET: "bet",
+};
+
+export const EARLY_BET_STATE = {
+    NONE: "none",
+    BET: "bet",
+};
+
+export const CASH_OUT_STATE = {
+    NONE: "none",
+    HALF: "half",
+    FULL: "full",
+};

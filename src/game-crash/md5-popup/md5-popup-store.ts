@@ -1,0 +1,29 @@
+import { injectable } from "inversify";
+import { makeAutoObservable } from "mobx";
+
+@injectable()
+export class Md5PopupStore {
+    private _isOpenPopupMd5 = false;
+
+    private _roundId = 0;
+
+    get isOpenPopupMd5() {
+        return this._isOpenPopupMd5;
+    }
+
+    set isOpenPopupMd5(isOpen: boolean) {
+        this._isOpenPopupMd5 = isOpen;
+    }
+
+    get roundId() {
+        return this._roundId;
+    }
+
+    set roundId(roundId: number) {
+        this._roundId = roundId;
+    }
+
+    constructor() {
+        makeAutoObservable(this);
+    }
+}
