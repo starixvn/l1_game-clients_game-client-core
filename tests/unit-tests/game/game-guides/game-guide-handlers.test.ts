@@ -19,9 +19,9 @@ jest.mock("../../../../src/shared/utils", () => ({
     localStorageKeys: {
         playerIngameSelections: "player-selections",
     },
-    UrlUtils: { buildGameGuideUrl: jest.fn() },
+    UrlUtils: { buildGameGuideUrl: jest.fn().mockReturnValue("guide.test") },
     Translator: {
-        gameTranslate: jest.fn(),
+        gameTranslate: jest.fn().mockReturnValue("Test"),
     },
 }));
 
@@ -56,8 +56,6 @@ describe("GameGuideHandlers test", () => {
                 gameConfigsStore,
                 guideStore
             );
-            (UrlUtils.buildGameGuideUrl as jest.Mock).mockReturnValueOnce("guide.test");
-            (Translator.gameTranslate as jest.Mock).mockReturnValueOnce("Test");
         });
 
         test.each([
