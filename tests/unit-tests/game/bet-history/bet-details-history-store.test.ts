@@ -1,5 +1,6 @@
 import { stub } from "jest-auto-stub";
-import { BetDetailHitoryStore, BetHistoryLog, DynamicObject } from "../../../../src/game/bet-history";
+
+import { BetDetailHistoryStore, BetHistoryLog, DynamicObject } from "../../../../src/game/bet-history";
 import { NoticeStore } from "../../../../src/game/notices/notice-store";
 import { MainPlayerStore } from "../../../../src/players";
 
@@ -12,14 +13,14 @@ export interface BetDetailsLog {
 }
 
 describe("BetDetailHitoryStore tests", () => {
-    let store: BetDetailHitoryStore;
+    let store: BetDetailHistoryStore;
     const noticeStore = stub<NoticeStore>();
     const mainPlayerStore = new MainPlayerStore(noticeStore);
     mainPlayerStore.fractionalOddsFormat = false;
 
     beforeAll(() => {
         // arrange
-        store = new BetDetailHitoryStore(mainPlayerStore);
+        store = new BetDetailHistoryStore(mainPlayerStore);
     });
 
     describe("setData", () => {

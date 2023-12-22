@@ -1,4 +1,5 @@
 import { stub } from "jest-auto-stub";
+
 import { AuthStore } from "../../../../src/auth/auth-store";
 import { SiteConfigs } from "../../../../src/configs";
 import { GameConfigStore, GameSetting } from "../../../../src/game/game-configs";
@@ -7,7 +8,8 @@ import { GameGuideStore } from "../../../../src/game/game-guides/game-guide-stor
 import { RoundStore } from "../../../../src/game/rounds/round-store";
 import { MainPlayerStore } from "../../../../src/players/main-player-store";
 import { AppTypes } from "../../../../src/shared/constants/app-type";
-import { UrlUtils, StorageManager } from "../../../../src/shared/utils";
+import { StorageManager, Translator, UrlUtils } from "../../../../src/shared/utils";
+
 jest.mock("../../../../src/shared/utils", () => ({
     StorageManager: {
         get: jest.fn(),
@@ -18,7 +20,11 @@ jest.mock("../../../../src/shared/utils", () => ({
         playerIngameSelections: "player-selections",
     },
     UrlUtils: { buildGameGuideUrl: jest.fn() },
+    Translator: {
+        gameTranslate: jest.fn(),
+    },
 }));
+
 const now = new Date(123456);
 jest.useFakeTimers().setSystemTime(now);
 
@@ -51,6 +57,7 @@ describe("GameGuideHandlers test", () => {
                 guideStore
             );
             (UrlUtils.buildGameGuideUrl as jest.Mock).mockReturnValueOnce("guide.test");
+            (Translator.gameTranslate as jest.Mock).mockReturnValueOnce("Test");
         });
 
         test.each([
@@ -58,43 +65,43 @@ describe("GameGuideHandlers test", () => {
                 system: AppTypes.Club,
                 language: "vi-VN",
                 specialDirection: "",
-                expected: "guide.test/vi?gId=1&t=blue&f=sc&p=false&v=123456&fof=false&minBet=1&maxBet=2000",
+                expected: "guide.test/vi?gId=1&t=blue&f=sc&p=false&v=123456&fof=false&minBet=1&maxBet=2000&md5=0&displayName=Test",
             },
             {
                 system: AppTypes.Mobi,
                 language: "en-US",
                 specialDirection: "",
-                expected: "guide.test/en?gId=1&t=blue&f=sm&p=false&v=123456&fof=false&minBet=1&maxBet=2000",
+                expected: "guide.test/en?gId=1&t=blue&f=sm&p=false&v=123456&fof=false&minBet=1&maxBet=2000&md5=0&displayName=Test",
             },
             {
                 system: AppTypes.Mobi,
                 language: "en-UK",
                 specialDirection: "",
-                expected: "guide.test/en?gId=1&t=blue&f=sm&p=false&v=123456&fof=false&minBet=1&maxBet=2000",
+                expected: "guide.test/en?gId=1&t=blue&f=sm&p=false&v=123456&fof=false&minBet=1&maxBet=2000&md5=0&displayName=Test",
             },
             {
                 system: AppTypes.Instant,
                 language: "th-TH",
                 specialDirection: "",
-                expected: "guide.test/th?gId=1&t=blue&f=si&p=false&v=123456&fof=false&minBet=1&maxBet=2000",
+                expected: "guide.test/th?gId=1&t=blue&f=si&p=false&v=123456&fof=false&minBet=1&maxBet=2000&md5=0&displayName=Test",
             },
             {
                 system: AppTypes.MegaKeno,
                 language: "id-ID",
                 specialDirection: "",
-                expected: "guide.test/id?gId=1&t=blue&f=sm&p=false&v=123456&fof=false&minBet=1&maxBet=2000",
+                expected: "guide.test/id?gId=1&t=blue&f=sm&p=false&v=123456&fof=false&minBet=1&maxBet=2000&md5=0&displayName=Test",
             },
             {
                 system: AppTypes.App,
                 language: "zh-CN",
                 specialDirection: "",
-                expected: "guide.test/zh_cn?gId=1&t=blue&f=sc&p=false&v=123456&fof=false&minBet=1&maxBet=2000",
+                expected: "guide.test/zh_cn?gId=1&t=blue&f=sc&p=false&v=123456&fof=false&minBet=1&maxBet=2000&md5=0&displayName=Test",
             },
             {
                 system: AppTypes.Club,
                 language: "zh-TW",
-                specialDirection: "&md5=1",
-                expected: "guide.test/zh_tw?gId=1&t=blue&f=sc&p=false&v=123456&fof=false&minBet=1&maxBet=2000&md5=1",
+                specialDirection: "",
+                expected: "guide.test/zh_tw?gId=1&t=blue&f=sc&p=false&v=123456&fof=false&minBet=1&maxBet=2000&md5=0&displayName=Test",
             },
         ])(
             "should get expected url when system=$system , language=$language and specialDirection=$specialDirection",
@@ -104,7 +111,7 @@ describe("GameGuideHandlers test", () => {
                 (StorageManager.get as jest.Mock).mockReturnValueOnce({ session: "session", ssoTime: new Date("2023-01-01"), language });
 
                 // act
-                handler.handle({ theme: "blue", specialDirection });
+                handler.handle({ theme: "blue", specialDirection, isScrollMd5: false });
 
                 // assert
                 expect(guideStore.url).toBe(expected);
