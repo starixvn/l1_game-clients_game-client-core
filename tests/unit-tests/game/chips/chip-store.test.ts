@@ -42,6 +42,7 @@ describe("ChipStore", () => {
         it("should convert rate for balance and amount before return value", () => {
             // Arrange
             gameConfigStore.odds = { a: 2 };
+            gameConfigStore.chips = ["2", "5"];
             chipStore.playerChip = { amount: 100, betChoice: "a", playerId: "12", red: 2000, rate: 0.5 };
             mainPlayerStore.rate = 1;
 
@@ -72,7 +73,7 @@ describe("ChipStore", () => {
         describe("when gameConfig.odds not empty", () => {
             it("should not set playerchip", () => {
                 // arrange
-                gameConfigStore.odds = { a: 2 };
+                gameConfigStore.chips = ["2", "5"];
                 // @ts-ignore
                 chipStore["_playerChip"] = null;
                 const expected = { playerId: "123", red: 2000, amount: 20, betChoice: "a" };

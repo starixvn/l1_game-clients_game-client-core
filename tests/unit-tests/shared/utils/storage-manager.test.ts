@@ -185,7 +185,7 @@ describe("Storage Manger", () => {
                 const result = StorageManager.getName(name);
 
                 // Assert
-                expect(result).toBe(`${name}_${prefixKey}`);
+                expect(result).toBe(`${prefixKey}_${name}`);
             });
 
             it("should return the name without the prefix when no prefix is set", () => {

@@ -50,6 +50,7 @@ describe("ChipHandlers", () => {
 
     test("can handle player chip message", () => {
         // Arrange
+        gameConfigStore.chips = ["2", "5"];
         const playerChipMessage = {
             playerId: "1",
             betChoice: "even",
