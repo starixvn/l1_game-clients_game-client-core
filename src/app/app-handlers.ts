@@ -1,5 +1,7 @@
 import { inject, injectable } from "inversify";
 import { ISessionInfo } from "../auth";
+import { AutoCashOutStore } from "../game-crash/auto-cash-out/auto-cash-out-store";
+import { BetInputStore } from "../game-crash/bet-input/bet-input-store";
 import { PlayerSelectionHandlers } from "../game/player-selections";
 import { IHandler } from "../shared";
 import { BrowserDomUtils, GameUtils, StorageManager, localStorageKeys, sentryLogger } from "../shared/utils";
@@ -49,7 +51,6 @@ export namespace AppHandlers {
                 gameId,
             };
         }
-
     }
 
     @injectable()
@@ -60,11 +61,22 @@ export namespace AppHandlers {
             this.appStore.isUserGesture = isUserGesture;
         }
 
-        
         handleTouchScreen(isTouchedScreen: boolean) {
             this.appStore.isTouchedScreen = isTouchedScreen;
         }
+    }
 
+    @injectable()
+    export class ClearGameSetting implements IHandler<void> {
+        constructor(
+            @inject(BetInputStore) protected readonly betInputStore: BetInputStore,
+            @inject(AutoCashOutStore) protected readonly autoCashOutStore: AutoCashOutStore
+        ) {}
 
+        handle() {
+            StorageManager.remove(localStorageKeys.userSetting);
+            this.betInputStore.initBetAmount();
+            this.autoCashOutStore.loadMultiplierFromStorage();
+        }
     }
 }

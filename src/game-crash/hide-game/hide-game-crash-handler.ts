@@ -29,7 +29,6 @@ export class HideGameCrashHandler extends HideGameHandler {
     async handle() {
         await super.handle();
         this.betInputStore.betAmount > 0 && this.saveUserSetting();
-        this.resetDefaultStore();
     }
 
     saveUserSetting() {
@@ -40,10 +39,5 @@ export class HideGameCrashHandler extends HideGameHandler {
         };
 
         StorageManager.set(localStorageKeys.userSetting, currentSetting);
-    }
-
-    resetDefaultStore() {
-        this.betInputStore.resetDefaultBetAmount();
-        this.autoCashOutStore.resetDefaultValueStore();
     }
 }
