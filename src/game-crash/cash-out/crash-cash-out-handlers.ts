@@ -62,6 +62,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             // user cashed out, not show full and half cash out buttons
             this.cashOutStore.isCashedOutFull = false;
             this.cashOutStore.isCashedOutHalf = false;
+            this.cashOutStore.ratio = 1;
         }
     }
 
