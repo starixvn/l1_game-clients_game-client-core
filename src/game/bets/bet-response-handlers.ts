@@ -25,7 +25,7 @@ export class BetResponseHandlers implements IMultipleHandlers {
 
     handleBetResponse(endBet: number) {
         this.stopProcessingBetAndClearInterval();
-        this.betStore.lastReceivedBet = { value: endBet };
+        this.betStore.lastReceivedBet = { value: endBet, isAnimated: true };
         this.betStore.isReceivedBet = endBet > 0;
     }
 

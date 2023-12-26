@@ -124,7 +124,7 @@ export class CrashBetListStore {
     }
 
     resetMainPlayer() {
-        this.betStore.lastReceivedBet = { value: -1 };
+        this.betStore.lastReceivedBet = { value: -1, isAnimated: false };
         this.crashCashOutStore.cashOut = null;
         this.crashCashOutStore.halfCashOut = null;
     }

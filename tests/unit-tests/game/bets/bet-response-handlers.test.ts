@@ -23,7 +23,7 @@ describe("BetResponseHandler", () => {
     describe("handleBetResponse", () => {
         beforeEach(() => {
             betStore.isProcessingBet = true;
-            betStore.lastReceivedBet = { value: 0 };
+            betStore.lastReceivedBet = { value: 0, isAnimated: false };
         });
 
         it("set betStore.isProcessingBet false", () => {
@@ -45,7 +45,7 @@ describe("BetResponseHandler", () => {
             instance.handleBetResponse(endBet);
 
             // Assert
-            expect(betStore.lastReceivedBet).toEqual({ value: endBet });
+            expect(betStore.lastReceivedBet).toEqual({ value: endBet, isAnimated: true });
         });
     });
 });

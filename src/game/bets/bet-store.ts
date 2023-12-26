@@ -8,6 +8,12 @@ export interface IStakeLevel {
 
 export interface ILastReceivedBet {
     value: number;
+    isAnimated: boolean;
+}
+
+export interface IShowDecreaseBalanceEffect {
+    showDecreaseBalanceEffect: boolean;
+    value: number;
 }
 
 @injectable()
