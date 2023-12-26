@@ -66,4 +66,9 @@ export class AutoCashOutStore {
     set disable(trigger: boolean) {
         this._disable = trigger;
     }
+
+    resetDefaultValueStore() {
+        this._enable = false;
+        this._multiplier = 1.01;
+    }
 }

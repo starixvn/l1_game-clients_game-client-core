@@ -84,4 +84,8 @@ export class BetInputStore {
     get betAmountGreaterMinBet() {
         return this.minBet <= this.betAmount;
     }
+
+    resetDefaultBetAmount() {
+        this._betAmount = -1;
+    }
 }
