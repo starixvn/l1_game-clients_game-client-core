@@ -5,8 +5,8 @@ import { GameCrashServiceMessage } from "../game-crash-messages";
 
 @injectable()
 export class CrashCashOutStore {
-    isCashedOutFull = false;
-    isCashedOutHalf = false;
+    isFullCashedOut = false;
+    isHalfCashedOut = false;
     ratio = 1;
 
     cashOutNotice: {
@@ -18,6 +18,8 @@ export class CrashCashOutStore {
     private _cashOutBet: { value: number } = null;
     private _cashOut: GameCrashServiceMessage.CrashCashOut = null;
     private _halfCashOut: GameCrashServiceMessage.CrashCashOut = null;
+    private _fullCashOutValue = 0;
+    private _halfCashOutValue = 0;
 
     constructor() {
         makeAutoObservable(this);
@@ -53,5 +55,19 @@ export class CrashCashOutStore {
             cashOutWin: cashOut.cashOutWin,
             reachMaxWin: cashOut.reachMaxWin,
         };
+    }
+
+    set fullCashOutValue(value: number) {
+        this._fullCashOutValue = value;
+    }
+    get fullCashOutValue(): number {
+        return this._fullCashOutValue;
+    }
+
+    set halfCashOutValue(value: number) {
+        this._halfCashOutValue = value;
+    }
+    get halfCashOutValue(): number {
+        return this._halfCashOutValue;
     }
 }
