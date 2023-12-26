@@ -6,8 +6,8 @@ import { RoundRunningHandlers } from "../rounds/round-running-handlers";
 @injectable()
 export class HideGameHandler implements IHandler<void> {
     constructor(
-        @inject(RoundRunningHandlers) private readonly roundRunning: RoundRunningHandlers,
-        @inject(ConnectionStore) private readonly connectStore: ConnectionStore
+        @inject(RoundRunningHandlers) protected readonly roundRunning: RoundRunningHandlers,
+        @inject(ConnectionStore) protected readonly connectStore: ConnectionStore
     ) {}
 
     async handle() {
