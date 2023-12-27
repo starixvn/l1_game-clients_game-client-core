@@ -104,6 +104,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             const fullValue = multiplier * ownBets.amount;
             this.cashOutStore.fullCashOutValue = fullValue;
             this.cashOutStore.halfCashOutValue = fullValue / 2;
+            this.multiplierStore.isCrashed = true;
         }
     }
 
