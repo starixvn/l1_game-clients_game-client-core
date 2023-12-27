@@ -1,7 +1,7 @@
 import gc from "@sg/game-client-base";
 import { _decorator, Animation, Component, Node, Sprite, SpriteFrame, tween, UIOpacity, v2, v3 } from "cc";
 import Observer from "observer";
-import { settings } from "../sedie-settings";
+import { settings } from "../game-settings";
 
 const { ccclass, property } = _decorator;
 const { observer, handle } = Observer;
