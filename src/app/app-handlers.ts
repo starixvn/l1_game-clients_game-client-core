@@ -49,7 +49,6 @@ export namespace AppHandlers {
                 gameId,
             };
         }
-
     }
 
     @injectable()
@@ -60,11 +59,17 @@ export namespace AppHandlers {
             this.appStore.isUserGesture = isUserGesture;
         }
 
-        
         handleTouchScreen(isTouchedScreen: boolean) {
             this.appStore.isTouchedScreen = isTouchedScreen;
         }
+    }
 
+    @injectable()
+    export class ClearStorage implements IHandler<boolean> {
+        constructor(@inject(AppStore) private readonly appStore: AppStore) {}
 
+        handle(isClearStorage: boolean) {
+            this.appStore.isClearStorage = isClearStorage;
+        }
     }
 }

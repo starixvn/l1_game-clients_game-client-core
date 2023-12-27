@@ -30,6 +30,7 @@ export class AppStore {
     isLoading = true;
     isUserGesture = false;
     isTouchedScreen = false;
+    isClearStorage = false;
 
     constructor() {
         makeAutoObservable(this);

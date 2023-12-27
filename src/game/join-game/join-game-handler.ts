@@ -6,7 +6,7 @@ import { JoinGameStore } from "./join-game-store";
 @injectable()
 export class JoinGameHandler implements IHandler<string> {
     name = GameServiceMessage.toGame;
-    constructor(@inject(JoinGameStore) private readonly joinGameStore: JoinGameStore) {}
+    constructor(@inject(JoinGameStore) protected readonly joinGameStore: JoinGameStore) {}
 
     async handle(toGame: string) {
         this.joinGameStore.toGame = {
