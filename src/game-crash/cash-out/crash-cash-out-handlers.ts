@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
 
 import { BetStore } from "../../game/bets/bet-store";
+import { RoundHistoryStore } from "../../game/round-histories/round-history-store";
 import { RoundTimeStore } from "../../game/rounds";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { GameCrashServiceMessage } from "../game-crash-messages";
@@ -12,6 +13,7 @@ import { CrashCashOutStore } from "./crash-cash-out-store";
 export class CrashCashOutHandlers implements IMultipleHandlers {
     constructor(
         @inject(CrashCashOutStore) protected readonly cashOutStore: CrashCashOutStore,
+        @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(BetStore) protected readonly betStore: BetStore,
         @inject(MultiplierStore) private readonly multiplierStore: MultiplierStore
@@ -71,23 +73,37 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             return;
         }
 
-        if (ownBets.amount) {
-            this.betStore.lastReceivedBet = { value: ownBets.amount, isAnimated: false };
-            this.betStore.isReceivedBet = true;
-        }
+        this.betStore.lastReceivedBet = { value: ownBets.amount, isAnimated: false };
+        this.betStore.isReceivedBet = true;
 
         this.cashOutStore.cashOutBet = { value: ownBets.amount };
         ownBets.halfCashOut && this.handleCashOutHalf(ownBets.halfCashOut, true);
 
         if (ownBets.cashOut) {
-            this.cashOutStore.cashOut = ownBets.cashOut;
-            this.cashOutStore.fullCashOutValue = ownBets.cashOut.cashOutWin;
-            this.betStore.isReceivedBet = false;
+            this.handleOwnBetsWhenUserCashedOut(ownBets);
+        } else {
+            this.handleOwnBetsWhenUserNotCashOut(ownBets);
+        }
+    }
 
-            // user cashed out, not show full and half cash out buttons
-            this.cashOutStore.isFullCashedOut = false;
-            this.cashOutStore.isHalfCashedOut = false;
-            this.cashOutStore.ratio = 1;
+    private handleOwnBetsWhenUserCashedOut(ownBets: GameCrashServiceMessage.CrashOwnBets) {
+        this.cashOutStore.cashOut = ownBets.cashOut;
+        this.cashOutStore.fullCashOutValue = ownBets.cashOut.cashOutWin;
+        this.betStore.isReceivedBet = false;
+
+        // join game when user cashed out, not show full and half cash out buttons
+        this.cashOutStore.isFullCashedOut = false;
+        this.cashOutStore.isHalfCashedOut = false;
+        this.cashOutStore.ratio = 1;
+    }
+
+    private handleOwnBetsWhenUserNotCashOut(ownBets: GameCrashServiceMessage.CrashOwnBets) {
+        // join game when user does not cash out, game show explosion animation and result
+        const multiplier = +(this.roundHistoryStore.getLastRound()?.result || 0);
+        if (!ownBets.halfCashOut && multiplier && (this.roundTimeStore.isShowResult || this.roundTimeStore.isShowAnimationResult)) {
+            const fullValue = multiplier * ownBets.amount;
+            this.cashOutStore.fullCashOutValue = fullValue;
+            this.cashOutStore.halfCashOutValue = fullValue / 2;
         }
     }
 
