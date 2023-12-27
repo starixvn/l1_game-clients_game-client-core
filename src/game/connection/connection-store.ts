@@ -79,6 +79,7 @@ export class ConnectionStore {
     }
 
     onConnected() {
+        console.log("socket connected");
         this.isConnected = true;
         this.isConnectFailed = false;
         this.connection.onAny(this.onHandleData.bind(this));
