@@ -115,3 +115,12 @@ export const CASH_OUT_STATE = {
     HALF: "half",
     FULL: "full",
 };
+
+export const RoundState = {
+    NONE: "NONE",
+    PLACE_BET: "PLACE_BET",
+    BET_NEXT_ROUND: "BET_NEXT_ROUND",
+    CANCEL_BET: "CANCEL_BET",
+    BET_ACCEPTED: "BET_ACCEPTED",
+    CASH_OUT: "CASH_OUT",
+};

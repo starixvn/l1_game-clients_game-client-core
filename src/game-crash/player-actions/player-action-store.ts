@@ -7,7 +7,7 @@ import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { AutoPlayStore } from "../auto-play/auto-play-store";
 import { EarlyBetStore } from "../bet/early-bet-store";
 import { CrashCashOutStore } from "../cash-out/crash-cash-out-store";
-import { BET_STATE, CASH_OUT_STATE, EARLY_BET_STATE } from "../game-crash-messages";
+import { BET_STATE, CASH_OUT_STATE, EARLY_BET_STATE, RoundState } from "../game-crash-messages";
 
 @injectable()
 export class PlayerActionStore {
@@ -35,6 +35,16 @@ export class PlayerActionStore {
     private _cashOutState = CASH_OUT_STATE.NONE;
 
     private _betState = BET_STATE.NONE;
+
+    private _roundState = RoundState.PLACE_BET;
+
+    set roundState(state: string) {
+        this._roundState = state;
+    }
+
+    get roundState(): string {
+        return this._roundState;
+    }
 
     get enableAutoPlay() {
         return this._enableAutoPlay;

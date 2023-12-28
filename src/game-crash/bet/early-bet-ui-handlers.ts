@@ -6,6 +6,8 @@ import { MainPlayerStore } from "../../players/main-player-store";
 import { IHandler } from "../../shared";
 import { Translator } from "../../shared/utils";
 import { BetInputStore } from "../bet-input/bet-input-store";
+import { RoundState } from "../game-crash-messages";
+import { PlayerActionStore } from "../player-actions";
 import { EarlyBetStore } from "./early-bet-store";
 
 @injectable()
@@ -15,7 +17,8 @@ export class EarlyBetUIHandlers implements IHandler<boolean> {
         @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
         @inject(EarlyBetStore) private readonly earlyBetStore: EarlyBetStore,
         @inject(BetInputStore) private readonly betInputStore: BetInputStore,
-        @inject(BetStore) private readonly betStore: BetStore
+        @inject(BetStore) private readonly betStore: BetStore,
+        @inject(PlayerActionStore) private readonly playerActionStore: PlayerActionStore
     ) {}
 
     handle(enable: boolean) {
@@ -33,6 +36,7 @@ export class EarlyBetUIHandlers implements IHandler<boolean> {
             this.noticeStore.addWarning(message);
         } else {
             this.earlyBetStore.earlyBet = enable;
+            this.playerActionStore.roundState = RoundState.CANCEL_BET;
         }
     }
 }
