@@ -47,8 +47,8 @@ export class PlayerActionHandlers implements IHandler<boolean> {
             (isPlacingBet) => {
                 if (
                     isPlacingBet &&
-                    (this.playerActionStore.roundState !== RoundState.BET_ACCEPTED ||
-                        this.playerActionStore.roundState !== RoundState.CANCEL_BET)
+                    this.playerActionStore.roundState !== RoundState.BET_ACCEPTED &&
+                    this.playerActionStore.roundState !== RoundState.CANCEL_BET
                 ) {
                     this.handleRoundState(RoundState.PLACE_BET);
                 }
