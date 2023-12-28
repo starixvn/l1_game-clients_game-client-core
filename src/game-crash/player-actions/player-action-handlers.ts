@@ -25,11 +25,6 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         );
 
         reaction(
-            () => this.roundTimeStore.isStartPlacingBet,
-            (isStartPlacingBet) => isStartPlacingBet && this.handleRoundState(RoundState.PLACE_BET)
-        );
-
-        reaction(
             () => this.roundTimeStore.roundTime,
             (roundTime) => {
                 if (roundTime <= 0) {
