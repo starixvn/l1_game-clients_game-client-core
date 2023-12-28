@@ -5,8 +5,9 @@ import { BetStore } from "../../game/bets/bet-store";
 import { RoundHistoryStore } from "../../game/round-histories/round-history-store";
 import { RoundTimeStore } from "../../game/rounds";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { GameCrashServiceMessage } from "../game-crash-messages";
+import { GameCrashServiceMessage, RoundState } from "../game-crash-messages";
 import { MultiplierStore } from "../multiplier/multiplier-store";
+import { PlayerActionStore } from "../player-actions/player-action-store";
 import { CrashCashOutStore } from "./crash-cash-out-store";
 
 @injectable()
@@ -16,7 +17,8 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(BetStore) protected readonly betStore: BetStore,
-        @inject(MultiplierStore) private readonly multiplierStore: MultiplierStore
+        @inject(MultiplierStore) private readonly multiplierStore: MultiplierStore,
+        @inject(PlayerActionStore) protected readonly playerActionStore: PlayerActionStore
     ) {
         reaction(
             () => this.roundTimeStore.isPlacingBet,
@@ -56,6 +58,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         !isReceiveOwnBets && this.cashOutStore.setCashOutNotice(cashOut);
         setTimeout(() => {
             this.cashOutStore.ratio = 1;
+            this.playerActionStore.roundState = RoundState.BET_NEXT_ROUND;
         }, 2700);
     }
 

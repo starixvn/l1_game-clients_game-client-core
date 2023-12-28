@@ -95,11 +95,12 @@ export class PlayerActionStore {
     }
 
     get visibleBetNextRound() {
-        return (
-            (this.betState === BET_STATE.NONE &&
-                (this.isFlyingTime || this.roundTimeStore.isShowResult || this.roundTimeStore.isStartRound)) ||
-            (this.cashOutState === CASH_OUT_STATE.FULL && this.endShowCashOutNotice)
-        );
+        // return (
+        //     (this.betState === BET_STATE.NONE &&
+        //         (this.isFlyingTime || this.roundTimeStore.isShowResult || this.roundTimeStore.isStartRound)) ||
+        //     (this.cashOutState === CASH_OUT_STATE.FULL && this.endShowCashOutNotice)
+        // );
+        return this.roundState === RoundState.BET_NEXT_ROUND;
     }
 
     get permissionAutoPlay() {
@@ -111,12 +112,13 @@ export class PlayerActionStore {
     }
 
     get visibleCashOut() {
-        return (
-            (this.betState === BET_STATE.BET && this.isFlyingTime && !this.visibleBetNextRound) ||
-            (this.betState === BET_STATE.BET &&
-                this.cashOutState !== CASH_OUT_STATE.FULL &&
-                (this.roundTimeStore.isShowResult || this.roundTimeStore.isStartRound))
-        );
+        // return (
+        //     (this.betState === BET_STATE.BET && this.isFlyingTime && !this.visibleBetNextRound) ||
+        //     (this.betState === BET_STATE.BET &&
+        //         this.cashOutState !== CASH_OUT_STATE.FULL &&
+        //         (this.roundTimeStore.isShowResult || this.roundTimeStore.isStartRound))
+        // );
+        return this.roundState === RoundState.CASH_OUT;
     }
 
     get visibleAutoCashOut() {
