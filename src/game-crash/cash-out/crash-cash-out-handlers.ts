@@ -103,7 +103,8 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     private handleOwnBetsWhenUserNotCashOut(ownBets: GameCrashServiceMessage.CrashOwnBets) {
         // join game when user does not cash out, game show explosion animation and result
         const multiplier = +(this.roundHistoryStore.getLastRound()?.result || 0);
-        if (!ownBets.halfCashOut && multiplier && (this.roundTimeStore.isShowResult || this.roundTimeStore.isShowAnimationResult)) {
+        const isResultPhase = this.roundTimeStore.roundTime > this.roundTimeStore.placingBet;
+        if (!ownBets.halfCashOut && multiplier && isResultPhase) {
             const fullValue = multiplier * ownBets.amount;
             this.cashOutStore.fullCashOutValue = fullValue;
             this.cashOutStore.halfCashOutValue = fullValue / 2;
