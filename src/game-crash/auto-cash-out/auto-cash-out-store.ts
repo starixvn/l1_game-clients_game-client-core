@@ -70,8 +70,6 @@ export class AutoCashOutStore {
     }
 
     resetDefaultValueStore() {
-        console.log("component clear storage");
-
         this._enable = false;
         this._multiplier = 1.01;
     }
