@@ -5,7 +5,7 @@ import { BetStore } from "../../game/bets/bet-store";
 import { RoundHistoryStore } from "../../game/round-histories/round-history-store";
 import { RoundTimeStore } from "../../game/rounds";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { GameCrashServiceMessage, RoundState } from "../game-crash-messages";
+import { CASH_OUT_STATE, GameCrashServiceMessage, RoundState } from "../game-crash-messages";
 import { MultiplierStore } from "../multiplier/multiplier-store";
 import { PlayerActionStore } from "../player-actions/player-action-store";
 import { CrashCashOutStore } from "./crash-cash-out-store";
@@ -59,6 +59,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         setTimeout(() => {
             this.cashOutStore.ratio = 1;
             this.playerActionStore.roundState = RoundState.BET_NEXT_ROUND;
+            this.playerActionStore.cashOutState = CASH_OUT_STATE.FULL;
         }, 2700);
     }
 
