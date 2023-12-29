@@ -58,7 +58,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         !isReceiveOwnBets && this.cashOutStore.setCashOutNotice(cashOut);
         setTimeout(() => {
             this.cashOutStore.ratio = 1;
-            this.playerActionStore.roundState = ButtonState.BET_NEXT_ROUND;
+            this.playerActionStore.buttonState = ButtonState.BET_NEXT_ROUND;
             this.playerActionStore.cashOutState = CASH_OUT_STATE.FULL;
         }, 2700);
     }

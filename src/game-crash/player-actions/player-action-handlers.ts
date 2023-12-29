@@ -28,7 +28,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
             () => this.roundTimeStore.roundTime,
             (roundTime) => {
                 if (roundTime <= 0) {
-                    switch (this.playerActionStore.roundState) {
+                    switch (this.playerActionStore.buttonState) {
                         case ButtonState.BET_ACCEPTED:
                             this.handleRoundState(ButtonState.CASH_OUT);
                             break;
@@ -47,8 +47,8 @@ export class PlayerActionHandlers implements IHandler<boolean> {
             (isPlacingBet) => {
                 if (
                     isPlacingBet &&
-                    this.playerActionStore.roundState !== ButtonState.BET_ACCEPTED &&
-                    this.playerActionStore.roundState !== ButtonState.CANCEL_BET
+                    this.playerActionStore.buttonState !== ButtonState.BET_ACCEPTED &&
+                    this.playerActionStore.buttonState !== ButtonState.CANCEL_BET
                 ) {
                     this.handleRoundState(ButtonState.PLACE_BET);
                 }
@@ -61,7 +61,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
             },
             (showingResult) => {
                 if (showingResult) {
-                    if (this.playerActionStore.roundState === ButtonState.PLACE_BET) {
+                    if (this.playerActionStore.buttonState === ButtonState.PLACE_BET) {
                         this.handleRoundState(ButtonState.BET_NEXT_ROUND);
                     }
                 }
@@ -83,10 +83,6 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         this.playerActionStore.earlyBetState = action;
     }
 
-    handleWaitingBet(flag: boolean) {
-        this.playerActionStore.waitingBet = flag;
-    }
-
     handleCurrentCashOutStateInStore(action: string) {
         this.playerActionStore.cashOutState = action;
     }
@@ -104,6 +100,6 @@ export class PlayerActionHandlers implements IHandler<boolean> {
     }
 
     handleRoundState(state: string) {
-        this.playerActionStore.roundState = state;
+        this.playerActionStore.buttonState = state;
     }
 }

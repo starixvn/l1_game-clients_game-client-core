@@ -24,8 +24,6 @@ export class PlayerActionStore {
 
     private _endShowCashOutNotice = false;
 
-    private _waitingBet = false;
-
     private _activeAutoPlay = false;
 
     private _enableAutoPlay = false;
@@ -36,14 +34,14 @@ export class PlayerActionStore {
 
     private _betState = BET_STATE.NONE;
 
-    private _roundState = ButtonState.PLACE_BET;
+    private _buttonState = ButtonState.PLACE_BET;
 
-    set roundState(state: string) {
-        this._roundState = state;
+    set buttonState(state: string) {
+        this._buttonState = state;
     }
 
-    get roundState(): string {
-        return this._roundState;
+    get buttonState(): string {
+        return this._buttonState;
     }
 
     get enableAutoPlay() {
@@ -95,19 +93,15 @@ export class PlayerActionStore {
     }
 
     get visibleBetNextRound() {
-        return this.roundState === ButtonState.BET_NEXT_ROUND;
+        return this.buttonState === ButtonState.BET_NEXT_ROUND;
     }
 
     get permissionAutoPlay() {
         return this.cashOutState === CASH_OUT_STATE.FULL && this.betState === BET_STATE.BET;
     }
 
-    get isFlyingTime() {
-        return this.roundTimeStore.roundTime <= 0;
-    }
-
     get visibleCashOut() {
-        return this.roundState === ButtonState.CASH_OUT;
+        return this.buttonState === ButtonState.CASH_OUT;
     }
 
     get visibleAutoCashOut() {
@@ -120,16 +114,8 @@ export class PlayerActionStore {
             this.visibleCashOut ||
             this.autoPlayStore.roundsAutoPlay > 0 ||
             (this.latestRound && this.roundTimeStore.isStartPlacingBet) ||
-            (this.betState === BET_STATE.BET && (this.roundTimeStore.isPlacingBet || this.roundTimeStore.isLocking))
+            (this.buttonState === ButtonState.BET_ACCEPTED && (this.roundTimeStore.isPlacingBet || this.roundTimeStore.isLocking))
         );
-    }
-
-    get waitingBet(): boolean {
-        return this._waitingBet;
-    }
-
-    set waitingBet(enable: boolean) {
-        this._waitingBet = enable;
     }
 
     get activeAutoPlayCurrentRound() {

@@ -36,7 +36,7 @@ export class EarlyBetUIHandlers implements IHandler<boolean> {
             this.noticeStore.addWarning(message);
         } else {
             this.earlyBetStore.earlyBet = enable;
-            this.playerActionStore.roundState = enable ? ButtonState.CANCEL_BET : ButtonState.BET_NEXT_ROUND;
+            this.playerActionStore.buttonState = enable ? ButtonState.CANCEL_BET : ButtonState.BET_NEXT_ROUND;
         }
     }
 }
