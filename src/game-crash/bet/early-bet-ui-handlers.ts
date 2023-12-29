@@ -6,7 +6,7 @@ import { MainPlayerStore } from "../../players/main-player-store";
 import { IHandler } from "../../shared";
 import { Translator } from "../../shared/utils";
 import { BetInputStore } from "../bet-input/bet-input-store";
-import { RoundState } from "../game-crash-messages";
+import { ButtonState } from "../game-crash-messages";
 import { PlayerActionStore } from "../player-actions";
 import { EarlyBetStore } from "./early-bet-store";
 
@@ -36,7 +36,7 @@ export class EarlyBetUIHandlers implements IHandler<boolean> {
             this.noticeStore.addWarning(message);
         } else {
             this.earlyBetStore.earlyBet = enable;
-            enable && (this.playerActionStore.roundState = RoundState.CANCEL_BET);
+            this.playerActionStore.roundState = enable ? ButtonState.CANCEL_BET : ButtonState.BET_NEXT_ROUND;
         }
     }
 }

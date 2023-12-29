@@ -6,7 +6,7 @@ import { NoticeStore } from "../../game/notices/notice-store";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { IHandler } from "../../shared";
 import { Translator } from "../../shared/utils";
-import { RoundState } from "../game-crash-messages";
+import { ButtonState } from "../game-crash-messages";
 import { PlayerActionStore } from "./player-action-store";
 
 @injectable()
@@ -20,7 +20,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         reaction(
             () => this.betStore.isReceivedBet,
             () => {
-                this.betStore.isReceivedBet && this.handleRoundState(RoundState.BET_ACCEPTED);
+                this.betStore.isReceivedBet && this.handleRoundState(ButtonState.BET_ACCEPTED);
             }
         );
 
@@ -29,11 +29,11 @@ export class PlayerActionHandlers implements IHandler<boolean> {
             (roundTime) => {
                 if (roundTime <= 0) {
                     switch (this.playerActionStore.roundState) {
-                        case RoundState.BET_ACCEPTED:
-                            this.handleRoundState(RoundState.CASH_OUT);
+                        case ButtonState.BET_ACCEPTED:
+                            this.handleRoundState(ButtonState.CASH_OUT);
                             break;
-                        case RoundState.PLACE_BET:
-                            this.handleRoundState(RoundState.BET_NEXT_ROUND);
+                        case ButtonState.PLACE_BET:
+                            this.handleRoundState(ButtonState.BET_NEXT_ROUND);
                             break;
                     }
                 }
@@ -47,10 +47,10 @@ export class PlayerActionHandlers implements IHandler<boolean> {
             (isPlacingBet) => {
                 if (
                     isPlacingBet &&
-                    this.playerActionStore.roundState !== RoundState.BET_ACCEPTED &&
-                    this.playerActionStore.roundState !== RoundState.CANCEL_BET
+                    this.playerActionStore.roundState !== ButtonState.BET_ACCEPTED &&
+                    this.playerActionStore.roundState !== ButtonState.CANCEL_BET
                 ) {
-                    this.handleRoundState(RoundState.PLACE_BET);
+                    this.handleRoundState(ButtonState.PLACE_BET);
                 }
             }
         );
@@ -61,8 +61,8 @@ export class PlayerActionHandlers implements IHandler<boolean> {
             },
             (showingResult) => {
                 if (showingResult) {
-                    if (this.playerActionStore.roundState === RoundState.PLACE_BET) {
-                        this.handleRoundState(RoundState.BET_NEXT_ROUND);
+                    if (this.playerActionStore.roundState === ButtonState.PLACE_BET) {
+                        this.handleRoundState(ButtonState.BET_NEXT_ROUND);
                     }
                 }
             }
