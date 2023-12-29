@@ -5,7 +5,6 @@ import { BetStore } from "../../game/bets/bet-store";
 import { NoticeStore } from "../../game/notices/notice-store";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { IHandler } from "../../shared";
-import { Translator } from "../../shared/utils";
 import { ButtonState } from "../game-crash-messages";
 import { PlayerActionStore } from "./player-action-store";
 
@@ -20,7 +19,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         reaction(
             () => this.betStore.isReceivedBet,
             () => {
-                this.betStore.isReceivedBet && this.handleRoundState(ButtonState.BET_ACCEPTED);
+                this.betStore.isReceivedBet && this.changeButtonState(ButtonState.BET_ACCEPTED);
             }
         );
 
@@ -30,10 +29,10 @@ export class PlayerActionHandlers implements IHandler<boolean> {
                 if (roundTime <= 0) {
                     switch (this.playerActionStore.buttonState) {
                         case ButtonState.BET_ACCEPTED:
-                            this.handleRoundState(ButtonState.CASH_OUT);
+                            this.changeButtonState(ButtonState.CASH_OUT);
                             break;
                         case ButtonState.PLACE_BET:
-                            this.handleRoundState(ButtonState.BET_NEXT_ROUND);
+                            this.changeButtonState(ButtonState.BET_NEXT_ROUND);
                             break;
                     }
                 }
@@ -50,7 +49,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
                     this.playerActionStore.buttonState !== ButtonState.BET_ACCEPTED &&
                     this.playerActionStore.buttonState !== ButtonState.CANCEL_BET
                 ) {
-                    this.handleRoundState(ButtonState.PLACE_BET);
+                    this.changeButtonState(ButtonState.PLACE_BET);
                 }
             }
         );
@@ -62,7 +61,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
             (showingResult) => {
                 if (showingResult) {
                     if (this.playerActionStore.buttonState === ButtonState.PLACE_BET) {
-                        this.handleRoundState(ButtonState.BET_NEXT_ROUND);
+                        this.changeButtonState(ButtonState.BET_NEXT_ROUND);
                     }
                 }
             }
@@ -79,10 +78,6 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         this.playerActionStore.betState = action;
     }
 
-    handleCurrentEarlyBetStateInStore(action: string) {
-        this.playerActionStore.earlyBetState = action;
-    }
-
     handleCurrentCashOutStateInStore(action: string) {
         this.playerActionStore.cashOutState = action;
     }
@@ -95,11 +90,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         this.playerActionStore.enableAutoPlay = flag;
     }
 
-    showMsgMinBet(minBet: number) {
-        this.noticeStore.addWarning(Translator.commonTranslate("message_min_bet_notice", { minBet: minBet }));
-    }
-
-    handleRoundState(state: string) {
+    changeButtonState(state: string) {
         this.playerActionStore.buttonState = state;
     }
 }

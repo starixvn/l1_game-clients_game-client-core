@@ -7,7 +7,7 @@ import { IHandler } from "../../shared";
 import { Translator } from "../../shared/utils";
 import { BetInputStore } from "../bet-input/bet-input-store";
 import { EarlyBetStore } from "../bet/early-bet-store";
-import { BET_STATE, EARLY_BET_STATE } from "../game-crash-messages";
+import { BET_STATE } from "../game-crash-messages";
 import { PlayerActionStore } from "../player-actions/player-action-store";
 import { AutoPlayStore } from "./auto-play-store";
 
@@ -59,7 +59,6 @@ export class AutoPlayHandler implements IHandler<number> {
         if (!this.betInputStore.betAmountGreaterMinBet) {
             this.noticeStore.addWarning(Translator.commonTranslate("message_min_bet_notice", { minBet: minBet }));
             this.playerActionStore.betState = BET_STATE.NONE;
-            this.playerActionStore.earlyBetState = EARLY_BET_STATE.NONE;
         }
         return this.betInputStore.betAmountGreaterMinBet;
     }
@@ -75,11 +74,11 @@ export class AutoPlayHandler implements IHandler<number> {
         this.autoPlayStore.isOpenAutoPlayPopup = false;
         this.autoPlayStore.isAutoPlay = true;
         this.updateStatusLatestRoundAccepted();
-        if (!this.playerActionStore.visibleCashOut && this.playerActionStore.visibleBetNextRound && !this.earlyBetStore.earlyBet) {
+        if (!this.playerActionStore.visibleCashOut && this.playerActionStore.visibleBetNextRound && !this.earlyBetStore.earlyBetEnable) {
             this.autoPlayStore.roundsAutoPlay = this.autoPlayStore.selectedRoundOnPopup - 1;
             this.autoPlayStore.autoPlayWhenRocketFly = true;
         }
-        if (this.earlyBetStore.earlyBet) {
+        if (this.earlyBetStore.earlyBetEnable) {
             this.checkEarlyBetBeforeAutoPlay(true);
         }
     }

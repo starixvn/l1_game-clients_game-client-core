@@ -1,29 +1,15 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+import { ButtonState } from "../game-crash-messages";
+import { PlayerActionStore } from "../player-actions";
 
 @injectable()
 export class EarlyBetStore {
-    private _betAmount = -1;
-
-    private _earlyBet = false;
-
-    get betAmount(): number {
-        return this._betAmount;
+    get earlyBetEnable(): boolean {
+        return this.roundStore.buttonState === ButtonState.CANCEL_BET;
     }
 
-    set betAmount(amount: number) {
-        this._betAmount = amount;
-    }
-
-    get earlyBet(): boolean {
-        return this._earlyBet;
-    }
-
-    set earlyBet(trigger: boolean) {
-        this._earlyBet = trigger;
-    }
-
-    constructor() {
+    constructor(@inject(PlayerActionStore) protected readonly roundStore: PlayerActionStore) {
         makeAutoObservable(this);
     }
 }

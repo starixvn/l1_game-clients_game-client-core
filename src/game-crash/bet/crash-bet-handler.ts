@@ -1,11 +1,13 @@
 import { inject, injectable } from "inversify";
-import { MainPlayerStore } from "../../players";
-import { Translator } from "../../shared/utils/localization-manager";
+import { BetStore } from "../../game/bets/bet-store";
 import { ConnectionHandlers, ConnectionStore } from "../../game/connection";
 import { NoticeStore } from "../../game/notices";
 import { OrientationStore } from "../../game/orientation";
 import { ROUND_STATE, RoundStore, RoundTimeStore } from "../../game/rounds";
-import { BetStore } from "../../game/bets/bet-store";
+import { MainPlayerStore } from "../../players";
+import { Translator } from "../../shared/utils/localization-manager";
+import { AutoCashOutStore } from "../auto-cash-out";
+import { BetInputStore } from "../bet-input";
 import { GameCrashEmitMessage } from "../game-crash-messages";
 
 @injectable()
@@ -18,7 +20,9 @@ export class CrashBetHandler {
         @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
         @inject(NoticeStore) private readonly noticeStore: NoticeStore,
         @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler,
-        @inject(RoundStore) private readonly roundStore: RoundStore
+        @inject(RoundStore) private readonly roundStore: RoundStore,
+        @inject(AutoCashOutStore) private readonly autoCashOutStore: AutoCashOutStore,
+        @inject(BetInputStore) private readonly betInputStore: BetInputStore
     ) {}
 
     handle(payload: { autoCashOut: number; amount: number }) {
@@ -76,5 +80,13 @@ export class CrashBetHandler {
         }
 
         return !isBetPhase;
+    }
+
+    autoPlaceBet() {
+        const payload = {
+            autoCashOut: this.autoCashOutStore.enable ? this.autoCashOutStore.multiplier : undefined,
+            amount: this.betInputStore.betAmount,
+        };
+        this.handle(payload);
     }
 }

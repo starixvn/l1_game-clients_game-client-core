@@ -7,7 +7,7 @@ import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { AutoPlayStore } from "../auto-play/auto-play-store";
 import { EarlyBetStore } from "../bet/early-bet-store";
 import { CrashCashOutStore } from "../cash-out/crash-cash-out-store";
-import { BET_STATE, ButtonState, CASH_OUT_STATE, EARLY_BET_STATE } from "../game-crash-messages";
+import { BET_STATE, ButtonState, CASH_OUT_STATE } from "../game-crash-messages";
 
 @injectable()
 export class PlayerActionStore {
@@ -27,8 +27,6 @@ export class PlayerActionStore {
     private _activeAutoPlay = false;
 
     private _enableAutoPlay = false;
-
-    private _earlyBetState = EARLY_BET_STATE.NONE;
 
     private _cashOutState = CASH_OUT_STATE.NONE;
 
@@ -58,14 +56,6 @@ export class PlayerActionStore {
 
     set activeAutoPlay(value: boolean) {
         this._activeAutoPlay = value;
-    }
-
-    get earlyBetState() {
-        return this._earlyBetState;
-    }
-
-    set earlyBetState(value: string) {
-        this._earlyBetState = value;
     }
 
     get cashOutState() {
@@ -109,13 +99,7 @@ export class PlayerActionStore {
     }
 
     get disableBetAmount() {
-        return (
-            this.earlyBetState === EARLY_BET_STATE.BET ||
-            this.visibleCashOut ||
-            this.autoPlayStore.roundsAutoPlay > 0 ||
-            (this.latestRound && this.roundTimeStore.isStartPlacingBet) ||
-            (this.buttonState === ButtonState.BET_ACCEPTED && (this.roundTimeStore.isPlacingBet || this.roundTimeStore.isLocking))
-        );
+        return this.buttonState !== ButtonState.PLACE_BET && this.buttonState !== ButtonState.BET_NEXT_ROUND;
     }
 
     get activeAutoPlayCurrentRound() {
