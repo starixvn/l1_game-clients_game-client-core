@@ -53,7 +53,7 @@ export function loadFeature(feature: Record<string, unknown>, container: Contain
     const mediator = container.get(Mediator);
 
     constructors.forEach((ctor) => {
-        const instance = container.resolve<any>(ctor);
+        const instance = container.get<any>(ctor);
 
         if (isMultipleHandlers(instance)) {
             mediator.registerHandlers(instance);
