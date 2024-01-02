@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import { when } from "mobx";
 import { BetStore } from "../../game/bets/bet-store";
 import { NoticeStore } from "../../game/notices/notice-store";
-import { ROUND_STATE, RoundTimeStore } from "../../game/rounds/round-time-store";
+import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { IHandler } from "../../shared";
 import { Translator } from "../../shared/utils";
@@ -40,7 +40,7 @@ export class AutoPlayHandler implements IHandler<number> {
     }
 
     get needHandleEarlyBet() {
-        return this.roundTimeStore.roundState === ROUND_STATE.PLACING_BET && this.earlyBetStore.earlyBetEnable;
+        return this.roundTimeStore.isPlacingBet && this.earlyBetStore.earlyBetEnable;
     }
 
     handle() {}
@@ -103,15 +103,21 @@ export class AutoPlayHandler implements IHandler<number> {
 
     handleDecreaseRoundAtConfirm() {
         if (this.validateAmount() && this.autoPlayStore.roundsAutoPlay > 0) {
-            if (this.playerActionStore.buttonState === ButtonState.BET_NEXT_ROUND) {
-                this.enableEarlyBet(true);
-                this.autoPlayStore.skipDecreaseAutoPlayCount = true;
+            if (this.roundTimeStore.isPlacingBet) {
+                this.crashBetHandler.autoPlaceBet();
                 this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
-                this.autoPlayStore.autoPlayWhenRocketFly = true;
+            } else if (this.playerActionStore.buttonState === ButtonState.BET_NEXT_ROUND) {
+                this.autoEnableEarlyBet();
             }
         } else {
             this.clearAutoPlay();
         }
+    }
+
+    autoEnableEarlyBet() {
+        this.enableEarlyBet(true);
+        this.autoPlayStore.skipDecreaseAutoPlayCount = true;
+        this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
     }
 
     updateAutoPlayRounds(rounds: number) {
