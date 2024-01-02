@@ -35,7 +35,7 @@ export class AutoPlayHandler implements IHandler<number> {
     }
 
     checkAutoPlayClick() {
-        if (!this.autoPlayStore.isAutoPlay && this.checkBalanceForAutoPlay() && this.checkBetAmountVsMinBet()) {
+        if (!this.autoPlayStore.isAutoPlay && this.validateAmount()) {
             this.openAutoPlayPopup();
         } else {
             this.autoPlayStore.isAutoPlay = false;
@@ -43,24 +43,20 @@ export class AutoPlayHandler implements IHandler<number> {
         }
     }
 
-    private checkBalanceForAutoPlay() {
+    validateAmount() {
         const { freebetEnabled } = this.betStore;
         const availableBalance = freebetEnabled ? this.mainPlayerStore.scoin : this.mainPlayerStore.balance;
+        const minBet = this.betInputStore.minBet;
         if (this.betInputStore.betAmount <= availableBalance) {
-            return true;
+            if (!this.betInputStore.betAmountGreaterMinBet) {
+                this.noticeStore.addWarning(Translator.commonTranslate("message_min_bet_notice", { minBet: minBet }));
+                this.playerActionStore.betState = BET_STATE.NONE;
+            }
+            return this.betInputStore.betAmountGreaterMinBet;
         } else {
             this.noticeStore.addWarning(Translator.commonTranslate("not_enough_money"));
             return false;
         }
-    }
-
-    checkBetAmountVsMinBet() {
-        const minBet = this.betInputStore.minBet;
-        if (!this.betInputStore.betAmountGreaterMinBet) {
-            this.noticeStore.addWarning(Translator.commonTranslate("message_min_bet_notice", { minBet: minBet }));
-            this.playerActionStore.betState = BET_STATE.NONE;
-        }
-        return this.betInputStore.betAmountGreaterMinBet;
     }
 
     closeAutoPlayPopup() {
@@ -89,7 +85,7 @@ export class AutoPlayHandler implements IHandler<number> {
 
     decreaseAutoPlayRounds() {
         if (this.autoPlayStore.isAutoPlay) {
-            if (this.checkBalanceForAutoPlay() && this.checkBetAmountVsMinBet() && this.autoPlayStore.roundsAutoPlay > 0) {
+            if (this.validateAmount() && this.autoPlayStore.roundsAutoPlay > 0) {
                 this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
             } else {
                 this.autoPlayStore.isAutoPlay = false;

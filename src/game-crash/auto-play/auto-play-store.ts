@@ -52,7 +52,7 @@ export class AutoPlayStore {
         this._latestRoundAccepted = status;
     }
 
-    get showHideArrowIcon() {
+    get hideArrowIcon() {
         return this.isAutoPlay && !this.latestRoundAccepted;
     }
 
