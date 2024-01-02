@@ -6,13 +6,13 @@ import { Md5PopupStore } from "./md5-popup-store";
 export class Md5PopupHandler {
     constructor(@inject(Md5PopupStore) private readonly md5PopupStore: Md5PopupStore) {}
 
-    updateShowHidePopupMd5(isShow: boolean) {
+    setDisplayPopupMd5(isShow: boolean) {
         this.md5PopupStore.isOpenPopupMd5 = isShow;
     }
 
     handleMd5Popup(info: { isOpenPopupMd5: boolean; roundId: number }) {
         const { isOpenPopupMd5, roundId } = info;
-        this.updateShowHidePopupMd5(isOpenPopupMd5);
+        this.setDisplayPopupMd5(isOpenPopupMd5);
         this.md5PopupStore.roundId = roundId;
     }
 
