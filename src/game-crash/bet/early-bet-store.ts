@@ -6,10 +6,10 @@ import { PlayerActionStore } from "../player-actions";
 @injectable()
 export class EarlyBetStore {
     get earlyBetEnable(): boolean {
-        return this.roundStore.buttonState === ButtonState.CANCEL_BET;
+        return this.playerActionStore.buttonState === ButtonState.CANCEL_BET;
     }
 
-    constructor(@inject(PlayerActionStore) protected readonly roundStore: PlayerActionStore) {
+    constructor(@inject(PlayerActionStore) protected readonly playerActionStore: PlayerActionStore) {
         makeAutoObservable(this);
     }
 }

@@ -1,23 +1,15 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 
-import { BetStore } from "../../game/bets/bet-store";
-import { RoundStore } from "../../game/rounds/round-store";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { AutoPlayStore } from "../auto-play/auto-play-store";
-import { EarlyBetStore } from "../bet/early-bet-store";
-import { CrashCashOutStore } from "../cash-out/crash-cash-out-store";
 import { BET_STATE, ButtonState, CASH_OUT_STATE } from "../game-crash-messages";
 
 @injectable()
 export class PlayerActionStore {
     constructor(
-        @inject(CrashCashOutStore) protected readonly crashCashoutStore: CrashCashOutStore,
         @inject(AutoPlayStore) protected readonly autoPlayStore: AutoPlayStore,
-        @inject(EarlyBetStore) protected readonly earlyBetStore: EarlyBetStore,
-        @inject(BetStore) protected readonly betStore: BetStore,
-        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
-        @inject(RoundStore) protected readonly roundStore: RoundStore
+        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore
     ) {
         makeAutoObservable(this);
     }
