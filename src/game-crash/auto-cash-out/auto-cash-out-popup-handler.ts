@@ -6,18 +6,21 @@ import { AutoCashOutPopupStore } from "./auto-cash-out-popup-store";
 @injectable()
 export class AutoCashOutPopupHandler {
     constructor(
-        @inject(AutoCashOutPopupStore) private readonly autoCashoutPopupStore: AutoCashOutPopupStore,
+        @inject(AutoCashOutPopupStore) private readonly autoCashOutPopupStore: AutoCashOutPopupStore,
         @inject(CrashGameConfigStore) private readonly gameConfigStore: CrashGameConfigStore
     ) {}
 
     togglePopup(enable: boolean) {
-        this.autoCashoutPopupStore.enable = enable;
+        this.autoCashOutPopupStore.enable = enable;
     }
 
     handleMultiplier(multiplierString: string) {
-        this.autoCashoutPopupStore.multiplier = multiplierString;
+        this.autoCashOutPopupStore.multiplier = multiplierString;
+        this.autoCashOutPopupStore.isValid = this.isValidMultiplier(multiplierString);
+    }
 
-        const multiplier = parseFloat(multiplierString);
-        this.autoCashoutPopupStore.isValid = multiplier >= 1.01 && multiplier <= this.gameConfigStore.maxMultiplier;
+    private isValidMultiplier(multiplier: string): boolean {
+        const parsedMultiplier = parseFloat(multiplier);
+        return parsedMultiplier >= this.gameConfigStore.minMultiplier && parsedMultiplier <= this.gameConfigStore.maxMultiplier;
     }
 }

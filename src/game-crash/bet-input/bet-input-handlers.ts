@@ -13,13 +13,12 @@ export class BetInputHandler implements IHandler<number> {
 
     handle() {
         this.betInputStore.betAmount = this.betInputStore.betAmountTemp;
-        this.betInputStore.isOpenBetAmountPopup = false;
+        this.closeBetAmountPopup();
     }
 
     setBetAmountTemp(amount: number) {
         const calcAmount = this.betInputStore.betAmountTemp + amount;
         const validatedAmount = calcAmount > this.betInputStore.maxBet ? this.betInputStore.maxBet : calcAmount;
-
         this.betInputStore.betAmountTemp = validatedAmount;
     }
 
@@ -28,7 +27,7 @@ export class BetInputHandler implements IHandler<number> {
     }
 
     openBetAmountPopup() {
-        this.betInputStore.betAmountTemp = 0;
+        this.resetBetAmount();
         this.betInputStore.isOpenBetAmountPopup = true;
     }
 

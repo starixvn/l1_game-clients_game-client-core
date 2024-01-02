@@ -3,11 +3,20 @@ import { makeAutoObservable, when } from "mobx";
 
 import { RoundStore } from "../../game/rounds/round-store";
 import { localStorageKeys, StorageManager } from "../../shared/utils/storage-manager";
+import { CrashGameConfigStore } from "../game-configs/crash-game-config-store";
 import { GameCrashServiceMessage, IGameCrashUserSettings } from "../game-crash-messages";
 
 @injectable()
 export class AutoCashOutStore {
-    constructor(@inject(RoundStore) protected readonly roundStore: RoundStore) {
+    private _enable = false;
+    private _multiplier = 0;
+
+    private _disable = false;
+
+    constructor(
+        @inject(CrashGameConfigStore) private readonly gameConfigStore: CrashGameConfigStore,
+        @inject(RoundStore) protected readonly roundStore: RoundStore
+    ) {
         makeAutoObservable(this);
         this.loadMultiplierFromStorage();
 
@@ -18,11 +27,6 @@ export class AutoCashOutStore {
             }
         );
     }
-
-    private _enable = false;
-    private _multiplier = 1.01;
-
-    private _disable = false;
 
     loadMultiplierFromStorage() {
         const userSetting = StorageManager.get(localStorageKeys.userSetting) as IGameCrashUserSettings;
@@ -71,6 +75,6 @@ export class AutoCashOutStore {
 
     resetDefaultValueStore() {
         this._enable = false;
-        this._multiplier = 1.01;
+        this._multiplier = this.gameConfigStore.minMultiplier;
     }
 }

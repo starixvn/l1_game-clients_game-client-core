@@ -2,21 +2,24 @@ import { stub } from "jest-auto-stub";
 
 import { AutoCashOutHandler } from "../../../../src/game-crash/auto-cash-out/auto-cash-out-handler";
 import { AutoCashOutStore } from "../../../../src/game-crash/auto-cash-out/auto-cash-out-store";
+import { CrashGameConfigStore } from "../../../../src/game-crash/game-configs/crash-game-config-store";
 import { RoundStore } from "../../../../src/game/rounds/round-store";
 
 describe("AutoCashOutHandler", () => {
     let autoCashOutHandler: AutoCashOutHandler;
     let autoCashOutStore: AutoCashOutStore;
     let roundStore: RoundStore;
+    let gameConfigStore: CrashGameConfigStore;
 
     beforeEach(() => {
         roundStore = stub<RoundStore>();
-        autoCashOutStore = new AutoCashOutStore(roundStore);
+        gameConfigStore = stub<CrashGameConfigStore>();
+        autoCashOutStore = new AutoCashOutStore(gameConfigStore, roundStore);
         autoCashOutHandler = new AutoCashOutHandler(autoCashOutStore);
     });
 
     describe("handleEnable", () => {
-        it("should update enable for autoCashoutStore", async () => {
+        it("should update enable of autoCashOutStore", async () => {
             // Arrange
 
             // Act
@@ -28,7 +31,7 @@ describe("AutoCashOutHandler", () => {
     });
 
     describe("handleMultiplier", () => {
-        it("should update multiplier for autoCashoutStore", async () => {
+        it("should update multiplier", async () => {
             // Arrange
             const multiplier = 2;
 
@@ -41,7 +44,7 @@ describe("AutoCashOutHandler", () => {
     });
 
     describe("adjustMultiplier", () => {
-        it("should update multiplier for autoCashoutStore", async () => {
+        it("should update multiplier", async () => {
             // Arrange
             const adjustValue = 1;
             autoCashOutStore.multiplier = 1;
@@ -55,7 +58,7 @@ describe("AutoCashOutHandler", () => {
     });
 
     describe("handleDisableAuto", () => {
-        it("should update disable status for autoCashoutStore", async () => {
+        it("should update disable", async () => {
             // Arrange
 
             // Act

@@ -4,21 +4,21 @@ import { AutoCashOutStore } from "./auto-cash-out-store";
 
 @injectable()
 export class AutoCashOutHandler {
-    constructor(@inject(AutoCashOutStore) private readonly autoCashoutStore: AutoCashOutStore) {}
+    constructor(@inject(AutoCashOutStore) private readonly autoCashOutStore: AutoCashOutStore) {}
 
     handleEnable(enable: boolean) {
-        this.autoCashoutStore.enable = enable;
+        this.autoCashOutStore.enable = enable;
     }
 
     handleMultiplier(multiplier: number) {
-        this.autoCashoutStore.multiplier = multiplier;
+        this.autoCashOutStore.multiplier = multiplier;
     }
 
     adjustMultiplier(value: number) {
-        this.autoCashoutStore.multiplier = parseFloat((this.autoCashoutStore.multiplier + value).toFixed(2));
+        this.autoCashOutStore.multiplier = parseFloat((this.autoCashOutStore.multiplier + value).toFixed(2));
     }
 
     handleDisableAuto(disable: boolean) {
-        this.autoCashoutStore.disable = disable;
+        this.autoCashOutStore.disable = disable;
     }
 }
