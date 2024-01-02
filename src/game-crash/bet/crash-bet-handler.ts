@@ -83,6 +83,7 @@ export class CrashBetHandler {
     }
 
     autoPlaceBet() {
+        console.log("auto place bet");
         const payload = {
             autoCashOut: this.autoCashOutStore.enable ? this.autoCashOutStore.multiplier : undefined,
             amount: this.betInputStore.betAmount,

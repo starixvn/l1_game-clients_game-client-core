@@ -14,19 +14,12 @@ export class AutoPlayStore {
     public _roundConfirmedOnPopup = 0;
 
     public isAutoPlay = false;
-    private _hasEarlyBetBeforeAutoPlay = false;
     private _autoPlayWhenPlacingBet = false;
     private _autoPlayWhenRocketFly = false;
 
     private _latestRoundAccepted = false;
 
-    set hasEarlyBetBeforeAutoPlay(value: boolean) {
-        this._hasEarlyBetBeforeAutoPlay = value;
-    }
-
-    get hasEarlyBetBeforeAutoPlay(): boolean {
-        return this._hasEarlyBetBeforeAutoPlay;
-    }
+    skipDecreaseAutoPlayCount = false;
 
     set autoPlayWhenPlacingBet(value: boolean) {
         this._autoPlayWhenPlacingBet = value;
