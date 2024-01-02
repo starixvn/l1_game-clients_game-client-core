@@ -38,14 +38,16 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         reaction(
             () => this.multiplierStore.multiplier,
             () => {
-                const multiplier = this.multiplierStore.multiplier;
-                if (multiplier && !!this.cashOutStore.cashOutBet) {
-                    if (!this.cashOutStore.isFullCashedOut) {
-                        this.cashOutStore.fullCashOutValue = multiplier * this.cashOutStore.cashOutBet.value;
-                    }
+                if (this.cashOutStore.isFullCashedOut) return;
+
+                const { multiplier } = this.multiplierStore;
+                const { cashOutBet } = this.cashOutStore;
+
+                if (multiplier && !!cashOutBet) {
+                    this.cashOutStore.fullCashOutValue = cashOutBet.value * multiplier;
 
                     if (!this.cashOutStore.isHalfCashedOut) {
-                        this.cashOutStore.halfCashOutValue = multiplier * this.cashOutStore.cashOutBet.value * this.HalfCashOutRatio;
+                        this.cashOutStore.halfCashOutValue = cashOutBet.value * multiplier * this.HalfCashOutRatio;
                     }
                 }
             }
