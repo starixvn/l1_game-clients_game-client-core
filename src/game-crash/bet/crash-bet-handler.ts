@@ -69,8 +69,9 @@ export class CrashBetHandler {
     }
 
     isInPhasePreventBet() {
-        const isBetPhase = [ROUND_STATE.PLACING_BET].includes(this.roundTimeStore.roundState);
-        if (!isBetPhase) {
+        const isPreventBet = this.roundTimeStore.roundState !== ROUND_STATE.PLACING_BET;
+
+        if (isPreventBet) {
             const isStartingRound = this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND;
             const warningMsg = isStartingRound
                 ? Translator.commonTranslate("message_cannot_bet")
@@ -79,7 +80,7 @@ export class CrashBetHandler {
             this.noticeStore.addWarning(warningMsg);
         }
 
-        return !isBetPhase;
+        return isPreventBet;
     }
 
     autoPlaceBet() {
