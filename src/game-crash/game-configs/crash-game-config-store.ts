@@ -3,8 +3,8 @@ import { makeAutoObservable } from "mobx";
 
 @injectable()
 export class CrashGameConfigStore {
-    private _maxMultiplier = 0;
     private readonly _minMultiplier = 1.01;
+    private _maxMultiplier = 0;
 
     constructor() {
         makeAutoObservable(this);

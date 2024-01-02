@@ -55,68 +55,68 @@ describe("AutoCashOutPopupHandler", () => {
     });
 
     describe("isValidMultiplier", () => {
-        describe("when multiplier is greater than minBet and multiplier less than maxBet", () => {
+        describe("when multiplier is greater than minMultiplier and multiplier less than maxMultiplier", () => {
             it("should return true", async () => {
                 // Arrange
                 const multiplier = "2.00";
 
                 // Act
-                autoCashOutPopupHandler["isValidMultiplier"](multiplier);
+                const isValid = autoCashOutPopupHandler["isValidMultiplier"](multiplier);
 
                 // Assert
-                expect(autoCashOutPopupHandler["isValidMultiplier"](multiplier)).toEqual(true);
+                expect(isValid).toEqual(true);
             });
         });
 
-        describe("when multiplier greater than maxBet", () => {
+        describe("when multiplier greater than maxMultiplier", () => {
             it("should return false", async () => {
                 // Arrange
                 const multiplier = "30.00";
 
                 // Act
-                autoCashOutPopupHandler["isValidMultiplier"](multiplier);
+                const isValid = autoCashOutPopupHandler["isValidMultiplier"](multiplier);
 
                 // Assert
-                expect(autoCashOutPopupHandler["isValidMultiplier"](multiplier)).toEqual(false);
+                expect(isValid).toEqual(false);
             });
         });
 
-        describe("when multiplier less than minBet", () => {
+        describe("when multiplier less than minMultiplier", () => {
             it("should return false", async () => {
                 // Arrange
                 const multiplier = "1.00";
 
                 // Act
-                autoCashOutPopupHandler["isValidMultiplier"](multiplier);
+                const isValid = autoCashOutPopupHandler["isValidMultiplier"](multiplier);
 
                 // Assert
-                expect(autoCashOutPopupHandler["isValidMultiplier"](multiplier)).toEqual(false);
+                expect(isValid).toEqual(false);
             });
         });
 
-        describe("when multiplier is equal to minBet", () => {
+        describe("when multiplier is equal to minMultiplier", () => {
             it("should return false", async () => {
                 // Arrange
                 const multiplier = "1.01";
 
                 // Act
-                autoCashOutPopupHandler["isValidMultiplier"](multiplier);
+                const isValid = autoCashOutPopupHandler["isValidMultiplier"](multiplier);
 
                 // Assert
-                expect(autoCashOutPopupHandler["isValidMultiplier"](multiplier)).toEqual(true);
+                expect(isValid).toEqual(true);
             });
         });
 
-        describe("when multiplier is equal to maxBet", () => {
+        describe("when multiplier is equal to maxMultiplier", () => {
             it("should return false", async () => {
                 // Arrange
                 const multiplier = "20.00";
 
                 // Act
-                autoCashOutPopupHandler["isValidMultiplier"](multiplier);
+                const isValid = autoCashOutPopupHandler["isValidMultiplier"](multiplier);
 
                 // Assert
-                expect(autoCashOutPopupHandler["isValidMultiplier"](multiplier)).toEqual(true);
+                expect(isValid).toEqual(true);
             });
         });
     });
