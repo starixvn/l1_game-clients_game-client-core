@@ -19,6 +19,10 @@ export class AutoPlayStore {
 
     skipDecreaseAutoPlayCount = false;
 
+    get isValidAutoPlay() {
+        return this.isAutoPlay && this.roundsAutoPlay > 0;
+    }
+
     get latestRoundAccepted(): boolean {
         return this._latestRoundAccepted;
     }

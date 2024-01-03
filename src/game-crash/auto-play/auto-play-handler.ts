@@ -53,7 +53,11 @@ export class AutoPlayHandler implements IHandler<number> {
     }
 
     checkFinishedAutoPlay() {
-        return this.autoPlayStore.isAutoPlay && !this.autoPlayStore.skipDecreaseAutoPlayCount && this.autoPlayStore.roundsAutoPlay === 0;
+        return (
+            this.autoPlayStore.isAutoPlay && //
+            !this.autoPlayStore.skipDecreaseAutoPlayCount &&
+            this.autoPlayStore.roundsAutoPlay <= 0
+        );
     }
 
     handle() {}
@@ -114,11 +118,7 @@ export class AutoPlayHandler implements IHandler<number> {
 
     handleDecreaseRoundAtConfirm() {
         if (this.validateAmount() && this.autoPlayStore.roundsAutoPlay > 0) {
-            if (
-                this.roundTimeStore.lockingBet ||
-                this.roundTimeStore.isTimeOut ||
-                this.playerActionStore.buttonState === ButtonState.BET_ACCEPTED
-            ) {
+            if (this.roundTimeStore.isLocking || this.playerActionStore.buttonState === ButtonState.BET_ACCEPTED) {
                 this.earlyBetStore.earlyBetEnable = true;
             } else if (this.roundTimeStore.isPlacingBet) {
                 this.crashBetHandler.autoPlaceBet();

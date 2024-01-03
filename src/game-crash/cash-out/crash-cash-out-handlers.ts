@@ -71,7 +71,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             this.cashOutStore.ratio = this.FullCashOutRatio;
             this.playerActionStore.cashOutState = CASH_OUT_STATE.FULL;
 
-            if (this.autoPlayStore.isAutoPlay) {
+            if (this.autoPlayStore.isValidAutoPlay) {
                 this.autoPlayHandler.autoEnableEarlyBet();
             } else {
                 this.playerActionHandlers.changeButtonBetNextRound();
