@@ -105,4 +105,8 @@ export class PlayerActionStore {
     get latestRound() {
         return this.autoPlayStore.isAutoPlay && this.autoPlayStore.roundsAutoPlay === 0;
     }
+
+    get disabledWaitingBet() {
+        return this.roundTimeStore.isPlacingBet && this.buttonState === ButtonState.CANCEL_BET;
+    }
 }
