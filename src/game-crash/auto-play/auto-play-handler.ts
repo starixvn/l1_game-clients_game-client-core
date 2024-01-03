@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 
-import { when } from "mobx";
+import { reaction } from "mobx";
 import { BetStore } from "../../game/bets/bet-store";
 import { NoticeStore } from "../../game/notices/notice-store";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
@@ -27,10 +27,16 @@ export class AutoPlayHandler implements IHandler<number> {
         @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
         @inject(CrashBetHandler) private readonly crashBetHandler: CrashBetHandler
     ) {
-        when(
+        reaction(
             () => this.roundTimeStore.isPlacingBet,
-            () => {
-                if (!(this.autoPlayStore.isAutoPlay || this.earlyBetStore.earlyBetEnable)) {
+            (isPlacingBet) => {
+                if (!isPlacingBet || !(this.autoPlayStore.isAutoPlay || this.earlyBetStore.earlyBetEnable)) {
+                    return;
+                }
+
+                if (this.checkFinishedAutoPlay()) {
+                    this.autoPlayStore.isAutoPlay = false;
+                    this.autoPlayStore.isOpenAutoPlayPopup = true;
                     return;
                 }
 
@@ -42,6 +48,10 @@ export class AutoPlayHandler implements IHandler<number> {
                 this.earlyBetStore.earlyBetEnable = false;
             }
         );
+    }
+
+    checkFinishedAutoPlay() {
+        return this.autoPlayStore.isAutoPlay && !this.autoPlayStore.skipDecreaseAutoPlayCount && this.autoPlayStore.roundsAutoPlay === 0;
     }
 
     handle() {}
@@ -126,13 +136,6 @@ export class AutoPlayHandler implements IHandler<number> {
 
     updateAutoPlayRounds(rounds: number) {
         this.autoPlayStore.roundsAutoPlay = rounds;
-    }
-
-    checkFinishedPlayMode() {
-        if (this.autoPlayStore.roundsAutoPlay === 0 && this.autoPlayStore.isAutoPlay) {
-            this.autoPlayStore.isOpenAutoPlayPopup = true;
-            this.autoPlayStore.isAutoPlay = false;
-        }
     }
 
     cancelAutoPlay() {
