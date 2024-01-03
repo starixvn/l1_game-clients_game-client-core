@@ -78,7 +78,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
     handle(flag: boolean) {}
 
     changeButtonBetNextRound() {
-        if (this.autoPlayStore.isAutoPlay || this.earlyBetStore.earlyBetEnable) {
+        if (this.autoPlayStore.isValidAutoPlay || this.earlyBetStore.earlyBetEnable) {
             this.autoPlayHandler.autoEnableEarlyBet();
         } else {
             this.changeButtonState(ButtonState.BET_NEXT_ROUND);
