@@ -41,7 +41,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         reaction(
             () => this.multiplierStore.multiplier,
             () => {
-                if (this.cashOutStore.isFullCashedOut) return;
+                if (this.cashOutStore.isFullCashedOut) {
+                    return;
+                }
 
                 const { multiplier } = this.multiplierStore;
                 const { cashOutBet } = this.cashOutStore;
@@ -134,7 +136,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     private handleCrashed() {
         const isResultPhase = this.roundTimeStore.roundTime > this.roundTimeStore.placingBet;
 
-        if (!isResultPhase) return;
+        if (!isResultPhase) {
+            return;
+        }
 
         const multiplier = +(this.roundHistoryStore.getLastRound()?.result || 0);
 
