@@ -13,10 +13,10 @@ import { CrashCashOutStore } from "./crash-cash-out-store";
 
 @injectable()
 export class CrashCashOutHandlers implements IMultipleHandlers {
-    private readonly HalfCashOutRatio = 0.5;
-    private readonly FullCashOutRatio = 1;
+    private readonly halfCashOutRatio = 0.5;
+    private readonly fullCashOutRatio = 1;
 
-    private readonly DisplayCashedOutDuration = 2700;
+    private readonly displayCashedOutDuration = 2700;
 
     constructor(
         @inject(CrashCashOutStore) protected readonly cashOutStore: CrashCashOutStore,
@@ -50,7 +50,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
                     this.cashOutStore.fullCashOutValue = cashOutBet.value * multiplier;
 
                     if (!this.cashOutStore.isHalfCashedOut) {
-                        this.cashOutStore.halfCashOutValue = cashOutBet.value * multiplier * this.HalfCashOutRatio;
+                        this.cashOutStore.halfCashOutValue = cashOutBet.value * multiplier * this.halfCashOutRatio;
                     }
                 }
             }
@@ -66,9 +66,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashOutStore.halfCashOut = cashOut;
         this.setHalfCashedOutValue(cashOut.cashOutWin);
 
-        this.cashOutStore.ratio = this.HalfCashOutRatio;
+        this.cashOutStore.ratio = this.halfCashOutRatio;
 
-        this.cashOutStore.cashOutBet = { value: this.cashOutStore.cashOutBet.value * this.HalfCashOutRatio };
+        this.cashOutStore.cashOutBet = { value: this.cashOutStore.cashOutBet.value * this.halfCashOutRatio };
     }
 
     handleCashOutFull(cashOut: GameCrashServiceMessage.CrashCashOut | undefined) {
@@ -77,7 +77,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
 
         setTimeout(() => {
             this.hideCashOut();
-        }, this.DisplayCashedOutDuration);
+        }, this.displayCashedOutDuration);
     }
 
     handleCashOutMessage(cashOut: GameCrashServiceMessage.CrashCashOut | undefined) {
@@ -85,7 +85,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.setFullCashedOutValue(cashOut.win);
 
         if (!this.cashOutStore.isHalfCashedOut) {
-            this.setHalfCashedOutValue(cashOut.cashOutWin * this.HalfCashOutRatio);
+            this.setHalfCashedOutValue(cashOut.cashOutWin * this.halfCashOutRatio);
         }
     }
 
@@ -100,7 +100,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     }
 
     hideCashOut() {
-        this.cashOutStore.ratio = this.FullCashOutRatio;
+        this.cashOutStore.ratio = this.fullCashOutRatio;
         this.playerActionStore.cashOutState = CASH_OUT_STATE.FULL;
 
         if (this.autoPlayStore.isValidAutoPlay) {
@@ -142,7 +142,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             const amount = this.cashOutStore.cashOutBet;
 
             this.cashOutStore.fullCashOutValue = amount * multiplier;
-            this.cashOutStore.halfCashOutValue = amount * multiplier * this.HalfCashOutRatio;
+            this.cashOutStore.halfCashOutValue = amount * multiplier * this.halfCashOutRatio;
         }
     }
 
@@ -150,7 +150,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashOutStore.isFullCashedOut = false;
         this.cashOutStore.isHalfCashedOut = false;
 
-        this.cashOutStore.ratio = this.FullCashOutRatio;
+        this.cashOutStore.ratio = this.fullCashOutRatio;
     }
 
     eventHandleList = [
