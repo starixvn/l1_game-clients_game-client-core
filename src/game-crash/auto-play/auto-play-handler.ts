@@ -114,7 +114,11 @@ export class AutoPlayHandler implements IHandler<number> {
 
     handleDecreaseRoundAtConfirm() {
         if (this.validateAmount() && this.autoPlayStore.roundsAutoPlay > 0) {
-            if (this.roundTimeStore.lockingBet || this.roundTimeStore.isTimeOut) {
+            if (
+                this.roundTimeStore.lockingBet ||
+                this.roundTimeStore.isTimeOut ||
+                this.playerActionStore.buttonState === ButtonState.BET_ACCEPTED
+            ) {
                 this.earlyBetStore.earlyBetEnable = true;
             } else if (this.roundTimeStore.isPlacingBet) {
                 this.crashBetHandler.autoPlaceBet();
