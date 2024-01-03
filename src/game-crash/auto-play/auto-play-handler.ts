@@ -28,19 +28,20 @@ export class AutoPlayHandler implements IHandler<number> {
         @inject(CrashBetHandler) private readonly crashBetHandler: CrashBetHandler
     ) {
         when(
-            () => this.needHandleEarlyBet,
+            () => this.roundTimeStore.isPlacingBet,
             () => {
+                if (!(this.autoPlayStore.isAutoPlay || this.earlyBetStore.earlyBetEnable)) {
+                    return;
+                }
+
                 if (!this.autoPlayStore.skipDecreaseAutoPlayCount) {
                     this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
                 }
                 this.autoPlayStore.skipDecreaseAutoPlayCount = false;
                 this.crashBetHandler.autoPlaceBet();
+                this.earlyBetStore.earlyBetEnable = false;
             }
         );
-    }
-
-    get needHandleEarlyBet() {
-        return this.roundTimeStore.isPlacingBet && this.earlyBetStore.earlyBetEnable;
     }
 
     handle() {}
@@ -108,6 +109,9 @@ export class AutoPlayHandler implements IHandler<number> {
                 this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
             } else if (this.playerActionStore.buttonState === ButtonState.BET_NEXT_ROUND) {
                 this.autoEnableEarlyBet();
+            } else if (this.playerActionStore.buttonState === ButtonState.CANCEL_BET) {
+                this.enableEarlyBet(true);
+                this.autoPlayStore.skipDecreaseAutoPlayCount = true;
             }
         } else {
             this.clearAutoPlay();
