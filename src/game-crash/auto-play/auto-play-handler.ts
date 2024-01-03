@@ -38,7 +38,6 @@ export class AutoPlayHandler implements IHandler<number> {
                     console.log("finish auto play");
                     this.autoPlayStore.isAutoPlay = false;
                     this.earlyBetStore.earlyBetEnable = false;
-                    this.autoPlayStore.isOpenAutoPlayPopup = true;
                     return;
                 }
 
