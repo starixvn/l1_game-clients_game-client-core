@@ -6,9 +6,9 @@ import { RoundHistoryStore } from "../../game/round-histories/round-history-stor
 import { RoundTimeStore } from "../../game/rounds";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { AutoPlayHandler, AutoPlayStore } from "../auto-play";
-import { ButtonState, CASH_OUT_STATE, GameCrashServiceMessage } from "../game-crash-messages";
+import { CASH_OUT_STATE, GameCrashServiceMessage } from "../game-crash-messages";
 import { MultiplierStore } from "../multiplier/multiplier-store";
-import { PlayerActionStore } from "../player-actions/player-action-store";
+import { PlayerActionHandlers, PlayerActionStore } from "../player-actions";
 import { CrashCashOutStore } from "./crash-cash-out-store";
 
 @injectable()
@@ -23,6 +23,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         @inject(BetStore) protected readonly betStore: BetStore,
         @inject(MultiplierStore) private readonly multiplierStore: MultiplierStore,
         @inject(PlayerActionStore) protected readonly playerActionStore: PlayerActionStore,
+        @inject(PlayerActionHandlers) protected readonly playerActionHandlers: PlayerActionHandlers,
         @inject(AutoPlayHandler) protected readonly autoPlayHandler: AutoPlayHandler,
         @inject(AutoPlayStore) protected readonly autoPlayStore: AutoPlayStore
     ) {
@@ -73,7 +74,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             if (this.autoPlayStore.isAutoPlay) {
                 this.autoPlayHandler.autoEnableEarlyBet();
             } else {
-                this.playerActionStore.buttonState = ButtonState.BET_NEXT_ROUND;
+                this.playerActionHandlers.changeButtonBetNextRound();
             }
         }, 2700);
     }

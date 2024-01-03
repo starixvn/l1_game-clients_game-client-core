@@ -35,7 +35,9 @@ export class AutoPlayHandler implements IHandler<number> {
                 }
 
                 if (this.checkFinishedAutoPlay()) {
+                    console.log("finish auto play");
                     this.autoPlayStore.isAutoPlay = false;
+                    this.earlyBetStore.earlyBetEnable = false;
                     this.autoPlayStore.isOpenAutoPlayPopup = true;
                     return;
                 }
@@ -69,11 +71,11 @@ export class AutoPlayHandler implements IHandler<number> {
         if (!this.autoPlayStore.isAutoPlay && this.validateAmount()) {
             this.openAutoPlayPopup();
         } else {
-            this.clearAutoPlay();
+            this.cancelAutoPlay();
         }
     }
 
-    private clearAutoPlay() {
+    private cancelAutoPlay() {
         this.autoPlayStore.isAutoPlay = false;
         this.updateAutoPlayRounds(0);
     }
@@ -96,8 +98,6 @@ export class AutoPlayHandler implements IHandler<number> {
 
     closeAutoPlayPopup() {
         this.autoPlayStore.isOpenAutoPlayPopup = false;
-        this.autoPlayStore.autoPlayWhenRocketFly = false;
-        this.autoPlayStore.autoPlayWhenPlacingBet = false;
     }
 
     confirmRoundAndStart() {
@@ -114,42 +114,29 @@ export class AutoPlayHandler implements IHandler<number> {
 
     handleDecreaseRoundAtConfirm() {
         if (this.validateAmount() && this.autoPlayStore.roundsAutoPlay > 0) {
-            if (this.roundTimeStore.isPlacingBet) {
+            if (this.roundTimeStore.lockingBet || this.roundTimeStore.isTimeOut) {
+                this.earlyBetStore.earlyBetEnable = true;
+            } else if (this.roundTimeStore.isPlacingBet) {
                 this.crashBetHandler.autoPlaceBet();
                 this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
             } else if (this.playerActionStore.buttonState === ButtonState.BET_NEXT_ROUND) {
                 this.autoEnableEarlyBet();
             } else if (this.playerActionStore.buttonState === ButtonState.CANCEL_BET) {
-                this.enableEarlyBet(true);
                 this.autoPlayStore.skipDecreaseAutoPlayCount = true;
             }
         } else {
-            this.clearAutoPlay();
+            this.cancelAutoPlay();
         }
     }
 
     autoEnableEarlyBet() {
-        this.enableEarlyBet(true);
+        this.changeEarlyBetButton(true);
         this.autoPlayStore.skipDecreaseAutoPlayCount = true;
         this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
     }
 
     updateAutoPlayRounds(rounds: number) {
         this.autoPlayStore.roundsAutoPlay = rounds;
-    }
-
-    cancelAutoPlay() {
-        this.clearAutoPlay();
-        this.autoPlayStore.autoPlayWhenRocketFly = false;
-        this.autoPlayStore.autoPlayWhenPlacingBet = false;
-    }
-
-    updatedAutoPlayWhenPlacingBet(value: boolean) {
-        this.autoPlayStore.autoPlayWhenPlacingBet = value;
-    }
-
-    updatedAutoPlayWhenRocketFly(value: boolean) {
-        this.autoPlayStore.autoPlayWhenRocketFly = value;
     }
 
     updateStatusLatestRoundAccepted() {
@@ -181,11 +168,14 @@ export class AutoPlayHandler implements IHandler<number> {
             }
         }
 
-        this.enableEarlyBet(enable);
+        this.changeEarlyBetButton(enable);
+        if (!enable) {
+            this.cancelAutoPlay();
+        }
     }
 
-    enableEarlyBet(enable: boolean) {
-        console.log("enable early bet ", enable);
+    changeEarlyBetButton(enable: boolean) {
+        console.log("changeEarlyBetButton ", enable);
         this.earlyBetStore.earlyBetEnable = enable;
         this.playerActionStore.buttonState = enable ? ButtonState.CANCEL_BET : ButtonState.BET_NEXT_ROUND;
     }

@@ -14,28 +14,10 @@ export class AutoPlayStore {
     public _roundConfirmedOnPopup = 0;
 
     public isAutoPlay = false;
-    private _autoPlayWhenPlacingBet = false;
-    private _autoPlayWhenRocketFly = false;
 
     private _latestRoundAccepted = false;
 
     skipDecreaseAutoPlayCount = false;
-
-    set autoPlayWhenPlacingBet(value: boolean) {
-        this._autoPlayWhenPlacingBet = value;
-    }
-
-    get autoPlayWhenPlacingBet(): boolean {
-        return this._autoPlayWhenPlacingBet;
-    }
-
-    get autoPlayWhenRocketFly(): boolean {
-        return this._autoPlayWhenRocketFly;
-    }
-
-    set autoPlayWhenRocketFly(value: boolean) {
-        this._autoPlayWhenRocketFly = value;
-    }
 
     get latestRoundAccepted(): boolean {
         return this._latestRoundAccepted;

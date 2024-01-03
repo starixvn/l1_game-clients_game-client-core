@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { PlayerActionStore } from "../player-actions";
+import { PlayerActionStore } from "../player-actions/player-action-store";
 
 @injectable()
 export class EarlyBetStore {
