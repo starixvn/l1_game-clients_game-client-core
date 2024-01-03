@@ -63,7 +63,7 @@ export class CrashBetListStore {
     get noOfPlayerCashOut() {
         const players = [];
         this._betList.players.forEach((player: IPlayer) => {
-            (player["cashOut"] || player["halfCashOut"]) && players.push(player);
+            (player.cashOut || player.halfCashOut) && players.push(player);
         });
 
         const countMainPlayer = this.mainPlayer?.cashOut || this.mainPlayer?.halfCashOut ? 1 : 0;
@@ -71,7 +71,42 @@ export class CrashBetListStore {
     }
 
     addBetList(data: ICrashBetList, isReceivedBetListData = false) {
-        let players = [];
+        let players = this.convertCurrency(data);
+        let playerList = [];
+        if (isReceivedBetListData) {
+            playerList = this.updatePlayerListByBetList(players, playerList);
+        } else {
+            playerList = this.updateBetListByOtherPlayerCashOut(players);
+        }
+
+        this._betList = {
+            players: playerList,
+        };
+    }
+
+    private updateBetListByOtherPlayerCashOut(players: any[]): any[] {
+        return players.concat(...this._betList.players).sort((player1, player2) => player2.amount - player1.amount);
+    }
+
+    private updatePlayerListByBetList(players: any[], playerList: any[]) {
+        const newPlayers = players.concat(...this._betList.players);
+
+        const cashOutPlayers = newPlayers.filter((player) => player.cashOut || player.halfCashOut);
+        cashOutPlayers.sort((player1: IPlayer, player2: IPlayer) => {
+            const time1 = new Date(player1.time).getTime();
+            const time2 = new Date(player2.time).getTime();
+            return time2 - time1;
+        });
+
+        const betPlayers = newPlayers.filter((player) => !player.halfCashOut && !player.cashOut);
+        betPlayers.sort((player1, player2) => player2.amount - player1.amount);
+        playerList = cashOutPlayers.concat(betPlayers);
+
+        return playerList;
+    }
+
+    private convertCurrency(data: ICrashBetList) {
+        const players = [];
         Object.keys(data).forEach((key) => {
             if (!data[key]) {
                 return;
@@ -93,30 +128,7 @@ export class CrashBetListStore {
 
             players.push(data[key]);
         });
-
-        let playerList = [];
-
-        if (isReceivedBetListData) {
-            const newPlayers = players.concat(...this._betList.players);
-
-            const cashOutPlayers = newPlayers.filter((player) => player.cashOut || player.halfCashOut);
-            cashOutPlayers.sort((player1: IPlayer, player2: IPlayer) => {
-                const time1 = new Date(player1.time).getTime();
-                const time2 = new Date(player2.time).getTime();
-                return time2 - time1;
-            });
-
-            const betPlayers = newPlayers.filter((player) => !player.halfCashOut && !player.cashOut);
-            betPlayers.sort((player1, player2) => player2.amount - player1.amount);
-
-            playerList = cashOutPlayers.concat(betPlayers);
-        } else {
-            playerList = players.concat(...this._betList.players).sort((player1, player2) => player2.amount - player1.amount);
-        }
-
-        this._betList = {
-            players: playerList,
-        };
+        return players;
     }
 
     resetOtherPlayerList() {
