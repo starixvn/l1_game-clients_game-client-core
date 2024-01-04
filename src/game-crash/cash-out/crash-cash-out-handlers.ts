@@ -106,11 +106,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     private hideCashOut() {
         this.cashOutStore.ratio = this.fullCashOutRatio;
 
-        if (this.autoPlayHandler.isValidAutoPlay) {
-            this.autoPlayHandler.autoEnableEarlyBet();
-        } else {
-            this.playerActionHandlers.changeButtonBetNextRound();
-        }
+        this.playerActionHandlers.changeButtonBetNextRound();
     }
 
     private handleOwnBets(ownBets: GameCrashServiceMessage.CrashOwnBets) {

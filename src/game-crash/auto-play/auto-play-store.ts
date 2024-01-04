@@ -31,10 +31,6 @@ export class AutoPlayStore {
         this._latestRoundAccepted = status;
     }
 
-    get hideArrowIcon() {
-        return this.isAutoPlay && !this.latestRoundAccepted;
-    }
-
     set roundConfirmedOnPopup(rounds: number) {
         this._roundConfirmedOnPopup = rounds;
     }

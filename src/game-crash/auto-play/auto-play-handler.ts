@@ -35,16 +35,21 @@ export class AutoPlayHandler implements IHandler<number> {
                 }
 
                 if (this.checkFinishedAutoPlay()) {
-                    this.autoPlayStore.isAutoPlay = false;
-                    this.earlyBetStore.earlyBetEnable = false;
+                    this.cancelAutoPlay();
                     return;
                 }
 
                 if (!this.autoPlayStore.skipDecreaseAutoPlayCount) {
                     this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
                 }
+
+                if (this.validateAmount()) {
+                    this.crashBetHandler.autoPlaceBet();
+                } else {
+                    this.cancelAutoPlay();
+                }
+
                 this.autoPlayStore.skipDecreaseAutoPlayCount = false;
-                this.crashBetHandler.autoPlaceBet();
                 this.earlyBetStore.earlyBetEnable = false;
             }
         );
@@ -77,7 +82,7 @@ export class AutoPlayHandler implements IHandler<number> {
         }
     }
 
-    private cancelAutoPlay() {
+    cancelAutoPlay() {
         this.autoPlayStore.isAutoPlay = false;
         this.updateAutoPlayRounds(0);
     }
@@ -109,9 +114,13 @@ export class AutoPlayHandler implements IHandler<number> {
     confirmRoundAndStart() {
         this.autoPlayStore.roundsAutoPlay = this.autoPlayStore.roundConfirmedOnPopup = this.autoPlayStore.selectedRoundOnPopup;
         this.autoPlayStore.isOpenAutoPlayPopup = false;
-        this.autoPlayStore.isAutoPlay = true;
-        this.updateStatusLatestRoundAccepted();
-        this.handleDecreaseRoundAtConfirm();
+        if (this.validateAmount()) {
+            this.autoPlayStore.isAutoPlay = true;
+            this.updateStatusLatestRoundAccepted();
+            this.handleDecreaseRoundAtConfirm();
+        } else {
+            this.cancelAutoPlay();
+        }
     }
 
     updateNoOfRounds(rounds: number) {
@@ -119,19 +128,13 @@ export class AutoPlayHandler implements IHandler<number> {
     }
 
     handleDecreaseRoundAtConfirm() {
-        if (this.validateAmount() && this.autoPlayStore.roundsAutoPlay > 0) {
-            if (this.roundTimeStore.isLocking || this.playerActionStore.buttonState === ButtonState.BET_ACCEPTED) {
-                this.earlyBetStore.earlyBetEnable = true;
-            } else if (this.roundTimeStore.isPlacingBet && this.playerActionStore.buttonState === ButtonState.PLACE_BET) {
-                this.crashBetHandler.autoPlaceBet();
-                this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
-            } else if (this.playerActionStore.buttonState === ButtonState.BET_NEXT_ROUND) {
-                this.autoEnableEarlyBet();
-            } else if (this.playerActionStore.buttonState === ButtonState.CANCEL_BET) {
-                this.autoPlayStore.skipDecreaseAutoPlayCount = true;
-            }
-        } else {
-            this.cancelAutoPlay();
+        if (this.roundTimeStore.isPlacingBet && this.playerActionStore.buttonState === ButtonState.PLACE_BET) {
+            this.crashBetHandler.autoPlaceBet();
+            this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
+        } else if (this.playerActionStore.buttonState === ButtonState.BET_NEXT_ROUND) {
+            this.autoEnableEarlyBet();
+        } else if (this.playerActionStore.buttonState === ButtonState.CANCEL_BET) {
+            this.autoPlayStore.skipDecreaseAutoPlayCount = true;
         }
     }
 

@@ -34,14 +34,6 @@ export class PlayerActionStore {
         return this._buttonState;
     }
 
-    get enableAutoPlay() {
-        return this._enableAutoPlay;
-    }
-
-    set enableAutoPlay(value: boolean) {
-        this._enableAutoPlay = value;
-    }
-
     get activeAutoPlay() {
         return this._activeAutoPlay;
     }
@@ -68,10 +60,6 @@ export class PlayerActionStore {
 
     get disableBetAmount() {
         return this.buttonState !== ButtonState.PLACE_BET && this.buttonState !== ButtonState.BET_NEXT_ROUND;
-    }
-
-    get activeAutoPlayCurrentRound() {
-        return this.enableAutoPlay && this.roundTimeStore.isPlacingBet && !this.roundTimeStore.isLocking && !this.activeAutoPlay;
     }
 
     get autoEarlyBet() {

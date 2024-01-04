@@ -57,7 +57,6 @@ export class PlayerActionHandlers implements IHandler<boolean> {
                 return this.roundTimeStore.isPlacingBet || this.roundTimeStore.isLocking;
             },
             (isPlacingBet) => {
-                console.log("handle button state ", this.autoPlayStore.isAutoPlay);
                 if (
                     isPlacingBet &&
                     this.playerActionStore.buttonState !== ButtonState.BET_ACCEPTED &&
@@ -86,9 +85,10 @@ export class PlayerActionHandlers implements IHandler<boolean> {
     handle(flag: boolean) {}
 
     changeButtonBetNextRound() {
-        if (this.autoPlayHandler.isValidAutoPlay || this.earlyBetStore.earlyBetEnable) {
+        if (this.autoPlayHandler.isValidAutoPlay) {
             this.autoPlayHandler.autoEnableEarlyBet();
         } else {
+            this.autoPlayHandler.cancelAutoPlay();
             this.changeButtonState(ButtonState.BET_NEXT_ROUND);
         }
     }
@@ -99,10 +99,6 @@ export class PlayerActionHandlers implements IHandler<boolean> {
 
     handleActiveAutoPlayInStore(flag: boolean) {
         this.playerActionStore.activeAutoPlay = flag;
-    }
-
-    handleEnableAutoPlayInStore(flag: boolean) {
-        this.playerActionStore.enableAutoPlay = flag;
     }
 
     changeButtonState(state: string) {
