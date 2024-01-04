@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, reaction } from "mobx";
 
 import { NumberUtils } from "../../exports";
 import { BetStore } from "../../game/bets/bet-store";
@@ -25,7 +25,7 @@ interface IPlayer {
 @injectable()
 export class CrashBetListStore {
     private _betList: GameCrashServiceMessage.CrashOtherPlayerList = { players: [] };
-
+    private _mainPlayer: GameCrashServiceMessage.CrashOtherPlayer = null;
     constructor(
         @inject(RoundStore) protected readonly roundStore: RoundStore,
         @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
@@ -34,6 +34,26 @@ export class CrashBetListStore {
         @inject(BetStore) private readonly betStore: BetStore
     ) {
         makeAutoObservable(this);
+        reaction(
+            () => this.betStore.lastReceivedBet,
+            (lastReceivedBet) => {
+                if (!lastReceivedBet) {
+                    return;
+                }
+                const bet = lastReceivedBet.value;
+                if (bet === -1) {
+                    this.mainPlayer = null;
+                } else {
+                    this.mainPlayer = {
+                        playerId: null,
+                        name: this.mainPlayerStore.name,
+                        amount: bet,
+                        cashOut: this.crashCashOutStore?.cashOut,
+                        halfCashOut: this.crashCashOutStore?.halfCashOut,
+                    };
+                }
+            }
+        );
     }
 
     get betList(): GameCrashServiceMessage.CrashOtherPlayerList {
@@ -44,15 +64,12 @@ export class CrashBetListStore {
         return this.roundTimeStore.roundTime;
     }
 
+    set mainPlayer(value: GameCrashServiceMessage.CrashOtherPlayer) {
+        this._mainPlayer = value;
+    }
+
     get mainPlayer(): GameCrashServiceMessage.CrashOtherPlayer {
-        const bet = this.betStore.lastReceivedBet?.value;
-        return {
-            playerId: null,
-            name: this.mainPlayerStore.name,
-            amount: bet !== -1 ? bet : null,
-            cashOut: this.crashCashOutStore?.cashOut,
-            halfCashOut: this.crashCashOutStore?.halfCashOut,
-        };
+        return this._mainPlayer;
     }
 
     get noOfPlayerBet(): number {
@@ -136,7 +153,7 @@ export class CrashBetListStore {
     }
 
     resetMainPlayer() {
-        this.betStore.lastReceivedBet = { value: -1, isAnimated: false };
+        this.mainPlayer = null;
         this.crashCashOutStore.cashOut = null;
         this.crashCashOutStore.halfCashOut = null;
     }

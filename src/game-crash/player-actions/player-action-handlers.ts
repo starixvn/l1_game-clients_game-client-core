@@ -22,9 +22,19 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         @inject(AutoPlayHandler) private readonly autoPlayHandler: AutoPlayHandler
     ) {
         reaction(
-            () => this.betStore.isReceivedBet,
-            () => {
-                this.betStore.isReceivedBet && this.changeButtonState(ButtonState.BET_ACCEPTED);
+            () => this.betStore.lastReceivedBet,
+            (lastReceivedBet) => {
+                const isReceivedBet = lastReceivedBet.value > 0;
+                if (isReceivedBet) {
+                    this.changeButtonState(ButtonState.BET_ACCEPTED);
+                } else {
+                    this.autoPlayHandler.cancelEarlyBetAndAutoPlay();
+                    if (this.roundTimeStore.isPlacingBet || this.roundTimeStore.isLocking) {
+                        this.changeButtonState(ButtonState.PLACE_BET);
+                    } else {
+                        this.changeButtonState(ButtonState.BET_NEXT_ROUND);
+                    }
+                }
             }
         );
 
@@ -91,10 +101,6 @@ export class PlayerActionHandlers implements IHandler<boolean> {
 
     handleCurrentBetStateInStore(action: string) {
         this.playerActionStore.betState = action;
-    }
-
-    handleCurrentCashOutStateInStore(action: string) {
-        this.playerActionStore.cashOutState = action;
     }
 
     handleActiveAutoPlayInStore(flag: boolean) {

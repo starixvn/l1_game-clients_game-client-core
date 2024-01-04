@@ -118,7 +118,6 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         }
 
         this.betStore.lastReceivedBet = { value: ownBets.amount, isAnimated: false };
-        this.betStore.isReceivedBet = true;
         this.cashOutStore.cashOutBet = { value: ownBets.amount };
 
         if (ownBets.halfCashOut) {

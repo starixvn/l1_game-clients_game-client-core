@@ -17,25 +17,16 @@ export class BetResponseHandlers implements IMultipleHandlers {
             () => this.roundTimeStore.isWaiting,
             (isWaiting) => isWaiting && this.stopProcessingBetAndClearInterval()
         );
-        reaction(
-            () => this.roundTimeStore.isStartPlacingBet,
-            (isStartPlacingBet) => isStartPlacingBet && this.resetIsReceivedBet()
-        );
     }
 
     handleBetResponse(endBet: number) {
         this.stopProcessingBetAndClearInterval();
         this.betStore.lastReceivedBet = { value: endBet, isAnimated: true };
-        this.betStore.isReceivedBet = endBet > 0;
     }
 
     stopProcessingBetAndClearInterval() {
         this.betStore.isProcessingBet = false;
         this.retryGameHandler.clearInterval();
-    }
-
-    resetIsReceivedBet() {
-        this.betStore.isReceivedBet = false;
     }
 
     eventHandleList = [

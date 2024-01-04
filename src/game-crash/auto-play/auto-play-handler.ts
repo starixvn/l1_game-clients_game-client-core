@@ -83,6 +83,11 @@ export class AutoPlayHandler implements IHandler<number> {
         this.updateAutoPlayRounds(0);
     }
 
+    cancelEarlyBetAndAutoPlay() {
+        this.earlyBetStore.earlyBetEnable = false;
+        this.cancelAutoPlay();
+    }
+
     validateAmount() {
         const { freebetEnabled } = this.betStore;
         const availableBalance = freebetEnabled ? this.mainPlayerStore.scoin : this.mainPlayerStore.balance;

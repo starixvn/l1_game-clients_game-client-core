@@ -35,7 +35,6 @@ export class BetStore {
 
     private _lastReceivedBet: ILastReceivedBet = null;
 
-    private _isReceivedBet = false;
     isProcessingBet = false;
 
     get lastReceivedBet() {
@@ -44,13 +43,5 @@ export class BetStore {
 
     set lastReceivedBet(lastReceivedBet: ILastReceivedBet) {
         this._lastReceivedBet = lastReceivedBet;
-    }
-
-    get isReceivedBet() {
-        return this._isReceivedBet;
-    }
-
-    set isReceivedBet(isReceived: boolean) {
-        this._isReceivedBet = isReceived;
     }
 }
