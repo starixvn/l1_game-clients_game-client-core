@@ -47,6 +47,7 @@ export class AutoPlayHandler implements IHandler<number> {
                     this.crashBetHandler.autoPlaceBet();
                 } else {
                     this.cancelAutoPlay();
+                    this.playerActionStore.buttonState = ButtonState.PLACE_BET;
                 }
 
                 this.autoPlayStore.skipDecreaseAutoPlayCount = false;
