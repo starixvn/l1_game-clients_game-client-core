@@ -6,7 +6,7 @@ import { RoundHistoryStore } from "../../game/round-histories/round-history-stor
 import { RoundTimeStore } from "../../game/rounds";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { AutoPlayHandler, AutoPlayStore } from "../auto-play";
-import { CASH_OUT_STATE, GameCrashServiceMessage } from "../game-crash-messages";
+import { GameCrashServiceMessage } from "../game-crash-messages";
 import { MultiplierStore } from "../multiplier/multiplier-store";
 import { PlayerActionHandlers, PlayerActionStore } from "../player-actions";
 import { CrashCashOutStore } from "./crash-cash-out-store";
@@ -103,7 +103,6 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
 
     hideCashOut() {
         this.cashOutStore.ratio = this.fullCashOutRatio;
-        this.playerActionStore.cashOutState = CASH_OUT_STATE.FULL;
 
         if (this.autoPlayStore.isValidAutoPlay) {
             this.autoPlayHandler.autoEnableEarlyBet();

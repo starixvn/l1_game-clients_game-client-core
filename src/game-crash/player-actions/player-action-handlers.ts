@@ -99,10 +99,6 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         this.playerActionStore.endShowCashOutNotice = flag;
     }
 
-    handleCurrentBetStateInStore(action: string) {
-        this.playerActionStore.betState = action;
-    }
-
     handleActiveAutoPlayInStore(flag: boolean) {
         this.playerActionStore.activeAutoPlay = flag;
     }

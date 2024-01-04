@@ -10,7 +10,7 @@ import { Translator } from "../../shared/utils";
 import { BetInputStore } from "../bet-input/bet-input-store";
 import { CrashBetHandler } from "../bet/crash-bet-handler";
 import { EarlyBetStore } from "../bet/early-bet-store";
-import { BET_STATE, ButtonState } from "../game-crash-messages";
+import { ButtonState } from "../game-crash-messages";
 import { PlayerActionStore } from "../player-actions/player-action-store";
 import { AutoPlayStore } from "./auto-play-store";
 
@@ -95,7 +95,6 @@ export class AutoPlayHandler implements IHandler<number> {
         if (this.betInputStore.betAmount <= availableBalance) {
             if (!this.betInputStore.betAmountGreaterMinBet) {
                 this.noticeStore.addWarning(Translator.commonTranslate("message_min_bet_notice", { minBet: minBet }));
-                this.playerActionStore.betState = BET_STATE.NONE;
             }
             return this.betInputStore.betAmountGreaterMinBet;
         } else {

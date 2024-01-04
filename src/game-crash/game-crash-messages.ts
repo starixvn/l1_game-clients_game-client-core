@@ -100,22 +100,6 @@ export interface IGameCrashUserSettings {
     autoCashOutMultiplier: number;
 }
 
-export const BET_STATE = {
-    NONE: "none",
-    BET: "bet",
-};
-
-export const EARLY_BET_STATE = {
-    NONE: "none",
-    BET: "bet",
-};
-
-export const CASH_OUT_STATE = {
-    NONE: "none",
-    HALF: "half",
-    FULL: "full",
-};
-
 export const ButtonState = {
     PLACE_BET: "PLACE_BET",
     BET_NEXT_ROUND: "BET_NEXT_ROUND",
