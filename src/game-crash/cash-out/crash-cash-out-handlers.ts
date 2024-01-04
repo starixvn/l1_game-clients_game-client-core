@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
 
 import { BetStore } from "../../game/bets/bet-store";
+import { GameConfigStore } from "../../game/game-configs";
 import { RoundHistoryStore } from "../../game/round-histories/round-history-store";
 import { RoundTimeStore } from "../../game/rounds";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
@@ -27,7 +28,8 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         @inject(PlayerActionStore) protected readonly playerActionStore: PlayerActionStore,
         @inject(PlayerActionHandlers) protected readonly playerActionHandlers: PlayerActionHandlers,
         @inject(AutoPlayHandler) protected readonly autoPlayHandler: AutoPlayHandler,
-        @inject(AutoPlayStore) protected readonly autoPlayStore: AutoPlayStore
+        @inject(AutoPlayStore) protected readonly autoPlayStore: AutoPlayStore,
+        @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore
     ) {
         reaction(
             () => this.roundTimeStore.isPlacingBet,
@@ -128,7 +130,15 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             return;
         }
 
-        this.handleCrashed();
+        const callHandleCrashed = () => {
+            if (this.roundTimeStore.initialized && this.gameConfigStore.initialized) {
+                this.handleCrashed();
+            } else {
+                setTimeout(callHandleCrashed, 50);
+            }
+        };
+
+        callHandleCrashed();
     }
 
     private handleCrashed() {

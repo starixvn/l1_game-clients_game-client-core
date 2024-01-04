@@ -14,12 +14,15 @@ export class GameConfigStore {
     originalOdds?: GameServiceMessage.Odds = null;
     boostedChoices?: string[] = [];
 
+    initialized = false;
+
     constructor() {
         makeAutoObservable(this);
     }
 
     setGameConfigs(gameConfigs: GameServiceMessage.GameConfigs) {
         if (gameConfigs) {
+            this.initialized = true;
             if (gameConfigs.enableFreeBet === undefined) {
                 gameConfigs.enableFreeBet = false;
             }

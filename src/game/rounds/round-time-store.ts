@@ -37,6 +37,8 @@ export const ROUND_STATE = {
     NONE: "none",
 };
 
+const RoundTimeInitValue = -99999;
+
 @injectable()
 export class RoundTimeStore {
     wholeRound = 0;
@@ -44,7 +46,7 @@ export class RoundTimeStore {
     lockingBet = 0;
     generatingResult = 0;
     startRound = 0;
-    private _roundTime = 0;
+    private _roundTime = RoundTimeInitValue;
     private _roundState = ROUND_STATE.NONE;
     private _countdownTimer = 0;
     private _remaining = 0;
@@ -58,6 +60,10 @@ export class RoundTimeStore {
         makeAutoObservable(this);
         this.setRoundTimeSetting(gameSetting.durations as RoundTimeSetting);
         this.setDurationShowPromptMessage(gameSetting?.durationShowPromptMessage);
+    }
+
+    get initialized() {
+        return this.roundTime !== RoundTimeInitValue;
     }
 
     get isWaiting() {
