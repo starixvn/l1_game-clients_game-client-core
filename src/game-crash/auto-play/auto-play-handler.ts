@@ -198,4 +198,8 @@ export class AutoPlayHandler implements IHandler<number> {
         const availableBalance = freebetEnabled ? this.mainPlayerStore.scoin : this.mainPlayerStore.balance;
         return this.betInputStore.betAmount <= availableBalance;
     }
+
+    get isValidAutoPlay() {
+        return this.autoPlayStore.isValidAutoPlay && this.validateAmount();
+    }
 }

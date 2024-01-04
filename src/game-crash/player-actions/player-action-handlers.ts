@@ -2,7 +2,6 @@ import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
 
 import { BetStore } from "../../game/bets/bet-store";
-import { NoticeStore } from "../../game/notices/notice-store";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { IHandler } from "../../shared";
 import { AutoPlayHandler, AutoPlayStore } from "../auto-play";
@@ -16,7 +15,6 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         @inject(PlayerActionStore) protected readonly playerActionStore: PlayerActionStore,
         @inject(BetStore) protected readonly betStore: BetStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
-        @inject(NoticeStore) private readonly noticeStore: NoticeStore,
         @inject(AutoPlayStore) private readonly autoPlayStore: AutoPlayStore,
         @inject(EarlyBetStore) private readonly earlyBetStore: EarlyBetStore,
         @inject(AutoPlayHandler) private readonly autoPlayHandler: AutoPlayHandler
@@ -88,7 +86,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
     handle(flag: boolean) {}
 
     changeButtonBetNextRound() {
-        if (this.autoPlayStore.isValidAutoPlay || this.earlyBetStore.earlyBetEnable) {
+        if (this.autoPlayHandler.isValidAutoPlay || this.earlyBetStore.earlyBetEnable) {
             this.autoPlayHandler.autoEnableEarlyBet();
         } else {
             this.changeButtonState(ButtonState.BET_NEXT_ROUND);
