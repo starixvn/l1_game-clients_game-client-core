@@ -1,5 +1,7 @@
 import { inject, injectable } from "inversify";
 
+import { reaction } from "mobx";
+import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { IHandler } from "../../shared";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 import { MultiplierStore } from "./multiplier-store";
@@ -8,7 +10,21 @@ import { MultiplierStore } from "./multiplier-store";
 export class MultiplierHandlers implements IHandler<GameCrashServiceMessage.CrashMultiplierInfo> {
     name = GameCrashServiceMessage.CrashMultiplierInfo.eventName;
 
-    constructor(@inject(MultiplierStore) protected readonly multiplierStore: MultiplierStore) {}
+    constructor(
+        @inject(MultiplierStore) protected readonly multiplierStore: MultiplierStore,
+        @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore
+    ) {
+        reaction(
+            () => this.roundTimeStore.roundTime,
+            (roundTime) => {
+                if (roundTime > this.roundTimeStore.placingBet) {
+                    this.handleIsCrashed(true);
+                } else {
+                    this.handleIsCrashed(false);
+                }
+            }
+        );
+    }
 
     handle(multiplierInfo: GameCrashServiceMessage.CrashMultiplierInfo) {
         this.multiplierStore.multiplier = multiplierInfo.m;
