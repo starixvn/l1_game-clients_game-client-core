@@ -1,12 +1,11 @@
 import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
 
-import { NumberUtils } from "../../exports";
 import { BetStore, ILastReceivedBet } from "../../game/bets/bet-store";
-import { RoundStore } from "../../game/rounds/round-store";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
+import { NumberUtils } from "../../shared/utils/number-utils";
 import { CrashCashOutStore } from "../cash-out/crash-cash-out-store";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 import { CrashBetListStore, ICrashBetList, IPlayer } from "./crash-bet-list-store";
@@ -14,7 +13,6 @@ import { CrashBetListStore, ICrashBetList, IPlayer } from "./crash-bet-list-stor
 @injectable()
 export class CrashBetListHandlers implements IMultipleHandlers {
     constructor(
-        @inject(RoundStore) protected readonly roundStore: RoundStore,
         @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
         @inject(CrashCashOutStore) private readonly crashCashOutStore: CrashCashOutStore,
         @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
