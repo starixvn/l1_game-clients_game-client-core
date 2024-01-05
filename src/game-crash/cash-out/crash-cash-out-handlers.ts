@@ -157,6 +157,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.cashOutStore.isFullCashedOut = false;
         this.cashOutStore.isHalfCashedOut = false;
 
+        this.cashOutStore.cashOut = null;
+        this.cashOutStore.halfCashOut = null;
+
         this.cashOutStore.ratio = this.fullCashOutRatio;
     }
 

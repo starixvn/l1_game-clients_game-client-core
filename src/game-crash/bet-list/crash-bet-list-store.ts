@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { makeAutoObservable, reaction } from "mobx";
 
 import { NumberUtils } from "../../exports";
-import { BetStore } from "../../game/bets/bet-store";
+import { BetStore, ILastReceivedBet } from "../../game/bets/bet-store";
 import { RoundStore, RoundTimeStore } from "../../game/rounds";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { CrashCashOutStore } from "../cash-out/crash-cash-out-store";
@@ -36,93 +36,70 @@ export class CrashBetListStore {
         @inject(BetStore) private readonly betStore: BetStore
     ) {
         makeAutoObservable(this);
-        this.addLastReceivedBetListener();
-        this.addHalfCashOutListener();
-        this.addCashOutListener();
-        this.addRoundTimeListener();
-        this.addStartPlaceBetListener();
+        reaction(() => this.roundTimeStore.isStartPlacingBet, this.reactionStartPlacingBet.bind(this));
+        reaction(() => this.roundTimeStore.roundTime, this.reactionRoundTime.bind(this));
+        reaction(() => this.betStore.lastReceivedBet, this.reactionLastReceivedBet.bind(this));
+        reaction(() => this.crashCashOutStore.halfCashOut, this.reactionHalfCashOut.bind(this));
+        reaction(() => this.crashCashOutStore.cashOut, this.reactionCashOut.bind(this));
     }
 
-    private addStartPlaceBetListener() {
-        reaction(
-            () => this.roundTimeStore.isStartPlacingBet,
-            (isStartPlacingBet) => {
-                if (isStartPlacingBet) {
-                    this.resetMainPlayer();
-                    this.resetOtherPlayerList();
-                }
-            }
-        );
+    private reactionStartPlacingBet(isStartPlacingBet: boolean) {
+        if (!isStartPlacingBet) {
+            return;
+        }
+
+        this.resetMainPlayer();
+        this.resetOtherPlayerList();
     }
 
-    private addRoundTimeListener() {
-        reaction(
-            () => this.roundTimeStore.roundTime,
-            (roundTime) => {
-                if (roundTime <= 0 || this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
-                    this.isNeedEmptyBetAmount = true;
-                }
-            }
-        );
+    private reactionRoundTime(roundTime: number) {
+        if (roundTime <= 0 || this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
+            this.isNeedEmptyBetAmount = true;
+        }
     }
 
-    private addLastReceivedBetListener() {
-        reaction(
-            () => this.betStore.lastReceivedBet,
-            (lastReceivedBet) => {
-                if (!lastReceivedBet) {
-                    return;
-                }
+    private reactionLastReceivedBet(lastReceivedBet: ILastReceivedBet) {
+        if (!lastReceivedBet) {
+            return;
+        }
 
-                const bet = lastReceivedBet.value;
-                if (bet > 0) {
-                    const player = {
-                        name: this.mainPlayerStore.name,
-                        amount: bet,
-                    };
-                    this.mainPlayer = player;
-                }
+        const bet = lastReceivedBet.value;
+        if (bet > 0) {
+            const player = {
+                name: this.mainPlayerStore.name,
+                amount: bet,
+            };
+            this.mainPlayer = player;
+        }
 
-                this.isNeedEmptyBetAmount = false;
-            }
-        );
+        this.isNeedEmptyBetAmount = false;
     }
 
-    private addHalfCashOutListener() {
-        reaction(
-            () => this.crashCashOutStore.halfCashOut,
-            (halfCashOut) => {
-                if (!halfCashOut) {
-                    return;
-                }
-                const player = {
-                    name: this.mainPlayer.name,
-                    amount: this.mainPlayer.amount,
-                    halfCashOut,
-                };
-                this.mainPlayer = player;
-                this.isNeedEmptyBetAmount = false;
-            }
-        );
+    private reactionHalfCashOut(halfCashOut: GameCrashServiceMessage.CrashCashOut) {
+        if (!halfCashOut) {
+            return;
+        }
+        const player = {
+            name: this.mainPlayer.name,
+            amount: this.mainPlayer.amount,
+            halfCashOut,
+        };
+        this.mainPlayer = player;
+        this.isNeedEmptyBetAmount = false;
     }
 
-    private addCashOutListener() {
-        reaction(
-            () => this.crashCashOutStore.cashOut,
-            (cashOut) => {
-                if (!cashOut) {
-                    return;
-                }
-                const player = {
-                    name: this.mainPlayer.name,
-                    amount: this.mainPlayer.amount,
-                    halfCashOut: this.mainPlayer.halfCashOut,
-                    cashOut,
-                };
-                this.mainPlayer = player;
-                this.isNeedEmptyBetAmount = false;
-            }
-        );
+    private reactionCashOut(cashOut: GameCrashServiceMessage.CrashCashOut) {
+        if (!cashOut) {
+            return;
+        }
+        const player = {
+            name: this.mainPlayer.name,
+            amount: this.mainPlayer.amount,
+            halfCashOut: this.mainPlayer.halfCashOut,
+            cashOut,
+        };
+        this.mainPlayer = player;
+        this.isNeedEmptyBetAmount = false;
     }
 
     set isNeedEmptyBetAmount(value: boolean) {
@@ -190,6 +167,7 @@ export class CrashBetListStore {
     private sortBetPlayersByAmount(newPlayers: any[]) {
         const betPlayers = newPlayers.filter((player) => !player.halfCashOut && !player.cashOut);
         betPlayers.sort((player1, player2) => player2.amount - player1.amount);
+
         return betPlayers;
     }
 
@@ -200,6 +178,7 @@ export class CrashBetListStore {
             const time2 = new Date(player2.time).getTime();
             return time2 - time1;
         });
+
         return cashOutPlayers;
     }
 
@@ -210,22 +189,21 @@ export class CrashBetListStore {
                 return;
             }
 
-            data[key].amount = NumberUtils.getValueByCurrency(data[key].amount, this.mainPlayerStore.rate, data[key].rate);
+            const { amount, rate, halfCashOut, cashOut } = data[key];
 
-            if (data[key].halfCashOut) {
-                data[key].halfCashOut.win = NumberUtils.getValueByCurrency(
-                    data[key].halfCashOut.win,
-                    this.mainPlayerStore.rate,
-                    data[key].rate
-                );
+            data[key].amount = NumberUtils.getValueByCurrency(amount, this.mainPlayerStore.rate, rate);
+
+            if (halfCashOut) {
+                data[key].halfCashOut.win = NumberUtils.getValueByCurrency(halfCashOut.win, this.mainPlayerStore.rate, rate);
             }
 
-            if (data[key].cashOut) {
-                data[key].cashOut.win = NumberUtils.getValueByCurrency(data[key].cashOut.win, this.mainPlayerStore.rate, data[key].rate);
+            if (cashOut) {
+                data[key].cashOut.win = NumberUtils.getValueByCurrency(cashOut.win, this.mainPlayerStore.rate, rate);
             }
 
             players.push(data[key]);
         });
+
         return players;
     }
 
@@ -235,26 +213,25 @@ export class CrashBetListStore {
 
     resetMainPlayer() {
         this.mainPlayer = null;
-        this.crashCashOutStore.cashOut = null;
-        this.crashCashOutStore.halfCashOut = null;
-        console.log("resetMainPlayer");
     }
 
     updateBetListCashOut(otherPlayer: GameCrashServiceMessage.CrashOtherPlayer) {
-        const existedPlayer = this._betList.players.find((player) => player.playerId === otherPlayer.playerId);
+        const { playerId, halfCashOut, cashOut } = otherPlayer;
+        const existedPlayer = this._betList.players.find((player) => player.playerId === playerId);
         if (!existedPlayer) {
             return;
         }
 
-        if (otherPlayer.halfCashOut) {
-            existedPlayer["halfCashOut"] = otherPlayer.halfCashOut;
+        if (halfCashOut) {
+            existedPlayer["halfCashOut"] = halfCashOut;
         }
 
-        if (otherPlayer.cashOut) {
-            existedPlayer["cashOut"] = otherPlayer.cashOut;
+        if (cashOut) {
+            existedPlayer["cashOut"] = cashOut;
         }
 
-        const newPlayers = this._betList.players.filter((player) => player.playerId !== otherPlayer.playerId);
+        const newPlayers = this._betList.players.filter((player) => player.playerId !== playerId);
+
         this._betList = {
             players: [existedPlayer, ...newPlayers],
         };
