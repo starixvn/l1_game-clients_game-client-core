@@ -5,18 +5,17 @@ import { GameServiceMessage, IMultipleHandlers, utils } from "../../shared";
 import { Translator } from "../../shared/utils/localization-manager";
 import { NoticeInfo, NoticeStore, NoticeType } from "../notices";
 import { AppTypes } from "./../../shared/constants/app-type";
+import { ErrorStore } from "./error-store";
 
 const { ErrorUtils } = utils;
 
 @injectable()
 export class ErrorHandlers implements IMultipleHandlers {
     constructor(
-        @inject(MainPlayerStore)
-        protected readonly mainPlayerStore: MainPlayerStore,
-        @inject(NoticeStore)
-        protected readonly noticeStore: NoticeStore,
-        @inject(AuthStore)
-        protected readonly authStore: AuthStore
+        @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
+        @inject(NoticeStore) protected readonly noticeStore: NoticeStore,
+        @inject(AuthStore) protected readonly authStore: AuthStore,
+        @inject(ErrorStore) protected readonly errorStore: ErrorStore
     ) {}
 
     getSystem = () => {
@@ -24,6 +23,7 @@ export class ErrorHandlers implements IMultipleHandlers {
     };
 
     handleApiError(apiError: GameServiceMessage.ApiError) {
+        this.errorStore.apiError = apiError;
         const { minBet, maxBet, errorCode } = apiError;
 
         const errorCodeString = errorCode.toString();

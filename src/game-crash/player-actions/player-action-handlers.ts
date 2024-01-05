@@ -27,11 +27,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
                     this.changeButtonState(ButtonState.BET_ACCEPTED);
                 } else {
                     this.autoPlayHandler.cancelEarlyBetAndAutoPlay();
-                    if (this.roundTimeStore.isPlacingBet || this.roundTimeStore.isLocking) {
-                        this.changeButtonState(ButtonState.PLACE_BET);
-                    } else {
-                        this.changeButtonState(ButtonState.BET_NEXT_ROUND);
-                    }
+                    this.autoPlayHandler.resetButtonState();
                 }
             }
         );

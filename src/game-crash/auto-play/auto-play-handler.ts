@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 
 import { reaction } from "mobx";
 import { BetStore } from "../../game/bets/bet-store";
+import { ErrorStore } from "../../game/errors";
 import { NoticeStore } from "../../game/notices/notice-store";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { MainPlayerStore } from "../../players/main-player-store";
@@ -25,7 +26,8 @@ export class AutoPlayHandler implements IHandler<number> {
         @inject(NoticeStore) private readonly noticeStore: NoticeStore,
         @inject(PlayerActionStore) private readonly playerActionStore: PlayerActionStore,
         @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
-        @inject(CrashBetHandler) private readonly crashBetHandler: CrashBetHandler
+        @inject(CrashBetHandler) private readonly crashBetHandler: CrashBetHandler,
+        @inject(ErrorStore) private readonly errorStore: ErrorStore
     ) {
         reaction(
             () => this.roundTimeStore.isPlacingBet,
@@ -53,6 +55,18 @@ export class AutoPlayHandler implements IHandler<number> {
 
                 this.autoPlayStore.skipDecreaseAutoPlayCount = false;
                 this.earlyBetStore.earlyBetEnable = false;
+            }
+        );
+
+        reaction(
+            () => this.errorStore.apiError,
+            (apiError) => {
+                if (!apiError) {
+                    return;
+                }
+
+                this.cancelEarlyBetAndAutoPlay();
+                this.resetButtonState();
             }
         );
     }
