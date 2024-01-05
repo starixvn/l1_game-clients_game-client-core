@@ -10,6 +10,7 @@ import { PlayerActionStore } from "../../../../src/game-crash/player-actions/pla
 import { BetStore } from "../../../../src/game/bets/bet-store";
 import { RoundHistoryStore } from "../../../../src/game/round-histories/round-history-store";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
+import { GameConfigStore } from "../../../../src/game/game-configs";
 
 describe("CrashCashOutHandlers", () => {
     let cashOutHandlers: CrashCashOutHandlers;
@@ -21,7 +22,7 @@ describe("CrashCashOutHandlers", () => {
     let playerActionStore: PlayerActionStore;
     let playerActionHandlers: PlayerActionHandlers;
     let autoPlayHandler: AutoPlayHandler;
-    let autoPlayStore: AutoPlayStore;
+    let gameConfigStore: GameConfigStore;
     const halfCashOut = {
         amount: 25,
         win: 26.25,
@@ -46,7 +47,7 @@ describe("CrashCashOutHandlers", () => {
         playerActionStore = stub<PlayerActionStore>();
         playerActionHandlers = stub<PlayerActionHandlers>({ changeButtonBetNextRound: jest.fn() });
         autoPlayHandler = stub<AutoPlayHandler>({ autoEnableEarlyBet: jest.fn() });
-        autoPlayStore = stub<AutoPlayStore>();
+        gameConfigStore = stub<GameConfigStore>();
     });
 
     beforeEach(() => {
@@ -59,14 +60,13 @@ describe("CrashCashOutHandlers", () => {
             playerActionStore,
             playerActionHandlers,
             autoPlayHandler,
-            autoPlayStore
+            gameConfigStore
         );
     });
 
     describe("handleCashOutHalf", () => {
         beforeEach(() => {
             // Arrange
-
             cashOutHandlers["handleHalfCashOutMessage"] = jest.fn();
 
             // Act
@@ -250,53 +250,8 @@ describe("CrashCashOutHandlers", () => {
             expect(cashOutStore.ratio).toEqual(cashOutHandlers["fullCashOutRatio"]);
         });
 
-        describe("when have auto play", () => {
-            beforeEach(() => {
-                // Arrange
-                autoPlayStore = stub<AutoPlayStore>({ isValidAutoPlay: true });
-                cashOutHandlers = new CrashCashOutHandlers(
-                    cashOutStore,
-                    roundHistoryStore,
-                    roundTimeStore,
-                    betStore,
-                    multiplierStore,
-                    playerActionStore,
-                    playerActionHandlers,
-                    autoPlayHandler,
-                    autoPlayStore
-                );
-
-                // Act
-                cashOutHandlers["hideCashOut"]();
-            });
-
-            it("should call autoEnableEarlyBet() of AutoPlayHandler", () => {
-                // Assert
-                expect(autoPlayHandler.autoEnableEarlyBet).toBeCalled();
-            });
-
-            it("should not call changeButtonBetNextRound() of PlayerActionHandlers", () => {
-                // Assert
-                expect(playerActionHandlers.changeButtonBetNextRound).not.toBeCalled();
-            });
-        });
-
         describe("when have not auto play", () => {
             beforeEach(() => {
-                // Arrange
-                autoPlayStore = stub<AutoPlayStore>({ isValidAutoPlay: false });
-                cashOutHandlers = new CrashCashOutHandlers(
-                    cashOutStore,
-                    roundHistoryStore,
-                    roundTimeStore,
-                    betStore,
-                    multiplierStore,
-                    playerActionStore,
-                    playerActionHandlers,
-                    autoPlayHandler,
-                    autoPlayStore
-                );
-
                 // Act
                 cashOutHandlers["hideCashOut"]();
             });
@@ -309,6 +264,73 @@ describe("CrashCashOutHandlers", () => {
             it("should call changeButtonBetNextRound() of PlayerActionHandlers", () => {
                 // Assert
                 expect(playerActionHandlers.changeButtonBetNextRound).toBeCalled();
+            });
+        });
+    });
+
+    describe("handleMultiplier", () => {
+        it("always call calculateWinAmount", () => {
+            // Arrange
+            cashOutHandlers["calculateWinAmount"] = jest.fn();
+
+            // Act
+            cashOutHandlers["handleMultiplier"]();
+
+            // Assert
+            expect(cashOutHandlers["calculateWinAmount"]).toBeCalledTimes(1);
+        });
+
+        describe("when winAmount is less than 0", () => {
+            const winAmount = 0;
+
+            beforeEach(() => {
+                // Arrange
+                cashOutHandlers["calculateWinAmount"] = jest.fn().mockReturnValueOnce(winAmount);
+                cashOutHandlers["updateFullCashOutValue"] = jest.fn();
+                cashOutHandlers["updateHalfCashOutValue"] = jest.fn();
+            });
+
+            it("should not update fullCashOutValue", () => {
+                // Act
+                cashOutHandlers["handleMultiplier"]();
+
+                // Assert
+                expect(cashOutHandlers["updateFullCashOutValue"]).not.toBeCalled();
+            });
+
+            it("should not update halfCashOutValue", () => {
+                // Act
+                cashOutHandlers["handleMultiplier"]();
+
+                // Assert
+                expect(cashOutHandlers["updateHalfCashOutValue"]).not.toBeCalled();
+            });
+        });
+
+        describe("when winAmount is greater than 0", () => {
+            const winAmount = 4.12;
+
+            beforeEach(() => {
+                // Arrange
+                cashOutHandlers["calculateWinAmount"] = jest.fn().mockReturnValueOnce(winAmount);
+                cashOutHandlers["updateFullCashOutValue"] = jest.fn();
+                cashOutHandlers["updateHalfCashOutValue"] = jest.fn();
+            });
+
+            it("should update fullCashOutValue", () => {
+                // Act
+                cashOutHandlers["handleMultiplier"]();
+
+                // Assert
+                expect(cashOutHandlers["updateFullCashOutValue"]).toBeCalledWith(winAmount);
+            });
+
+            it("should update halfCashOutValue", () => {
+                // Act
+                cashOutHandlers["handleMultiplier"]();
+
+                // Assert
+                expect(cashOutHandlers["updateHalfCashOutValue"]).toBeCalledWith(winAmount);
             });
         });
     });

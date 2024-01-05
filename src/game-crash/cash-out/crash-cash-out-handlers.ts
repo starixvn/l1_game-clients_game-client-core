@@ -6,7 +6,7 @@ import { GameConfigStore } from "../../game/game-configs";
 import { RoundHistoryStore } from "../../game/round-histories/round-history-store";
 import { RoundTimeStore } from "../../game/rounds";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { AutoPlayHandler, AutoPlayStore } from "../auto-play";
+import { AutoPlayHandler } from "../auto-play";
 import { ButtonState, GameCrashServiceMessage } from "../game-crash-messages";
 import { MultiplierStore } from "../multiplier/multiplier-store";
 import { PlayerActionHandlers, PlayerActionStore } from "../player-actions";
@@ -28,7 +28,6 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         @inject(PlayerActionStore) protected readonly playerActionStore: PlayerActionStore,
         @inject(PlayerActionHandlers) protected readonly playerActionHandlers: PlayerActionHandlers,
         @inject(AutoPlayHandler) protected readonly autoPlayHandler: AutoPlayHandler,
-        @inject(AutoPlayStore) protected readonly autoPlayStore: AutoPlayStore,
         @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore
     ) {
         reaction(
@@ -43,22 +42,43 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         reaction(
             () => this.multiplierStore.multiplier,
             () => {
-                if (this.cashOutStore.isFullCashedOut) {
-                    return;
-                }
-
-                const { multiplier } = this.multiplierStore;
-                const { cashOutBet } = this.cashOutStore;
-
-                if (multiplier && !!cashOutBet) {
-                    this.cashOutStore.fullCashOutValue = cashOutBet.value * multiplier;
-
-                    if (!this.cashOutStore.isHalfCashedOut) {
-                        this.cashOutStore.halfCashOutValue = cashOutBet.value * multiplier * this.halfCashOutRatio;
-                    }
-                }
+                this.handleMultiplier();
             }
         );
+    }
+
+    private handleMultiplier() {
+        const winAmount = this.calculateWinAmount();
+
+        if (winAmount <= 0) {
+            return;
+        }
+
+        this.updateFullCashOutValue(winAmount);
+        this.updateHalfCashOutValue(winAmount);
+    }
+
+    private calculateWinAmount() {
+        const { multiplier } = this.multiplierStore;
+        const betAmount = this.cashOutStore?.cashOutBet ?? 0;
+
+        return multiplier >= 1 ? betAmount * multiplier : 0;
+    }
+
+    private updateFullCashOutValue(winAmount: number) {
+        if (this.cashOutStore.isFullCashedOut) {
+            return;
+        }
+
+        this.cashOutStore.fullCashOutValue = winAmount;
+    }
+
+    private updateHalfCashOutValue(winAmount: number) {
+        if (this.cashOutStore.isHalfCashedOut) {
+            return;
+        }
+
+        this.cashOutStore.halfCashOutValue = winAmount * this.halfCashOutRatio;
     }
 
     private handleCashOutHalf(cashOut: GameCrashServiceMessage.CrashCashOut | undefined) {
@@ -138,16 +158,17 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     }
 
     private handleCrashed() {
-        const isResultPhase = this.roundTimeStore.roundTime > this.roundTimeStore.placingBet;
-        if (!isResultPhase) {
+        if (!this.roundTimeStore.isDisplayingResultState) {
             return;
         }
 
         this.playerActionStore.buttonState = ButtonState.CASH_OUT;
+
         this.multiplierStore.multiplier = +(this.roundHistoryStore.getLastRound()?.result || 0);
 
         if (!this.cashOutStore.isHalfCashedOut && this.multiplierStore.multiplier) {
             const amount = this.cashOutStore.cashOutBet.value;
+
             this.cashOutStore.fullCashOutValue = amount * this.multiplierStore.multiplier;
             this.cashOutStore.halfCashOutValue = amount * this.multiplierStore.multiplier * this.halfCashOutRatio;
         }
