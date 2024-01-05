@@ -1,16 +1,15 @@
 import { stub } from "jest-auto-stub";
 
 import { AutoPlayHandler } from "../../../../src/game-crash/auto-play/auto-play-handler";
-import { AutoPlayStore } from "../../../../src/game-crash/auto-play/auto-play-store";
 import { CrashCashOutHandlers } from "../../../../src/game-crash/cash-out/crash-cash-out-handlers";
 import { CrashCashOutStore } from "../../../../src/game-crash/cash-out/crash-cash-out-store";
 import { MultiplierStore } from "../../../../src/game-crash/multiplier/multiplier-store";
 import { PlayerActionHandlers } from "../../../../src/game-crash/player-actions/player-action-handlers";
 import { PlayerActionStore } from "../../../../src/game-crash/player-actions/player-action-store";
 import { BetStore } from "../../../../src/game/bets/bet-store";
+import { GameConfigStore } from "../../../../src/game/game-configs";
 import { RoundHistoryStore } from "../../../../src/game/round-histories/round-history-store";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
-import { GameConfigStore } from "../../../../src/game/game-configs";
 
 describe("CrashCashOutHandlers", () => {
     let cashOutHandlers: CrashCashOutHandlers;
@@ -251,21 +250,12 @@ describe("CrashCashOutHandlers", () => {
             expect(cashOutStore.ratio).toEqual(cashOutHandlers["fullCashOutRatio"]);
         });
 
-        describe("when have not auto play", () => {
-            beforeEach(() => {
-                // Act
-                cashOutHandlers["hideCashOut"]();
-            });
+        it("should call changeButtonBetNextRound() of PlayerActionHandlers", () => {
+            // Act
+            cashOutHandlers["hideCashOut"]();
 
-            it("should not call autoEnableEarlyBet() of AutoPlayHandler", () => {
-                // Assert
-                expect(autoPlayHandler.autoEnableEarlyBet).not.toBeCalled();
-            });
-
-            it("should call changeButtonBetNextRound() of PlayerActionHandlers", () => {
-                // Assert
-                expect(playerActionHandlers.changeButtonBetNextRound).toBeCalled();
-            });
+            // Assert
+            expect(playerActionHandlers.changeButtonBetNextRound).toBeCalled();
         });
     });
 
@@ -379,6 +369,81 @@ describe("CrashCashOutHandlers", () => {
 
                 // Assert
                 expect(actual).toBe(1.5);
+            });
+        });
+    });
+    describe("handleOwnBets", () => {
+        beforeEach(() => {
+            cashOutHandlers["callHandleCrashed"] = jest.fn();
+        });
+        describe("when ownBets have HalfCashOut", () => {
+            // Arrange
+            const ownBets = {
+                amount: 10,
+                autoCashOut: 2,
+                name: "abc",
+                playerId: "abc",
+                rate: 2,
+                time: "10.12.34",
+                halfCashOut: {
+                    amount: 10,
+                    win: 20,
+                    multiplier: 2,
+                    reachMaxWin: false,
+                    cashOutWin: 20,
+                },
+            };
+
+            it("should call handleHalfCashOutMessage()", () => {
+                //Arrange
+                cashOutHandlers["handleHalfCashOutMessage"] = jest.fn();
+
+                //Act
+                cashOutHandlers["handleOwnBets"](ownBets);
+
+                //Assert
+                expect(cashOutHandlers["handleHalfCashOutMessage"]).toBeCalled();
+            });
+        });
+
+        describe("when ownBets have CashOut", () => {
+            // Arrange
+            const ownBets = {
+                amount: 10,
+                autoCashOut: 2,
+                name: "abc",
+                playerId: "abc",
+                rate: 2,
+                time: "10.12.34",
+                cashOut: {
+                    amount: 10,
+                    win: 20,
+                    multiplier: 2,
+                    reachMaxWin: false,
+                    cashOutWin: 20,
+                },
+            };
+
+            it("should call handleCashOutMessage()", () => {
+                //Arrange
+                cashOutHandlers["handleCashOutMessage"] = jest.fn();
+
+                //Act
+                cashOutHandlers["handleOwnBets"](ownBets);
+
+                //Assert
+                expect(cashOutHandlers["handleCashOutMessage"]).toBeCalled();
+            });
+
+            it("should not call callHandleCrashed()", () => {
+                //Arrange
+                cashOutHandlers["callHandleCrashed"] = jest.fn();
+
+                //Act
+                cashOutHandlers["handleOwnBets"](ownBets);
+
+                //Assert
+                expect(cashOutHandlers["callHandleCrashed"]).not.toBeCalled();
             });
         });
     });
