@@ -17,11 +17,7 @@ export class MultiplierHandlers implements IHandler<GameCrashServiceMessage.Cras
         reaction(
             () => this.roundTimeStore.roundTime,
             (roundTime) => {
-                if (roundTime > this.roundTimeStore.placingBet) {
-                    this.handleIsCrashed(true);
-                } else {
-                    this.handleIsCrashed(false);
-                }
+                this.handleIsCrashed(roundTime > this.roundTimeStore.placingBet);
             }
         );
     }
