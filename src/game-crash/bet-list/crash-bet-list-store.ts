@@ -36,14 +36,14 @@ export class CrashBetListStore {
         @inject(BetStore) private readonly betStore: BetStore
     ) {
         makeAutoObservable(this);
-        reaction(() => this.roundTimeStore.isStartPlacingBet, this.reactionStartPlacingBet.bind(this));
+        reaction(() => this.roundTimeStore.isPlacingBet, this.reactionPlacingBet.bind(this));
         reaction(() => this.roundTimeStore.roundTime, this.reactionRoundTime.bind(this));
         reaction(() => this.betStore.lastReceivedBet, this.reactionLastReceivedBet.bind(this));
         reaction(() => this.crashCashOutStore.halfCashOut, this.reactionHalfCashOut.bind(this));
         reaction(() => this.crashCashOutStore.cashOut, this.reactionCashOut.bind(this));
     }
 
-    private reactionStartPlacingBet(isStartPlacingBet: boolean) {
+    private reactionPlacingBet(isStartPlacingBet: boolean) {
         if (!isStartPlacingBet) {
             return;
         }
