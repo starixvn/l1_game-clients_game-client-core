@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 
 import { IHandler } from "../../shared";
-import { CrashBetListHandlers } from "../bet-list";
+import { CrashBetListHandlers } from "../bet-list/crash-bet-list-handlers";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 import { OtherPlayerStore } from "./other-player-store";
 
