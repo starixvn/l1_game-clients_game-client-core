@@ -334,4 +334,53 @@ describe("CrashCashOutHandlers", () => {
             });
         });
     });
+
+    describe("calculateWinAmount", () => {
+        describe("when multiplier greater than 0", () => {
+            it("should return 0", () => {
+                // Arrange
+                Object.defineProperty(multiplierStore, "multiplier", { value: 0, configurable: true, writable: true });
+
+                // Act
+                const actual = cashOutHandlers["calculateWinAmount"]();
+
+                // Assert
+                expect(actual).toBe(0);
+            });
+        });
+
+        describe("when bet amount is null", () => {
+            beforeEach(() => {
+                Object.defineProperty(multiplierStore, "multiplier", { value: 1, configurable: true, writable: true });
+            });
+
+            it("should return 0", () => {
+                // Arrange
+                Object.defineProperty(cashOutStore, "cashOutBet", { value: undefined, configurable: true, writable: true });
+
+                // Act
+                const actual = cashOutHandlers["calculateWinAmount"]();
+
+                // Assert
+                expect(actual).toBe(0);
+            });
+        });
+
+        describe("when has bet amount", () => {
+            beforeEach(() => {
+                jest.clearAllMocks();
+
+                Object.defineProperty(multiplierStore, "multiplier", { value: 3, configurable: true, writable: true });
+                Object.defineProperty(cashOutStore, "cashOutBet", { value: 0.5, configurable: true, writable: true });
+            });
+
+            it("should calculate by multiplier", () => {
+                // Act
+                const actual = cashOutHandlers["calculateWinAmount"]();
+
+                // Assert
+                expect(actual).toBe(1.5);
+            });
+        });
+    });
 });
