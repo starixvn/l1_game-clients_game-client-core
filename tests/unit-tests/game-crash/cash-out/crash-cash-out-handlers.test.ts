@@ -51,6 +51,7 @@ describe("CrashCashOutHandlers", () => {
     });
 
     beforeEach(() => {
+        jest.clearAllMocks();
         cashOutHandlers = new CrashCashOutHandlers(
             cashOutStore,
             roundHistoryStore,
@@ -368,8 +369,6 @@ describe("CrashCashOutHandlers", () => {
 
         describe("when has bet amount", () => {
             beforeEach(() => {
-                jest.clearAllMocks();
-
                 Object.defineProperty(multiplierStore, "multiplier", { value: 3, configurable: true, writable: true });
                 Object.defineProperty(cashOutStore, "cashOutBet", { value: 0.5, configurable: true, writable: true });
             });
