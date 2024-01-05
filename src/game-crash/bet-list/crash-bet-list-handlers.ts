@@ -16,14 +16,6 @@ export class CrashBetListHandlers implements IMultipleHandlers {
         this.betListStore.addBetList({ [playerChip.playerId]: playerChip });
     }
 
-    resetOtherPlayerList() {
-        this.betListStore.resetOtherPlayerList();
-    }
-
-    resetMainPlayer() {
-        this.betListStore.resetMainPlayer();
-    }
-
     eventHandleList = [
         {
             name: GameCrashServiceMessage.BetList.eventName,

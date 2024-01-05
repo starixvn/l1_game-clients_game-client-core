@@ -22,7 +22,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         reaction(
             () => this.betStore.lastReceivedBet,
             (lastReceivedBet) => {
-                const isReceivedBet = lastReceivedBet.value > 0;
+                const isReceivedBet = lastReceivedBet?.value > 0;
                 if (isReceivedBet) {
                     this.changeButtonState(ButtonState.BET_ACCEPTED);
                 } else {

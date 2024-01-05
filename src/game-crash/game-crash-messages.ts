@@ -20,7 +20,7 @@ export namespace GameCrashServiceMessage {
     export class CrashOtherPlayer {
         name: string;
 
-        playerId: string;
+        playerId?: string;
 
         cashOut?: CashOutReceive;
 
