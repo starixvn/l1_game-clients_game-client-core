@@ -36,6 +36,7 @@ export class AutoPlayHandler implements IHandler<number> {
 
                 if (this.checkFinishedAutoPlay()) {
                     this.cancelAutoPlay();
+                    this.playerActionStore.buttonState = ButtonState.PLACE_BET;
                     return;
                 }
 
@@ -75,11 +76,20 @@ export class AutoPlayHandler implements IHandler<number> {
         }
     }
 
-    checkAutoPlayClick() {
+    clickAutoPlay() {
         if (!this.autoPlayStore.isAutoPlay && this.validateAmount()) {
             this.openAutoPlayPopup();
         } else {
             this.cancelAutoPlay();
+            this.resetButtonState();
+        }
+    }
+
+    resetButtonState() {
+        if (this.playerActionStore.buttonState === ButtonState.CANCEL_BET) {
+            this.playerActionStore.buttonState = this.roundTimeStore.isPlacingBet ? ButtonState.PLACE_BET : ButtonState.BET_NEXT_ROUND;
+        } else if (this.playerActionStore.buttonState === ButtonState.CASH_OUT && this.roundTimeStore.isPlacingBet) {
+            this.playerActionStore.buttonState = ButtonState.PLACE_BET;
         }
     }
 
@@ -158,7 +168,7 @@ export class AutoPlayHandler implements IHandler<number> {
     }
 
     clickEarlyBet() {
-        const enable = !this.earlyBetStore.earlyBetEnable;
+        const enable = this.playerActionStore.buttonState === ButtonState.BET_NEXT_ROUND;
         if (enable) {
             let isError = false;
 
@@ -173,7 +183,6 @@ export class AutoPlayHandler implements IHandler<number> {
             }
 
             if (isError) {
-                this.cancelAutoPlay();
                 return;
             }
         }
