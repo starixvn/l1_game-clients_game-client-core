@@ -1,5 +1,4 @@
 import { inject, injectable } from "inversify";
-import { reaction } from "mobx";
 
 import { BetStore } from "../../game/bets/bet-store";
 import { ConnectionHandlers, ConnectionStore } from "../../game/connection";
@@ -21,12 +20,7 @@ export class CrashCashOutUIHandlers {
         @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler,
         @inject(RoundStore) private readonly roundStore: RoundStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore
-    ) {
-        reaction(
-            () => this.roundTimeStore.isStartRound,
-            (isStartRound) => isStartRound && this.updateCashOutBetValue(null)
-        );
-    }
+    ) {}
 
     handle(cashOutValue: number, halfCashOut: boolean) {
         const cashOutData = {
@@ -38,10 +32,6 @@ export class CrashCashOutUIHandlers {
         };
         this.connectionStore.send(GameCrashEmitMessage.CashOut.eventName, cashOutData);
         this.retryGameHandler.handle();
-    }
-
-    updateCashOutBetValue(value: number) {
-        this.cashOutStore.cashOutBet = { value };
     }
 
     resetCashOutValue() {

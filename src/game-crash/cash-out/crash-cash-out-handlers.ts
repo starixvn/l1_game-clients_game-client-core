@@ -7,6 +7,7 @@ import { RoundHistoryStore } from "../../game/round-histories/round-history-stor
 import { RoundTimeStore } from "../../game/rounds";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { AutoPlayHandler } from "../auto-play";
+import { BetInputStore } from "../bet-input/bet-input-store";
 import { ButtonState, GameCrashServiceMessage } from "../game-crash-messages";
 import { MultiplierStore } from "../multiplier/multiplier-store";
 import { PlayerActionHandlers, PlayerActionStore } from "../player-actions";
@@ -28,7 +29,8 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         @inject(PlayerActionStore) protected readonly playerActionStore: PlayerActionStore,
         @inject(PlayerActionHandlers) protected readonly playerActionHandlers: PlayerActionHandlers,
         @inject(AutoPlayHandler) protected readonly autoPlayHandler: AutoPlayHandler,
-        @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore
+        @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore,
+        @inject(BetInputStore) protected readonly betInputStore: BetInputStore
     ) {
         reaction(
             () => this.roundTimeStore.isPlacingBet,
@@ -60,8 +62,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
 
     private calculateWinAmount() {
         const { multiplier } = this.multiplierStore;
-        const betAmount = this.cashOutStore?.cashOutBet ?? 0;
-
+        const betAmount = this.betInputStore.betAmountRatio;
         return multiplier > 0 ? betAmount * multiplier : 0;
     }
 
@@ -91,8 +92,6 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         this.setHalfCashedOutValue(cashOut.cashOutWin);
 
         this.cashOutStore.ratio = this.halfCashOutRatio;
-
-        this.cashOutStore.cashOutBet = { value: this.cashOutStore.cashOutBet.value * this.halfCashOutRatio };
     }
 
     private handleCashOutFull(cashOut: GameCrashServiceMessage.CrashCashOut | undefined) {
@@ -134,8 +133,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             return;
         }
 
-        this.betStore.lastReceivedBet = { value: ownBets.amount, isAnimated: false };
-        this.cashOutStore.cashOutBet = { value: ownBets.amount };
+        if (!ownBets.cashOut && !ownBets.halfCashOut) {
+            this.betStore.lastReceivedBet = { value: ownBets.amount, isAnimated: false };
+        }
 
         if (ownBets.halfCashOut) {
             this.handleHalfCashOutMessage(ownBets.halfCashOut);
@@ -143,28 +143,30 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         }
 
         if (ownBets.cashOut) {
-            this.playerActionStore.buttonState = ButtonState.BET_NEXT_ROUND;
             this.handleCashOutMessage(ownBets.cashOut);
+            this.playerActionStore.buttonState = ButtonState.BET_NEXT_ROUND;
             return;
         }
 
-        const callHandleCrashed = () => {
-            if (this.roundTimeStore.initialized && this.gameConfigStore.initialized) {
-                this.handleCrashed();
-            } else {
-                setTimeout(callHandleCrashed, 50);
-            }
-        };
+        this.callHandleCrashed();
+    }
 
-        callHandleCrashed();
+    callHandleCrashed() {
+        if (this.roundTimeStore.initialized && this.gameConfigStore.initialized) {
+            this.handleCrashed();
+        } else {
+            setTimeout(() => this.callHandleCrashed(), 50);
+        }
     }
 
     private handleCrashed() {
+        console.log("round time", this.roundTimeStore.roundTime);
         if (this.roundTimeStore.roundTime <= this.roundTimeStore.placingBet) {
             return;
         }
 
         this.playerActionStore.buttonState = ButtonState.CASH_OUT;
+        this.betStore.lastReceivedBet = null;
 
         this.multiplierStore.multiplier = +(this.roundHistoryStore.getLastRound()?.result || 0);
 

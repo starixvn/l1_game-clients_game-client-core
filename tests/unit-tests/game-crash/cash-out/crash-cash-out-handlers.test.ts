@@ -2,6 +2,7 @@ import { stub } from "jest-auto-stub";
 import { RoundHistory } from "./../../../../src/game/round-histories/round-history-store";
 
 import { AutoPlayHandler } from "../../../../src/game-crash/auto-play/auto-play-handler";
+import { BetInputStore } from "../../../../src/game-crash/bet-input/bet-input-store";
 import { CrashCashOutHandlers } from "../../../../src/game-crash/cash-out/crash-cash-out-handlers";
 import { CrashCashOutStore } from "../../../../src/game-crash/cash-out/crash-cash-out-store";
 import { ButtonState } from "../../../../src/game-crash/game-crash-messages";
@@ -24,6 +25,7 @@ describe("CrashCashOutHandlers", () => {
     let playerActionHandlers: PlayerActionHandlers;
     let autoPlayHandler: AutoPlayHandler;
     let gameConfigStore: GameConfigStore;
+    let betInputStore: BetInputStore;
     const halfCashOut = {
         amount: 25,
         win: 26.25,
@@ -49,6 +51,7 @@ describe("CrashCashOutHandlers", () => {
         playerActionHandlers = stub<PlayerActionHandlers>({ changeButtonBetNextRound: jest.fn() });
         autoPlayHandler = stub<AutoPlayHandler>({ autoEnableEarlyBet: jest.fn() });
         gameConfigStore = stub<GameConfigStore>();
+        betInputStore = stub<BetInputStore>();
     });
 
     beforeEach(() => {
@@ -62,7 +65,8 @@ describe("CrashCashOutHandlers", () => {
             playerActionStore,
             playerActionHandlers,
             autoPlayHandler,
-            gameConfigStore
+            gameConfigStore,
+            betInputStore
         );
     });
 
@@ -108,15 +112,6 @@ describe("CrashCashOutHandlers", () => {
         it("should update ratio of CrashCashOutStore", () => {
             // Assert
             expect(cashOutStore.ratio).toEqual(cashOutHandlers["halfCashOutRatio"]);
-        });
-
-        it("should update cashOutBet of CrashCashOutStore", () => {
-            // Arrange
-            cashOutStore = stub<CrashCashOutStore>({ cashOutBet: { value: 10 } });
-            const expected = cashOutHandlers["cashOutStore"].cashOutBet.value * cashOutHandlers["halfCashOutRatio"];
-
-            // Assert
-            expect(cashOutHandlers["cashOutStore"].cashOutBet.value).toEqual(expected);
         });
     });
 
@@ -342,27 +337,10 @@ describe("CrashCashOutHandlers", () => {
             });
         });
 
-        describe("when bet amount is null", () => {
-            beforeEach(() => {
-                Object.defineProperty(multiplierStore, "multiplier", { value: 1, configurable: true, writable: true });
-            });
-
-            it("should return 0", () => {
-                // Arrange
-                Object.defineProperty(cashOutStore, "cashOutBet", { value: undefined, configurable: true, writable: true });
-
-                // Act
-                const actual = cashOutHandlers["calculateWinAmount"]();
-
-                // Assert
-                expect(actual).toBe(0);
-            });
-        });
-
         describe("when has bet amount", () => {
             beforeEach(() => {
                 Object.defineProperty(multiplierStore, "multiplier", { value: 3, configurable: true, writable: true });
-                Object.defineProperty(cashOutStore, "cashOutBet", { value: 0.5, configurable: true, writable: true });
+                Object.defineProperty(betInputStore, "betAmountRatio", { value: 0.5, configurable: true, writable: true });
             });
 
             it("should calculate by multiplier", () => {

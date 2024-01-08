@@ -15,7 +15,6 @@ export class CrashCashOutStore {
         reachMaxWin: boolean;
     } = null;
 
-    private _cashOutBet: { value: number } = null;
     private _cashOut: GameCrashServiceMessage.CrashCashOut = null;
     private _halfCashOut: GameCrashServiceMessage.CrashCashOut = null;
     private _fullCashOutValue = 0;
@@ -23,14 +22,6 @@ export class CrashCashOutStore {
 
     constructor() {
         makeAutoObservable(this);
-    }
-
-    get cashOutBet() {
-        return this._cashOutBet;
-    }
-
-    set cashOutBet(cashOutBet: any) {
-        this._cashOutBet = cashOutBet;
     }
 
     set cashOut(data: GameCrashServiceMessage.CrashCashOut) {
