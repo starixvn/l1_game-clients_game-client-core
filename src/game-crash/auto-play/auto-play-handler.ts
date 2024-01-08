@@ -101,7 +101,11 @@ export class AutoPlayHandler implements IHandler<number> {
 
     resetButtonState() {
         if (this.playerActionStore.buttonState === ButtonState.CANCEL_BET) {
-            this.playerActionStore.buttonState = this.roundTimeStore.isPlacingBet ? ButtonState.PLACE_BET : ButtonState.BET_NEXT_ROUND;
+            if (this.roundTimeStore.isPlacingBet) {
+                this.playerActionStore.buttonState = ButtonState.PLACE_BET;
+            } else if (!this.earlyBetStore.earlyBetEnable) {
+                this.playerActionStore.buttonState = ButtonState.BET_NEXT_ROUND;
+            }
         } else if (this.playerActionStore.buttonState === ButtonState.CASH_OUT && this.roundTimeStore.isPlacingBet) {
             this.playerActionStore.buttonState = ButtonState.PLACE_BET;
         }
