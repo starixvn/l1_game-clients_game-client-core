@@ -2,17 +2,20 @@ import { stub } from "jest-auto-stub";
 
 import { MultiplierHandlers } from "../../../../src/game-crash/multiplier/multiplier-handlers";
 import { MultiplierStore } from "../../../../src/game-crash/multiplier/multiplier-store";
+import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
 
 describe("MultiplierHandlers", () => {
     let multiplierHandlers: MultiplierHandlers;
     let multiplierStore: MultiplierStore;
+    let roundTimeStore: RoundTimeStore;
 
     beforeAll(() => {
         multiplierStore = stub<MultiplierStore>();
+        roundTimeStore = stub<RoundTimeStore>();
     });
 
     beforeEach(() => {
-        multiplierHandlers = new MultiplierHandlers(multiplierStore);
+        multiplierHandlers = new MultiplierHandlers(multiplierStore, roundTimeStore);
     });
 
     describe("handle", () => {

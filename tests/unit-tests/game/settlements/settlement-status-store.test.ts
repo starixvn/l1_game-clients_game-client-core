@@ -61,19 +61,19 @@ describe("SettlementStatusStore test", () => {
                     choice2: 20,
                 },
             };
-            store.setStatusStore(mockStatus);
 
             // Act
-            const settlementStatus = store.settlementStatus;
+            store.setStatusStore(mockStatus);
 
             // Assert
-            expect(settlementStatus).toEqual({
+            expect(store.settlementStatus).toEqual({
                 win: true,
                 bet: 50,
                 winningByChoices: {
                     choice1: 30,
                     choice2: 20,
                 },
+                reachMaxWin: false,
             });
         });
     });

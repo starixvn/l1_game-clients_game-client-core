@@ -1,6 +1,6 @@
 import { stub } from "jest-auto-stub";
 import { AuthStore } from "../../../../src/auth";
-import { ErrorHandlers } from "../../../../src/game/errors";
+import { ErrorHandlers, ErrorStore } from "../../../../src/game/errors";
 import { NoticeStore } from "../../../../src/game/notices";
 import { MainPlayerStore } from "../../../../src/players";
 import { GameServiceMessage } from "../../../../src/shared";
@@ -19,14 +19,16 @@ describe("ErrorHandlers test", () => {
     let noticeStore: NoticeStore;
     let mainPlayerStore: MainPlayerStore;
     let authStore: AuthStore;
+    let errorStore: ErrorStore;
     beforeAll(() => {
         noticeStore = stub<NoticeStore>();
         mainPlayerStore = stub<MainPlayerStore>();
         authStore = stub<AuthStore>();
+        errorStore = stub<ErrorStore>();
     });
 
     beforeEach(() => {
-        instance = new ErrorHandlers(mainPlayerStore, noticeStore, authStore);
+        instance = new ErrorHandlers(mainPlayerStore, noticeStore, authStore, errorStore);
     });
 
     afterEach(() => {
@@ -34,6 +36,17 @@ describe("ErrorHandlers test", () => {
     });
 
     describe("handleApiError", () => {
+        it("set apiError to errorStore", () => {
+            // Arrange
+            const data = stub<GameServiceMessage.ApiError>();
+
+            // Act
+            instance.handleApiError(data);
+
+            // Assert
+            expect(errorStore.apiError).toBe(data);
+        });
+
         it("set error code in auth store, when error code is session timeout type.", () => {
             // Arrange
             const data = stub<GameServiceMessage.ApiError>({

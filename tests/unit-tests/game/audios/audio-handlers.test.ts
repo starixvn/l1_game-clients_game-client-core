@@ -152,27 +152,25 @@ describe("AudioHandler", () => {
         it("should call playMusic with a random music id", () => {
             // Arrange
             audioStore.musicIds = ["id1", "id2"];
-            const randomValue = 1;
-            lodash.random = jest.fn(() => randomValue);
+            lodash.sample = jest.fn(() => "id2");
 
             // Act
             audioHandler.playRandomMusic();
 
             // Assert
-            expect(audioHandler.playMusic).toHaveBeenCalledWith(audioStore.musicIds[randomValue]);
+            expect(audioHandler.playMusic).toHaveBeenCalledWith("id2");
         });
 
         it("should call  random with correct param", () => {
             // Arrange
             audioStore.musicIds = ["id1", "id2", "id3", "id4"];
-            const randomValue = 1;
-            lodash.random = jest.fn().mockImplementation(() => randomValue);
+            lodash.sample = jest.fn();
 
             // Act
             audioHandler.playRandomMusic();
 
             // Assert
-            expect(lodash.random).toHaveBeenCalledWith(audioStore.musicIds.length - 1);
+            expect(lodash.sample).toHaveBeenCalledWith(audioStore.musicIds);
         });
     });
 });
