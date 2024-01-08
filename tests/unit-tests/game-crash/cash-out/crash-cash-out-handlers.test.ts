@@ -1,8 +1,10 @@
 import { stub } from "jest-auto-stub";
+import { RoundHistory } from "./../../../../src/game/round-histories/round-history-store";
 
 import { AutoPlayHandler } from "../../../../src/game-crash/auto-play/auto-play-handler";
 import { CrashCashOutHandlers } from "../../../../src/game-crash/cash-out/crash-cash-out-handlers";
 import { CrashCashOutStore } from "../../../../src/game-crash/cash-out/crash-cash-out-store";
+import { ButtonState } from "../../../../src/game-crash/game-crash-messages";
 import { MultiplierStore } from "../../../../src/game-crash/multiplier/multiplier-store";
 import { PlayerActionHandlers } from "../../../../src/game-crash/player-actions/player-action-handlers";
 import { PlayerActionStore } from "../../../../src/game-crash/player-actions/player-action-store";
@@ -404,6 +406,14 @@ describe("CrashCashOutHandlers", () => {
                 //Assert
                 expect(cashOutHandlers["handleHalfCashOutMessage"]).toBeCalled();
             });
+
+            it("should set button state to CASH OUT", () => {
+                //Act
+                cashOutHandlers["handleOwnBets"](ownBets);
+
+                //Assert
+                expect(playerActionStore.buttonState).toEqual(ButtonState.CASH_OUT);
+            });
         });
 
         describe("when ownBets have CashOut", () => {
@@ -444,6 +454,70 @@ describe("CrashCashOutHandlers", () => {
 
                 //Assert
                 expect(cashOutHandlers["callHandleCrashed"]).not.toBeCalled();
+            });
+
+            it("should set button state to BET NEXT ROUND", () => {
+                //Act
+                cashOutHandlers["handleOwnBets"](ownBets);
+
+                //Assert
+                expect(playerActionStore.buttonState).toEqual(ButtonState.BET_NEXT_ROUND);
+            });
+        });
+    });
+
+    describe("handleCrashed", () => {
+        describe("when roundTime is less than 10", () => {
+            it("should not set button state to CASH OUT", () => {
+                //Arrange
+                roundTimeStore.placingBet = 9;
+                roundTimeStore.roundTime = 8;
+
+                //Act
+                cashOutHandlers["handleCrashed"]();
+
+                //Assert
+                expect(playerActionStore.buttonState).not.toEqual(ButtonState.CASH_OUT);
+            });
+        });
+        describe("when roundTime greater than 10", () => {
+            beforeEach(() => {
+                //Arrange3
+                let lastRound: RoundHistory = { roundId: 123, result: [3], settlementResult: {} };
+
+                roundHistoryStore.getLastRound = jest.fn(() => lastRound);
+                roundTimeStore.placingBet = 9;
+                roundTimeStore.roundTime = 12;
+            });
+            it("should set button state to CASH OUT", () => {
+                //Act
+                cashOutHandlers["handleCrashed"]();
+
+                //Assert
+                expect(playerActionStore.buttonState).toEqual(ButtonState.CASH_OUT);
+            });
+
+            it("should call calculateWinAmount()", () => {
+                //Arrange
+                cashOutHandlers["calculateWinAmount"] = jest.fn();
+
+                //Act
+                const actual = cashOutHandlers["handleCrashed"]();
+
+                //Assert
+                expect(cashOutHandlers["calculateWinAmount"]).toBeCalled();
+            });
+
+            it("should call calculateWinAmount() twice", () => {
+                //Arrange
+                cashOutHandlers["calculateWinAmount"] = jest.fn();
+                cashOutStore.isHalfCashedOut = false;
+
+                //Act
+                const actual = cashOutHandlers["handleCrashed"]();
+
+                //Assert
+                expect(cashOutHandlers["calculateWinAmount"]).toBeCalledTimes(2);
             });
         });
     });
