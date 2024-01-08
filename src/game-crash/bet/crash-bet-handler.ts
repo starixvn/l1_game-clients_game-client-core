@@ -62,8 +62,6 @@ export class CrashBetHandler {
         this.noticeStore.addWarning(message);
     }
 
-    clearBet() {}
-
     showWarningProcessingBet() {
         this.noticeStore.addWarning(Translator.commonTranslate("message_processing_action"));
     }
