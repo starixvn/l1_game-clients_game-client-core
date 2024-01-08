@@ -48,17 +48,14 @@ export class AudioHandler {
     playRandomMusic() {
         const musicIds = this.audioStore.musicIds;
         const musicGameIds = this.audioStore.musicGameIds;
-        let musicTmp = [];
-        if (musicGameIds.length > 0) {
-            musicTmp = musicGameIds;
-        } else {
-            if (!musicIds.length) {
-                return;
-            }
-            musicTmp = musicIds;
+
+        let musicTmp = musicGameIds.length > 0 ? musicGameIds : musicIds;
+
+        if (musicTmp.length === 0) {
+            return;
         }
-        const id = musicTmp.length === 1 ? musicTmp[0] : musicTmp[_.random(musicTmp.length - 1)];
-        this.playMusic(id);
+
+        this.playMusic(_.sample(musicTmp));
     }
 
     audiosLoaded() {

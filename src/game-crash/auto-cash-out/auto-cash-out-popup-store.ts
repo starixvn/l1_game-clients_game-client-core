@@ -1,13 +1,13 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+import { CrashGameConfigStore } from "../game-configs/crash-game-config-store";
 
 @injectable()
 export class AutoCashOutPopupStore {
     private _enable = false;
-    private _isValid = false;
     private _multiplier = "0";
 
-    constructor() {
+    constructor(@inject(CrashGameConfigStore) private readonly gameConfigStore: CrashGameConfigStore) {
         makeAutoObservable(this);
     }
     get enable(): boolean {
@@ -19,11 +19,8 @@ export class AutoCashOutPopupStore {
     }
 
     get isValid(): boolean {
-        return this._isValid;
-    }
-
-    set isValid(isValid: boolean) {
-        this._isValid = isValid;
+        const parsedMultiplier = parseFloat(this.multiplier);
+        return parsedMultiplier >= this.gameConfigStore.minMultiplier && parsedMultiplier <= this.gameConfigStore.maxMultiplier;
     }
 
     get multiplier(): string {

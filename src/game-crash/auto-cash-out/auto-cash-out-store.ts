@@ -11,8 +11,6 @@ export class AutoCashOutStore {
     private _enable = false;
     private _multiplier = 0;
 
-    private _disable = false;
-
     constructor(
         @inject(CrashGameConfigStore) private readonly gameConfigStore: CrashGameConfigStore,
         @inject(RoundStore) protected readonly roundStore: RoundStore
@@ -65,16 +63,8 @@ export class AutoCashOutStore {
         this._multiplier = multiplier;
     }
 
-    get disable(): boolean {
-        return this._disable;
-    }
-
-    set disable(trigger: boolean) {
-        this._disable = trigger;
-    }
-
     resetDefaultValueStore() {
-        this._enable = false;
-        this._multiplier = this.gameConfigStore.minMultiplier;
+        this.enable = false;
+        this.multiplier = this.gameConfigStore.minMultiplier;
     }
 }

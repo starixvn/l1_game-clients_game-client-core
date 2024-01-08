@@ -11,11 +11,6 @@ export interface ILastReceivedBet {
     isAnimated: boolean;
 }
 
-export interface IShowDecreaseBalanceEffect {
-    showDecreaseBalanceEffect: boolean;
-    value: number;
-}
-
 @injectable()
 export class BetStore {
     constructor() {

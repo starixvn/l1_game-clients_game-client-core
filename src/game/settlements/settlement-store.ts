@@ -16,8 +16,8 @@ export class SettlementStore {
     settlementResult: GameServiceMessage.TSettlementResult = null;
     private _winningPlayers: GameServiceMessage.TWinningPlayers = null;
     private _isFinishedShowResult = false;
+    md5Result: GameServiceMessage.ResultHash = null;
     currentFinish: GameServiceMessage.Finish = null;
-    md5Result: GameServiceMessage.ResultHash;
 
     public get isFinishedShowResult() {
         return this._isFinishedShowResult;
@@ -58,6 +58,8 @@ export class SettlementStore {
         this.settlementResult = null;
         this.result = null;
         this.isFinishedShowResult = false;
+        this.md5Result = null;
+
         this.currentFinish = null;
     }
 }

@@ -10,11 +10,11 @@ describe("AutoCashOutPopupHandler", () => {
     let gameConfigStore: CrashGameConfigStore;
     beforeAll(() => {
         gameConfigStore = stub<CrashGameConfigStore>({ minMultiplier: 1.01, maxMultiplier: 20 });
-        autoCashOutPopupStore = new AutoCashOutPopupStore();
+        autoCashOutPopupStore = new AutoCashOutPopupStore(gameConfigStore);
     });
 
     beforeEach(() => {
-        autoCashOutPopupHandler = new AutoCashOutPopupHandler(autoCashOutPopupStore, gameConfigStore);
+        autoCashOutPopupHandler = new AutoCashOutPopupHandler(autoCashOutPopupStore);
     });
 
     describe("togglePopup", () => {
@@ -41,17 +41,6 @@ describe("AutoCashOutPopupHandler", () => {
             // Assert
             expect(autoCashOutPopupStore.multiplier).toEqual(multiplier);
         });
-
-        it("should call isValidMultiplier()", async () => {
-            // Arrange
-            autoCashOutPopupHandler["isValidMultiplier"] = jest.fn();
-
-            // Act
-            autoCashOutPopupHandler.handleMultiplier(multiplier);
-
-            // Assert
-            expect(autoCashOutPopupHandler["isValidMultiplier"]).toBeCalled();
-        });
     });
 
     describe("isValidMultiplier", () => {
@@ -61,7 +50,8 @@ describe("AutoCashOutPopupHandler", () => {
                 const multiplier = "2.00";
 
                 // Act
-                const isValid = autoCashOutPopupHandler["isValidMultiplier"](multiplier);
+                autoCashOutPopupHandler.handleMultiplier(multiplier);
+                const isValid = autoCashOutPopupStore.isValid;
 
                 // Assert
                 expect(isValid).toEqual(true);
@@ -74,7 +64,8 @@ describe("AutoCashOutPopupHandler", () => {
                 const multiplier = "30.00";
 
                 // Act
-                const isValid = autoCashOutPopupHandler["isValidMultiplier"](multiplier);
+                autoCashOutPopupHandler.handleMultiplier(multiplier);
+                const isValid = autoCashOutPopupStore.isValid;
 
                 // Assert
                 expect(isValid).toEqual(false);
@@ -87,7 +78,8 @@ describe("AutoCashOutPopupHandler", () => {
                 const multiplier = "1.00";
 
                 // Act
-                const isValid = autoCashOutPopupHandler["isValidMultiplier"](multiplier);
+                autoCashOutPopupHandler.handleMultiplier(multiplier);
+                const isValid = autoCashOutPopupStore.isValid;
 
                 // Assert
                 expect(isValid).toEqual(false);
@@ -100,7 +92,8 @@ describe("AutoCashOutPopupHandler", () => {
                 const multiplier = "1.01";
 
                 // Act
-                const isValid = autoCashOutPopupHandler["isValidMultiplier"](multiplier);
+                autoCashOutPopupHandler.handleMultiplier(multiplier);
+                const isValid = autoCashOutPopupStore.isValid;
 
                 // Assert
                 expect(isValid).toEqual(true);
@@ -113,7 +106,8 @@ describe("AutoCashOutPopupHandler", () => {
                 const multiplier = "20.00";
 
                 // Act
-                const isValid = autoCashOutPopupHandler["isValidMultiplier"](multiplier);
+                autoCashOutPopupHandler.handleMultiplier(multiplier);
+                const isValid = autoCashOutPopupStore.isValid;
 
                 // Assert
                 expect(isValid).toEqual(true);

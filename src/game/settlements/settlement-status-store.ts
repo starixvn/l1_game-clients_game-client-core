@@ -17,7 +17,7 @@ export class SettlementStatusStore {
         this.win = status.win;
         this.bet = status.bet;
         this.winningByChoices = status.winningByChoices;
-        this.reachMaxWin = status?.reachMaxWin;
+        this.reachMaxWin = status.reachMaxWin ?? false;
     }
 
     resetSettlementStatus() {
