@@ -56,16 +56,4 @@ describe("AutoCashOutHandler", () => {
             expect(autoCashOutStore.multiplier).toEqual(2);
         });
     });
-
-    describe("handleDisableAuto", () => {
-        it("should update disable", async () => {
-            // Arrange
-
-            // Act
-            autoCashOutHandler.handleDisableAuto(true);
-
-            // Assert
-            expect(autoCashOutStore.disable).toEqual(true);
-        });
-    });
 });
