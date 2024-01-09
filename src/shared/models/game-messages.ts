@@ -131,9 +131,10 @@ export namespace GameServiceMessage {
     }
     export class PlayerChip {
         playerId: string;
-        betChoice: string;
         amount: number;
         red: number;
+        name?: string;
+        betChoice?: string;
         rate?: number;
 
         static eventName = "playerChip";

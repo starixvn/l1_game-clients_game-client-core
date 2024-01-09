@@ -26,8 +26,8 @@ export class CrashBetListHandlers implements IMultipleHandlers {
         reaction(() => this.crashCashOutStore.cashOut, this.reactionCashOut.bind(this));
     }
 
-    private reactionPlacingBet(isStartPlacingBet: boolean) {
-        if (!isStartPlacingBet) {
+    private reactionPlacingBet(isPlacingBet: boolean) {
+        if (!isPlacingBet) {
             return;
         }
 
@@ -36,25 +36,21 @@ export class CrashBetListHandlers implements IMultipleHandlers {
     }
 
     private reactionRoundTime(roundTime: number) {
-        if (roundTime <= 0 || this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
+        if (roundTime <= 0 || this.roundTimeStore.isDisplayingResultState) {
             this.betListStore.isNeedEmptyBetAmount = true;
         }
     }
 
     private reactionLastReceivedBet(lastReceivedBet: ILastReceivedBet) {
-        if (!lastReceivedBet) {
+        if (!lastReceivedBet || lastReceivedBet.value <= 0) {
             return;
         }
 
-        const bet = lastReceivedBet.value;
-        if (bet > 0) {
-            const player = {
-                name: this.mainPlayerStore.name,
-                amount: bet,
-            };
-            this.betListStore.mainPlayer = player;
-        }
-
+        const player = {
+            name: this.mainPlayerStore.name,
+            amount: lastReceivedBet.value,
+        };
+        this.betListStore.mainPlayer = player;
         this.betListStore.isNeedEmptyBetAmount = false;
     }
 
@@ -79,7 +75,7 @@ export class CrashBetListHandlers implements IMultipleHandlers {
         this.betListStore.isNeedEmptyBetAmount = false;
     }
 
-    private updateBetListByPlayerChip(players: any[]): any[] {
+    private updateAndSortBetListByPlayerChip(players: any[]): any[] {
         return players.concat(...this.betListStore.betList.players).sort((player1, player2) => player2.amount - player1.amount);
     }
 
@@ -180,7 +176,7 @@ export class CrashBetListHandlers implements IMultipleHandlers {
         const data = { [playerChip.playerId]: playerChip };
         let players = this.convertCurrency(data);
 
-        const playerList = this.updateBetListByPlayerChip(players);
+        const playerList = this.updateAndSortBetListByPlayerChip(players);
 
         this.betListStore.betList = {
             players: playerList,
