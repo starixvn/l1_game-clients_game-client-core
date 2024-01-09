@@ -5,8 +5,12 @@ import { GameCrashServiceMessage } from "../game-crash-messages";
 
 @injectable()
 export class CrashCashOutStore {
-    isFullCashedOut = false;
-    isHalfCashedOut = false;
+    get isFullCashedOut() {
+        return this.cashOut !== null;
+    }
+    get isHalfCashedOut() {
+        return this.halfCashOut !== null;
+    }
     ratio = 1;
 
     cashOutNotice: {

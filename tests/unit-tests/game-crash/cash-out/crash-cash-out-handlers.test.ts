@@ -164,7 +164,7 @@ describe("CrashCashOutHandlers", () => {
         describe("when have half cash out", () => {
             it("should not call setHalfCashedOutValue()", () => {
                 // Arrange
-                cashOutHandlers["cashOutStore"].isHalfCashedOut = true;
+                Object.defineProperty(cashOutStore, "isHalfCashedOut", { value: true, writable: true, configurable: true });
 
                 // Act
                 cashOutHandlers["handleCashOutMessage"](cashOut);
@@ -177,7 +177,7 @@ describe("CrashCashOutHandlers", () => {
         describe("when have not half cash out", () => {
             it("should call setHalfCashedOutValue()", () => {
                 // Arrange
-                cashOutHandlers["cashOutStore"].isHalfCashedOut = false;
+                Object.defineProperty(cashOutStore, "isHalfCashedOut", { value: false, writable: true, configurable: true });
 
                 // Act
                 cashOutHandlers["handleCashOutMessage"](cashOut);
@@ -190,16 +190,6 @@ describe("CrashCashOutHandlers", () => {
 
     describe("setHalfCashedOutValue", () => {
         const value = 100;
-
-        it("should update isHalfCashedOut to true", () => {
-            // Arrange
-
-            // Act
-            cashOutHandlers["setHalfCashedOutValue"](value);
-
-            // Assert
-            expect(cashOutStore.isHalfCashedOut).toEqual(true);
-        });
 
         it("should update halfCashOutValue", () => {
             // Arrange
@@ -214,16 +204,6 @@ describe("CrashCashOutHandlers", () => {
 
     describe("setFullCashedOutValue", () => {
         const value = 100;
-
-        it("should update isFullCashedOut to true", () => {
-            // Arrange
-
-            // Act
-            cashOutHandlers["setFullCashedOutValue"](value);
-
-            // Assert
-            expect(cashOutStore.isFullCashedOut).toEqual(true);
-        });
 
         it("should update fullCashOutValue", () => {
             // Arrange
@@ -275,7 +255,7 @@ describe("CrashCashOutHandlers", () => {
                 // Arrange
                 cashOutHandlers["calculateWinAmount"] = jest.fn().mockReturnValueOnce(winAmount);
                 cashOutHandlers["updateFullCashOutValue"] = jest.fn();
-                cashOutHandlers["updateHalfCashOutValue"] = jest.fn();
+                cashOutHandlers["updateHalfCashOutValueByRatio"] = jest.fn();
             });
 
             it("should not update fullCashOutValue", () => {
@@ -291,7 +271,7 @@ describe("CrashCashOutHandlers", () => {
                 cashOutHandlers["handleMultiplier"]();
 
                 // Assert
-                expect(cashOutHandlers["updateHalfCashOutValue"]).not.toBeCalled();
+                expect(cashOutHandlers["updateHalfCashOutValueByRatio"]).not.toBeCalled();
             });
         });
 
@@ -302,7 +282,7 @@ describe("CrashCashOutHandlers", () => {
                 // Arrange
                 cashOutHandlers["calculateWinAmount"] = jest.fn().mockReturnValueOnce(winAmount);
                 cashOutHandlers["updateFullCashOutValue"] = jest.fn();
-                cashOutHandlers["updateHalfCashOutValue"] = jest.fn();
+                cashOutHandlers["updateHalfCashOutValueByRatio"] = jest.fn();
             });
 
             it("should update fullCashOutValue", () => {
@@ -318,7 +298,7 @@ describe("CrashCashOutHandlers", () => {
                 cashOutHandlers["handleMultiplier"]();
 
                 // Assert
-                expect(cashOutHandlers["updateHalfCashOutValue"]).toBeCalledWith(winAmount);
+                expect(cashOutHandlers["updateHalfCashOutValueByRatio"]).toBeCalledWith(winAmount);
             });
         });
     });
@@ -489,7 +469,7 @@ describe("CrashCashOutHandlers", () => {
             it("should call calculateWinAmount() twice", () => {
                 //Arrange
                 cashOutHandlers["calculateWinAmount"] = jest.fn();
-                cashOutStore.isHalfCashedOut = false;
+                Object.defineProperty(cashOutStore, "isHalfCashedOut", { value: false, writable: true, configurable: true });
 
                 //Act
                 const actual = cashOutHandlers["handleCrashed"]();
@@ -497,6 +477,58 @@ describe("CrashCashOutHandlers", () => {
                 //Assert
                 expect(cashOutHandlers["calculateWinAmount"]).toBeCalledTimes(2);
             });
+        });
+    });
+
+    describe("resetCashOut", () => {
+        it("should reset fullCashOutValue to 0", () => {
+            // Arrange
+
+            // Act
+            cashOutHandlers["resetCashOut"]();
+
+            // Assert
+            expect(cashOutStore.fullCashOutValue).toBe(0);
+        });
+
+        it("should reset halfCashOutValue to 0", () => {
+            // Arrange
+
+            // Act
+            cashOutHandlers["resetCashOut"]();
+
+            // Assert
+            expect(cashOutStore.halfCashOutValue).toBe(0);
+        });
+
+        it("should reset cashOut to null", () => {
+            // Arrange
+
+            // Act
+            cashOutHandlers["resetCashOut"]();
+
+            // Assert
+            expect(cashOutStore.cashOut).toBe(null);
+        });
+
+        it("should reset halfCashOut to null", () => {
+            // Arrange
+
+            // Act
+            cashOutHandlers["resetCashOut"]();
+
+            // Assert
+            expect(cashOutStore.halfCashOut).toBe(null);
+        });
+
+        it("should reset cashOutStore ratio to fullCashOutRatio", () => {
+            // Arrange
+
+            // Act
+            cashOutHandlers["resetCashOut"]();
+
+            // Assert
+            expect(cashOutStore.ratio).toBe(cashOutHandlers["fullCashOutRatio"]);
         });
     });
 });
