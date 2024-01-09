@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
 
 import { BetStore } from "../../game/bets/bet-store";
+import { ConnectionHandlers } from "../../game/connection/connection-handlers";
 import { GameConfigStore } from "../../game/game-configs";
 import { RoundHistoryStore } from "../../game/round-histories/round-history-store";
 import { RoundTimeStore } from "../../game/rounds";
@@ -30,7 +31,8 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         @inject(PlayerActionHandlers) protected readonly playerActionHandlers: PlayerActionHandlers,
         @inject(AutoPlayHandler) protected readonly autoPlayHandler: AutoPlayHandler,
         @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore,
-        @inject(BetInputStore) protected readonly betInputStore: BetInputStore
+        @inject(BetInputStore) protected readonly betInputStore: BetInputStore,
+        @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler
     ) {
         reaction(
             () => this.roundTimeStore.isPlacingBet,
@@ -83,6 +85,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     }
 
     private handleCashOutHalf(cashOut: GameCrashServiceMessage.CrashCashOut | undefined) {
+        this.retryGameHandler.clearInterval();
         this.handleHalfCashOutMessage(cashOut);
         this.cashOutStore.setCashOutNotice(cashOut);
     }
@@ -95,6 +98,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     }
 
     private handleCashOutFull(cashOut: GameCrashServiceMessage.CrashCashOut | undefined) {
+        this.retryGameHandler.clearInterval();
         this.handleCashOutMessage(cashOut);
         this.cashOutStore.setCashOutNotice(cashOut);
 
@@ -128,13 +132,13 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
             return;
         }
 
-        if (!ownBets.cashOut && !ownBets.halfCashOut) {
-            this.betStore.lastReceivedBet = { value: ownBets.amount, isAnimated: false };
-        }
+        this.betStore.lastReceivedBet = { value: ownBets.amount, isAnimated: false };
+
+        //set state to CASH OUT for join game at flying time
+        this.playerActionStore.buttonState = ButtonState.CASH_OUT;
 
         if (ownBets.halfCashOut) {
             this.handleHalfCashOutMessage(ownBets.halfCashOut);
-            this.playerActionStore.buttonState = ButtonState.CASH_OUT;
         }
 
         if (ownBets.cashOut) {
@@ -156,12 +160,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
 
     private handleCrashed() {
         console.log("round time", this.roundTimeStore.roundTime);
-        if (this.roundTimeStore.roundTime <= this.roundTimeStore.placingBet) {
+        if (!this.roundTimeStore.isDisplayingResultState && !this.roundTimeStore.isStartRound) {
             return;
         }
-
-        this.playerActionStore.buttonState = ButtonState.CASH_OUT;
-        this.betStore.lastReceivedBet = null;
 
         this.multiplierStore.multiplier = +(this.roundHistoryStore.getLastRound()?.result || 0);
 

@@ -24,7 +24,10 @@ export class PlayerActionHandlers implements IHandler<boolean> {
             (lastReceivedBet) => {
                 const isReceivedBet = lastReceivedBet?.value > 0;
                 if (isReceivedBet) {
-                    this.changeButtonState(ButtonState.BET_ACCEPTED);
+                    if (this.roundTimeStore.isPlacingBet || this.roundTimeStore.isLocking) {
+                        this.changeButtonState(ButtonState.BET_ACCEPTED);
+                    }
+
                     if (this.autoPlayStore.roundsAutoPlay === 0) {
                         this.autoPlayHandler.cancelAutoPlay();
                     }

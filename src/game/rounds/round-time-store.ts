@@ -75,7 +75,7 @@ export class RoundTimeStore {
     }
 
     get isLocking() {
-        return this.roundTime <= this.lockingBet && this.roundTime !== 0;
+        return this.roundTime <= this.lockingBet && this.roundTime > 0;
     }
 
     get isStaringLocking() {

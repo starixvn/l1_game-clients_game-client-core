@@ -1,4 +1,6 @@
 import { stub } from "jest-auto-stub";
+import { ConnectionHandlers } from "./../../../../src/game/connection/connection-handlers";
+
 import { RoundHistory } from "./../../../../src/game/round-histories/round-history-store";
 
 import { AutoPlayHandler } from "../../../../src/game-crash/auto-play/auto-play-handler";
@@ -26,6 +28,7 @@ describe("CrashCashOutHandlers", () => {
     let autoPlayHandler: AutoPlayHandler;
     let gameConfigStore: GameConfigStore;
     let betInputStore: BetInputStore;
+    let retryGameHandler: ConnectionHandlers.RetryGameHandler;
     const halfCashOut = {
         amount: 25,
         win: 26.25,
@@ -52,6 +55,7 @@ describe("CrashCashOutHandlers", () => {
         autoPlayHandler = stub<AutoPlayHandler>({ autoEnableEarlyBet: jest.fn() });
         gameConfigStore = stub<GameConfigStore>();
         betInputStore = stub<BetInputStore>();
+        retryGameHandler = stub<ConnectionHandlers.RetryGameHandler>();
     });
 
     beforeEach(() => {
@@ -66,7 +70,8 @@ describe("CrashCashOutHandlers", () => {
             playerActionHandlers,
             autoPlayHandler,
             gameConfigStore,
-            betInputStore
+            betInputStore,
+            retryGameHandler
         );
     });
 
@@ -425,10 +430,11 @@ describe("CrashCashOutHandlers", () => {
     });
 
     describe("handleCrashed", () => {
-        describe("when roundTime is less than 10", () => {
-            it("should not set button state to CASH OUT", () => {
+        describe("when roundTime less than 10", () => {
+            it("should call getLastRound()", () => {
                 //Arrange
-                roundTimeStore.placingBet = 9;
+                Object.defineProperty(roundTimeStore, "isDisplayingResultState", { value: false, configurable: true, writable: true });
+                Object.defineProperty(roundTimeStore, "isStartRound", { value: false, configurable: true, writable: true });
                 roundTimeStore.roundTime = 8;
 
                 //Act
@@ -444,15 +450,8 @@ describe("CrashCashOutHandlers", () => {
                 let lastRound: RoundHistory = { roundId: 123, result: [3], settlementResult: {} };
 
                 roundHistoryStore.getLastRound = jest.fn(() => lastRound);
-                roundTimeStore.placingBet = 9;
-                roundTimeStore.roundTime = 12;
-            });
-            it("should set button state to CASH OUT", () => {
-                //Act
-                cashOutHandlers["handleCrashed"]();
-
-                //Assert
-                expect(playerActionStore.buttonState).toEqual(ButtonState.CASH_OUT);
+                Object.defineProperty(roundTimeStore, "isDisplayingResultState", { value: true, configurable: true, writable: true });
+                Object.defineProperty(roundTimeStore, "isStartRound", { value: false, configurable: true, writable: true });
             });
 
             it("should call calculateWinAmount()", () => {
