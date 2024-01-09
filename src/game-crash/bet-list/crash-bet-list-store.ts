@@ -56,7 +56,7 @@ export class CrashBetListStore {
         return this.betList.players.length + countMainPlayer;
     }
 
-    get noOfPlayerCashOut() {
+    get noOfPlayerCashOut(): number {
         const players = [];
         this.betList.players.forEach((player: IPlayer) => {
             (player.cashOut || player.halfCashOut) && players.push(player);
@@ -64,5 +64,20 @@ export class CrashBetListStore {
 
         const countMainPlayer = this.mainPlayer?.cashOut || this.mainPlayer?.halfCashOut ? 1 : 0;
         return players.length + countMainPlayer;
+    }
+
+    get totalCashOut(): number {
+        let otherPlayersCashOut = 0;
+
+        this.betList.players.forEach((player: IPlayer) => {
+            const { cashOut, halfCashOut } = player;
+            const win = cashOut?.win || halfCashOut?.win || 0;
+
+            otherPlayersCashOut += win;
+        });
+
+        const mainPlayerCashOut = this.mainPlayer?.cashOut?.win + this.mainPlayer?.halfCashOut?.win || 0;
+
+        return otherPlayersCashOut + mainPlayerCashOut;
     }
 }
