@@ -7,6 +7,7 @@ import { CrashBetHandler } from "../../../../src/game-crash/bet/crash-bet-handle
 import { EarlyBetStore } from "../../../../src/game-crash/bet/early-bet-store";
 import { PlayerActionStore } from "../../../../src/game-crash/player-actions/player-action-store";
 import { BetStore } from "../../../../src/game/bets/bet-store";
+import { DisabledGameStore } from "../../../../src/game/disabled-game";
 import { ErrorStore } from "../../../../src/game/errors/error-store";
 import { NoticeStore } from "../../../../src/game/notices/notice-store";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
@@ -24,6 +25,7 @@ describe("AutoPlayHandler", () => {
     let roundTimeStore: RoundTimeStore;
     let crashBetHandler: CrashBetHandler;
     let errorStore: ErrorStore;
+    let disabledGameStore: DisabledGameStore;
 
     beforeAll(() => {
         autoPlayStore = stub<AutoPlayStore>();
@@ -36,6 +38,7 @@ describe("AutoPlayHandler", () => {
         roundTimeStore = stub<RoundTimeStore>();
         crashBetHandler = stub<CrashBetHandler>();
         errorStore = stub<ErrorStore>();
+        disabledGameStore = stub<DisabledGameStore>();
     });
 
     beforeEach(() => {
@@ -49,7 +52,8 @@ describe("AutoPlayHandler", () => {
             playerActionStore,
             roundTimeStore,
             crashBetHandler,
-            errorStore
+            errorStore,
+            disabledGameStore
         );
     });
 

@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 
 import { reaction } from "mobx";
 import { BetStore } from "../../game/bets/bet-store";
+import { DisabledGameStore } from "../../game/disabled-game";
 import { ErrorStore } from "../../game/errors";
 import { NoticeStore } from "../../game/notices/notice-store";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
@@ -27,48 +28,52 @@ export class AutoPlayHandler implements IHandler<number> {
         @inject(PlayerActionStore) private readonly playerActionStore: PlayerActionStore,
         @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
         @inject(CrashBetHandler) private readonly crashBetHandler: CrashBetHandler,
-        @inject(ErrorStore) private readonly errorStore: ErrorStore
+        @inject(ErrorStore) private readonly errorStore: ErrorStore,
+        @inject(DisabledGameStore) private readonly disabledGameStore: DisabledGameStore
     ) {
         reaction(
             () => this.roundTimeStore.isPlacingBet,
             (isPlacingBet) => {
-                if (!isPlacingBet || !(this.autoPlayStore.isAutoPlay || this.earlyBetStore.earlyBetEnable)) {
+                if (!isPlacingBet) {
                     return;
                 }
-
-                if (this.checkFinishedAutoPlay()) {
-                    this.cancelAutoPlay();
-                    this.playerActionStore.buttonState = ButtonState.PLACE_BET;
-                    return;
-                }
-
-                if (!this.autoPlayStore.skipDecreaseAutoPlayCount) {
-                    this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
-                }
-
-                if (this.validateAmount()) {
-                    this.crashBetHandler.autoPlaceBet();
-                } else {
-                    this.cancelAutoPlay();
-                    this.playerActionStore.buttonState = ButtonState.PLACE_BET;
-                }
-
-                this.autoPlayStore.skipDecreaseAutoPlayCount = false;
-                this.earlyBetStore.earlyBetEnable = false;
+                this.handleAutoPlaceBetAtPlacingBet();
             }
         );
-
         reaction(
             () => this.errorStore.apiError,
             (apiError) => {
                 if (!apiError) {
                     return;
                 }
-
-                this.cancelEarlyBetAndAutoPlay();
-                this.resetButtonState();
+                this.handleCancelAutoPlayWhenApiError();
             }
         );
+    }
+
+    handleCancelAutoPlayWhenApiError() {
+        this.cancelEarlyBetAndAutoPlay();
+        this.resetButtonState();
+    }
+
+    handleAutoPlaceBetAtPlacingBet() {
+        if (!(this.autoPlayStore.isAutoPlay || this.earlyBetStore.earlyBetEnable)) {
+            return;
+        }
+
+        if (!this.autoPlayStore.skipDecreaseAutoPlayCount) {
+            this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
+        }
+
+        this.autoPlayStore.skipDecreaseAutoPlayCount = false;
+        this.earlyBetStore.earlyBetEnable = false;
+
+        if (this.checkFinishedAutoPlay() || !this.validateAmount() || this.disabledGameStore.disabled) {
+            this.cancelAutoPlay();
+            this.playerActionStore.buttonState = ButtonState.PLACE_BET;
+        } else {
+            this.crashBetHandler.autoPlaceBet();
+        }
     }
 
     checkFinishedAutoPlay() {
