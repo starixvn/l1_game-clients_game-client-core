@@ -22,8 +22,6 @@ export class PlayerActionStore {
 
     private _activeAutoPlay = false;
 
-    private _enableAutoPlay = false;
-
     private _buttonState = ButtonState.PLACE_BET;
 
     set buttonState(state: string) {
