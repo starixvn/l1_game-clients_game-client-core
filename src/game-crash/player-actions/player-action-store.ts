@@ -87,6 +87,6 @@ export class PlayerActionStore {
     }
 
     get disabledHalfCashOut() {
-        return this.disabledCashOut || this.cashOutStore.isHalfCashedOut;
+        return this.disabledCashOut || this.cashOutStore.isHalfCashedOut || this.cashOutStore.isFullCashedOut;
     }
 }
