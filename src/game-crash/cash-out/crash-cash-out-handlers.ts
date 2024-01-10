@@ -59,7 +59,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         }
 
         this.updateFullCashOutValue(winAmount);
-        this.updateHalfCashOutValueByRatio(winAmount);
+        if (!this.cashOutStore.isFullCashedOut) {
+            this.updateHalfCashOutValueByRatio(winAmount);
+        }
     }
 
     private calculateWinAmount() {
@@ -159,7 +161,6 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     }
 
     private handleCrashed() {
-        console.log("round time", this.roundTimeStore.roundTime);
         if (!this.roundTimeStore.isDisplayingResultState && !this.roundTimeStore.isStartRound) {
             return;
         }

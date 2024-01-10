@@ -298,12 +298,26 @@ describe("CrashCashOutHandlers", () => {
                 expect(cashOutHandlers["updateFullCashOutValue"]).toBeCalledWith(winAmount);
             });
 
-            it("should update halfCashOutValue", () => {
+            it("should update halfCashOutValue, when NOT full cash out", () => {
+                // Arrange
+                Object.defineProperty(cashOutStore, "isFullCashedOut", { value: false, configurable: true, writable: true });
+
                 // Act
                 cashOutHandlers["handleMultiplier"]();
 
                 // Assert
                 expect(cashOutHandlers["updateHalfCashOutValueByRatio"]).toBeCalledWith(winAmount);
+            });
+
+            it("should NOT update halfCashOutValue, when full cash out", () => {
+                // Arrange
+                Object.defineProperty(cashOutStore, "isFullCashedOut", { value: true, configurable: true, writable: true });
+
+                // Act
+                cashOutHandlers["handleMultiplier"]();
+
+                // Assert
+                expect(cashOutHandlers["updateHalfCashOutValueByRatio"]).not.toBeCalled();
             });
         });
     });
