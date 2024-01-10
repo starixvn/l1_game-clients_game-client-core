@@ -163,7 +163,7 @@ describe("CrashCashOutHandlers", () => {
             cashOutHandlers["handleCashOutMessage"](cashOut);
 
             // Assert
-            expect(cashOutHandlers["setFullCashedOutValue"]).toBeCalled();
+            expect(cashOutHandlers["setFullCashedOutValue"]).toBeCalledWith(cashOut.cashOutWin);
         });
 
         describe("when have half cash out", () => {

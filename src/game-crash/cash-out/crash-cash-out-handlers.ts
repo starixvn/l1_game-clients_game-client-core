@@ -111,7 +111,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
 
     private handleCashOutMessage(cashOut: GameCrashServiceMessage.CrashCashOut | undefined) {
         this.cashOutStore.cashOut = cashOut;
-        this.setFullCashedOutValue(cashOut.win);
+        this.setFullCashedOutValue(cashOut.cashOutWin);
         this.updateHalfCashOutValueByRatio(cashOut.cashOutWin);
     }
 
