@@ -35,9 +35,9 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
         @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler
     ) {
         reaction(
-            () => this.roundTimeStore.isPlacingBet,
-            (isPlacingBet) => {
-                if (isPlacingBet) {
+            () => this.roundTimeStore.isStartRound,
+            (isStartRound) => {
+                if (isStartRound) {
                     this.resetCashOut();
                 }
             }

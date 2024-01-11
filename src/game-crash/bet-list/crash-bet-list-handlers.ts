@@ -19,7 +19,7 @@ export class CrashBetListHandlers implements IMultipleHandlers {
         @inject(BetStore) private readonly betStore: BetStore,
         @inject(CrashBetListStore) protected readonly betListStore: CrashBetListStore
     ) {
-        reaction(() => this.roundTimeStore.isPlacingBet, this.reactionPlacingBet.bind(this));
+        reaction(() => this.roundTimeStore.isStartRound, this.reactionPlacingBet.bind(this));
         reaction(() => this.roundTimeStore.roundTime, this.reactionRoundTime.bind(this));
         reaction(() => this.betStore.lastReceivedBet, this.reactionLastReceivedBet.bind(this));
         reaction(() => this.crashCashOutStore.halfCashOut, this.reactionHalfCashOut.bind(this));
