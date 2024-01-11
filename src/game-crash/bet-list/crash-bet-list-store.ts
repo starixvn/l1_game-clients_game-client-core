@@ -71,12 +71,12 @@ export class CrashBetListStore {
 
         this.betList.players.forEach((player: IPlayer) => {
             const { cashOut, halfCashOut } = player;
-            const win = cashOut?.win || halfCashOut?.win || 0;
+            const win = (cashOut?.win ?? 0) || (halfCashOut?.win ?? 0);
 
             otherPlayersCashOut += win;
         });
 
-        const mainPlayerCashOut = this.mainPlayer?.cashOut?.win + this.mainPlayer?.halfCashOut?.win || 0;
+        const mainPlayerCashOut = (this.mainPlayer?.cashOut?.win ?? 0) + (this.mainPlayer?.halfCashOut?.win ?? 0);
 
         return otherPlayersCashOut + mainPlayerCashOut;
     }
