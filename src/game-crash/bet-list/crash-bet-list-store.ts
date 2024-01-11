@@ -1,4 +1,5 @@
 import { injectable } from "inversify";
+import * as _ from "lodash";
 import { makeAutoObservable } from "mobx";
 
 import { GameCrashServiceMessage } from "../game-crash-messages";
@@ -52,8 +53,9 @@ export class CrashBetListStore {
     }
 
     get noOfPlayerBet(): number {
-        const countMainPlayer = this.mainPlayer?.amount ? 1 : 0;
-        return this.betList.players.length + countMainPlayer;
+        const countMainPlayer = this.mainPlayer ? 1 : 0;
+        const otherPlayerList = _.groupBy(this.betList.players, (item) => item.name);
+        return Object.keys(otherPlayerList).length + countMainPlayer;
     }
 
     get noOfPlayerCashOut(): number {
@@ -61,9 +63,9 @@ export class CrashBetListStore {
         this.betList.players.forEach((player: IPlayer) => {
             (player.cashOut || player.halfCashOut) && players.push(player);
         });
-
+        const otherPlayerCashout = _.groupBy(players, (item) => item.name);
         const countMainPlayer = this.mainPlayer?.cashOut || this.mainPlayer?.halfCashOut ? 1 : 0;
-        return players.length + countMainPlayer;
+        return Object.keys(otherPlayerCashout).length + countMainPlayer;
     }
 
     get totalCashOut(): number {
