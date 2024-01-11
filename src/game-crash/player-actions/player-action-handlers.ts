@@ -1,11 +1,10 @@
 import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
 
-import { BetStore } from "../../game/bets/bet-store";
+import { BetStore, ILastReceivedBet } from "../../game/bets/bet-store";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { IHandler } from "../../shared";
 import { AutoPlayHandler, AutoPlayStore } from "../auto-play";
-import { EarlyBetStore } from "../bet/early-bet-store";
 import { ButtonState } from "../game-crash-messages";
 import { PlayerActionStore } from "./player-action-store";
 
@@ -16,41 +15,19 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         @inject(BetStore) protected readonly betStore: BetStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(AutoPlayStore) private readonly autoPlayStore: AutoPlayStore,
-        @inject(EarlyBetStore) private readonly earlyBetStore: EarlyBetStore,
         @inject(AutoPlayHandler) private readonly autoPlayHandler: AutoPlayHandler
     ) {
         reaction(
             () => this.betStore.lastReceivedBet,
             (lastReceivedBet) => {
-                const isReceivedBet = lastReceivedBet?.value > 0;
-                if (isReceivedBet) {
-                    if (this.roundTimeStore.isPlacingBet || this.roundTimeStore.isLocking) {
-                        this.changeButtonState(ButtonState.BET_ACCEPTED);
-                    }
-
-                    if (this.autoPlayStore.roundsAutoPlay === 0) {
-                        this.autoPlayHandler.cancelAutoPlay();
-                    }
-                } else {
-                    this.autoPlayHandler.cancelEarlyBetAndAutoPlay();
-                    this.autoPlayHandler.resetButtonState();
-                }
+                this.handleReceivedBet(lastReceivedBet);
             }
         );
 
         reaction(
             () => this.roundTimeStore.roundTime,
             (roundTime) => {
-                if (roundTime <= 0) {
-                    switch (this.playerActionStore.buttonState) {
-                        case ButtonState.BET_ACCEPTED:
-                            this.changeButtonState(ButtonState.CASH_OUT);
-                            break;
-                        case ButtonState.PLACE_BET:
-                            this.changeButtonBetNextRound();
-                            break;
-                    }
-                }
+                this.handleFlyingTime(roundTime);
             }
         );
 
@@ -59,14 +36,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
                 return this.roundTimeStore.isPlacingBet || this.roundTimeStore.isLocking;
             },
             (isPlacingBet) => {
-                if (
-                    isPlacingBet &&
-                    this.playerActionStore.buttonState !== ButtonState.BET_ACCEPTED &&
-                    this.playerActionStore.buttonState !== ButtonState.CANCEL_BET &&
-                    !this.autoPlayStore.isAutoPlay
-                ) {
-                    this.changeButtonState(ButtonState.PLACE_BET);
-                }
+                this.handlePlacingBet(isPlacingBet);
             }
         );
 
@@ -75,11 +45,7 @@ export class PlayerActionHandlers implements IHandler<boolean> {
                 return this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult;
             },
             (showingResult) => {
-                if (showingResult) {
-                    if (this.playerActionStore.buttonState === ButtonState.PLACE_BET) {
-                        this.changeButtonBetNextRound();
-                    }
-                }
+                this.handleShowingResult(showingResult);
             }
         );
     }
@@ -105,5 +71,55 @@ export class PlayerActionHandlers implements IHandler<boolean> {
 
     changeButtonState(state: string) {
         this.playerActionStore.buttonState = state;
+    }
+
+    handleReceivedBet(lastReceivedBet: ILastReceivedBet) {
+        const isReceivedBet = lastReceivedBet?.value > 0;
+        if (isReceivedBet) {
+            if (this.roundTimeStore.isPlacingBet || this.roundTimeStore.isLocking) {
+                this.changeButtonState(ButtonState.BET_ACCEPTED);
+            }
+
+            if (this.autoPlayStore.roundsAutoPlay === 0) {
+                this.autoPlayHandler.cancelAutoPlay();
+            }
+        } else {
+            this.autoPlayHandler.cancelEarlyBetAndAutoPlay();
+            this.autoPlayHandler.resetButtonState();
+        }
+    }
+
+    handleFlyingTime(roundTime: number) {
+        if (roundTime > 0) {
+            return;
+        }
+
+        switch (this.playerActionStore.buttonState) {
+            case ButtonState.BET_ACCEPTED:
+                this.changeButtonState(ButtonState.CASH_OUT);
+                break;
+            case ButtonState.PLACE_BET:
+                this.changeButtonBetNextRound();
+                break;
+        }
+    }
+
+    handlePlacingBet(isPlacingBet: boolean) {
+        if (
+            isPlacingBet &&
+            this.playerActionStore.buttonState !== ButtonState.BET_ACCEPTED &&
+            this.playerActionStore.buttonState !== ButtonState.CANCEL_BET &&
+            !this.autoPlayStore.isAutoPlay
+        ) {
+            this.changeButtonState(ButtonState.PLACE_BET);
+        }
+    }
+
+    handleShowingResult(showingResult: boolean) {
+        if (showingResult) {
+            if (this.playerActionStore.buttonState === ButtonState.PLACE_BET) {
+                this.changeButtonBetNextRound();
+            }
+        }
     }
 }
