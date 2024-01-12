@@ -2,7 +2,6 @@ import { inject, injectable } from "inversify";
 
 import { MainPlayerStore } from "../../players/main-player-store";
 import { IHandler } from "../../shared";
-import { NumberUtils } from "../../shared/utils/number-utils";
 import { CrashBetListHandlers } from "../bet-list/crash-bet-list-handlers";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 import { OtherPlayerStore } from "./other-player-store";
@@ -18,24 +17,7 @@ export class OtherPlayerHandlers implements IHandler<GameCrashServiceMessage.Cra
     ) {}
 
     handle(otherPlayer: GameCrashServiceMessage.CrashOtherPlayer) {
-        this.otherPlayerStore.otherPlayer = this.convertCurrency(otherPlayer);
+        this.otherPlayerStore.otherPlayer = this.betListHandler.convertCurrencyCashOut(otherPlayer);
         this.betListHandler.updateBetListCashOut(this.otherPlayerStore.otherPlayer);
-    }
-
-    convertCurrency(otherPlayer: GameCrashServiceMessage.CrashOtherPlayer) {
-        const { halfCashOut, cashOut, rate } = otherPlayer;
-
-        if (halfCashOut) {
-            const { amount, win } = halfCashOut;
-            otherPlayer.halfCashOut.win = NumberUtils.getValueByCurrency(win, this.mainPlayerStore.rate, rate);
-            otherPlayer.halfCashOut.amount = NumberUtils.getValueByCurrency(amount, this.mainPlayerStore.rate, rate);
-        }
-
-        if (cashOut) {
-            const { amount, win } = cashOut;
-            otherPlayer.cashOut.win = NumberUtils.getValueByCurrency(win, this.mainPlayerStore.rate, rate);
-            otherPlayer.cashOut.win = NumberUtils.getValueByCurrency(amount, this.mainPlayerStore.rate, rate);
-        }
-        return otherPlayer;
     }
 }

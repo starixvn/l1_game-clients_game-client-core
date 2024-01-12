@@ -181,52 +181,6 @@ describe("CrashBetListHandlers", () => {
         });
     });
 
-    describe("reactionRoundTime", () => {
-        describe("when roundTime is less than 0", () => {
-            it("should update isNeedEmptyBetAmount of CrashBetListStore", () => {
-                // Arrange
-                const roundTime = -5;
-                Object.defineProperty(betListStore, "isNeedEmptyBetAmount", { value: false, configurable: true, writable: true });
-
-                // Act
-                betListHandlers["reactionRoundTime"](roundTime);
-
-                // Assert
-                expect(betListHandlers["betListStore"].isNeedEmptyBetAmount).toEqual(true);
-            });
-        });
-
-        describe("when roundTime is greater than placing bet time, less than full time and isDisplayingResultState is true", () => {
-            it("should update isNeedEmptyBetAmount of CrashBetListStore", () => {
-                // Arrange
-                const roundTime = 12;
-                Object.defineProperty(betListStore, "isNeedEmptyBetAmount", { value: false, configurable: true, writable: true });
-                Object.defineProperty(roundTimeStore, "isDisplayingResultState", { value: true, configurable: true, writable: true });
-
-                // Act
-                betListHandlers["reactionRoundTime"](roundTime);
-
-                // Assert
-                expect(betListHandlers["betListStore"].isNeedEmptyBetAmount).toEqual(true);
-            });
-        });
-
-        describe("when roundTime is in placing bet time", () => {
-            it("should not update isNeedEmptyBetAmount of CrashBetListStore", () => {
-                // Arrange
-                const roundTime = 9;
-                Object.defineProperty(betListStore, "isNeedEmptyBetAmount", { value: false, configurable: true, writable: true });
-                Object.defineProperty(roundTimeStore, "isDisplayingResultState", { value: false, configurable: true, writable: true });
-
-                // Act
-                betListHandlers["reactionRoundTime"](roundTime);
-
-                // Assert
-                expect(betListHandlers["betListStore"].isNeedEmptyBetAmount).toEqual(false);
-            });
-        });
-    });
-
     describe("reactionLastReceivedBet", () => {
         describe("when lastReceivedBet is null", () => {
             it("should not update isNeedEmptyBetAmount of CrashBetListStore", () => {

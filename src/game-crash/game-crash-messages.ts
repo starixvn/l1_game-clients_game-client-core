@@ -35,14 +35,10 @@ export namespace GameCrashServiceMessage {
         static eventName = "otherPlayer";
     }
 
-    export type CashOutReceive = {
+    export class CashOutReceive {
         amount: number;
         win: number;
         multiplier: number;
-    };
-
-    export interface CrashOtherPlayerList {
-        players: CrashOtherPlayer[];
     }
 
     export class BetList {
@@ -98,6 +94,13 @@ export interface IGameCrashUserSettings {
     betAmount: number;
     enableAutoCashOut: boolean;
     autoCashOutMultiplier: number;
+}
+
+export interface LeaderBoardPlayer {
+    name: string;
+    amount: number;
+    win: number;
+    multiplier: number;
 }
 
 export const ButtonState = {

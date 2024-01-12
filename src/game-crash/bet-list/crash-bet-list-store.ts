@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import * as _ from "lodash";
 import { makeAutoObservable } from "mobx";
 
-import { GameCrashServiceMessage } from "../game-crash-messages";
+import { GameCrashServiceMessage, LeaderBoardPlayer } from "../game-crash-messages";
 
 export interface ICrashBetList {
     [playerId: string]: any;
@@ -20,28 +20,38 @@ export interface IPlayer {
 
 @injectable()
 export class CrashBetListStore {
-    private _betList: GameCrashServiceMessage.CrashOtherPlayerList = { players: [] };
+    private _betList: GameCrashServiceMessage.CrashOtherPlayer[] = [];
     private _mainPlayer: GameCrashServiceMessage.CrashOtherPlayer = null;
-    private _isNeedEmptyBetAmount = false;
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    set isNeedEmptyBetAmount(value: boolean) {
-        this._isNeedEmptyBetAmount = value;
-    }
-
-    get isNeedEmptyBetAmount() {
-        return this._isNeedEmptyBetAmount;
-    }
-
-    set betList(value: GameCrashServiceMessage.CrashOtherPlayerList) {
+    set betList(value: GameCrashServiceMessage.CrashOtherPlayer[]) {
         this._betList = value;
     }
 
-    get betList(): GameCrashServiceMessage.CrashOtherPlayerList {
+    get betList(): GameCrashServiceMessage.CrashOtherPlayer[] {
         return this._betList;
+    }
+
+    get otherPlayers(): LeaderBoardPlayer[] {
+        const otherPlayer = [];
+        this.betList.forEach((player) => {
+            const { name, amount, halfCashOut, cashOut } = player;
+            const calcAmount = halfCashOut?.amount || cashOut?.amount || amount;
+            const multiplier = halfCashOut?.multiplier || cashOut?.multiplier;
+            const win = halfCashOut?.win || cashOut?.win;
+
+            const data = {
+                name,
+                amount: calcAmount,
+                multiplier,
+                win,
+            };
+            otherPlayer.push(data);
+        });
+        return otherPlayer;
     }
 
     set mainPlayer(value: GameCrashServiceMessage.CrashOtherPlayer) {
@@ -56,15 +66,16 @@ export class CrashBetListStore {
         const playerByGroup = _.groupBy(playerList, (item) => item.name);
         return Object.keys(playerByGroup).length;
     }
+
     get noOfPlayerBet(): number {
         const countMainPlayer = this.mainPlayer ? 1 : 0;
-        return this.groupPlayersByName(this.betList.players) + countMainPlayer;
+        return this.groupPlayersByName(this.otherPlayers) + countMainPlayer;
     }
 
     get noOfPlayerCashOut(): number {
         const players = [];
-        this.betList.players.forEach((player: IPlayer) => {
-            (player.cashOut || player.halfCashOut) && players.push(player);
+        this.otherPlayers.forEach((player: GameCrashServiceMessage.CrashOtherPlayer) => {
+            player.win > 0 && players.push(player);
         });
         const countMainPlayer = this.mainPlayer?.cashOut || this.mainPlayer?.halfCashOut ? 1 : 0;
         return this.groupPlayersByName(players) + countMainPlayer;
@@ -73,11 +84,8 @@ export class CrashBetListStore {
     get totalCashOut(): number {
         let otherPlayersCashOut = 0;
 
-        this.betList.players.forEach((player: IPlayer) => {
-            const { cashOut, halfCashOut } = player;
-            const win = (cashOut?.win ?? 0) || (halfCashOut?.win ?? 0);
-
-            otherPlayersCashOut += win;
+        this.otherPlayers.forEach((player) => {
+            otherPlayersCashOut += player?.win ?? 0;
         });
 
         const mainPlayerCashOut = (this.mainPlayer?.cashOut?.win ?? 0) + (this.mainPlayer?.halfCashOut?.win ?? 0);
