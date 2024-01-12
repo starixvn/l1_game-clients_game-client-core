@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 
 import { MainPlayerStore } from "../../players/main-player-store";
 import { IHandler } from "../../shared";
+import { NumberUtils } from "../../shared/utils/number-utils";
 import { CrashBetListHandlers } from "../bet-list/crash-bet-list-handlers";
 import { GameCrashServiceMessage } from "../game-crash-messages";
 import { OtherPlayerStore } from "./other-player-store";
@@ -17,7 +18,25 @@ export class OtherPlayerHandlers implements IHandler<GameCrashServiceMessage.Cra
     ) {}
 
     handle(otherPlayer: GameCrashServiceMessage.CrashOtherPlayer) {
-        this.otherPlayerStore.otherPlayer = this.betListHandler.convertCurrencyCashOut(otherPlayer);
+        this.otherPlayerStore.otherPlayer = this.convertCurrencyCashOut(otherPlayer);
         this.betListHandler.updateBetListCashOut(this.otherPlayerStore.otherPlayer);
+    }
+
+    convertCurrencyCashOut(player: GameCrashServiceMessage.CrashOtherPlayer) {
+        const { halfCashOut, cashOut, rate } = player;
+
+        halfCashOut && this.getValueByCurrency(halfCashOut, rate);
+        cashOut && this.getValueByCurrency(cashOut, rate);
+
+        return player;
+    }
+
+    getValueByCurrency(cashOut: GameCrashServiceMessage.CashOutReceive, rate: number) {
+        const { amount, win } = cashOut;
+
+        cashOut.win = NumberUtils.getValueByCurrency(win, this.mainPlayerStore.rate, rate);
+        cashOut.amount = NumberUtils.getValueByCurrency(amount, this.mainPlayerStore.rate, rate);
+
+        return cashOut;
     }
 }

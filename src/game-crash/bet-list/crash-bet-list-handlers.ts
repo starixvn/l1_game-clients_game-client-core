@@ -7,7 +7,7 @@ import { MainPlayerStore } from "../../players/main-player-store";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { NumberUtils } from "../../shared/utils/number-utils";
 import { CrashCashOutStore } from "../cash-out/crash-cash-out-store";
-import { GameCrashServiceMessage } from "../game-crash-messages";
+import { GameCrashServiceMessage, LeaderBoardPlayer } from "../game-crash-messages";
 import { CrashBetListStore, ICrashBetList } from "./crash-bet-list-store";
 
 @injectable()
@@ -65,8 +65,8 @@ export class CrashBetListHandlers implements IMultipleHandlers {
         this.betListStore.mainPlayer = player;
     }
 
-    private updatePlayerListByPlayerChip(players: any[]): any[] {
-        const newList = players.concat(...this.betListStore.betList);
+    private updatePlayerListByPlayerChip(players): any[] {
+        const newList = players.concat(...this.betListStore.otherPlayers);
         return this.sortDecreasedBetAmount(newList);
     }
 
@@ -75,7 +75,7 @@ export class CrashBetListHandlers implements IMultipleHandlers {
     }
 
     private updatePlayerList(newPlayers: any[]) {
-        const cashOutPlayers = this.sortCashOutPlayersByTime(newPlayers);
+        const cashOutPlayers = this.sortPlayersByMultiplier(newPlayers);
         const betPlayers = this.sortPlayersByBetAmount(newPlayers);
         const playerList = cashOutPlayers.concat(betPlayers);
 
@@ -83,37 +83,15 @@ export class CrashBetListHandlers implements IMultipleHandlers {
     }
 
     private sortPlayersByBetAmount(newPlayers: any[]) {
-        const betPlayers = newPlayers.filter((player) => !player.halfCashOut && !player.cashOut);
+        const betPlayers = newPlayers.filter((player) => player.win === 0);
         return this.sortDecreasedBetAmount(betPlayers);
     }
 
-    private sortCashOutPlayersByTime(newPlayers: any[]) {
-        const cashOutPlayers = newPlayers.filter((player) => player.cashOut || player.halfCashOut);
-        cashOutPlayers.sort((player1, player2) => {
-            const time1 = new Date(player1.time).getTime();
-            const time2 = new Date(player2.time).getTime();
-            return time2 - time1;
-        });
+    private sortPlayersByMultiplier(newPlayers: any[]) {
+        const newList = newPlayers.filter((player) => player.win > 0);
+        newList.sort((player1, player2) => player2.multiplier - player1.multiplier);
 
-        return cashOutPlayers;
-    }
-
-    convertCurrencyCashOut(player: GameCrashServiceMessage.CrashOtherPlayer) {
-        const { halfCashOut, cashOut, rate } = player;
-
-        halfCashOut && this.getValueByCurrency(halfCashOut, rate);
-        cashOut && this.getValueByCurrency(cashOut, rate);
-
-        return player;
-    }
-
-    getValueByCurrency(cashOut: GameCrashServiceMessage.CashOutReceive, rate: number) {
-        const { amount, win } = cashOut;
-
-        cashOut.win = NumberUtils.getValueByCurrency(win, this.mainPlayerStore.rate, rate);
-        cashOut.amount = NumberUtils.getValueByCurrency(amount, this.mainPlayerStore.rate, rate);
-
-        return cashOut;
+        return newList;
     }
 
     private convertCurrency(data: ICrashBetList) {
@@ -123,10 +101,11 @@ export class CrashBetListHandlers implements IMultipleHandlers {
                 return;
             }
 
-            const { amount, rate } = data[key];
+            const { amount, rate, win, multiplier } = data[key];
 
             data[key].amount = NumberUtils.getValueByCurrency(amount, this.mainPlayerStore.rate, rate);
-            data[key] = this.convertCurrencyCashOut(data[key]);
+            data[key].win = NumberUtils.getValueByCurrency(win, this.mainPlayerStore.rate, rate);
+            data[key].multiplier = NumberUtils.getValueByCurrency(multiplier, this.mainPlayerStore.rate, rate);
 
             players.push(data[key]);
         });
@@ -135,7 +114,7 @@ export class CrashBetListHandlers implements IMultipleHandlers {
     }
 
     private resetOtherPlayerList() {
-        this.betListStore.betList = [];
+        this.betListStore.otherPlayers = [];
     }
 
     private resetMainPlayer() {
@@ -144,61 +123,56 @@ export class CrashBetListHandlers implements IMultipleHandlers {
 
     updateBetListCashOut(otherPlayer: GameCrashServiceMessage.CrashOtherPlayer) {
         const { playerId, halfCashOut, cashOut } = otherPlayer;
-        const existedPlayer = this.betListStore.betList.find((player) => player.playerId === playerId && !player.halfCashOut);
+        const notWinPlayer = this.betListStore.otherPlayers.find((player) => player.playerId === playerId && player.win === 0);
 
-        if (!existedPlayer) {
+        if (!notWinPlayer) {
             return;
         }
 
-        const newHalfCashOutPlayer = { ...existedPlayer };
+        const newHalfCashOutPlayer = { ...notWinPlayer };
         let newCashOut = [];
 
         if (halfCashOut) {
-            newCashOut = this.addHalfCashOutItem(halfCashOut, existedPlayer, newHalfCashOutPlayer, newCashOut);
+            notWinPlayer.amount = halfCashOut.amount;
+            this.addHalfCashOutItem(newHalfCashOutPlayer, halfCashOut);
+            newCashOut.push(newHalfCashOutPlayer);
         }
 
         if (cashOut) {
-            existedPlayer["cashOut"] = cashOut;
+            notWinPlayer.win = cashOut.win;
+            notWinPlayer.multiplier = cashOut.multiplier;
         }
 
-        newCashOut = newCashOut.concat(...this.betListStore.betList);
+        newCashOut = newCashOut.concat(...this.betListStore.otherPlayers);
 
         const playerList = this.updatePlayerList(newCashOut);
 
-        this.betListStore.betList = playerList;
+        this.betListStore.otherPlayers = playerList;
     }
 
-    private addHalfCashOutItem(
-        halfCashOut: GameCrashServiceMessage.CashOutReceive,
-        existedPlayer: GameCrashServiceMessage.CrashOtherPlayer,
-        newHalfCashOutPlayer: GameCrashServiceMessage.CrashOtherPlayer,
-        newCashOut: any[]
-    ) {
-        existedPlayer.amount = halfCashOut.amount;
+    private addHalfCashOutItem(newHalfCashOutPlayer: LeaderBoardPlayer, halfCashOut: GameCrashServiceMessage.CashOutReceive) {
+        const { win, multiplier } = halfCashOut;
 
-        newHalfCashOutPlayer["halfCashOut"] = halfCashOut;
-        newCashOut.push(newHalfCashOutPlayer);
-
-        return newCashOut;
+        newHalfCashOutPlayer.win = win;
+        newHalfCashOutPlayer.multiplier = multiplier;
     }
 
     private handleBetList(betList: ICrashBetList) {
         let convertedCurrencyPlayers = this.convertCurrency(betList);
-        const newPlayers = convertedCurrencyPlayers.concat(...this.betListStore.betList);
-        const newSplitPlayers = this.splitPlayers(newPlayers);
+        const newPlayers = convertedCurrencyPlayers.concat(...this.betListStore.otherPlayers);
         const playerList = this.updatePlayerList(newPlayers);
 
-        this.betListStore.betList = playerList;
+        this.betListStore.otherPlayers = playerList;
     }
 
-    private splitPlayers(newPlayers) {}
-
     private handlePlayerChip(playerChip: GameServiceMessage.PlayerChip) {
-        const data = { [playerChip.playerId]: playerChip };
-        let players = this.convertCurrency(data);
-        const playerList = this.updatePlayerListByPlayerChip(players);
+        const { amount, rate } = playerChip;
+        playerChip[amount] = NumberUtils.getValueByCurrency(amount, this.mainPlayerStore.rate, rate);
+        playerChip["multiplier"] = 0;
+        playerChip["win"] = 0;
+        const playerList = this.updatePlayerListByPlayerChip([playerChip]);
 
-        this.betListStore.betList = playerList;
+        this.betListStore.otherPlayers = playerList;
     }
 
     eventHandleList = [

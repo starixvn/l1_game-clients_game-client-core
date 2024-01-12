@@ -97,6 +97,7 @@ export interface IGameCrashUserSettings {
 }
 
 export interface LeaderBoardPlayer {
+    playerId: string;
     name: string;
     amount: number;
     win: number;

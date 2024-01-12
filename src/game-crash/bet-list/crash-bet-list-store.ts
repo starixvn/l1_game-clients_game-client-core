@@ -20,38 +20,19 @@ export interface IPlayer {
 
 @injectable()
 export class CrashBetListStore {
-    private _betList: GameCrashServiceMessage.CrashOtherPlayer[] = [];
+    private _otherPlayers: LeaderBoardPlayer[] = [];
     private _mainPlayer: GameCrashServiceMessage.CrashOtherPlayer = null;
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    set betList(value: GameCrashServiceMessage.CrashOtherPlayer[]) {
-        this._betList = value;
-    }
-
-    get betList(): GameCrashServiceMessage.CrashOtherPlayer[] {
-        return this._betList;
+    set otherPlayers(value: LeaderBoardPlayer[]) {
+        this._otherPlayers = value;
     }
 
     get otherPlayers(): LeaderBoardPlayer[] {
-        const otherPlayer = [];
-        this.betList.forEach((player) => {
-            const { name, amount, halfCashOut, cashOut } = player;
-            const calcAmount = halfCashOut?.amount || cashOut?.amount || amount;
-            const multiplier = halfCashOut?.multiplier || cashOut?.multiplier || 0;
-            const win = halfCashOut?.win || cashOut?.win || 0;
-
-            const data = {
-                name,
-                amount: calcAmount,
-                multiplier,
-                win,
-            };
-            otherPlayer.push(data);
-        });
-        return otherPlayer;
+        return this._otherPlayers;
     }
 
     set mainPlayer(value: GameCrashServiceMessage.CrashOtherPlayer) {
