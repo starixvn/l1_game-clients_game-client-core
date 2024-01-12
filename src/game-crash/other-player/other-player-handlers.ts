@@ -26,11 +26,15 @@ export class OtherPlayerHandlers implements IHandler<GameCrashServiceMessage.Cra
         const { halfCashOut, cashOut, rate } = otherPlayer;
 
         if (halfCashOut) {
-            otherPlayer.halfCashOut.win = NumberUtils.getValueByCurrency(halfCashOut.win, this.mainPlayerStore.rate, rate);
+            const { amount, win } = halfCashOut;
+            otherPlayer.halfCashOut.win = NumberUtils.getValueByCurrency(win, this.mainPlayerStore.rate, rate);
+            otherPlayer.halfCashOut.amount = NumberUtils.getValueByCurrency(amount, this.mainPlayerStore.rate, rate);
         }
 
         if (cashOut) {
-            otherPlayer.cashOut.win = NumberUtils.getValueByCurrency(cashOut.win, this.mainPlayerStore.rate, rate);
+            const { amount, win } = cashOut;
+            otherPlayer.cashOut.win = NumberUtils.getValueByCurrency(win, this.mainPlayerStore.rate, rate);
+            otherPlayer.cashOut.win = NumberUtils.getValueByCurrency(amount, this.mainPlayerStore.rate, rate);
         }
         return otherPlayer;
     }

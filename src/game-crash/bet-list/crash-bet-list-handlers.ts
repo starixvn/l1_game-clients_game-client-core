@@ -179,6 +179,7 @@ export class CrashBetListHandlers implements IMultipleHandlers {
     ) {
         if (cashOut) {
             newHalfCashOutPlayer["cashOut"] = cashOut;
+
             newCashOut.push(newHalfCashOutPlayer);
 
             const filterPlayers = this.betListStore.betList.players.filter(
@@ -205,7 +206,7 @@ export class CrashBetListHandlers implements IMultipleHandlers {
         newCashOut: any[]
     ) {
         if (halfCashOut) {
-            existedPlayer.amount = halfCashOut.amount;
+            existedPlayer.amount = existedPlayer.amount / 2;
 
             newHalfCashOutPlayer["halfCashOut"] = halfCashOut;
             newCashOut.push(newHalfCashOutPlayer);
