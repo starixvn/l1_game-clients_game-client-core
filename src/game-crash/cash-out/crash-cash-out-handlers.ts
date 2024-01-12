@@ -161,7 +161,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
     }
 
     private handleCrashed() {
-        if (!this.roundTimeStore.isDisplayingResultState && !this.roundTimeStore.isStartRound) {
+        if (!this.roundTimeStore.isDisplayingResultState) {
             return;
         }
 

@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { IHandler } from "../../shared";
-import { GameCrashServiceMessage } from "../game-crash-messages";
+import { GameCrashServiceMessage, RocketState } from "../game-crash-messages";
 import { MultiplierStore } from "./multiplier-store";
 
 @injectable()
@@ -17,7 +17,13 @@ export class MultiplierHandlers implements IHandler<GameCrashServiceMessage.Cras
         reaction(
             () => this.roundTimeStore.roundTime,
             (roundTime) => {
-                this.handleIsCrashed(roundTime > this.roundTimeStore.placingBet);
+                if (roundTime > this.roundTimeStore.placingBet + this.roundTimeStore.startRound) {
+                    this.handleRocketState(RocketState.CRASHED);
+                } else if (roundTime <= 0) {
+                    this.handleRocketState(RocketState.FLYING);
+                } else {
+                    this.handleRocketState(RocketState.ONLAND);
+                }
             }
         );
     }
@@ -31,7 +37,7 @@ export class MultiplierHandlers implements IHandler<GameCrashServiceMessage.Cras
         this.multiplierStore.multiplier = multiplier;
     }
 
-    handleIsCrashed(isCrashed: boolean) {
-        this.multiplierStore.isCrashed = isCrashed;
+    handleRocketState(rocketState: string) {
+        this.multiplierStore.rocketState = rocketState;
     }
 }

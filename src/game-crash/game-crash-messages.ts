@@ -107,3 +107,9 @@ export const ButtonState = {
     BET_ACCEPTED: "BET_ACCEPTED",
     CASH_OUT: "CASH_OUT",
 };
+
+export const RocketState = {
+    CRASHED: "CRASHED",
+    FLYING: "FLYING",
+    ONLAND: "ONLAND",
+};

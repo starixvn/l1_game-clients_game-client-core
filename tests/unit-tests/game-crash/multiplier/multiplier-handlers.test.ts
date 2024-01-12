@@ -1,5 +1,6 @@
 import { stub } from "jest-auto-stub";
 
+import { RocketState } from "../../../../src/game-crash";
 import { MultiplierHandlers } from "../../../../src/game-crash/multiplier/multiplier-handlers";
 import { MultiplierStore } from "../../../../src/game-crash/multiplier/multiplier-store";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
@@ -55,16 +56,16 @@ describe("MultiplierHandlers", () => {
         });
     });
 
-    describe("handleIsCrashed", () => {
+    describe("handleRocketState", () => {
         it("should update isCrashed", async () => {
             // Arrange
-            const isCrashed = true;
+            const rocketState = RocketState.CRASHED;
 
             // Act
-            multiplierHandlers.handleIsCrashed(isCrashed);
+            multiplierHandlers.handleRocketState(rocketState);
 
             // Assert
-            expect(multiplierHandlers["multiplierStore"].isCrashed).toEqual(isCrashed);
+            expect(multiplierHandlers["multiplierStore"].rocketState).toEqual(rocketState);
         });
     });
 });

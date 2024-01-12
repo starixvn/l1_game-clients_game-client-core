@@ -1,19 +1,20 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
+import { RocketState } from "../game-crash-messages";
 
 @injectable()
 export class MultiplierStore {
     multiplier = 0;
     time = 0;
 
-    private _isCrashed: boolean = false;
+    private _rocketState: string = RocketState.ONLAND;
 
-    get isCrashed(): boolean {
-        return this._isCrashed;
+    get rocketState(): string {
+        return this._rocketState;
     }
 
-    set isCrashed(value: boolean) {
-        this._isCrashed = value;
+    set rocketState(value: string) {
+        this._rocketState = value;
     }
 
     constructor() {
