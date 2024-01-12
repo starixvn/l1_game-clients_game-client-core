@@ -40,8 +40,8 @@ export class CrashBetListStore {
         this.betList.forEach((player) => {
             const { name, amount, halfCashOut, cashOut } = player;
             const calcAmount = halfCashOut?.amount || cashOut?.amount || amount;
-            const multiplier = halfCashOut?.multiplier || cashOut?.multiplier;
-            const win = halfCashOut?.win || cashOut?.win;
+            const multiplier = halfCashOut?.multiplier || cashOut?.multiplier || 0;
+            const win = halfCashOut?.win || cashOut?.win || 0;
 
             const data = {
                 name,
@@ -74,7 +74,7 @@ export class CrashBetListStore {
 
     get noOfPlayerCashOut(): number {
         const players = [];
-        this.otherPlayers.forEach((player: GameCrashServiceMessage.CrashOtherPlayer) => {
+        this.otherPlayers.forEach((player: LeaderBoardPlayer) => {
             player.win > 0 && players.push(player);
         });
         const countMainPlayer = this.mainPlayer?.cashOut || this.mainPlayer?.halfCashOut ? 1 : 0;
@@ -85,7 +85,7 @@ export class CrashBetListStore {
         let otherPlayersCashOut = 0;
 
         this.otherPlayers.forEach((player) => {
-            otherPlayersCashOut += player?.win ?? 0;
+            otherPlayersCashOut += player.win;
         });
 
         const mainPlayerCashOut = (this.mainPlayer?.cashOut?.win ?? 0) + (this.mainPlayer?.halfCashOut?.win ?? 0);

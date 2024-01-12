@@ -185,10 +185,13 @@ export class CrashBetListHandlers implements IMultipleHandlers {
     private handleBetList(betList: ICrashBetList) {
         let convertedCurrencyPlayers = this.convertCurrency(betList);
         const newPlayers = convertedCurrencyPlayers.concat(...this.betListStore.betList);
+        const newSplitPlayers = this.splitPlayers(newPlayers);
         const playerList = this.updatePlayerList(newPlayers);
 
         this.betListStore.betList = playerList;
     }
+
+    private splitPlayers(newPlayers) {}
 
     private handlePlayerChip(playerChip: GameServiceMessage.PlayerChip) {
         const data = { [playerChip.playerId]: playerChip };
