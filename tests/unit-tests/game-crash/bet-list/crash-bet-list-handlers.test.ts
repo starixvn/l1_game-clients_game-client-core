@@ -134,7 +134,7 @@ describe("CrashBetListHandlers", () => {
         jest.clearAllMocks();
     });
 
-    describe("reactionPlacingBet", () => {
+    describe("reactionStartRound", () => {
         beforeEach(() => {
             // Arrange
             betListHandlers["resetMainPlayer"] = jest.fn();
@@ -146,7 +146,7 @@ describe("CrashBetListHandlers", () => {
 
             it("should call resetMainPlayer()", () => {
                 // Act
-                betListHandlers["reactionPlacingBet"](isStartPlacingBet);
+                betListHandlers["reactionStartRound"](isStartPlacingBet);
 
                 // Assert
                 expect(betListHandlers["resetMainPlayer"]).toBeCalled();
@@ -154,7 +154,7 @@ describe("CrashBetListHandlers", () => {
 
             it("should call resetOtherPlayerList()", () => {
                 // Act
-                betListHandlers["reactionPlacingBet"](isStartPlacingBet);
+                betListHandlers["reactionStartRound"](isStartPlacingBet);
 
                 // Assert
                 expect(betListHandlers["resetOtherPlayerList"]).toBeCalled();
@@ -165,7 +165,7 @@ describe("CrashBetListHandlers", () => {
 
             it("should not call resetMainPlayer()", () => {
                 // Act
-                betListHandlers["reactionPlacingBet"](isStartPlacingBet);
+                betListHandlers["reactionStartRound"](isStartPlacingBet);
 
                 // Assert
                 expect(betListHandlers["resetMainPlayer"]).not.toBeCalled();
@@ -173,7 +173,7 @@ describe("CrashBetListHandlers", () => {
 
             it("should not call resetOtherPlayerList()", () => {
                 // Act
-                betListHandlers["reactionPlacingBet"](isStartPlacingBet);
+                betListHandlers["reactionStartRound"](isStartPlacingBet);
 
                 // Assert
                 expect(betListHandlers["resetOtherPlayerList"]).not.toBeCalled();
@@ -796,13 +796,12 @@ describe("CrashBetListHandlers", () => {
 
         it("should update betList of CrashBetListStore", () => {
             // Arrange
-            const expectedData = { players: mockedData };
 
             // Act
             betListHandlers["handlePlayerChip"](playerChip);
 
             // Assert
-            expect(betListStore.betList).toEqual(expectedData);
+            expect(betListStore.otherPlayers).toEqual(mockedData);
         });
     });
 });

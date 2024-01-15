@@ -5,7 +5,7 @@ import { makeAutoObservable } from "mobx";
 import { GameCrashServiceMessage, LeaderBoardPlayer } from "../game-crash-messages";
 
 export interface ICrashBetList {
-    [playerId: string]: any;
+    [playerId: string]: IPlayer;
 }
 
 export interface IPlayer {
