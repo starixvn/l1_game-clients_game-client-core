@@ -29,8 +29,14 @@ export class AudioHandler {
         this.audioStore.sfx = { id: audioId, action: AudioAction.STOP };
     }
 
-    playSFXExtra(audioId: string) {
-        this.audioStore.sfx = { id: audioId, action: AudioAction.PLAY };
+    playStoppableSFX(audioId: string) {
+        if (this.userSettingsStore.sfxEnable) {
+            this.audioStore.stoppableSFX = { id: audioId, action: AudioAction.PLAY };
+        }
+    }
+
+    stopStoppableSFX(audioId: string) {
+        this.audioStore.stoppableSFX = { id: audioId, action: AudioAction.STOP };
     }
 
     updateMusicState(state: MusicState) {

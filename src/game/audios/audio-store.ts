@@ -70,4 +70,12 @@ export class AudioStore {
     set startMusicPlayer(value: boolean) {
         this._startMusicPlayer = value;
     }
+
+    private _stoppableSFX: AudioData = null;
+    get stoppableSFX(): AudioData {
+        return this._stoppableSFX;
+    }
+    set stoppableSFX(value: AudioData) {
+        this._stoppableSFX = value;
+    }
 }
