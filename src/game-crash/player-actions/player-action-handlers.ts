@@ -65,10 +65,6 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         this.playerActionStore.endShowCashOutNotice = flag;
     }
 
-    handleActiveAutoPlayInStore(flag: boolean) {
-        this.playerActionStore.activeAutoPlay = flag;
-    }
-
     changeButtonState(state: string) {
         this.playerActionStore.buttonState = state;
     }
@@ -93,7 +89,10 @@ export class PlayerActionHandlers implements IHandler<boolean> {
         if (roundTime > 0) {
             return;
         }
+        this.changeButtonStateWhenFlyTime();
+    }
 
+    private changeButtonStateWhenFlyTime() {
         switch (this.playerActionStore.buttonState) {
             case ButtonState.BET_ACCEPTED:
                 this.changeButtonState(ButtonState.CASH_OUT);
