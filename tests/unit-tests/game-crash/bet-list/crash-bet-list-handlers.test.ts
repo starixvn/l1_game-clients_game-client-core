@@ -1,13 +1,14 @@
 import { stub } from "jest-auto-stub";
 
 import { CrashBetListHandlers } from "../../../../src/game-crash/bet-list/crash-bet-list-handlers";
-import { CrashBetListStore } from "../../../../src/game-crash/bet-list/crash-bet-list-store";
+import { CrashBetListStore, ICrashBetList } from "../../../../src/game-crash/bet-list/crash-bet-list-store";
 import { CrashCashOutStore } from "../../../../src/game-crash/cash-out/crash-cash-out-store";
+import { GameCrashServiceMessage, LeaderBoardPlayer } from "../../../../src/game-crash/game-crash-messages";
 import { BetStore } from "../../../../src/game/bets/bet-store";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
 import { MainPlayerStore } from "../../../../src/players/main-player-store";
+import { GameServiceMessage } from "../../../../src/shared/models/game-messages";
 import { NumberUtils } from "../../../../src/shared/utils/number-utils";
-
 describe("CrashBetListHandlers", () => {
     let betListHandlers: CrashBetListHandlers;
     let mainPlayerStore: MainPlayerStore;
@@ -137,64 +138,35 @@ describe("CrashBetListHandlers", () => {
     describe("reactionStartRound", () => {
         beforeEach(() => {
             // Arrange
-            betListHandlers["resetMainPlayer"] = jest.fn();
-            betListHandlers["resetOtherPlayerList"] = jest.fn();
+            betListHandlers["resetLeaderBoard"] = jest.fn();
         });
 
         describe("when placing bet", () => {
             const isStartPlacingBet = true;
 
-            it("should call resetMainPlayer()", () => {
+            it("should call resetLeaderBoard()", () => {
                 // Act
                 betListHandlers["reactionStartRound"](isStartPlacingBet);
 
                 // Assert
-                expect(betListHandlers["resetMainPlayer"]).toBeCalled();
-            });
-
-            it("should call resetOtherPlayerList()", () => {
-                // Act
-                betListHandlers["reactionStartRound"](isStartPlacingBet);
-
-                // Assert
-                expect(betListHandlers["resetOtherPlayerList"]).toBeCalled();
+                expect(betListHandlers["resetLeaderBoard"]).toBeCalled();
             });
         });
         describe("when not placing bet", () => {
             const isStartPlacingBet = false;
 
-            it("should not call resetMainPlayer()", () => {
+            it("should not call resetLeaderBoard()", () => {
                 // Act
                 betListHandlers["reactionStartRound"](isStartPlacingBet);
 
                 // Assert
-                expect(betListHandlers["resetMainPlayer"]).not.toBeCalled();
-            });
-
-            it("should not call resetOtherPlayerList()", () => {
-                // Act
-                betListHandlers["reactionStartRound"](isStartPlacingBet);
-
-                // Assert
-                expect(betListHandlers["resetOtherPlayerList"]).not.toBeCalled();
+                expect(betListHandlers["resetLeaderBoard"]).not.toBeCalled();
             });
         });
     });
 
     describe("reactionLastReceivedBet", () => {
         describe("when lastReceivedBet is null", () => {
-            it("should not update isNeedEmptyBetAmount of CrashBetListStore", () => {
-                // Arrange
-                const lastReceivedBet = null;
-                Object.defineProperty(betListStore, "isNeedEmptyBetAmount", { value: true, configurable: true, writable: true });
-
-                // Act
-                betListHandlers["reactionLastReceivedBet"](lastReceivedBet as any);
-
-                // Assert
-                expect(betListStore["isNeedEmptyBetAmount"]).toEqual(true);
-            });
-
             it("should not update mainPlayer of CrashBetListStore", () => {
                 // Arrange
                 const lastReceivedBet = null;
@@ -204,49 +176,25 @@ describe("CrashBetListHandlers", () => {
                 betListHandlers["reactionLastReceivedBet"](lastReceivedBet as any);
 
                 // Assert
-                expect(betListStore["mainPlayer"]).toEqual(null);
+                expect(betListStore.mainPlayer).toEqual(null);
             });
         });
 
         describe("when lastReceivedBet has data, but a bet value is less than 0", () => {
-            it("should not update isNeedEmptyBetAmount of CrashBetListStore", () => {
-                // Arrange
-                const lastReceivedBet = { value: -1, isAnimated: false };
-                Object.defineProperty(betListStore, "isNeedEmptyBetAmount", { value: true, configurable: true, writable: true });
-
-                // Act
-                betListHandlers["reactionLastReceivedBet"](lastReceivedBet);
-
-                // Assert
-                expect(betListStore["isNeedEmptyBetAmount"]).toEqual(true);
-            });
-
             it("should not update mainPlayer of CrashBetListStore", () => {
                 // Arrange
                 const lastReceivedBet = { value: -1, isAnimated: false };
                 Object.defineProperty(betListStore, "mainPlayer", { value: null, configurable: true, writable: true });
 
                 // Act
-                betListHandlers["reactionLastReceivedBet"](lastReceivedBet);
+                betListHandlers["reactionLastReceivedBet"](lastReceivedBet as any);
 
                 // Assert
-                expect(betListStore["mainPlayer"]).toEqual(null);
+                expect(betListStore.mainPlayer).toEqual(null);
             });
         });
 
         describe("when lastReceivedBet has data and a bet value is greater than 0", () => {
-            it("should update isNeedEmptyBetAmount of CrashBetListStore", () => {
-                // Arrange
-                const lastReceivedBet = { value: 1, isAnimated: false };
-                Object.defineProperty(betListStore, "isNeedEmptyBetAmount", { value: true, configurable: true, writable: true });
-
-                // Act
-                betListHandlers["reactionLastReceivedBet"](lastReceivedBet);
-
-                // Assert
-                expect(betListStore["isNeedEmptyBetAmount"]).toEqual(false);
-            });
-
             it("should update mainPlayer of CrashBetListStore", () => {
                 // Arrange
                 const lastReceivedBet = { value: 1, isAnimated: false };
@@ -265,18 +213,6 @@ describe("CrashBetListHandlers", () => {
 
     describe("reactionHalfCashOut", () => {
         describe("when halfCashOut is null", () => {
-            it("should not update isNeedEmptyBetAmount of CrashBetListStore", () => {
-                // Arrange
-                const halfCashOut = null;
-                Object.defineProperty(betListStore, "isNeedEmptyBetAmount", { value: true, configurable: true, writable: true });
-
-                // Act
-                betListHandlers["reactionLastReceivedBet"](halfCashOut as any);
-
-                // Assert
-                expect(betListStore["isNeedEmptyBetAmount"]).toEqual(true);
-            });
-
             it("should not update mainPlayer of CrashBetListStore", () => {
                 // Arrange
                 const halfCashOut = null;
@@ -297,17 +233,6 @@ describe("CrashBetListHandlers", () => {
                     configurable: true,
                     writable: true,
                 });
-                Object.defineProperty(betListStore, "isNeedEmptyBetAmount", { value: true, configurable: true, writable: true });
-            });
-
-            it("should update isNeedEmptyBetAmount of CrashBetListStore", () => {
-                // Arrange
-
-                // Act
-                betListHandlers["reactionHalfCashOut"](halfCashOut);
-
-                // Assert
-                expect(betListStore["isNeedEmptyBetAmount"]).toEqual(false);
             });
 
             it("should update mainPlayer of CrashBetListStore", () => {
@@ -331,17 +256,6 @@ describe("CrashBetListHandlers", () => {
             beforeEach(() => {
                 // Arrange
                 Object.defineProperty(betListStore, "mainPlayer", { value: null, configurable: true, writable: true });
-                Object.defineProperty(betListStore, "isNeedEmptyBetAmount", { value: true, configurable: true, writable: true });
-            });
-
-            it("should not update isNeedEmptyBetAmount of CrashBetListStore", () => {
-                // Arrange
-
-                // Act
-                betListHandlers["reactionCashOut"](cashOut as any);
-
-                // Assert
-                expect(betListStore["isNeedEmptyBetAmount"]).toEqual(true);
             });
 
             it("should not update mainPlayer of CrashBetListStore", () => {
@@ -362,17 +276,6 @@ describe("CrashBetListHandlers", () => {
                     configurable: true,
                     writable: true,
                 });
-                Object.defineProperty(betListStore, "isNeedEmptyBetAmount", { value: true, configurable: true, writable: true });
-            });
-
-            it("should update isNeedEmptyBetAmount of CrashBetListStore", () => {
-                // Arrange
-
-                // Act
-                betListHandlers["reactionCashOut"](cashOut);
-
-                // Assert
-                expect(betListStore["isNeedEmptyBetAmount"]).toEqual(false);
             });
 
             it("should update mainPlayer of CrashBetListStore", () => {
@@ -389,96 +292,66 @@ describe("CrashBetListHandlers", () => {
         });
     });
 
-    describe("updatePlayerListByPlayerChip", () => {
-        const existedPlayers = [player1];
-        const players = [player2];
-        const expectedData = [player2, player1];
+    describe("sortByMultiplierBetAmount", () => {
+        let players: LeaderBoardPlayer[] = [];
+        let expectedData: LeaderBoardPlayer[] = [];
 
         beforeEach(() => {
             // Arrange
-            Object.defineProperty(betListStore, "betList", { value: { players: existedPlayers }, configurable: true, writable: true });
-            betListHandlers["sortDecreasedBetAmount"] = jest.fn(() => expectedData);
+            const player1 = stub<LeaderBoardPlayer>({ amount: 15, win: 0, multiplier: 0 });
+            const player2 = stub<LeaderBoardPlayer>({ amount: 20, win: 0, multiplier: 0 });
+            const player3 = stub<LeaderBoardPlayer>({ amount: 10, multiplier: 2.0, win: 4.0 });
+            const player4 = stub<LeaderBoardPlayer>({ amount: 10, multiplier: 1.23, win: 3.0 });
+
+            players = [player1, player2, player3, player4];
+            expectedData = [player3, player4, player2, player1];
         });
 
-        it("should call sortDecreasedBetAmount()", () => {
+        it("should call sortPlayersByMultiplier()", () => {
             // Arrange
+            const spySortPlayersByMultiplier = jest.spyOn(betListHandlers as any, "sortPlayersByMultiplier");
 
             // Act
-            betListHandlers["updatePlayerListByPlayerChip"](players);
+            betListHandlers["sortByMultiplierBetAmount"](players);
 
             // Assert
-            expect(betListHandlers["sortDecreasedBetAmount"]).toBeCalled();
-        });
-
-        it("should return new sorted player list by bet amount", () => {
-            // Arrange
-
-            // Act
-            const newPlayers = betListHandlers["updatePlayerListByPlayerChip"](players);
-
-            // Assert
-            expect(newPlayers).toEqual(expectedData);
-        });
-    });
-
-    describe("updatePlayerList", () => {
-        const players = [player1, player2];
-        const expectedData = [player2, player1];
-
-        beforeEach(() => {
-            // Arrange
-            Object.defineProperty(betListStore, "betList", {
-                value: {
-                    players: [],
-                },
-                configurable: true,
-                writable: true,
-            });
-            betListHandlers["sortCashOutPlayersByTime"] = jest.fn(() => {
-                return [];
-            });
-            betListHandlers["sortPlayersByBetAmount"] = jest.fn(() => {
-                return expectedData;
-            });
-        });
-
-        it("should call sortCashOutPlayersByTime()", () => {
-            // Arrange
-
-            // Act
-            betListHandlers["updatePlayerList"](players);
-
-            // Assert
-            expect(betListHandlers["sortCashOutPlayersByTime"]).toBeCalled();
+            expect(spySortPlayersByMultiplier).toBeCalled();
         });
 
         it("should call sortPlayersByBetAmount()", () => {
             // Arrange
+            const spySortPlayersByBetAmount = jest.spyOn(betListHandlers as any, "sortPlayersByBetAmount");
 
             // Act
-            betListHandlers["updatePlayerList"](players);
+            betListHandlers["sortByMultiplierBetAmount"](players);
 
             // Assert
-            expect(betListHandlers["sortPlayersByBetAmount"]).toBeCalled();
+            expect(spySortPlayersByBetAmount).toBeCalled();
         });
 
-        it("should return new sorted player list", () => {
+        it("should return array sort by multiplier for win, then sort by amount for not cashout", () => {
             // Arrange
 
             // Act
-            const playerList = betListHandlers["updatePlayerList"](players);
+            const result = betListHandlers["sortByMultiplierBetAmount"](players);
 
             // Assert
-            expect(playerList).toEqual(expectedData);
+            result.forEach((item, index) => {
+                expect(item.amount).toEqual(expectedData[index].amount);
+            });
         });
     });
 
     describe("sortPlayersByBetAmount", () => {
-        const players = [player1, player2];
-        const expectedData = [player2, player1];
+        const players: LeaderBoardPlayer[] = [];
+        const expectedData: LeaderBoardPlayer[] = [];
 
         beforeEach(() => {
             // Arrange
+            const player1 = stub<LeaderBoardPlayer>({ amount: 10, multiplier: 0 });
+            const player2 = stub<LeaderBoardPlayer>({ amount: 20, multiplier: 0 });
+            players.push(...[player1, player2]);
+            expectedData.push(...[player2, player1]);
             betListHandlers["sortDecreasedBetAmount"] = jest.fn(() => expectedData);
         });
 
@@ -486,10 +359,10 @@ describe("CrashBetListHandlers", () => {
             // Arrange
 
             // Act
-            const newPlayers = betListHandlers["sortPlayersByBetAmount"](players);
+            betListHandlers["sortPlayersByBetAmount"](players);
 
             // Assert
-            expect(newPlayers).toEqual(expectedData);
+            expect(betListHandlers["sortDecreasedBetAmount"]).toBeCalled();
         });
 
         it("should return decreased player list by bet amount", () => {
@@ -503,83 +376,64 @@ describe("CrashBetListHandlers", () => {
         });
     });
 
-    describe("sortCashOutPlayersByTime", () => {
-        it("should return decreased player list by cash out time", () => {
+    describe("playerHasCashedOut", () => {
+        it("should return true when multiplier > 0", () => {
             // Arrange
-            const players = [player3HalfCashOut, player4CashOut];
-            const expectedData = [player4CashOut, player3HalfCashOut];
-
+            const player = stub<LeaderBoardPlayer>({ multiplier: 2 });
             // Act
-            const newPlayers = betListHandlers["sortCashOutPlayersByTime"](players);
-
+            const result = betListHandlers["playerHasCashedOut"](player);
             // Assert
-            expect(newPlayers).toEqual(expectedData);
+            expect(result).toEqual(true);
+        });
+
+        it("should return false when multiplier = 0", () => {
+            // Arrange
+            const player = stub<LeaderBoardPlayer>({ multiplier: 0 });
+            // Act
+            const result = betListHandlers["playerHasCashedOut"](player);
+            // Assert
+            expect(result).toEqual(false);
+        });
+        it("should return false when multiplier < 0", () => {
+            // Arrange
+            const player = stub<LeaderBoardPlayer>({ multiplier: -1 });
+            // Act
+            const result = betListHandlers["playerHasCashedOut"](player);
+            // Assert
+            expect(result).toEqual(false);
         });
     });
 
-    describe("convertCurrency", () => {
-        describe("when data has bet amount", () => {
-            it("should return player list with converted bet amount", () => {
-                // Arrange
-                const players = [player5];
-                const expectedData = [mockedConvertedCurrencyPlayer5];
-                jest.spyOn(NumberUtils, "getValueByCurrency").mockReturnValue(mockedConvertedCurrencyValue);
-
-                // Act
-                const newPlayers = betListHandlers["convertCurrency"](players);
-
-                // Assert
-                expect(newPlayers).toEqual(expectedData);
-            });
-        });
-
-        describe("when data has half cash out", () => {
-            it("should return player list with converted cash out win", () => {
-                // Arrange
-                const players = [player3HalfCashOut];
-                const expectedData = [...players];
-                expectedData[0].amount = mockedConvertedCurrencyValue;
-                expectedData[0]["halfCashOut"].win = mockedConvertedCurrencyValue;
-                jest.spyOn(NumberUtils, "getValueByCurrency").mockReturnValue(mockedConvertedCurrencyValue);
-
-                // Act
-                const newPlayers = betListHandlers["convertCurrency"](players);
-
-                // Assert
-                expect(newPlayers).toEqual(expectedData);
-            });
-        });
-
-        describe("when data has cash out", () => {
-            it("should return player list with converted cash out win", () => {
-                // Arrange
-                const players = [player6CashOut];
-                const expectedData = [player6CashOut];
-                jest.spyOn(NumberUtils, "getValueByCurrency").mockReturnValue(mockedConvertedCurrencyValue);
-
-                // Act
-                const newPlayers = betListHandlers["convertCurrency"](players);
-
-                // Assert
-                expect(newPlayers).toEqual(expectedData);
-            });
+    describe("convertAmountAndWinValue", () => {
+        it("should convert for win and amount value", () => {
+            // Arrange
+            const amount = 10;
+            const win = 20;
+            const cashOut = stub<GameCrashServiceMessage.CashOutReceive>({ amount, win });
+            const rate = 1.5;
+            const mainRate = 1.2;
+            Object.defineProperty(mainPlayerStore, "rate", { value: mainRate, configurable: true, writable: true });
+            const expectedWin = NumberUtils.getValueByCurrency(win, mainRate, rate);
+            const expectedAmount = NumberUtils.getValueByCurrency(amount, mainRate, rate);
+            // Act
+            betListHandlers["convertAmountAndWinValue"](cashOut, rate);
+            // Assert
+            expect(cashOut.win).toEqual(expectedWin);
+            expect(cashOut.amount).toEqual(expectedAmount);
         });
     });
 
-    describe("resetOtherPlayerList", () => {
+    describe("resetLeaderBoard", () => {
         it("should set bet list to empty array", () => {
             // Arrange
-            const expectedData = { players: [] };
 
             // Act
             betListHandlers["resetOtherPlayerList"]();
 
             // Assert
-            expect(betListStore.betList).toEqual(expectedData);
+            expect(betListStore.otherPlayers.length).toEqual(0);
         });
-    });
 
-    describe("resetMainPlayer", () => {
         it("should set main player to null", () => {
             // Arrange
 
@@ -591,217 +445,446 @@ describe("CrashBetListHandlers", () => {
         });
     });
 
-    describe("updateBetListCashOut", () => {
-        describe("when other player cash is not existed in player list", () => {
-            it("should not update player list", () => {
-                // Arrange
-                Object.defineProperty(betListStore, "betList", { value: { players: [] }, configurable: true, writable: true });
+    describe("updateCashOutRow", () => {
+        it("should update amount, win, multiplier", () => {
+            // Arrange
+            const notCashedOutRow = stub<LeaderBoardPlayer>({ playerId: "1", name: "abc", amount: 100, win: 0, multiplier: 0 });
+            const cashOut = stub<GameCrashServiceMessage.CashOutReceive>({ amount: 100, win: 200, multiplier: 2.0 });
 
-                // Act
-                betListHandlers.updateBetListCashOut(player4CashOut);
+            // Act
+            betListHandlers["updateCashOutRow"](notCashedOutRow, cashOut);
 
-                // Assert
-                expect(betListStore.betList).toEqual({ players: [] });
-            });
-        });
-
-        describe("when other player cash out is existed in player list", () => {
-            beforeEach(() => {
-                // Arrange
-                Object.defineProperty(betListStore, "betList", {
-                    value: {
-                        players: [player4, player2],
-                    },
-                    configurable: true,
-                    writable: true,
-                });
-                betListHandlers["addHalfCashOutItem"] = jest.fn(() => []);
-                betListHandlers["addCashOutItem"] = jest.fn((a) => [player4CashOut, player2]);
-            });
-
-            it("should call addHalfCashOutItem()", () => {
-                // Arrange
-
-                // Act
-                betListHandlers.updateBetListCashOut(player4CashOut);
-
-                // Assert
-                expect(betListHandlers["addHalfCashOutItem"]).toBeCalled();
-            });
-
-            it("should call addCashOutItem()", () => {
-                // Arrange
-
-                // Act
-                betListHandlers.updateBetListCashOut(player4CashOut);
-
-                // Assert
-                expect(betListHandlers["addCashOutItem"]).toBeCalled();
-            });
-
-            it("should update player cashed out on top", () => {
-                // Arrange
-                const expectedData = {
-                    players: [player4CashOut, player2],
-                };
-
-                // Act
-                betListHandlers.updateBetListCashOut(player4CashOut);
-
-                // Assert
-                expect(betListStore.betList).toEqual(expectedData);
-            });
+            // Assert
+            expect(notCashedOutRow.amount).toEqual(cashOut.amount);
+            expect(notCashedOutRow.win).toEqual(cashOut.win);
+            expect(notCashedOutRow.multiplier).toEqual(cashOut.multiplier);
         });
     });
 
-    describe("addCashOutItem", () => {
-        it("should add cash out item on top of array", () => {
+    describe("updateAmountAndAddHalfCashOut", () => {
+        let notCashedOutRow;
+        let halfCashOut;
+        beforeEach(() => {
+            betListHandlers["createHalfCashOut"] = jest.fn();
+            notCashedOutRow = stub<LeaderBoardPlayer>({ playerId: "1", name: "abc", amount: 100, win: 0, multiplier: 0 });
+            halfCashOut = stub<GameCrashServiceMessage.CashOutReceive>({ amount: 50, win: 100, multiplier: 2.0 });
+        });
+        it("should update notCashedOutRow amount by halfCashOut amount", () => {
             // Arrange
-            const newCashOut = [];
-            const clonePlayer1 = player4;
-            Object.defineProperty(betListStore, "betList", {
-                value: {
-                    players: [player4, player2],
-                },
-                configurable: true,
-                writable: true,
-            });
-            const expectedData = [player4CashOut, player2];
 
             // Act
-            const newList = betListHandlers["addCashOutItem"](player4CashOut.cashOut, clonePlayer1, newCashOut, player4CashOut.playerId);
+            betListHandlers["updateAmountAndAddHalfCashOut"](notCashedOutRow, halfCashOut);
 
             // Assert
-            expect(newList).toEqual(expectedData);
+            expect(notCashedOutRow.amount).toEqual(halfCashOut.amount);
+        });
+
+        it("should call createHalfCashOut", () => {
+            // Arrange
+
+            // Act
+            betListHandlers["updateAmountAndAddHalfCashOut"](notCashedOutRow, halfCashOut);
+
+            // Assert
+            expect(betListHandlers["createHalfCashOut"]).toBeCalled();
         });
     });
 
-    describe("addHalfCashOutItem", () => {
-        it("should add half cash out item on top of array", () => {
+    describe("createHalfCashOut", () => {
+        it("should clone current row, then fill value from cashout", () => {
             // Arrange
-            const newCashOut = [];
-            const existedPlayer = {
-                time: "2024-01-08T07:43:55.957Z",
-                playerId: "5e7aa462bdcc701b8ca8f9fe",
-                name: "QuatKeat",
-                amount: 50,
-                rate: 1,
-            };
-            const { time, playerId, name, amount, rate } = existedPlayer;
-            const cloneFromExistedPlayer = { time, playerId, name, amount, rate };
-            const newHalfCashOutPlayer = {
-                time,
-                playerId,
-                name,
-                amount,
-                rate,
-                halfCashOut,
-            };
-
-            Object.defineProperty(betListStore, "betList", {
-                value: {
-                    players: [existedPlayer],
-                },
-                configurable: true,
-                writable: true,
-            });
-            const expectedData = [newHalfCashOutPlayer, existedPlayer];
+            const notCashedOutRow = stub<LeaderBoardPlayer>({ playerId: "1", name: "abc", amount: 100, win: 0, multiplier: 0 });
+            const halfCashOut = stub<GameCrashServiceMessage.CashOutReceive>({ amount: 50, win: 100, multiplier: 2.0 });
 
             // Act
-            const newList = betListHandlers["addHalfCashOutItem"](halfCashOut, existedPlayer, cloneFromExistedPlayer, newCashOut);
+            const result = betListHandlers["createHalfCashOut"](notCashedOutRow, halfCashOut);
 
             // Assert
-            expect(newList).toEqual(expectedData);
+            expect(result.playerId).toEqual(notCashedOutRow.playerId);
+            expect(result.name).toEqual(notCashedOutRow.name);
+
+            expect(result.amount).toEqual(halfCashOut.amount);
+            expect(result.win).toEqual(halfCashOut.win);
+            expect(result.multiplier).toEqual(halfCashOut.multiplier);
         });
     });
 
     describe("handleBetList", () => {
-        const betList = [player1];
-        const mockedData = betList;
+        let betList: ICrashBetList;
+        let initOtherPlayers;
 
         beforeEach(() => {
-            // Arrange
-            Object.defineProperty(betListStore, "betList", {
-                value: {
-                    players: [],
-                },
-                configurable: true,
-                writable: true,
-            });
-            betListHandlers["convertCurrency"] = jest.fn(() => []);
-            betListHandlers["updatePlayerList"] = jest.fn(() => mockedData);
+            betList = stub<ICrashBetList>();
+            betListHandlers["generateLeaderBoardPlayers"] = jest.fn();
+            betListHandlers["sortByMultiplierBetAmount"] = jest.fn();
+            initOtherPlayers = [];
+            Object.defineProperty(betListStore, "otherPlayers", { value: initOtherPlayers, configurable: true, writable: true });
         });
 
-        it("should call convertCurrency()", () => {
+        it("should call generateLeaderBoardPlayers()", () => {
             // Arrange
 
             // Act
             betListHandlers["handleBetList"](betList);
 
             // Assert
-            expect(betListHandlers["convertCurrency"]).toBeCalled();
+            expect(betListHandlers["generateLeaderBoardPlayers"]).toBeCalled();
         });
 
-        it("should call updatePlayerList()", () => {
+        it("should call sortByMultiplierBetAmount()", () => {
             // Arrange
 
             // Act
             betListHandlers["handleBetList"](betList);
 
             // Assert
-            expect(betListHandlers["updatePlayerList"]).toBeCalled();
+            expect(betListHandlers["sortByMultiplierBetAmount"]).toBeCalled();
         });
 
-        it("should update betList of CrashBetListStore", () => {
+        it("should return otherPlayers by new array", () => {
             // Arrange
-            const expectedData = { players: mockedData };
 
             // Act
             betListHandlers["handleBetList"](betList);
 
             // Assert
-            expect(betListStore.betList).toEqual(expectedData);
+            expect(betListStore["otherPlayers"]).not.toBe(initOtherPlayers);
+        });
+    });
+
+    describe("convertCurrencyForPlayerChip", () => {
+        it("should convert for amount value", () => {
+            // Arrange
+            const amount = 10;
+            const rate = 1.5;
+            const mainRate = 1.2;
+            const playerChip = stub<GameServiceMessage.PlayerChip>({ amount, rate });
+            Object.defineProperty(mainPlayerStore, "rate", { value: mainRate, configurable: true, writable: true });
+            const expectedAmount = NumberUtils.getValueByCurrency(amount, mainRate, rate);
+            // Act
+            const result = betListHandlers["convertCurrencyForPlayerChip"](playerChip);
+            // Assert
+            expect(result.amount).toEqual(expectedAmount);
         });
     });
 
     describe("handlePlayerChip", () => {
-        const playerChip = player1;
-        const mockedData = [playerChip];
+        let playerChip: GameServiceMessage.PlayerChip;
+        let initOtherPlayers = [];
 
         beforeEach(() => {
             // Arrange
-            betListHandlers["convertCurrency"] = jest.fn();
-            betListHandlers["updatePlayerListByPlayerChip"] = jest.fn(() => mockedData);
+            playerChip = stub<GameServiceMessage.PlayerChip>();
+            betListHandlers["sortPlayersByBetAmount"] = jest.fn();
+            betListHandlers["convertCurrencyForPlayerChip"] = jest.fn();
+
+            initOtherPlayers = [];
+            Object.defineProperty(betListStore, "otherPlayers", { value: initOtherPlayers, configurable: true, writable: true });
         });
 
-        it("should call convertCurrency()", () => {
+        it("should call convertCurrencyForPlayerChip()", () => {
             // Arrange
 
             // Act
             betListHandlers["handlePlayerChip"](playerChip);
 
             // Assert
-            expect(betListHandlers["convertCurrency"]).toBeCalled();
+            expect(betListHandlers["convertCurrencyForPlayerChip"]).toBeCalled();
         });
 
-        it("should call updatePlayerListByPlayerChip()", () => {
+        it("should call sortPlayersByBetAmount()", () => {
             // Arrange
 
             // Act
             betListHandlers["handlePlayerChip"](playerChip);
 
             // Assert
-            expect(betListHandlers["updatePlayerListByPlayerChip"]).toBeCalled();
+            expect(betListHandlers["sortPlayersByBetAmount"]).toBeCalled();
         });
 
-        it("should update betList of CrashBetListStore", () => {
+        it("should return otherPlayers by new array", () => {
             // Arrange
 
             // Act
             betListHandlers["handlePlayerChip"](playerChip);
 
             // Assert
-            expect(betListStore.otherPlayers).toEqual(mockedData);
+            expect(betListStore["otherPlayers"]).not.toBe(initOtherPlayers);
+        });
+    });
+
+    describe("handleNewOtherCashOut", () => {
+        let otherPlayer: GameCrashServiceMessage.CrashOtherPlayer;
+        let initOtherPlayers: LeaderBoardPlayer[] = [];
+        const playerId = "123";
+
+        beforeEach(() => {
+            // Arrange
+            otherPlayer = stub<GameCrashServiceMessage.CrashOtherPlayer>({
+                playerId,
+            });
+            betListHandlers["updateAmountAndAddHalfCashOut"] = jest.fn();
+            betListHandlers["updateCashOutRow"] = jest.fn();
+            betListHandlers["sortByMultiplierBetAmount"] = jest.fn();
+        });
+
+        describe("NOT exist player not cashed out", () => {
+            it("should NOT call sortByMultiplierBetAmount()", () => {
+                // Arrange
+                const player = stub<LeaderBoardPlayer>({ playerId, multiplier: 2.0 });
+                initOtherPlayers = [player];
+                Object.defineProperty(betListStore, "otherPlayers", { value: initOtherPlayers, configurable: true, writable: true });
+
+                // Act
+                betListHandlers["handleNewOtherCashOut"](otherPlayer);
+
+                // Assert
+                expect(betListHandlers["sortByMultiplierBetAmount"]).not.toBeCalled();
+            });
+        });
+        describe("exist player not cashed out", () => {
+            beforeEach(() => {
+                const player = stub<LeaderBoardPlayer>({ playerId, multiplier: 0 });
+                initOtherPlayers = [player];
+                Object.defineProperty(betListStore, "otherPlayers", { value: initOtherPlayers, configurable: true, writable: true });
+            });
+            it("should call sortByMultiplierBetAmount()", () => {
+                // Arrange
+
+                // Act
+                betListHandlers["handleNewOtherCashOut"](otherPlayer);
+
+                // Assert
+                expect(betListHandlers["sortByMultiplierBetAmount"]).toBeCalled();
+            });
+
+            it("should return otherPlayers by new array", () => {
+                // Arrange
+
+                // Act
+                betListHandlers["handleNewOtherCashOut"](otherPlayer);
+
+                // Assert
+                expect(betListStore["otherPlayers"]).not.toBe(initOtherPlayers);
+            });
+
+            describe("otherPlayer has only halfCashOut", () => {
+                beforeEach(() => {
+                    // Arrange
+                    otherPlayer = stub<GameCrashServiceMessage.CrashOtherPlayer>({
+                        playerId,
+                        halfCashOut: stub<GameCrashServiceMessage.CashOutReceive>(),
+                        cashOut: undefined,
+                    });
+                });
+                it("should call updateAmountAndAddHalfCashOut()", () => {
+                    // Act
+                    betListHandlers["handleNewOtherCashOut"](otherPlayer);
+
+                    // Assert
+                    expect(betListHandlers["updateAmountAndAddHalfCashOut"]).toBeCalled();
+                });
+
+                it("should NOT call updateCashOutRow()", () => {
+                    // Act
+                    betListHandlers["handleNewOtherCashOut"](otherPlayer);
+
+                    // Assert
+                    expect(betListHandlers["updateCashOutRow"]).not.toBeCalled();
+                });
+            });
+
+            describe("otherPlayer has only cashOut", () => {
+                beforeEach(() => {
+                    // Arrange
+                    otherPlayer = stub<GameCrashServiceMessage.CrashOtherPlayer>({
+                        playerId,
+                        cashOut: stub<GameCrashServiceMessage.CashOutReceive>(),
+                        halfCashOut: undefined,
+                    });
+                });
+                it("should call updateCashOutRow()", () => {
+                    // Act
+                    betListHandlers["handleNewOtherCashOut"](otherPlayer);
+
+                    // Assert
+                    expect(betListHandlers["updateCashOutRow"]).toBeCalled();
+                });
+
+                it("should NOT call updateAmountAndAddHalfCashOut()", () => {
+                    // Act
+                    betListHandlers["handleNewOtherCashOut"](otherPlayer);
+
+                    // Assert
+                    expect(betListHandlers["updateAmountAndAddHalfCashOut"]).not.toBeCalled();
+                });
+            });
+
+            describe("otherPlayer has both halfCashOut and cashOut", () => {
+                beforeEach(() => {
+                    // Arrange
+                    otherPlayer = stub<GameCrashServiceMessage.CrashOtherPlayer>({
+                        playerId,
+                        halfCashOut: stub<GameCrashServiceMessage.CashOutReceive>(),
+                        cashOut: stub<GameCrashServiceMessage.CashOutReceive>(),
+                    });
+                });
+                it("should handle only halfCashout", () => {
+                    // Act
+                    betListHandlers["handleNewOtherCashOut"](otherPlayer);
+
+                    // Assert
+                    expect(betListHandlers["updateAmountAndAddHalfCashOut"]).toBeCalled();
+                    expect(betListHandlers["updateCashOutRow"]).not.toBeCalled();
+                });
+            });
+        });
+    });
+
+    describe("generateLeaderBoardPlayer", () => {
+        let players: LeaderBoardPlayer[] = [];
+        let player: GameCrashServiceMessage.CrashOtherPlayer;
+        beforeEach(() => {
+            players = [];
+            betListHandlers["convertAmountAndWinValue"] = jest.fn();
+            betListHandlers["updateCashOutRow"] = jest.fn();
+            betListHandlers["convertAmountAndWinValue"] = jest.fn();
+            betListHandlers["updateAmountAndAddHalfCashOut"] = jest.fn();
+        });
+        describe("has only cashOut", () => {
+            beforeEach(() => {
+                // Arrange
+                player = stub<GameCrashServiceMessage.CrashOtherPlayer>({
+                    cashOut: stub<GameCrashServiceMessage.CashOutReceive>(),
+                    halfCashOut: undefined,
+                });
+            });
+            it("only added one player", () => {
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(players.length).toEqual(1);
+            });
+            it("call convertAmountAndWinValue", () => {
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(betListHandlers["convertAmountAndWinValue"]).toBeCalled;
+            });
+            it("call updateCashOutRow", () => {
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(betListHandlers["updateCashOutRow"]).toBeCalled;
+            });
+        });
+        describe("has only halfCashOut", () => {
+            beforeEach(() => {
+                // Arrange
+                player = stub<GameCrashServiceMessage.CrashOtherPlayer>({
+                    halfCashOut: stub<GameCrashServiceMessage.CashOutReceive>(),
+                    cashOut: undefined,
+                });
+            });
+            it("only added 2 player", () => {
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(players.length).toEqual(2);
+            });
+            it("call convertAmountAndWinValue", () => {
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(betListHandlers["convertAmountAndWinValue"]).toBeCalled;
+            });
+            it("call updateAmountAndAddHalfCashOut", () => {
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(betListHandlers["updateAmountAndAddHalfCashOut"]).toBeCalled;
+            });
+        });
+        describe("has both halfCashOut and cashOut", () => {
+            beforeEach(() => {
+                // Arrange
+                player = stub<GameCrashServiceMessage.CrashOtherPlayer>({
+                    halfCashOut: stub<GameCrashServiceMessage.CashOutReceive>(),
+                    cashOut: stub<GameCrashServiceMessage.CashOutReceive>(),
+                });
+            });
+            it("only added 2 player", () => {
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(players.length).toEqual(2);
+            });
+            it("call convertAmountAndWinValue", () => {
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(betListHandlers["convertAmountAndWinValue"]).toBeCalled;
+            });
+            it("call updateAmountAndAddHalfCashOut", () => {
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(betListHandlers["updateAmountAndAddHalfCashOut"]).toBeCalled;
+            });
+            it("call updateCashOutRow", () => {
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(betListHandlers["updateCashOutRow"]).toBeCalled;
+            });
+        });
+
+        describe("NOT both halfCashOut and cashOut", () => {
+            beforeEach(() => {
+                // Arrange
+                player = stub<GameCrashServiceMessage.CrashOtherPlayer>({
+                    cashOut: undefined,
+                    halfCashOut: undefined,
+                });
+            });
+            it("only added one player", () => {
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(players.length).toEqual(1);
+            });
+
+            it("should convert amount value", () => {
+                // Arrange
+                const amount = 10;
+                const mainRate = 1.2;
+                const rate = 1.5;
+                Object.defineProperty(mainPlayerStore, "rate", { value: mainRate, configurable: true, writable: true });
+                const expectedAmount = NumberUtils.getValueByCurrency(amount, mainRate, rate);
+                player = stub<GameCrashServiceMessage.CrashOtherPlayer>({
+                    amount,
+                    rate,
+                    cashOut: undefined,
+                    halfCashOut: undefined,
+                });
+
+                // Act
+                betListHandlers["generateLeaderBoardPlayer"](players, player);
+
+                // Assert
+                expect(players[0].amount).toEqual(expectedAmount);
+            });
         });
     });
 });

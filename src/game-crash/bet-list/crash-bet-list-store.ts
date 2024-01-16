@@ -5,17 +5,7 @@ import { makeAutoObservable } from "mobx";
 import { GameCrashServiceMessage, LeaderBoardPlayer } from "../game-crash-messages";
 
 export interface ICrashBetList {
-    [playerId: string]: IPlayer;
-}
-
-export interface IPlayer {
-    playerId: string;
-    name: string;
-    amount: number;
-    cashOut?: GameCrashServiceMessage.CashOutReceive;
-    halfCashOut?: GameCrashServiceMessage.CashOutReceive;
-    rate?: number;
-    time?: string | number | Date;
+    [playerId: string]: GameCrashServiceMessage.CrashOtherPlayer;
 }
 
 @injectable()
