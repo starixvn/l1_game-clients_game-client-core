@@ -428,7 +428,7 @@ describe("CrashBetListHandlers", () => {
             // Arrange
 
             // Act
-            betListHandlers["resetOtherPlayerList"]();
+            betListHandlers["resetLeaderBoard"]();
 
             // Assert
             expect(betListStore.otherPlayers.length).toEqual(0);
@@ -438,7 +438,7 @@ describe("CrashBetListHandlers", () => {
             // Arrange
 
             // Act
-            betListHandlers["resetMainPlayer"]();
+            betListHandlers["resetLeaderBoard"]();
 
             // Assert
             expect(betListStore.mainPlayer).toEqual(null);
