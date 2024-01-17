@@ -145,6 +145,7 @@ export class CrashCashOutHandlers implements IMultipleHandlers {
 
         if (ownBets.cashOut) {
             this.handleCashOutMessage(ownBets.cashOut);
+            this.cashOutStore.ratio = this.fullCashOutRatio;
             this.playerActionStore.buttonState = ButtonState.BET_NEXT_ROUND;
             return;
         }

@@ -440,6 +440,14 @@ describe("CrashCashOutHandlers", () => {
                 //Assert
                 expect(playerActionStore.buttonState).toEqual(ButtonState.BET_NEXT_ROUND);
             });
+
+            it("should set cashOutStore.ratio to fullCashOutRatio", () => {
+                //Act
+                cashOutHandlers["handleOwnBets"](ownBets);
+
+                //Assert
+                expect(cashOutStore.ratio).toEqual(cashOutHandlers["fullCashOutRatio"]);
+            });
         });
     });
 
