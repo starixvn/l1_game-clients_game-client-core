@@ -36,7 +36,7 @@ export namespace ConnectionHandlers {
             this.clearInterval();
             this.retryGameId = setInterval(() => {
                 this.connectionStore.send(GameClientEmitMessage.retry, null);
-            }, 1000);
+            }, 500);
         }
 
         clearInterval() {
