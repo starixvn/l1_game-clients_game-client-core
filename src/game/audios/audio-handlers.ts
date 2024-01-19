@@ -55,7 +55,7 @@ export class AudioHandler {
         const musicIds = this.audioStore.musicIds;
         const musicGameIds = this.audioStore.musicGameIds;
 
-        let musicTmp = musicGameIds.length > 0 ? musicGameIds : musicIds;
+        const musicTmp = musicGameIds.length > 0 ? musicGameIds : musicIds;
 
         if (musicTmp.length === 0) {
             return;

@@ -58,12 +58,13 @@ describe("PlayerActionHandlers", () => {
         it("when hide cash out notice", () => {
             //Arrange
             const flag = false;
+            playerActionStore.endShowCashOutNotice = !flag;
 
             //Act
             playerActionHandlers.handleEndShowCashOutNotice(flag);
 
             //Assert
-            expect(playerActionStore.endShowCashOutNotice).toBe(false);
+            expect(playerActionStore.endShowCashOutNotice).toBe(flag);
         });
     });
 

@@ -20,7 +20,6 @@ export class CrashRoundHistoryStore {
     }
 
     private readonly _lastRound: RoundHistory = { roundId: 0, result: {}, md5Result: {}, settlementResult: {} };
-    private _roundIndex = 0;
     get roundHistories() {
         let roundHistory: RoundHistory[] = [];
 
@@ -38,8 +37,12 @@ export class CrashRoundHistoryStore {
         const roundItem = this.roundHistories.find((obj) => {
             return obj.roundId === this.md5PopupStore.roundId;
         });
-        this._roundIndex = this.roundHistories.findIndex((obj) => obj.roundId === this.md5PopupStore.roundId);
+
         return roundItem;
+    }
+
+    get roundIndex(): number {
+        return this.roundHistories.findIndex((obj) => obj.roundId === this.md5PopupStore.roundId);
     }
 
     get lastRound(): RoundHistory {
@@ -64,13 +67,13 @@ export class CrashRoundHistoryStore {
         };
     }
     get increaseStatus(): boolean {
-        return this._roundIndex > 0 || this._roundIndex === -1;
+        return this.roundIndex > 0 || this.roundIndex === -1;
     }
 
     get decreaseStatus(): boolean {
-        if (this._roundIndex === -1) {
+        if (this.roundIndex === -1) {
             return false;
         }
-        return this._roundIndex < this.roundHistoryStore.histories.length - 1;
+        return this.roundIndex < this.roundHistoryStore.histories.length - 1;
     }
 }
