@@ -13,11 +13,7 @@ export class CrashCashOutStore {
     }
     ratio = 1;
 
-    cashOutNotice: {
-        win: number;
-        cashOutWin: number;
-        reachMaxWin: boolean;
-    } = null;
+    cashOutNotice: GameCrashServiceMessage.CrashCashOut = null;
 
     private _cashOut: GameCrashServiceMessage.CrashCashOut = null;
     private _halfCashOut: GameCrashServiceMessage.CrashCashOut = null;
@@ -46,9 +42,7 @@ export class CrashCashOutStore {
 
     setCashOutNotice(cashOut: GameCrashServiceMessage.CrashCashOut) {
         this.cashOutNotice = {
-            win: cashOut.win,
-            cashOutWin: cashOut.cashOutWin,
-            reachMaxWin: cashOut.reachMaxWin,
+            ...cashOut,
         };
     }
 
