@@ -61,6 +61,10 @@ export class AutoPlayHandler implements IHandler<number> {
             return;
         }
 
+        this.autoPlaceBet();
+    }
+
+    autoPlaceBet() {
         if (!this.autoPlayStore.skipDecreaseAutoPlayCount) {
             this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
         }
@@ -127,16 +131,14 @@ export class AutoPlayHandler implements IHandler<number> {
     }
 
     validateAmount() {
-        const { freebetEnabled } = this.betStore;
-        const availableBalance = freebetEnabled ? this.mainPlayerStore.scoin : this.mainPlayerStore.balance;
-        const minBet = this.betInputStore.minBet;
-        if (this.betInputStore.betAmount <= availableBalance) {
+        if (this.isEnoughMoney()) {
             if (!this.betInputStore.betAmountGreaterMinBet) {
-                this.noticeStore.addWarning(Translator.commonTranslate("message_min_bet_notice", { minBet: minBet }));
+                this.showMsgMinBet();
+                return false;
             }
-            return this.betInputStore.betAmountGreaterMinBet;
+            return true;
         } else {
-            this.noticeStore.addWarning(Translator.commonTranslate("not_enough_money"));
+            this.showNotEnoughMoney();
             return false;
         }
     }
@@ -195,7 +197,7 @@ export class AutoPlayHandler implements IHandler<number> {
         if (enable) {
             let isError = false;
 
-            if (!this.validateBalance()) {
+            if (!this.isEnoughMoney()) {
                 this.showNotEnoughMoney();
                 isError = true;
             }
@@ -227,10 +229,8 @@ export class AutoPlayHandler implements IHandler<number> {
         this.noticeStore.addWarning(message);
     }
 
-    validateBalance() {
-        const { freebetEnabled } = this.betStore;
-        const availableBalance = freebetEnabled ? this.mainPlayerStore.scoin : this.mainPlayerStore.balance;
-        return this.betInputStore.betAmount <= availableBalance;
+    isEnoughMoney() {
+        return this.betInputStore.betAmount <= this.betStore.availableBalance;
     }
 
     get isValidAutoPlay() {

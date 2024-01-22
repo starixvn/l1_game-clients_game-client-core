@@ -33,7 +33,7 @@ export class BetHandler {
             this.showWarningProcessingBet();
             return;
         }
-        const availableBalance = freebetEnabled ? this.mainPlayerStore.scoin : this.mainPlayerStore.balance;
+        const availableBalance = this.betStore.availableBalance;
 
         if (this.gameSetting?.validateBalanceWhenBet && amount > availableBalance) {
             this.showNoticePlaceBetFailure(freebetEnabled);

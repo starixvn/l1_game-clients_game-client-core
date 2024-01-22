@@ -36,7 +36,7 @@ export class CrashBetHandler {
             this.showWarningProcessingBet();
             return;
         }
-        const availableBalance = freebetEnabled ? this.mainPlayerStore.scoin : this.mainPlayerStore.balance;
+        const availableBalance = this.betStore.availableBalance;
 
         if (amount > availableBalance) {
             this.showNoticePlaceBetFailure(freebetEnabled);

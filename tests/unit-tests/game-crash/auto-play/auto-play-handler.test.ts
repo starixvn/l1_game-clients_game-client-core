@@ -39,9 +39,7 @@ describe("AutoPlayHandler", () => {
         crashBetHandler = stub<CrashBetHandler>();
         errorStore = stub<ErrorStore>();
         disabledGameStore = stub<DisabledGameStore>();
-    });
 
-    beforeEach(() => {
         handler = new AutoPlayHandler(
             autoPlayStore,
             earlyBetStore,
@@ -160,6 +158,384 @@ describe("AutoPlayHandler", () => {
 
             // Assert
             expect(playerActionStore.buttonState).toEqual(ButtonState.BET_NEXT_ROUND);
+        });
+    });
+
+    describe("handleCancelAutoPlayWhenApiError", () => {
+        beforeEach(() => {
+            handler.cancelEarlyBetAndAutoPlay = jest.fn();
+            handler.resetButtonState = jest.fn();
+        });
+
+        it("should call cancelEarlyBetAndAutoPlay", () => {
+            // Act
+            handler.handleCancelAutoPlayWhenApiError();
+
+            // Assert
+            expect(handler.cancelEarlyBetAndAutoPlay).toBeCalled();
+        });
+
+        it("should call resetButtonState", () => {
+            // Act
+            handler.handleCancelAutoPlayWhenApiError();
+
+            // Assert
+            expect(handler.resetButtonState).toBeCalled();
+        });
+    });
+
+    describe("handleAutoPlaceBetAtPlacingBet", () => {
+        beforeEach(() => {
+            handler.autoPlaceBet = jest.fn();
+        });
+
+        it("should call autoPlaceBet, when isAutoPlay true", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "isAutoPlay", { value: true, configurable: true, writable: true });
+
+            // Act
+            handler.handleAutoPlaceBetAtPlacingBet();
+
+            // Assert
+            expect(handler.autoPlaceBet).toBeCalled();
+        });
+
+        it("should call autoPlaceBet, when earlyBetEnable true", () => {
+            // Arrange
+            Object.defineProperty(earlyBetStore, "earlyBetEnable", { value: true, configurable: true, writable: true });
+
+            // Act
+            handler.handleAutoPlaceBetAtPlacingBet();
+
+            // Assert
+            expect(handler.autoPlaceBet).toBeCalled();
+        });
+
+        it("should NOT call autoPlaceBet, when isAutoPlay false and earlyBetEnable false", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "isAutoPlay", { value: false, configurable: true, writable: true });
+            Object.defineProperty(earlyBetStore, "earlyBetEnable", { value: false, configurable: true, writable: true });
+
+            // Act
+            handler.handleAutoPlaceBetAtPlacingBet();
+
+            // Assert
+            expect(handler.autoPlaceBet).not.toBeCalled();
+        });
+    });
+
+    describe("autoPlaceBet", () => {
+        beforeEach(() => {
+            handler.updateAutoPlayRounds = jest.fn();
+            handler.checkFinishedAutoPlay = jest.fn();
+            handler.validateAmount = jest.fn();
+            handler.cancelAutoPlay = jest.fn();
+            crashBetHandler.autoPlaceBet = jest.fn();
+        });
+
+        it("should call updateAutoPlayRounds, when skipDecreaseAutoPlayCount false", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "roundsAutoPlay", { value: 5, configurable: true, writable: true });
+            Object.defineProperty(autoPlayStore, "skipDecreaseAutoPlayCount", { value: false, configurable: true, writable: true });
+
+            // Act
+            handler.autoPlaceBet();
+
+            // Assert
+            expect(handler.updateAutoPlayRounds).toBeCalledWith(autoPlayStore.roundsAutoPlay - 1);
+        });
+
+        it("should NOT call updateAutoPlayRounds, when skipDecreaseAutoPlayCount true", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "skipDecreaseAutoPlayCount", { value: true, configurable: true, writable: true });
+
+            // Act
+            handler.autoPlaceBet();
+
+            // Assert
+            expect(handler.updateAutoPlayRounds).not.toBeCalled();
+        });
+
+        it("should set autoPlayStore.skipDecreaseAutoPlayCount to false", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "skipDecreaseAutoPlayCount", { value: true, configurable: true, writable: true });
+
+            // Act
+            handler.autoPlaceBet();
+
+            // Assert
+            expect(autoPlayStore.skipDecreaseAutoPlayCount).toEqual(false);
+        });
+
+        it("should set earlyBetStore.earlyBetEnable to false", () => {
+            // Arrange
+            Object.defineProperty(earlyBetStore, "earlyBetEnable", { value: true, configurable: true, writable: true });
+
+            // Act
+            handler.autoPlaceBet();
+
+            // Assert
+            expect(earlyBetStore.earlyBetEnable).toEqual(false);
+        });
+
+        it("should call crashBetHandler.autoPlaceBet", () => {
+            // Arrange
+            handler.checkFinishedAutoPlay = jest.fn(() => false);
+            handler.validateAmount = jest.fn(() => true);
+            Object.defineProperty(disabledGameStore, "disabled", { value: false, configurable: true, writable: true });
+
+            // Act
+            handler.autoPlaceBet();
+
+            // Assert
+            expect(crashBetHandler.autoPlaceBet).toBeCalled();
+        });
+
+        describe("should call cancelAutoPlay, and set buttonState to PLACE_BET", () => {
+            beforeEach(() => {
+                // Arrange
+                handler.checkFinishedAutoPlay = jest.fn(() => false);
+                handler.validateAmount = jest.fn(() => true);
+                Object.defineProperty(disabledGameStore, "disabled", { value: false, configurable: true, writable: true });
+            });
+            it("when checkFinishedAutoPlay return true", () => {
+                // Arrange
+                handler.checkFinishedAutoPlay = jest.fn(() => true);
+
+                // Act
+                handler.autoPlaceBet();
+
+                // Assert
+                expect(handler.cancelAutoPlay).toBeCalled();
+                expect(playerActionStore.buttonState).toEqual(ButtonState.PLACE_BET);
+            });
+
+            it("when validateAmount return false", () => {
+                // Arrange
+                handler.validateAmount = jest.fn(() => false);
+
+                // Act
+                handler.autoPlaceBet();
+
+                // Assert
+                expect(handler.cancelAutoPlay).toBeCalled();
+                expect(playerActionStore.buttonState).toEqual(ButtonState.PLACE_BET);
+            });
+
+            it("when disabledGameStore.disabled is true", () => {
+                // Arrange
+                Object.defineProperty(disabledGameStore, "disabled", { value: true, configurable: true, writable: true });
+
+                // Act
+                handler.autoPlaceBet();
+
+                // Assert
+                expect(handler.cancelAutoPlay).toBeCalled();
+                expect(playerActionStore.buttonState).toEqual(ButtonState.PLACE_BET);
+            });
+        });
+    });
+
+    describe("checkFinishedAutoPlay", () => {
+        it("should return true", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "isAutoPlay", { value: true, configurable: true, writable: true });
+            Object.defineProperty(autoPlayStore, "skipDecreaseAutoPlayCount", { value: false, configurable: true, writable: true });
+            Object.defineProperty(autoPlayStore, "roundsAutoPlay", { value: 0, configurable: true, writable: true });
+
+            // Act
+            const result = handler.checkFinishedAutoPlay();
+
+            // Assert
+            expect(result).toEqual(true);
+        });
+
+        describe("should return false", () => {
+            beforeEach(() => {
+                // Arrange
+                Object.defineProperty(autoPlayStore, "isAutoPlay", { value: true, configurable: true, writable: true });
+                Object.defineProperty(autoPlayStore, "skipDecreaseAutoPlayCount", { value: false, configurable: true, writable: true });
+                Object.defineProperty(autoPlayStore, "roundsAutoPlay", { value: 0, configurable: true, writable: true });
+            });
+
+            it("when isAutoPlay false", () => {
+                // Arrange
+                Object.defineProperty(autoPlayStore, "isAutoPlay", { value: false, configurable: true, writable: true });
+
+                // Act
+                const result = handler.checkFinishedAutoPlay();
+
+                // Assert
+                expect(result).toEqual(false);
+            });
+
+            it("when skipDecreaseAutoPlayCount true", () => {
+                // Arrange
+                Object.defineProperty(autoPlayStore, "skipDecreaseAutoPlayCount", { value: true, configurable: true, writable: true });
+
+                // Act
+                const result = handler.checkFinishedAutoPlay();
+
+                // Assert
+                expect(result).toEqual(false);
+            });
+
+            it("when roundsAutoPlay > 0", () => {
+                // Arrange
+                Object.defineProperty(autoPlayStore, "roundsAutoPlay", { value: 1, configurable: true, writable: true });
+
+                // Act
+                const result = handler.checkFinishedAutoPlay();
+
+                // Assert
+                expect(result).toEqual(false);
+            });
+        });
+    });
+
+    describe("openAutoPlayPopup", () => {
+        it("should set autoPlayStore.isOpenAutoPlayPopup to true", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "isOpenAutoPlayPopup", { value: false, configurable: true, writable: true });
+
+            // Act
+            handler.openAutoPlayPopup();
+
+            // Assert
+            expect(autoPlayStore.isOpenAutoPlayPopup).toEqual(true);
+        });
+
+        it("should set autoPlayStore.selectedRoundOnPopup to autoPlayStore.roundConfirmedOnPopup when autoPlayStore.roundConfirmedOnPopup > 0", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "roundConfirmedOnPopup", { value: 10, configurable: true, writable: true });
+
+            // Act
+            handler.openAutoPlayPopup();
+
+            // Assert
+            expect(autoPlayStore.selectedRoundOnPopup).toEqual(autoPlayStore.roundConfirmedOnPopup);
+        });
+
+        it("should set autoPlayStore.selectedRoundOnPopup to default value when autoPlayStore.roundConfirmedOnPopup === 0", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "roundConfirmedOnPopup", { value: 0, configurable: true, writable: true });
+
+            // Act
+            handler.openAutoPlayPopup();
+
+            // Assert
+            expect(autoPlayStore.selectedRoundOnPopup).toEqual(autoPlayStore.roundsList[0]);
+        });
+    });
+
+    describe("clickAutoPlay", () => {
+        beforeEach(() => {
+            handler.openAutoPlayPopup = jest.fn();
+            handler.cancelAutoPlay = jest.fn();
+            handler.resetButtonState = jest.fn();
+        });
+        it("should call openAutoPlayPopup when isAutoPlay false, and validateAmount return true", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "isAutoPlay", { value: false, configurable: true, writable: true });
+            handler.validateAmount = jest.fn(() => true);
+
+            // Act
+            handler.clickAutoPlay();
+
+            // Assert
+            expect(handler.openAutoPlayPopup).toBeCalled();
+        });
+
+        describe("should call cancelAutoPlay and resetButtonState ", () => {
+            beforeEach(() => {
+                // Arrange
+                Object.defineProperty(autoPlayStore, "isAutoPlay", { value: false, configurable: true, writable: true });
+                handler.validateAmount = jest.fn(() => true);
+            });
+            it("when isAutoPlay true", () => {
+                // Arrange
+                Object.defineProperty(autoPlayStore, "isAutoPlay", { value: true, configurable: true, writable: true });
+
+                // Act
+                handler.clickAutoPlay();
+
+                // Assert
+                expect(handler.cancelAutoPlay).toBeCalled();
+                expect(handler.resetButtonState).toBeCalled();
+            });
+
+            it("when validateAmount return false", () => {
+                // Arrange
+                handler.validateAmount = jest.fn(() => false);
+
+                // Act
+                handler.clickAutoPlay();
+
+                // Assert
+                expect(handler.cancelAutoPlay).toBeCalled();
+                expect(handler.resetButtonState).toBeCalled();
+            });
+        });
+    });
+
+    describe("cancelAutoPlay", () => {
+        beforeEach(() => {
+            handler.updateAutoPlayRounds = jest.fn();
+        });
+        it("should set autoPlayStore.isAutoPlay to false", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "isAutoPlay", { value: true, configurable: true, writable: true });
+
+            // Act
+            handler.cancelAutoPlay();
+
+            // Assert
+            expect(autoPlayStore.isAutoPlay).toEqual(false);
+        });
+
+        it("should call updateAutoPlayRounds with 0", () => {
+            // Act
+            handler.cancelAutoPlay();
+
+            // Assert
+            expect(handler.updateAutoPlayRounds).toBeCalledWith(0);
+        });
+    });
+
+    describe("cancelEarlyBetAndAutoPlay", () => {
+        beforeEach(() => {
+            handler.cancelAutoPlay = jest.fn();
+        });
+        it("should set earlyBetStore.earlyBetEnable to false", () => {
+            // Arrange
+            Object.defineProperty(earlyBetStore, "earlyBetEnable", { value: true, configurable: true, writable: true });
+
+            // Act
+            handler.cancelEarlyBetAndAutoPlay();
+
+            // Assert
+            expect(earlyBetStore.earlyBetEnable).toEqual(false);
+        });
+
+        it("should call cancelAutoPlay", () => {
+            // Act
+            handler.cancelEarlyBetAndAutoPlay();
+
+            // Assert
+            expect(handler.cancelAutoPlay).toBeCalled();
+        });
+    });
+
+    describe("closeAutoPlayPopup", () => {
+        it("should set earlyBetStore.earlyBetEnable to false", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "isOpenAutoPlayPopup", { value: true, configurable: true, writable: true });
+
+            // Act
+            handler.closeAutoPlayPopup();
+
+            // Assert
+            expect(autoPlayStore.isOpenAutoPlayPopup).toEqual(false);
         });
     });
 });
