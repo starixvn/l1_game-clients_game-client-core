@@ -34,9 +34,7 @@ export class CrashRoundHistoryStore {
     }
 
     get md5PopupData() {
-        return this.roundHistories.find((obj) => {
-            obj.roundId === this.md5PopupStore.roundId;
-        });
+        return this.roundHistories.find((obj) => obj.roundId === this.md5PopupStore.roundId);
     }
 
     get roundIndex(): number {
