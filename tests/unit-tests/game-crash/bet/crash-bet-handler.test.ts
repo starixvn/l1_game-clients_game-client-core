@@ -2,18 +2,17 @@ import { stub } from "jest-auto-stub";
 
 import { CrashBetHandler } from "../../../../src/game-crash/bet";
 
+import { AutoCashOutStore } from "../../../../src/game-crash/auto-cash-out";
+import { BetInputStore } from "../../../../src/game-crash/bet-input";
+import { BetStore } from "../../../../src/game/bets";
 import { GameSetting } from "../../../../src/game/game-configs/game-setting";
 import { NoticeStore } from "../../../../src/game/notices";
-import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
+import { ROUND_STATE, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
 import { MainPlayerStore } from "../../../../src/players";
+import { Translator } from "../../../../src/shared/utils/localization-manager";
 import { gameSettings } from "../../container.test";
 import { ConnectionHandlers, ConnectionStore } from "./../../../../src/game/connection";
 import { OrientationStore } from "./../../../../src/game/orientation";
-import { AutoCashOutStore } from "../../../../src/game-crash/auto-cash-out";
-import { BetStore } from "../../../../src/game/bets";
-import { BetInputStore } from "../../../../src/game-crash/bet-input";
-import { RoundStore } from "../../../../src/game/rounds";
-import { Translator } from "../../../../src/shared/utils/localization-manager";
 
 jest.mock("../../../../src/shared/utils/localization-manager", () => ({
     Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key) },
@@ -39,7 +38,7 @@ describe("CrashBetHandler", () => {
         noticeStore = new NoticeStore();
         mainPlayerStore = new MainPlayerStore(noticeStore);
         connectionStore = stub<ConnectionStore>();
-        betStore = new BetStore();
+        betStore = stub<BetStore>();
         orientationStore = new OrientationStore();
         retryHandler = stub<ConnectionHandlers.RetryGameHandler>();
         autoCashoutStore = stub<AutoCashOutStore>();

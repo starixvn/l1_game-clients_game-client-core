@@ -9,7 +9,7 @@ describe("BetResponseHandler", () => {
     let roundTimeStore: RoundTimeStore;
     let retryGameHandler: ConnectionHandlers.RetryGameHandler;
     beforeAll(() => {
-        betStore = new BetStore();
+        betStore = stub<BetStore>();
         roundTimeStore = stub<RoundTimeStore>();
         retryGameHandler = stub<ConnectionHandlers.RetryGameHandler>();
         instance = new BetResponseHandlers(betStore, roundTimeStore, retryGameHandler);

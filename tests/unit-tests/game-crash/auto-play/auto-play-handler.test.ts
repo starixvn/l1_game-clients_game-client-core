@@ -27,7 +27,7 @@ describe("AutoPlayHandler", () => {
     let errorStore: ErrorStore;
     let disabledGameStore: DisabledGameStore;
 
-    beforeAll(() => {
+    beforeEach(() => {
         autoPlayStore = stub<AutoPlayStore>();
         earlyBetStore = stub<EarlyBetStore>();
         betInputStore = stub<BetInputStore>();
@@ -53,6 +53,10 @@ describe("AutoPlayHandler", () => {
             errorStore,
             disabledGameStore
         );
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe("resetButtonState", () => {
