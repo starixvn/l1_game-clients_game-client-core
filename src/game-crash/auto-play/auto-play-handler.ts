@@ -72,7 +72,7 @@ export class AutoPlayHandler implements IHandler<number> {
         this.autoPlayStore.skipDecreaseAutoPlayCount = false;
         this.earlyBetStore.earlyBetEnable = false;
 
-        if (this.checkFinishedAutoPlay() || !this.validateAmount() || this.disabledGameStore.disabled) {
+        if (this.checkFinishedAutoPlay() || !this.isValidBet() || this.disabledGameStore.disabled) {
             this.cancelAutoPlay();
             this.playerActionStore.buttonState = ButtonState.PLACE_BET;
         } else {
@@ -100,7 +100,7 @@ export class AutoPlayHandler implements IHandler<number> {
     }
 
     clickAutoPlay() {
-        if (!this.autoPlayStore.isAutoPlay && this.validateAmount()) {
+        if (!this.autoPlayStore.isAutoPlay && this.isValidBet()) {
             this.openAutoPlayPopup();
         } else {
             this.cancelAutoPlay();
@@ -130,7 +130,7 @@ export class AutoPlayHandler implements IHandler<number> {
         this.cancelAutoPlay();
     }
 
-    validateAmount() {
+    isValidBet() {
         if (this.isEnoughMoney()) {
             if (!this.betInputStore.betAmountGreaterMinBet) {
                 this.showMsgMinBet();
@@ -150,7 +150,7 @@ export class AutoPlayHandler implements IHandler<number> {
     confirmRoundAndStart() {
         this.autoPlayStore.roundsAutoPlay = this.autoPlayStore.roundConfirmedOnPopup = this.autoPlayStore.selectedRoundOnPopup;
         this.autoPlayStore.isOpenAutoPlayPopup = false;
-        if (this.validateAmount()) {
+        if (this.isValidBet()) {
             this.autoPlayStore.isAutoPlay = true;
             this.updateStatusLatestRoundAccepted();
             this.handleDecreaseRoundAtConfirm();
@@ -194,22 +194,8 @@ export class AutoPlayHandler implements IHandler<number> {
 
     clickEarlyBet() {
         const enable = this.playerActionStore.buttonState === ButtonState.BET_NEXT_ROUND;
-        if (enable) {
-            let isError = false;
-
-            if (!this.isEnoughMoney()) {
-                this.showNotEnoughMoney();
-                isError = true;
-            }
-
-            if (!this.betInputStore.betAmountGreaterMinBet) {
-                this.showMsgMinBet();
-                isError = true;
-            }
-
-            if (isError) {
-                return;
-            }
+        if (enable && !this.isValidBet()) {
+            return;
         }
 
         this.changeEarlyBetButton(enable);
@@ -234,6 +220,6 @@ export class AutoPlayHandler implements IHandler<number> {
     }
 
     get isValidAutoPlay() {
-        return this.autoPlayStore.isValidAutoPlay && this.validateAmount();
+        return this.autoPlayStore.isValidAutoPlay && this.isValidBet();
     }
 }

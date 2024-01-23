@@ -232,7 +232,7 @@ describe("AutoPlayHandler", () => {
         beforeEach(() => {
             handler.updateAutoPlayRounds = jest.fn();
             handler.checkFinishedAutoPlay = jest.fn();
-            handler.validateAmount = jest.fn();
+            handler.isValidBet = jest.fn();
             handler.cancelAutoPlay = jest.fn();
             crashBetHandler.autoPlaceBet = jest.fn();
         });
@@ -285,7 +285,7 @@ describe("AutoPlayHandler", () => {
         it("should call crashBetHandler.autoPlaceBet", () => {
             // Arrange
             handler.checkFinishedAutoPlay = jest.fn(() => false);
-            handler.validateAmount = jest.fn(() => true);
+            handler.isValidBet = jest.fn(() => true);
             Object.defineProperty(disabledGameStore, "disabled", { value: false, configurable: true, writable: true });
 
             // Act
@@ -299,7 +299,7 @@ describe("AutoPlayHandler", () => {
             beforeEach(() => {
                 // Arrange
                 handler.checkFinishedAutoPlay = jest.fn(() => false);
-                handler.validateAmount = jest.fn(() => true);
+                handler.isValidBet = jest.fn(() => true);
                 Object.defineProperty(disabledGameStore, "disabled", { value: false, configurable: true, writable: true });
             });
             it("when checkFinishedAutoPlay return true", () => {
@@ -314,9 +314,9 @@ describe("AutoPlayHandler", () => {
                 expect(playerActionStore.buttonState).toEqual(ButtonState.PLACE_BET);
             });
 
-            it("when validateAmount return false", () => {
+            it("when isValidBet return false", () => {
                 // Arrange
-                handler.validateAmount = jest.fn(() => false);
+                handler.isValidBet = jest.fn(() => false);
 
                 // Act
                 handler.autoPlaceBet();
@@ -438,10 +438,10 @@ describe("AutoPlayHandler", () => {
             handler.cancelAutoPlay = jest.fn();
             handler.resetButtonState = jest.fn();
         });
-        it("should call openAutoPlayPopup when isAutoPlay false, and validateAmount return true", () => {
+        it("should call openAutoPlayPopup when isAutoPlay false, and isValidBet return true", () => {
             // Arrange
             Object.defineProperty(autoPlayStore, "isAutoPlay", { value: false, configurable: true, writable: true });
-            handler.validateAmount = jest.fn(() => true);
+            handler.isValidBet = jest.fn(() => true);
 
             // Act
             handler.clickAutoPlay();
@@ -454,7 +454,7 @@ describe("AutoPlayHandler", () => {
             beforeEach(() => {
                 // Arrange
                 Object.defineProperty(autoPlayStore, "isAutoPlay", { value: false, configurable: true, writable: true });
-                handler.validateAmount = jest.fn(() => true);
+                handler.isValidBet = jest.fn(() => true);
             });
             it("when isAutoPlay true", () => {
                 // Arrange
@@ -468,9 +468,9 @@ describe("AutoPlayHandler", () => {
                 expect(handler.resetButtonState).toBeCalled();
             });
 
-            it("when validateAmount return false", () => {
+            it("when isValidBet return false", () => {
                 // Arrange
-                handler.validateAmount = jest.fn(() => false);
+                handler.isValidBet = jest.fn(() => false);
 
                 // Act
                 handler.clickAutoPlay();
