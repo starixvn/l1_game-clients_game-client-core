@@ -1,7 +1,7 @@
 import { stub } from "jest-auto-stub";
 import { AutoPlayStore } from "../../../../src/game-crash/auto-play/auto-play-store";
 import { CrashCashOutStore } from "../../../../src/game-crash/cash-out/crash-cash-out-store";
-import { ButtonState } from "../../../../src/game-crash/game-crash-messages";
+import { ButtonState, RocketState } from "../../../../src/game-crash/game-crash-messages";
 import { MultiplierStore } from "../../../../src/game-crash/multiplier/multiplier-store";
 import { PlayerActionStore } from "../../../../src/game-crash/player-actions/player-action-store";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
@@ -336,6 +336,173 @@ describe("PlayerActionStore", () => {
 
                 //Assert
                 expect(playerActionStore.disabledAutoCashout).toBe(true);
+            });
+        });
+    });
+
+    describe("disabledCashOut", () => {
+        describe("when rocket state is CRASHED", () => {
+            beforeEach(() => {
+                Object.defineProperty(multiplierStore, "rocketState", { value: RocketState.CRASHED, writable: true, configurable: true });
+            });
+            it("when isPlacingBet is true and button state is CASH_OUT", () => {
+                //Arrange
+                Object.defineProperty(roundTimeStore, "isPlacingBet", { value: true, writable: true, configurable: true });
+                playerActionStore.buttonState = ButtonState.CASH_OUT;
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledCashOut).toBe(true);
+            });
+
+            it("when isPlacingBet is true and button state is not CASH_OUT", () => {
+                //Arrange
+                Object.defineProperty(roundTimeStore, "isPlacingBet", { value: true, writable: true, configurable: true });
+                playerActionStore.buttonState = ButtonState.PLACE_BET;
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledCashOut).toBe(true);
+            });
+        });
+
+        describe("when rocket state is FLYING", () => {
+            beforeEach(() => {
+                Object.defineProperty(multiplierStore, "rocketState", { value: RocketState.CRASHED, writable: true, configurable: true });
+            });
+            it("when isPlacingBet is true and button state is CASH_OUT", () => {
+                //Arrange
+                Object.defineProperty(roundTimeStore, "isPlacingBet", { value: true, writable: true, configurable: true });
+                playerActionStore.buttonState = ButtonState.CASH_OUT;
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledCashOut).toBe(true);
+            });
+
+            it("when isPlacingBet is true and button state is not CASH_OUT", () => {
+                //Arrange
+                Object.defineProperty(roundTimeStore, "isPlacingBet", { value: true, writable: true, configurable: true });
+                playerActionStore.buttonState = ButtonState.PLACE_BET;
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledCashOut).toBe(true);
+            });
+        });
+    });
+
+    describe("disabledFullCashOut", () => {
+        describe("when button state is CASH_OUT and isPlacingBet is true", () => {
+            beforeEach(() => {
+                Object.defineProperty(roundTimeStore, "isPlacingBet", { value: true, writable: true, configurable: true });
+                playerActionStore.buttonState = ButtonState.CASH_OUT;
+            });
+            it("when isFullCashedOut is true", () => {
+                //Arrange
+                Object.defineProperty(cashOutStore, "isFullCashedOut", { value: true, writable: true, configurable: true });
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledFullCashOut).toBe(true);
+            });
+
+            it("when isFullCashedOut is false", () => {
+                //Arrange
+                Object.defineProperty(cashOutStore, "isFullCashedOut", { value: false, writable: true, configurable: true });
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledFullCashOut).toBe(true);
+            });
+        });
+
+        describe("when button state is CASH_OUT and isPlacingBet is false", () => {
+            beforeEach(() => {
+                Object.defineProperty(roundTimeStore, "isPlacingBet", { value: false, writable: true, configurable: true });
+                playerActionStore.buttonState = ButtonState.CASH_OUT;
+                Object.defineProperty(multiplierStore, "rocketState", { value: RocketState.FLYING, writable: true, configurable: true });
+            });
+            it("when isFullCashedOut is true", () => {
+                //Arrange
+                Object.defineProperty(cashOutStore, "isFullCashedOut", { value: true, writable: true, configurable: true });
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledFullCashOut).toBe(true);
+            });
+
+            it("when isFullCashedOut is false", () => {
+                //Arrange
+                Object.defineProperty(cashOutStore, "isFullCashedOut", { value: false, writable: true, configurable: true });
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledFullCashOut).toBe(false);
+            });
+        });
+    });
+
+    describe("disabledHalfCashOut", () => {
+        describe("when button state is CASH_OUT, isPlacingBet is true and isFullCashedOut is true", () => {
+            beforeEach(() => {
+                Object.defineProperty(cashOutStore, "isFullCashedOut", { value: true, writable: true, configurable: true });
+                Object.defineProperty(roundTimeStore, "isPlacingBet", { value: true, writable: true, configurable: true });
+                playerActionStore.buttonState = ButtonState.CASH_OUT;
+            });
+            it("when isHalfCashedOut is true", () => {
+                //Arrange
+                Object.defineProperty(cashOutStore, "isHalfCashedOut", { value: true, writable: true, configurable: true });
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledHalfCashOut).toBe(true);
+            });
+
+            it("when isHalfCashedOut is false", () => {
+                //Arrange
+                Object.defineProperty(cashOutStore, "isHalfCashedOut", { value: false, writable: true, configurable: true });
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledHalfCashOut).toBe(true);
+            });
+        });
+
+        describe("when rocket state is FLYING, isPlacingBet is false and isFullCashedOut is false", () => {
+            beforeEach(() => {
+                Object.defineProperty(cashOutStore, "isFullCashedOut", { value: false, writable: true, configurable: true });
+                Object.defineProperty(roundTimeStore, "isPlacingBet", { value: false, writable: true, configurable: true });
+                multiplierStore.rocketState = RocketState.FLYING;
+            });
+            it("when isHalfCashedOut is true", () => {
+                //Arrange
+                Object.defineProperty(cashOutStore, "isHalfCashedOut", { value: true, writable: true, configurable: true });
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledHalfCashOut).toBe(true);
+            });
+
+            it("when isHalfCashedOut is false", () => {
+                //Arrange
+                Object.defineProperty(cashOutStore, "isHalfCashedOut", { value: false, writable: true, configurable: true });
+
+                //Act
+
+                //Assert
+                expect(playerActionStore.disabledHalfCashOut).toBe(false);
             });
         });
     });
