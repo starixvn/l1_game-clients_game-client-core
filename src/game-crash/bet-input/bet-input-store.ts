@@ -81,7 +81,7 @@ export class BetInputStore {
         return this.gameConfig.chips;
     }
 
-    get betAmountGreaterMinBet() {
+    get isAmountGreaterMinBet() {
         return this.minBet <= this.betAmount;
     }
 }

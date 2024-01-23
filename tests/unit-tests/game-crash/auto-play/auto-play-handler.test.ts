@@ -542,4 +542,81 @@ describe("AutoPlayHandler", () => {
             expect(autoPlayStore.isOpenAutoPlayPopup).toEqual(false);
         });
     });
+
+    describe("isValidBet", () => {
+        beforeEach(() => {
+            handler["showNotEnoughMoney"] = jest.fn();
+            handler["showMsgMinBet"] = jest.fn();
+        });
+        describe("when NOT enough money", () => {
+            beforeEach(() => {
+                handler["isEnoughMoney"] = jest.fn(() => false);
+            });
+            it("should call showNotEnoughMoney", () => {
+                // Arrange
+
+                // Act
+                const result = handler.isValidBet();
+
+                // Assert
+                expect(handler["showNotEnoughMoney"]).toBeCalled();
+            });
+
+            it("should return false", () => {
+                // Arrange
+
+                // Act
+                const result = handler.isValidBet();
+
+                // Assert
+                expect(result).toEqual(false);
+            });
+        });
+
+        describe("when enough money", () => {
+            beforeEach(() => {
+                handler["isEnoughMoney"] = jest.fn(() => true);
+            });
+            describe("when amount NOT greater than min bet", () => {
+                beforeEach(() => {
+                    Object.defineProperty(betInputStore, "isAmountGreaterMinBet", { value: false, configurable: true, writable: true });
+                });
+                it("should call showMsgMinBet", () => {
+                    // Arrange
+
+                    // Act
+                    const result = handler.isValidBet();
+
+                    // Assert
+                    expect(handler["showMsgMinBet"]).toBeCalled();
+                });
+
+                it("should return false", () => {
+                    // Arrange
+
+                    // Act
+                    const result = handler.isValidBet();
+
+                    // Assert
+                    expect(result).toEqual(false);
+                });
+            });
+
+            describe("when amount greater than min bet", () => {
+                beforeEach(() => {
+                    Object.defineProperty(betInputStore, "isAmountGreaterMinBet", { value: true, configurable: true, writable: true });
+                });
+
+                it("should return true", () => {
+                    // Arrange
+
+                    // Act
+                    const result = handler.isValidBet();
+
+                    // Assert
+                    expect(result).toEqual(true);
+                });
+            });
+        });
+    });
 });

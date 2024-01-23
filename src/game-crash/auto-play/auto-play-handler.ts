@@ -131,16 +131,17 @@ export class AutoPlayHandler implements IHandler<number> {
     }
 
     isValidBet() {
-        if (this.isEnoughMoney()) {
-            if (!this.betInputStore.betAmountGreaterMinBet) {
-                this.showMsgMinBet();
-                return false;
-            }
-            return true;
-        } else {
+        if (!this.isEnoughMoney()) {
             this.showNotEnoughMoney();
             return false;
         }
+
+        if (!this.betInputStore.isAmountGreaterMinBet) {
+            this.showMsgMinBet();
+            return false;
+        }
+
+        return true;
     }
 
     closeAutoPlayPopup() {
