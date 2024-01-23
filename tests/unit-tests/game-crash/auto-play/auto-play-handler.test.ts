@@ -556,7 +556,7 @@ describe("AutoPlayHandler", () => {
                 // Arrange
 
                 // Act
-                const result = handler.isValidBet();
+                handler.isValidBet();
 
                 // Assert
                 expect(handler["showNotEnoughMoney"]).toBeCalled();
@@ -617,6 +617,280 @@ describe("AutoPlayHandler", () => {
                     expect(result).toEqual(true);
                 });
             });
+        });
+    });
+
+    describe("confirmRoundAndStart", () => {
+        beforeEach(() => {
+            handler.isValidBet = jest.fn();
+            handler.updateStatusLatestRoundAccepted = jest.fn();
+            handler.handleDecreaseRoundAtConfirm = jest.fn();
+            handler.cancelAutoPlay = jest.fn();
+        });
+
+        it("should set autoPlayStore.roundsAutoPlay by autoPlayStore.selectedRoundOnPopup", () => {
+            // Arrange
+            autoPlayStore.roundsAutoPlay = 0;
+            autoPlayStore.selectedRoundOnPopup = 5;
+
+            // Act
+            handler.confirmRoundAndStart();
+
+            // Assert
+            expect(autoPlayStore.roundsAutoPlay).toEqual(autoPlayStore.selectedRoundOnPopup);
+        });
+
+        it("should set autoPlayStore.roundConfirmedOnPopup by autoPlayStore.selectedRoundOnPopup", () => {
+            // Arrange
+            autoPlayStore.roundConfirmedOnPopup = 0;
+            autoPlayStore.selectedRoundOnPopup = 5;
+
+            // Act
+            handler.confirmRoundAndStart();
+
+            // Assert
+            expect(autoPlayStore.roundConfirmedOnPopup).toEqual(autoPlayStore.selectedRoundOnPopup);
+        });
+
+        it("should set autoPlayStore.isOpenAutoPlayPopup by false", () => {
+            // Arrange
+            autoPlayStore.isOpenAutoPlayPopup = true;
+
+            // Act
+            handler.confirmRoundAndStart();
+
+            // Assert
+            expect(autoPlayStore.isOpenAutoPlayPopup).toEqual(false);
+        });
+
+        describe("when isValidBet return true", () => {
+            beforeEach(() => {
+                handler.isValidBet = jest.fn(() => true);
+            });
+            it("should set autoPlayStore.isAutoPlay by true", () => {
+                // Arrange
+                autoPlayStore.isAutoPlay = false;
+
+                // Act
+                handler.confirmRoundAndStart();
+
+                // Assert
+                expect(autoPlayStore.isAutoPlay).toEqual(true);
+            });
+
+            it("should call updateStatusLatestRoundAccepted", () => {
+                // Arrange
+
+                // Act
+                handler.confirmRoundAndStart();
+
+                // Assert
+                expect(handler.updateStatusLatestRoundAccepted).toBeCalled();
+            });
+            it("should call handleDecreaseRoundAtConfirm", () => {
+                // Arrange
+
+                // Act
+                handler.confirmRoundAndStart();
+
+                // Assert
+                expect(handler.handleDecreaseRoundAtConfirm).toBeCalled();
+            });
+        });
+        describe("when isValidBet return false", () => {
+            beforeEach(() => {
+                handler.isValidBet = jest.fn(() => false);
+            });
+
+            it("should call cancelAutoPlay", () => {
+                // Arrange
+
+                // Act
+                handler.confirmRoundAndStart();
+
+                // Assert
+                expect(handler.cancelAutoPlay).toBeCalled();
+            });
+        });
+    });
+
+    describe("handleDecreaseRoundAtConfirm", () => {
+        beforeEach(() => {
+            crashBetHandler.autoPlaceBet = jest.fn();
+            handler.updateAutoPlayRounds = jest.fn();
+            handler.autoEnableEarlyBet = jest.fn();
+        });
+
+        describe("when isPlacingBet and playerActionStore.buttonState = ButtonState.PLACE_BET", () => {
+            beforeEach(() => {
+                Object.defineProperty(roundTimeStore, "isPlacingBet", { value: true, configurable: true, writable: true });
+                playerActionStore.buttonState = ButtonState.PLACE_BET;
+                autoPlayStore.roundsAutoPlay = 1;
+            });
+            it("should call crashBetHandler.autoPlaceBet", () => {
+                // Arrange
+
+                // Act
+                handler.confirmRoundAndStart();
+
+                // Assert
+                expect(crashBetHandler.autoPlaceBet).toBeCalled();
+            });
+
+            it("should call updateAutoPlayRounds", () => {
+                // Arrange
+
+                // Act
+                handler.confirmRoundAndStart();
+
+                // Assert
+                expect(handler.updateAutoPlayRounds).toBeCalledWith(autoPlayStore.roundsAutoPlay - 1);
+            });
+        });
+
+        describe("when playerActionStore.buttonState = ButtonState.BET_NEXT_ROUND", () => {
+            it("should call autoEnableEarlyBet", () => {
+                // Arrange
+                playerActionStore.buttonState = ButtonState.BET_NEXT_ROUND;
+
+                // Act
+                handler.confirmRoundAndStart();
+
+                // Assert
+                expect(handler.autoEnableEarlyBet).toBeCalled();
+            });
+        });
+
+        describe("when playerActionStore.buttonState = ButtonState.CANCEL_BET", () => {
+            it("should set autoPlayStore.skipDecreaseAutoPlayCount to true", () => {
+                // Arrange
+                autoPlayStore.skipDecreaseAutoPlayCount = false;
+                playerActionStore.buttonState = ButtonState.CANCEL_BET;
+
+                // Act
+                handler.confirmRoundAndStart();
+
+                // Assert
+                expect(autoPlayStore.skipDecreaseAutoPlayCount).toEqual(true);
+            });
+        });
+    });
+
+    describe("autoEnableEarlyBet", () => {
+        beforeEach(() => {
+            handler.changeEarlyBetButton = jest.fn();
+        });
+        it("should call changeEarlyBetButton with true", () => {
+            // Act
+            handler.autoEnableEarlyBet();
+
+            // Assert
+            expect(handler.changeEarlyBetButton).toBeCalledWith(true);
+        });
+
+        it("should set skipDecreaseAutoPlayCount property of autoPlayStore to true", () => {
+            // Arrange
+            autoPlayStore.skipDecreaseAutoPlayCount = false;
+
+            // Act
+            handler.autoEnableEarlyBet();
+
+            // Assert
+            expect(autoPlayStore.skipDecreaseAutoPlayCount).toBe(true);
+        });
+        it("should call updateAutoPlayRounds method of autoPlayStore with roundsAutoPlay - 1 argument", () => {
+            // Arrange
+            autoPlayStore.roundsAutoPlay = 5;
+            handler.updateAutoPlayRounds = jest.fn();
+
+            // Act
+            handler.autoEnableEarlyBet();
+
+            // Assert
+            expect(handler.updateAutoPlayRounds).toBeCalledWith(4);
+        });
+    });
+
+    describe("clickEarlyBet", () => {
+        beforeEach(() => {
+            handler.changeEarlyBetButton = jest.fn();
+            handler.cancelAutoPlay = jest.fn();
+        });
+        describe("when button state is 'BET_NEXT_ROUND' ", () => {
+            beforeEach(() => {
+                playerActionStore.buttonState = ButtonState.BET_NEXT_ROUND;
+            });
+            describe("Bet is invalid", () => {
+                it("should call changeEarlyBetButton with true", () => {
+                    // Arrange
+                    const enable = true;
+                    handler.isValidBet = jest.fn().mockReturnValue(true);
+
+                    // Act
+                    handler.clickEarlyBet();
+
+                    // Assert
+                    expect(handler.changeEarlyBetButton).toBeCalledWith(enable);
+                    expect(handler.cancelAutoPlay).not.toBeCalled();
+                });
+            });
+
+            describe("Bet is invalid", () => {
+                // Clicking early bet button when button state is 'BET_NEXT_ROUND' and bet is invalid
+                it("should call changeEarlyBetButton with true and cancelAutoPlay", () => {
+                    // Arrange
+                    const enable = true;
+                    handler.isValidBet = jest.fn().mockReturnValue(false);
+
+                    // Act
+                    handler.clickEarlyBet();
+
+                    // Assert
+                    expect(handler.changeEarlyBetButton).not.toBeCalled();
+                    expect(handler.cancelAutoPlay).not.toBeCalled();
+                });
+            });
+        });
+
+        describe("when button state is not 'BET_NEXT_ROUND", () => {
+            // Clicking early bet button when button state is not 'BET_NEXT_ROUND'
+            it("should call changeEarlyBetButton with false and cancelAutoPlay", () => {
+                // Arrange
+                const enable = false;
+                playerActionStore.buttonState = ButtonState.CANCEL_BET;
+
+                // Act
+                handler.clickEarlyBet();
+
+                // Assert
+                expect(handler.changeEarlyBetButton).toBeCalledWith(enable);
+                expect(handler.cancelAutoPlay).toBeCalled();
+            });
+        });
+    });
+
+    describe("changeEarlyBetButton", () => {
+        it("should set earlyBetStore.earlyBetEnable true", () => {
+            // Arrange
+            earlyBetStore.earlyBetEnable = false;
+
+            // Act
+            handler.changeEarlyBetButton(true);
+
+            // Assert
+            expect(earlyBetStore.earlyBetEnable).toEqual(true);
+            expect(playerActionStore.buttonState).toEqual(ButtonState.CANCEL_BET);
+        });
+        it("should set earlyBetStore.earlyBetEnable false", () => {
+            // Arrange
+            earlyBetStore.earlyBetEnable = true;
+
+            // Act
+            handler.changeEarlyBetButton(false);
+
+            // Assert
+            expect(earlyBetStore.earlyBetEnable).toEqual(false);
+            expect(playerActionStore.buttonState).toEqual(ButtonState.BET_NEXT_ROUND);
         });
     });
 });

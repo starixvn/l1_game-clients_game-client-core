@@ -34,19 +34,17 @@ export class AutoPlayHandler implements IHandler<number> {
         reaction(
             () => this.roundTimeStore.isPlacingBet,
             (isPlacingBet) => {
-                if (!isPlacingBet) {
-                    return;
+                if (isPlacingBet) {
+                    this.handleAutoPlaceBetAtPlacingBet();
                 }
-                this.handleAutoPlaceBetAtPlacingBet();
             }
         );
         reaction(
             () => this.errorStore.apiError,
             (apiError) => {
-                if (!apiError) {
-                    return;
+                if (apiError) {
+                    this.handleCancelAutoPlayWhenApiError();
                 }
-                this.handleCancelAutoPlayWhenApiError();
             }
         );
     }
