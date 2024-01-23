@@ -17,13 +17,7 @@ export class MultiplierHandlers implements IHandler<GameCrashServiceMessage.Cras
         reaction(
             () => this.roundTimeStore.roundTime,
             (roundTime) => {
-                if (roundTime > this.roundTimeStore.placingBet + this.roundTimeStore.startRound) {
-                    this.handleRocketState(RocketState.CRASHED);
-                } else if (roundTime <= 0) {
-                    this.handleRocketState(RocketState.FLYING);
-                } else {
-                    this.handleRocketState(RocketState.ONLAND);
-                }
+                this.changeRocketState(roundTime);
             }
         );
     }
@@ -39,5 +33,15 @@ export class MultiplierHandlers implements IHandler<GameCrashServiceMessage.Cras
 
     handleRocketState(rocketState: string) {
         this.multiplierStore.rocketState = rocketState;
+    }
+
+    changeRocketState(roundTime: number) {
+        if (roundTime > this.roundTimeStore.placingBet + this.roundTimeStore.startRound) {
+            this.handleRocketState(RocketState.CRASHED);
+        } else if (roundTime <= 0) {
+            this.handleRocketState(RocketState.FLYING);
+        } else {
+            this.handleRocketState(RocketState.ONLAND);
+        }
     }
 }

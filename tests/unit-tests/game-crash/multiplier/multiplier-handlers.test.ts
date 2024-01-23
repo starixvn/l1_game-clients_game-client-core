@@ -68,4 +68,44 @@ describe("MultiplierHandlers", () => {
             expect(multiplierHandlers["multiplierStore"].rocketState).toEqual(rocketState);
         });
     });
+
+    describe("changeRocketState", () => {
+        it("when round time greater than 0", () => {
+            // Arrange
+            const roundTime = 8;
+            multiplierHandlers.handleRocketState = jest.fn();
+
+            // Act
+            multiplierHandlers.changeRocketState(roundTime);
+
+            // Assert
+            expect(multiplierHandlers.handleRocketState).toBeCalledWith(RocketState.ONLAND);
+        });
+
+        it("when round time less than 0", () => {
+            // Arrange
+            const roundTime = -1;
+            multiplierHandlers.handleRocketState = jest.fn();
+
+            // Act
+            multiplierHandlers.changeRocketState(roundTime);
+
+            // Assert
+            expect(multiplierHandlers.handleRocketState).toBeCalledWith(RocketState.FLYING);
+        });
+
+        it("when round time greater than placing bet + starting round", () => {
+            // Arrange
+            const roundTime = 12;
+            multiplierHandlers.handleRocketState = jest.fn();
+            roundTimeStore.placingBet = 10;
+            roundTimeStore.startRound = 1;
+
+            // Act
+            multiplierHandlers.changeRocketState(roundTime);
+
+            // Assert
+            expect(multiplierHandlers.handleRocketState).toBeCalledWith(RocketState.CRASHED);
+        });
+    });
 });

@@ -209,4 +209,26 @@ describe("CrashRoundHistoryStore", () => {
             expect(status).toBeFalsy();
         });
     });
+
+    describe("decreaseStatus", () => {
+        it("when roundIndex equal -1", () => {
+            //Arrange
+            md5PopupStore.roundId = 4;
+
+            //Act
+
+            //Assert
+            expect(crashRoundHistoryStore.decreaseStatus).toEqual(false);
+        });
+
+        it("when roundIndex equal 0", () => {
+            //Arrange
+            md5PopupStore.roundId = 2;
+
+            //Act
+
+            //Assert
+            expect(crashRoundHistoryStore.decreaseStatus).toEqual(true);
+        });
+    });
 });
