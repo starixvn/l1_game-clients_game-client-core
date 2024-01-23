@@ -27,11 +27,11 @@ describe("BetHandler", () => {
     let showWarningProcessingBet;
     let gameSetting: GameSetting;
 
-    beforeAll(() => {
+    beforeEach(() => {
         noticeStore = new NoticeStore();
         mainPlayerStore = new MainPlayerStore(noticeStore);
         connectionStore = stub<ConnectionStore>();
-        betStore = new BetStore();
+        betStore = new BetStore(mainPlayerStore);
         orientationStore = new OrientationStore();
         retryHandler = stub<ConnectionHandlers.RetryGameHandler>();
 
