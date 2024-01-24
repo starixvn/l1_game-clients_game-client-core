@@ -22,5 +22,5 @@ export const containerOptions: gc.IContainerOptions = {
         container.bind(gc.GameConfigs.GameSetting).toConstantValue(settings);
         container.bind(LogStore).to(LogStore);
     },
-    extensions: [{ FEATURE_NAME: "example", ExampleHandler }],
+    features: [{ FEATURE_NAME: "example", ExampleHandler }],
 };
