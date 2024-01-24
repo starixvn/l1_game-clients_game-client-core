@@ -6,7 +6,6 @@ import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
 import { MainPlayerStore } from "../../../../src/players";
 import { GameClientEmitMessage } from "../../../../src/shared";
 import { Translator } from "../../../../src/shared/utils/localization-manager";
-import { gameSettings } from "../../container.test";
 import { ConnectionHandlers, ConnectionStore } from "./../../../../src/game/connection";
 import { OrientationStore } from "./../../../../src/game/orientation";
 
@@ -35,8 +34,8 @@ describe("BetHandler", () => {
         orientationStore = new OrientationStore();
         retryHandler = stub<ConnectionHandlers.RetryGameHandler>();
 
-        roundTimeStore = new RoundTimeStore(gameSettings);
-        gameSetting = new GameSetting();
+        gameSetting = stub<GameSetting>();
+        roundTimeStore = stub<RoundTimeStore>();
     });
 
     beforeEach(() => {
@@ -85,6 +84,7 @@ describe("BetHandler", () => {
         it("should show warning, can not bet at the moment, when starting round", () => {
             // Arrange
             roundTimeStore.roundState = ROUND_STATE.STARTING_ROUND;
+            Object.defineProperty(roundTimeStore, "isStartingRound", { value: true, configurable: true, writable: true });
             Translator.commonTranslate = jest.fn(() => "Cannot bet at the moment. Please wait for a few seconds.");
 
             // Act
@@ -150,6 +150,7 @@ describe("BetHandler", () => {
             beforeEach(() => {
                 mainPlayerStore.balance = 100;
                 betStore.amount = 200;
+                gameSetting.validateBalanceWhenBet = false;
             });
 
             it("without show error notice when amount is greater than balance and game client without check balance", () => {
