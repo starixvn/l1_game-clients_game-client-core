@@ -63,6 +63,8 @@ export class AutoPlayHandler implements IHandler<number> {
     }
 
     autoPlaceBet() {
+        const isFinishedAutoPlay = this.checkFinishedAutoPlay();
+
         if (!this.autoPlayStore.skipDecreaseAutoPlayCount) {
             this.updateAutoPlayRounds(this.autoPlayStore.roundsAutoPlay - 1);
         }
@@ -70,7 +72,7 @@ export class AutoPlayHandler implements IHandler<number> {
         this.autoPlayStore.skipDecreaseAutoPlayCount = false;
         this.earlyBetStore.earlyBetEnable = false;
 
-        if (this.checkFinishedAutoPlay() || !this.isValidBet() || this.disabledGameStore.disabled) {
+        if (isFinishedAutoPlay || !this.isValidBet() || this.disabledGameStore.disabled) {
             this.cancelAutoPlay();
             this.playerActionStore.buttonState = ButtonState.PLACE_BET;
         } else {

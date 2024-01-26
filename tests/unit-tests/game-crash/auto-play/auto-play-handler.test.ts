@@ -230,8 +230,6 @@ describe("AutoPlayHandler", () => {
 
     describe("autoPlaceBet", () => {
         beforeEach(() => {
-            handler.updateAutoPlayRounds = jest.fn();
-            handler.checkFinishedAutoPlay = jest.fn();
             handler.isValidBet = jest.fn();
             handler.cancelAutoPlay = jest.fn();
             crashBetHandler.autoPlaceBet = jest.fn();
@@ -239,6 +237,7 @@ describe("AutoPlayHandler", () => {
 
         it("should call updateAutoPlayRounds, when skipDecreaseAutoPlayCount false", () => {
             // Arrange
+            handler.updateAutoPlayRounds = jest.fn();
             Object.defineProperty(autoPlayStore, "roundsAutoPlay", { value: 5, configurable: true, writable: true });
             Object.defineProperty(autoPlayStore, "skipDecreaseAutoPlayCount", { value: false, configurable: true, writable: true });
 
@@ -247,6 +246,24 @@ describe("AutoPlayHandler", () => {
 
             // Assert
             expect(handler.updateAutoPlayRounds).toBeCalledWith(autoPlayStore.roundsAutoPlay - 1);
+        });
+
+        it("should call crashBetHandler.autoPlaceBet, when autoPlayRound is 1", () => {
+            // Arrange
+            Object.defineProperty(autoPlayStore, "isAutoPlay", { value: true, configurable: true, writable: true });
+            Object.defineProperty(autoPlayStore, "skipDecreaseAutoPlayCount", { value: false, configurable: true, writable: true });
+            Object.defineProperty(autoPlayStore, "roundsAutoPlay", { value: 1, configurable: true, writable: true });
+            const updateAutoPlayRoundsSpy = jest.spyOn(AutoPlayHandler.prototype, "updateAutoPlayRounds");
+            handler.isValidBet = jest.fn(() => true);
+            Object.defineProperty(disabledGameStore, "disabled", { value: false, configurable: true, writable: true });
+
+            // Act
+            handler.autoPlaceBet();
+
+            // Assert
+            expect(autoPlayStore.roundsAutoPlay).toEqual(0);
+            expect(updateAutoPlayRoundsSpy).toBeCalled();
+            expect(crashBetHandler.autoPlaceBet).toBeCalled();
         });
 
         it("should NOT call updateAutoPlayRounds, when skipDecreaseAutoPlayCount true", () => {
