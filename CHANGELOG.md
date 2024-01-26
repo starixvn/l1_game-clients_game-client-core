@@ -1,3 +1,10 @@
+## [1.50.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.50.0...v1.50.1) (2024-01-26)
+
+
+### Bug Fixes
+
+* autoplay missing last round ([20477f2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/20477f257856ccc57494d6d03c88a98a0796d722))
+
 # [1.50.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.49.0...v1.50.0) (2024-01-25)
 
 
