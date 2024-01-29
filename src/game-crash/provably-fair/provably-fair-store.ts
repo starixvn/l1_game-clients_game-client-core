@@ -11,6 +11,8 @@ export class ProvablyFairStore {
         return this.randomClientSeedEnabled ? this.randomClientSeed : this.manualClientSeed;
     }
 
+    openClientSeedPopup = false;
+
     constructor() {
         makeAutoObservable(this);
     }
