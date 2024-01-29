@@ -13,4 +13,5 @@ export * as CrashMultiplier from "./multiplier";
 export * as CrashOtherPlayer from "./other-player";
 export * as PlayerActions from "./player-actions";
 export * as Popups from "./popups";
+export * as ProvablyFair from "./provably-fair";
 export * as RoundHistory from "./round-history";

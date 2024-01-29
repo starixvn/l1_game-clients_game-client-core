@@ -27,7 +27,8 @@
         "pubbeta": "tsc && npm publish --registry http://npm.lumigame.com --tag beta",
         "semantic-release": "semantic-release",
         "generate-tolgee-data": "ts-node ./tolgee-generator/index.ts",
-        "load-tolgee-data": "ts-node ./tolgee-generator/load-tolgee-realtime.ts"
+        "load-tolgee-data": "ts-node ./tolgee-generator/load-tolgee-realtime.ts",
+        "create-beta-package": "npm version prerelease --preid beta && tsc && npm publish --registry http://npm.lumigame.com --tag beta"
     },
     "jestSonar": {
         "reportPath": "reports",
