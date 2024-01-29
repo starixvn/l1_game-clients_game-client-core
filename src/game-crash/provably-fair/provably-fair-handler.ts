@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import * as _ from "lodash";
 import { reaction } from "mobx";
 import { RoundTimeStore } from "./../../game/rounds/round-time-store";
-import { ProvablyFairStore } from "./provably-fair-store";
+import { CrashPFVerfication, ProvablyFairStore } from "./provably-fair-store";
 
 @injectable()
 export class ProvablyFairHandler {
@@ -11,11 +11,11 @@ export class ProvablyFairHandler {
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore
     ) {
         reaction(
-            () => {
-                return this.roundTimeStore.isStartRound;
-            },
+            () => this.roundTimeStore.isStartRound,
             (isStartRound) => {
-                this.provablyFairStore.randomClientSeed = this.generateClientSeedRandom();
+                if (isStartRound) {
+                    this.generateClientSeedRandom();
+                }
             }
         );
     }
@@ -23,8 +23,8 @@ export class ProvablyFairHandler {
         this.provablyFairStore.openClientSeedPopup = openClientSeedPopup;
     }
 
-    generateClientSeedRandom(): string {
-        return _.random(1000, 9999).toString();
+    generateClientSeedRandom() {
+        this.provablyFairStore.randomClientSeed = _.random(1000, 9999).toString();
     }
 
     clientSeedGenerationMode(randomClientSeedEnabled: boolean) {
@@ -33,5 +33,9 @@ export class ProvablyFairHandler {
 
     saveManualClientSeed(manualClientSeed: string) {
         this.provablyFairStore.manualClientSeed = manualClientSeed;
+    }
+
+    changePFVerification(verification: CrashPFVerfication) {
+        this.provablyFairStore.verification = verification;
     }
 }
