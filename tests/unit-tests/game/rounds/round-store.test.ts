@@ -1,10 +1,12 @@
 import { stub } from "jest-auto-stub";
-import { GameConfigStore } from "../../../../src/game/game-configs";
+import { GameConfigStore } from "../../../../src/game/game-configs/game-config-store";
 import { RoundHistoryStore } from "../../../../src/game/round-histories/round-history-store";
-import { ROUND_STATE, RoundStore, RoundTimeStore } from "../../../../src/game/rounds";
-import { SettlementStore } from "../../../../src/game/settlements";
-import { MainPlayerStore } from "../../../../src/players";
-
+import { ROUND_STATE, RoundTimeStore } from "../../../../src/game/rounds";
+import { RoundStore } from "../../../../src/game/rounds/round-store";
+import { SettlementStore } from "../../../../src/game/settlements/settlement-store";
+import { MainPlayerStore } from "../../../../src/players/main-player-store";
+import { GameServiceMessage } from "../../../../src/shared/models/game-messages";
+jest.mock("mobx");
 const gameConfig = {
     minBet: 1,
     maxBet: 40000,
@@ -68,6 +70,8 @@ describe("RoundStore", () => {
         settlementStore = stub<SettlementStore>();
         roundStore = new RoundStore(gameConfigStore, roundHistoryStore, roundTimeStore, mainPlayerStore, settlementStore);
     });
+
+    afterEach(() => jest.clearAllMocks());
 
     it("should have initial values", () => {
         // Assert
@@ -300,6 +304,111 @@ describe("RoundStore", () => {
                     expect(result).toEqual(30);
                 });
             });
+        });
+    });
+
+    describe("get currentServerSeedHash", () => {
+        let clientRoundId = 1;
+        it("return serverSeedHash from pf, when match client id", () => {
+            // Arrange
+            clientRoundId = 12;
+            Object.defineProperty(roundStore, "clientRoundId", { value: clientRoundId, configurable: true, writable: true });
+            roundStore.pf = stub<GameServiceMessage.ProvablyFair>({
+                roundId: clientRoundId,
+                serverSeedHash: "abc",
+            });
+
+            // Act
+            const result = roundStore.currentServerSeedHash;
+
+            // Assert
+            expect(result).toEqual(roundStore.pf.serverSeedHash);
+        });
+        describe("return serverSeedHash from pf of last round", () => {
+            beforeEach(() => {
+                clientRoundId = 12;
+                roundStore.pf = stub<GameServiceMessage.ProvablyFair>({
+                    roundId: clientRoundId + 1,
+                });
+                Object.defineProperty(roundStore, "clientRoundId", { value: clientRoundId, configurable: true, writable: true });
+                Object.defineProperty(roundHistoryStore, "histories", {
+                    value: [
+                        stub<GameServiceMessage.ProvablyFair>({
+                            roundId: clientRoundId,
+                        }),
+                    ],
+                    configurable: true,
+                    writable: true,
+                });
+            });
+            it("when not match client id", () => {
+                // Arrange
+                clientRoundId = 12;
+                roundStore.pf = stub<GameServiceMessage.ProvablyFair>({
+                    roundId: clientRoundId + 1,
+                });
+                Object.defineProperty(roundStore, "clientRoundId", { value: clientRoundId, configurable: true, writable: true });
+                Object.defineProperty(roundHistoryStore, "histories", {
+                    value: [
+                        stub<GameServiceMessage.ProvablyFair>({
+                            roundId: clientRoundId,
+                        }),
+                    ],
+                    configurable: true,
+                    writable: true,
+                });
+
+                // Act
+                const result = roundStore.currentServerSeedHash;
+
+                // Assert
+                expect(result).toEqual(roundHistoryStore.histories[0]["pf"].serverSeedHash);
+            });
+            it("when pf null", () => {
+                // Arrange
+                roundStore.pf = null;
+
+                // Act
+                const result = roundStore.currentServerSeedHash;
+
+                // Assert
+                expect(result).toEqual(roundHistoryStore.histories[0]["pf"].serverSeedHash);
+            });
+        });
+
+        it("return empty, when not match round id", () => {
+            // Arrange
+            clientRoundId = 12;
+            roundStore.pf = stub<GameServiceMessage.ProvablyFair>({
+                roundId: clientRoundId + 1,
+            });
+            Object.defineProperty(roundStore, "clientRoundId", { value: clientRoundId, configurable: true, writable: true });
+            Object.defineProperty(roundHistoryStore, "histories", {
+                value: [],
+                configurable: true,
+                writable: true,
+            });
+            // Act
+            const result = roundStore.currentServerSeedHash;
+
+            // Assert
+            expect(result).toEqual("");
+        });
+        it("return empty, when pf null", () => {
+            // Arrange
+            clientRoundId = 12;
+            roundStore.pf = null;
+            Object.defineProperty(roundStore, "clientRoundId", { value: clientRoundId, configurable: true, writable: true });
+            Object.defineProperty(roundHistoryStore, "histories", {
+                value: [],
+                configurable: true,
+                writable: true,
+            });
+            // Act
+            const result = roundStore.currentServerSeedHash;
+
+            // Assert
+            expect(result).toEqual("");
         });
     });
 });

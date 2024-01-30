@@ -171,6 +171,13 @@ export namespace GameServiceMessage {
         static eventName = "resultHash";
     }
 
+    export class ProvablyFair {
+        serverSeedHash: string;
+        roundId: number;
+
+        static eventName = "pf";
+    }
+
     export class BetResponse {
         static eventName = "endBet";
     }
