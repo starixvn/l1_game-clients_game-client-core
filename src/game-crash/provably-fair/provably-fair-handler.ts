@@ -1,5 +1,4 @@
 import { inject, injectable } from "inversify";
-import * as _ from "lodash";
 import { reaction } from "mobx";
 import { RoundTimeStore } from "./../../game/rounds/round-time-store";
 import { CrashPFVerfication, ProvablyFairStore } from "./provably-fair-store";
@@ -14,17 +13,13 @@ export class ProvablyFairHandler {
             () => this.roundTimeStore.isStartRound,
             (isStartRound) => {
                 if (isStartRound) {
-                    this.generateClientSeedRandom();
+                    this.provablyFairStore.generateRandomClientSeed();
                 }
             }
         );
     }
     handleClientSeedPopup(openClientSeedPopup: boolean) {
         this.provablyFairStore.openClientSeedPopup = openClientSeedPopup;
-    }
-
-    generateClientSeedRandom() {
-        this.provablyFairStore.randomClientSeed = _.random(1000, 9999).toString();
     }
 
     clientSeedGenerationMode(randomClientSeedEnabled: boolean) {

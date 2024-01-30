@@ -21,7 +21,7 @@ export interface CrashPFVerfication {
 export class ProvablyFairStore {
     randomClientSeedEnabled = true;
     manualClientSeed = "";
-    randomClientSeed = _.random(1000, 9999).toString();
+    randomClientSeed = this.randomClientSeedValue();
 
     get clientSeed() {
         return this.randomClientSeedEnabled ? this.randomClientSeed : this.manualClientSeed;
@@ -33,5 +33,13 @@ export class ProvablyFairStore {
 
     constructor() {
         makeAutoObservable(this);
+    }
+
+    generateRandomClientSeed() {
+        this.randomClientSeed = this.randomClientSeedValue();
+    }
+
+    private randomClientSeedValue(): string {
+        return _.random(1000, 9999).toString();
     }
 }
