@@ -1,4 +1,5 @@
 import { injectable } from "inversify";
+import * as _ from "lodash";
 import { makeAutoObservable } from "mobx";
 
 export interface CrashSingleClientSeed {
@@ -23,7 +24,7 @@ export interface CrashPFVerfication {
 export class ProvablyFairStore {
     randomClientSeedEnabled = true;
     manualClientSeed = "";
-    randomClientSeed = "";
+    randomClientSeed = _.random(1000, 9999).toString();
 
     get clientSeed() {
         return this.randomClientSeedEnabled ? this.randomClientSeed : this.manualClientSeed;
