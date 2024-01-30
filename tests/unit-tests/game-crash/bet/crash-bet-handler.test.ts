@@ -1,6 +1,7 @@
 import { stub } from "jest-auto-stub";
 
 import { CrashBetHandler } from "../../../../src/game-crash/bet";
+import { ProvablyFairStore } from "../../../../src/game-crash/provably-fair";
 
 import { AutoCashOutStore } from "../../../../src/game-crash/auto-cash-out";
 import { BetInputStore } from "../../../../src/game-crash/bet-input/bet-input-store";
@@ -13,7 +14,6 @@ import { MainPlayerStore } from "../../../../src/players";
 import { gameSettings } from "../../container.test";
 import { ConnectionHandlers, ConnectionStore } from "./../../../../src/game/connection";
 import { OrientationStore } from "./../../../../src/game/orientation";
-
 jest.mock("../../../../src/shared/utils/localization-manager", () => ({
     Translator: { translate: jest.fn(), gameTranslate: jest.fn(), commonTranslate: jest.fn().mockImplementation((key, option) => key) },
 }));
@@ -33,6 +33,8 @@ describe("CrashBetHandler", () => {
     let autoCashOutStore: AutoCashOutStore;
     let betInputStore: BetInputStore;
     let roundStore: RoundStore;
+    let pfStore: ProvablyFairStore;
+    const clientSeed = "9999";
 
     beforeAll(() => {
         noticeStore = new NoticeStore();
@@ -44,6 +46,9 @@ describe("CrashBetHandler", () => {
         autoCashOutStore = stub<AutoCashOutStore>();
         roundStore = stub<RoundStore>();
         betInputStore = stub<BetInputStore>();
+        pfStore = stub<ProvablyFairStore>({
+            clientSeed,
+        });
 
         roundTimeStore = new RoundTimeStore(gameSettings);
         gameSetting = new GameSetting();
@@ -61,7 +66,8 @@ describe("CrashBetHandler", () => {
             gameSetting,
             roundStore,
             autoCashOutStore,
-            betInputStore
+            betInputStore,
+            pfStore
         );
 
         showWarningProcessingBet = jest.spyOn(handler, "showWarningProcessingBet");
@@ -122,11 +128,13 @@ describe("CrashBetHandler", () => {
                 autoCashOut: undefined,
                 roundId: roundStore.clientRoundId,
                 clientSendTime: expect.any(Date),
+                clientSeed,
             };
             autoCashOutData = {
                 autoCashOut: autoCashOutStore.multiplier,
                 roundId: roundStore.clientRoundId,
                 clientSendTime: expect.any(Date),
+                clientSeed,
             };
         });
 

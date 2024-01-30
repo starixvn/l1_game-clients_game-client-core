@@ -3,21 +3,18 @@ import * as _ from "lodash";
 import { makeAutoObservable } from "mobx";
 
 export interface CrashSingleClientSeed {
-    name: string;
-    seed: string;
-}
-export interface CrashClientSeed {
-    players: CrashSingleClientSeed[];
-    mergedSeed: string;
+    nickname: string;
+    clientSeed: string;
 }
 
 export interface CrashPFVerfication {
     roundId: number;
-    serverHash: string;
+    serverSeedHash: string;
     crashPoint?: number;
     serverSeed?: string;
-    clientSeed?: CrashClientSeed;
-    combinedHash?: string;
+    clientSeeds?: CrashSingleClientSeed[];
+    mergeSeed?: string;
+    finalHash?: string;
 }
 
 @injectable()

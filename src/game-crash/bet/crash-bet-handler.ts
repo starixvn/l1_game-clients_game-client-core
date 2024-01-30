@@ -9,6 +9,7 @@ import { RoundStore, RoundTimeStore } from "../../game/rounds";
 import { MainPlayerStore } from "../../players";
 import { AutoCashOutStore } from "../auto-cash-out";
 import { BetInputStore } from "../bet-input";
+import { ProvablyFairStore } from "../provably-fair";
 
 @injectable()
 export class CrashBetHandler extends BetHandlerBase {
@@ -23,7 +24,8 @@ export class CrashBetHandler extends BetHandlerBase {
         @inject(GameSetting) protected readonly gameSetting: GameSetting,
         @inject(RoundStore) private readonly roundStore: RoundStore,
         @inject(AutoCashOutStore) private readonly autoCashOutStore: AutoCashOutStore,
-        @inject(BetInputStore) private readonly betInputStore: BetInputStore
+        @inject(BetInputStore) private readonly betInputStore: BetInputStore,
+        @inject(ProvablyFairStore) private readonly pfStore: ProvablyFairStore
     ) {
         super(connectionStore, betStore, mainPlayerStore, orientationStore, roundTimeStore, noticeStore, retryGameHandler, gameSetting);
     }
@@ -43,6 +45,7 @@ export class CrashBetHandler extends BetHandlerBase {
             autoCashOut: this.autoCashOutStore.enable ? this.autoCashOutStore.multiplier : undefined,
             roundId: this.roundStore.clientRoundId,
             clientSendTime: new Date(),
+            clientSeed: this.pfStore.clientSeed,
         });
     }
 
