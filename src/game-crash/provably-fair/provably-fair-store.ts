@@ -1,6 +1,9 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import * as _ from "lodash";
 import { makeAutoObservable } from "mobx";
+import { CrashCashOutStore } from "../cash-out/crash-cash-out-store";
+import { ButtonState } from "../game-crash-messages";
+import { PlayerActionStore } from "../player-actions/player-action-store";
 
 export interface CrashSingleClientSeed {
     nickname: string;
@@ -31,7 +34,10 @@ export class ProvablyFairStore {
 
     verification: CrashPFVerfication = null;
 
-    constructor() {
+    constructor(
+        @inject(PlayerActionStore) protected readonly playerActionStore: PlayerActionStore,
+        @inject(CrashCashOutStore) private readonly crashCashOutStore: CrashCashOutStore
+    ) {
         makeAutoObservable(this);
     }
 
@@ -41,5 +47,12 @@ export class ProvablyFairStore {
 
     private randomClientSeedValue(): string {
         return _.random(1000, 9999).toString();
+    }
+
+    get notAllowChangeClientSeed() {
+        return (
+            this.playerActionStore.buttonState === ButtonState.BET_ACCEPTED ||
+            (this.playerActionStore.buttonState === ButtonState.CASH_OUT && !this.crashCashOutStore.isFullCashedOut)
+        );
     }
 }
