@@ -6,7 +6,7 @@ import { RoundStore } from "../../game/rounds/round-store";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { SettlementStore } from "../../game/settlements/settlement-store";
 import { Md5PopupStore } from "../md5-popup/md5-popup-store";
-import { ProvablyFairStore } from "../provably-fair";
+import { ProvablyFairStore } from "../provably-fair/provably-fair-store";
 
 @injectable()
 export class CrashRoundHistoryStore {
