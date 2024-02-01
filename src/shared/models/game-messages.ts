@@ -171,9 +171,20 @@ export namespace GameServiceMessage {
         static eventName = "resultHash";
     }
 
+    export class SingleClientSeed {
+        nickname: string;
+        clientSeed: string;
+    }
+
     export class ProvablyFair {
         serverSeedHash: string;
         roundId: number;
+
+        result?: number;
+        serverSeed?: string;
+        clientSeeds?: SingleClientSeed[];
+        mergeSeed?: string;
+        finalHash?: string;
 
         static eventName = "pf";
     }

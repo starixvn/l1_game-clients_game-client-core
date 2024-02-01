@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
 import * as _ from "lodash";
 import { makeAutoObservable } from "mobx";
+import { GameServiceMessage } from "../../shared/models/game-messages";
 import { CrashCashOutStore } from "../cash-out/crash-cash-out-store";
 import { ButtonState } from "../game-crash-messages";
 import { PlayerActionStore } from "../player-actions/player-action-store";
@@ -13,7 +14,7 @@ export interface CrashSingleClientSeed {
 export interface CrashPFVerfication {
     roundId: number;
     serverSeedHash: string;
-    crashPoint?: number;
+    result?: number;
     serverSeed?: string;
     clientSeeds?: CrashSingleClientSeed[];
     mergeSeed?: string;
@@ -32,7 +33,9 @@ export class ProvablyFairStore {
 
     openClientSeedPopup = false;
 
-    verification: CrashPFVerfication = null;
+    selectedRoundId = { value: 0 };
+
+    pf: GameServiceMessage.ProvablyFair = null;
 
     constructor(
         @inject(PlayerActionStore) protected readonly playerActionStore: PlayerActionStore,

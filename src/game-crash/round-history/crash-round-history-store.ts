@@ -6,6 +6,7 @@ import { RoundStore } from "../../game/rounds/round-store";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { SettlementStore } from "../../game/settlements/settlement-store";
 import { Md5PopupStore } from "../md5-popup/md5-popup-store";
+import { ProvablyFairStore } from "../provably-fair";
 
 @injectable()
 export class CrashRoundHistoryStore {
@@ -14,20 +15,30 @@ export class CrashRoundHistoryStore {
         @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
         @inject(RoundStore) protected readonly roundStore: RoundStore,
         @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
-        @inject(Md5PopupStore) protected readonly md5PopupStore: Md5PopupStore
+        @inject(Md5PopupStore) protected readonly md5PopupStore: Md5PopupStore,
+        @inject(ProvablyFairStore) protected readonly pfStore: ProvablyFairStore
     ) {
         makeAutoObservable(this);
     }
 
     private readonly _lastRound: RoundHistory = { roundId: 0, result: {}, md5Result: {}, settlementResult: {} };
+    get currentRound(): RoundHistory {
+        return {
+            roundId: this.pfStore.pf.roundId,
+            pf: this.pfStore.pf,
+            result: {},
+            settlementResult: {},
+        };
+    }
+
     get roundHistories() {
         let roundHistory: RoundHistory[] = [];
 
         const lastRoundId = this.roundHistoryStore.histories[0]?.roundId;
-        if (lastRoundId === this.lastRound.roundId || this.roundTimeStore.isStartRound) {
+        if (!this.pfStore.pf || lastRoundId === this.pfStore.pf.roundId) {
             roundHistory = this.roundHistoryStore.histories;
         } else {
-            roundHistory = [this.lastRound, ...this.roundHistoryStore.histories];
+            roundHistory = [this.currentRound, ...this.roundHistoryStore.histories];
         }
 
         return roundHistory;
