@@ -226,6 +226,7 @@ export namespace GameServiceMessage {
         roundId?: number;
         winningPlayers?: TWinningPlayers;
         md5Result?: GameServiceMessage.ResultHash;
+        pf?: GameServiceMessage.ProvablyFair;
 
         static eventName = "finish";
     }
