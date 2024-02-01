@@ -35,7 +35,7 @@ export class CrashRoundHistoryStore {
         let roundHistory: RoundHistory[] = [];
 
         const lastRoundId = this.roundHistoryStore.histories[0]?.roundId;
-        if (!this.pfStore.pf || lastRoundId === this.pfStore.pf.roundId) {
+        if (!this.pfStore.pf || lastRoundId === this.pfStore.pf.roundId || this.roundTimeStore.isStartRound) {
             roundHistory = this.roundHistoryStore.histories;
         } else {
             roundHistory = [this.currentRound, ...this.roundHistoryStore.histories];
