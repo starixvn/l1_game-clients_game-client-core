@@ -45,4 +45,8 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
     openVerificationHistory(roundId: number) {
         this.provablyFairStore.openVerification = { mode: VerificationMode.History, roundId };
     }
+
+    closeVerification() {
+        this.provablyFairStore.openVerification = null;
+    }
 }
