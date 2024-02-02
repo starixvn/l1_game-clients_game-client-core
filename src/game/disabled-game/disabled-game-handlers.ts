@@ -9,11 +9,11 @@ import { RoundRunningHandlers } from "../rounds";
 import { RoundTimeStore } from "../rounds/round-time-store";
 import { AppTypes } from "./../../shared/constants/app-type";
 import { DisabledGameStore } from "./disabled-game-store";
+import { DefaultLanguage, SupportedLanguages } from "../../shared/languages";
 
 @injectable()
 export class DisableGameHandlers implements IHandler<GameServiceMessage.DisabledGameInfo> {
     name = GameServiceMessage.DisabledGameInfo.eventName;
-
     constructor(
         @inject(ConnectionStore) protected readonly connectionStore: ConnectionStore,
         @inject(AuthStore) protected readonly authStore: AuthStore,
@@ -38,8 +38,9 @@ export class DisableGameHandlers implements IHandler<GameServiceMessage.Disabled
     }
 
     showPopupHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
+        const language = SupportedLanguages.includes(this.authStore.language) ? this.authStore.language : DefaultLanguage;
         this.noticeStore.addNotice({
-            message: disabledGameInfo[this.authStore.language],
+            message: disabledGameInfo[language],
             title: Translator.commonTranslate("notice"),
             type: NoticeType.Error,
             onClose: this.onClosedHandle,
