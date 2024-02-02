@@ -3,7 +3,7 @@ import { reaction } from "mobx";
 import { GameServiceMessage } from "../../shared";
 import { IHandler } from "../../shared/mediator";
 import { RoundTimeStore } from "./../../game/rounds/round-time-store";
-import { ProvablyFairStore } from "./provably-fair-store";
+import { ProvablyFairStore, VerificationMode } from "./provably-fair-store";
 
 @injectable()
 export class ProvablyFairHandler implements IHandler<GameServiceMessage.ProvablyFair> {
@@ -38,7 +38,11 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
         this.provablyFairStore.manualClientSeed = manualClientSeed;
     }
 
-    changeSelectRoundId(roundId: number) {
-        this.provablyFairStore.selectedRoundId = { value: roundId };
+    openVerificationLatestRound(roundId: number) {
+        this.provablyFairStore.openVerification = { mode: VerificationMode.LatestRounds, roundId };
+    }
+
+    openVerificationHistory(roundId: number) {
+        this.provablyFairStore.openVerification = { mode: VerificationMode.History, roundId };
     }
 }

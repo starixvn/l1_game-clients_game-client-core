@@ -183,6 +183,7 @@ export namespace GameServiceMessage {
         result?: number;
         serverSeed?: string;
         clientSeeds?: SingleClientSeed[];
+        mergeClientSeed?: string;
         mergeSeed?: string;
         finalHash?: string;
 

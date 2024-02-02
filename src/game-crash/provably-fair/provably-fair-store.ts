@@ -21,6 +21,16 @@ export interface CrashPFVerfication {
     finalHash?: string;
 }
 
+export enum VerificationMode {
+    History = 0,
+    LatestRounds = 1,
+}
+
+export interface OpenVerification {
+    mode: VerificationMode;
+    roundId?: number;
+}
+
 @injectable()
 export class ProvablyFairStore {
     randomClientSeedEnabled = true;
@@ -33,7 +43,7 @@ export class ProvablyFairStore {
 
     openClientSeedPopup = false;
 
-    selectedRoundId = { value: 0 };
+    openVerification: OpenVerification = null;
 
     pf: GameServiceMessage.ProvablyFair = null;
 
