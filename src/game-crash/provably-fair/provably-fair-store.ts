@@ -34,9 +34,9 @@ export interface OpenVerification {
 @injectable()
 export class ProvablyFairStore {
     randomClientSeedEnabled = true;
-    manualClientSeed = "";
     randomClientSeed = this.randomClientSeedValue();
-
+    manualClientSeed = "";
+    isClickPFIcon = false;
     get clientSeed() {
         return this.randomClientSeedEnabled ? this.randomClientSeed : this.manualClientSeed;
     }
@@ -67,5 +67,13 @@ export class ProvablyFairStore {
             this.playerActionStore.buttonState === ButtonState.BET_ACCEPTED ||
             (this.playerActionStore.buttonState === ButtonState.CASH_OUT && !this.crashCashOutStore.isFullCashedOut)
         );
+    }
+
+    get showManualClientSeedPopup() {
+        return !this.randomClientSeedEnabled && !this.isClickPFIcon;
+    }
+
+    get clientSeedForManualForm() {
+        return this.manualClientSeed !== "" ? this.manualClientSeed : this.randomClientSeed;
     }
 }
