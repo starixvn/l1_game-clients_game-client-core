@@ -76,4 +76,8 @@ export class ProvablyFairStore {
     get clientSeedForManualForm() {
         return this.manualClientSeed !== "" ? this.manualClientSeed : this.randomClientSeed;
     }
+
+    get allowChangeManualClientSeed() {
+        return !this.notAllowChangeClientSeed && !this.randomClientSeedEnabled;
+    }
 }
