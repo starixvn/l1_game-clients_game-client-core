@@ -117,5 +117,5 @@ export const localStorageKeys = {
     parentUrl: "purl",
     isApp: "app",
     gameIdsSupportBoostedOddsForInstantSite: "gameIdsSupportBoostedOddsForInstantSite",
-    userSetting: "user-setting",
+    gameUserSetting: "game-user-setting",
 };

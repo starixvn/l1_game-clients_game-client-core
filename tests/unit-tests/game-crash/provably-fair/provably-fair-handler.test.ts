@@ -1,19 +1,26 @@
 import { stub } from "jest-auto-stub";
 import { ProvablyFairHandler } from "../../../../src/game-crash/provably-fair/provably-fair-handler";
 import { ProvablyFairStore } from "../../../../src/game-crash/provably-fair/provably-fair-store";
+import { GameUserSettingHandler } from "../../../../src/game/game-user-settings/game-user-setting-handler";
+import { GameUserSettingStore } from "../../../../src/game/game-user-settings/game-user-setting-store";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
 
 describe("ProvablyFairHandler", () => {
     let provablyFairHandler: ProvablyFairHandler;
     let provablyFairStore: ProvablyFairStore;
     let roundTimeStore: RoundTimeStore;
+    let gameUserSettingStore: GameUserSettingStore;
+    let gameUserSettingHandler: GameUserSettingHandler;
+
     beforeAll(() => {
         provablyFairStore = stub<ProvablyFairStore>();
         roundTimeStore = stub<RoundTimeStore>();
+        gameUserSettingStore = stub<GameUserSettingStore>();
+        gameUserSettingHandler = stub<GameUserSettingHandler>();
     });
     beforeEach(() => {
         jest.clearAllMocks();
-        provablyFairHandler = new ProvablyFairHandler(provablyFairStore, roundTimeStore);
+        provablyFairHandler = new ProvablyFairHandler(provablyFairStore, roundTimeStore, gameUserSettingStore, gameUserSettingHandler);
     });
 
     describe("handleClientSeedPopup", () => {
@@ -40,7 +47,19 @@ describe("ProvablyFairHandler", () => {
             provablyFairHandler.clientSeedGenerationMode(randomClientSeedEnabled);
 
             //Assert
-            expect(provablyFairStore.openClientSeedPopup).toEqual(false);
+            expect(provablyFairStore.randomClientSeedEnabled).toEqual(false);
+        });
+
+        it("call gameUserSettingHandler.triggerSave ", () => {
+            //Arrange
+            const randomClientSeedEnabled = false;
+            provablyFairStore.randomClientSeedEnabled = !randomClientSeedEnabled;
+
+            //Act
+            provablyFairHandler.clientSeedGenerationMode(randomClientSeedEnabled);
+
+            //Assert
+            expect(gameUserSettingHandler.triggerSave).toBeCalled();
         });
     });
 
@@ -55,28 +74,6 @@ describe("ProvablyFairHandler", () => {
 
             //Assert
             expect(provablyFairStore.manualClientSeed).toEqual("123");
-        });
-    });
-
-    describe("changePFVerification", () => {
-        it("test assign value correctly", () => {
-            //Arrange
-            const verification = {
-                roundId: 123,
-                serverSeedHash: "123abc",
-                crashPoint: 2.1,
-            };
-            provablyFairStore.verification = {
-                roundId: 234,
-                serverSeedHash: "234abc",
-                crashPoint: 2.1,
-            };
-
-            //Act
-            provablyFairHandler.changePFVerification(verification);
-
-            //Assert
-            expect(provablyFairStore.verification).toEqual(verification);
         });
     });
 });

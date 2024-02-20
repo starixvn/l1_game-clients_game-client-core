@@ -22,7 +22,7 @@ export class JoinGameCrashHandler implements IHandler<void> {
     }
 
     handle() {
-        StorageManager.remove(localStorageKeys.userSetting);
+        StorageManager.remove(localStorageKeys.gameUserSetting);
         this.betInputStore.initBetAmount();
         this.autoCashOutStore.loadMultiplierFromStorage();
     }

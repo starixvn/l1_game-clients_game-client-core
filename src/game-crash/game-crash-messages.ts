@@ -90,10 +90,17 @@ export namespace GameCrashEmitMessage {
     }
 }
 
+export interface PFClientSetting {
+    randomClientSeedEnabled: boolean;
+    manualClientSeed: string;
+    randomClientSeed: string;
+}
+
 export interface IGameCrashUserSettings {
     betAmount: number;
     enableAutoCashOut: boolean;
     autoCashOutMultiplier: number;
+    pfClientSetting?: PFClientSetting;
 }
 
 export interface LeaderBoardPlayer {

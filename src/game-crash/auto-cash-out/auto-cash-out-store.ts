@@ -27,7 +27,7 @@ export class AutoCashOutStore {
     }
 
     loadMultiplierFromStorage() {
-        const userSetting = StorageManager.get(localStorageKeys.userSetting) as IGameCrashUserSettings;
+        const userSetting = StorageManager.get(localStorageKeys.gameUserSetting) as IGameCrashUserSettings;
         if (userSetting) {
             userSetting.autoCashOutMultiplier && (this.multiplier = userSetting.autoCashOutMultiplier);
             userSetting.enableAutoCashOut && (this.enable = userSetting.enableAutoCashOut);

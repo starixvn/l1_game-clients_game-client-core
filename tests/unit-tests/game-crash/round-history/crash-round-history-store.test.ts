@@ -1,4 +1,5 @@
 import { stub } from "jest-auto-stub";
+import { ProvablyFairStore } from "../../../../src/game-crash/provably-fair/provably-fair-store";
 import { RoundHistoryStore } from "../../../../src/game/round-histories/round-history-store";
 import { Md5PopupStore } from "./../../../../src/game-crash/md5-popup/md5-popup-store";
 import { CrashRoundHistoryStore } from "./../../../../src/game-crash/round-history/crash-round-history-store";
@@ -13,6 +14,7 @@ describe("CrashRoundHistoryStore", () => {
     let roundStore: RoundStore;
     let settlementStore: SettlementStore;
     let md5PopupStore: Md5PopupStore;
+    let pfStore: ProvablyFairStore;
     const histories = [
         {
             roundId: 2,
@@ -34,12 +36,20 @@ describe("CrashRoundHistoryStore", () => {
         roundStore = stub<RoundStore>();
         settlementStore = stub<SettlementStore>();
         md5PopupStore = stub<Md5PopupStore>();
+        pfStore = stub<ProvablyFairStore>();
         Object.defineProperty(roundHistoryStore, "histories", { value: histories, configurable: true, writable: true });
     });
 
     beforeEach(() => {
         jest.clearAllMocks();
-        crashRoundHistoryStore = new CrashRoundHistoryStore(roundTimeStore, roundHistoryStore, roundStore, settlementStore, md5PopupStore);
+        crashRoundHistoryStore = new CrashRoundHistoryStore(
+            roundTimeStore,
+            roundHistoryStore,
+            roundStore,
+            settlementStore,
+            md5PopupStore,
+            pfStore
+        );
     });
 
     describe("roundHistories", () => {
@@ -223,7 +233,7 @@ describe("CrashRoundHistoryStore", () => {
 
         it("when roundIndex equal 0", () => {
             //Arrange
-            md5PopupStore.roundId = 2;
+            md5PopupStore.roundId = 0;
 
             //Act
 

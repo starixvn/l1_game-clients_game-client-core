@@ -1,25 +1,22 @@
 import { stub } from "jest-auto-stub";
 import { ConnectionStore } from "../../../../src/game/connection";
-import { GameSetting } from "../../../../src/game/game-configs";
+import { GameUserSettingHandler } from "../../../../src/game/game-user-settings/game-user-setting-handler";
 import { HideGameHandler } from "../../../../src/game/hide-game";
-import { RoundRunningHandlers, RoundTimeStore } from "../../../../src/game/rounds";
-import { gameSettings } from "../../container.test";
+import { RoundRunningHandlers } from "../../../../src/game/rounds";
 
 describe("HideGameHandler", () => {
     let roundRunning: RoundRunningHandlers;
     let connectStore: ConnectionStore;
-    let roundTimeStore: RoundTimeStore;
     let handler: HideGameHandler;
-    let gameSetting: GameSetting;
+
+    let gameUserSettingHandler: GameUserSettingHandler;
 
     beforeEach(() => {
-        gameSetting = new GameSetting();
-        gameSetting.name = gameSettings.name;
-        gameSetting.durations = gameSettings.durations;
-        roundTimeStore = stub<RoundTimeStore>();
         connectStore = stub<ConnectionStore>();
-        roundRunning = new RoundRunningHandlers(roundTimeStore, gameSetting);
-        handler = new HideGameHandler(roundRunning, connectStore);
+
+        gameUserSettingHandler = stub<GameUserSettingHandler>();
+        roundRunning = stub<RoundRunningHandlers>();
+        handler = new HideGameHandler(roundRunning, connectStore, gameUserSettingHandler);
     });
 
     afterEach(() => {
@@ -27,17 +24,34 @@ describe("HideGameHandler", () => {
     });
 
     describe("handle", () => {
-        it("should resetRoundTimeStore the round runner, round time store and disconnect store", async () => {
+        it("should call roundRunning.stopRunner", () => {
             // Arrange
-            roundRunning.stopRunner = jest.fn();
-            connectStore.onDisconnected = jest.fn();
 
             // Act
-            await handler.handle();
+            handler.handle();
 
             // Assert
-            expect(roundRunning.stopRunner).toHaveBeenCalledTimes(1);
-            expect(connectStore.onDisconnected).toHaveBeenCalledTimes(1);
+            expect(roundRunning.stopRunner).toBeCalled();
+        });
+
+        it("should call connectStore.onDisconnected", () => {
+            // Arrange
+
+            // Act
+            handler.handle();
+
+            // Assert
+            expect(connectStore.onDisconnected).toBeCalled();
+        });
+
+        it("should call gameUserSettingHandler.triggerSave", async () => {
+            // Arrange
+
+            // Act
+            handler.handle();
+
+            // Assert
+            expect(gameUserSettingHandler.triggerSave).toBeCalled();
         });
     });
 });

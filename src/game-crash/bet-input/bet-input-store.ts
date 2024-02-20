@@ -45,7 +45,7 @@ export class BetInputStore {
     }
 
     initBetAmount() {
-        const userSetting = StorageManager.get(localStorageKeys.userSetting) as IGameCrashUserSettings;
+        const userSetting = StorageManager.get(localStorageKeys.gameUserSetting) as IGameCrashUserSettings;
         this.betAmount = userSetting?.betAmount ? userSetting.betAmount : this.roundStore.minBet;
     }
 

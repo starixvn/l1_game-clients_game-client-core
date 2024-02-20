@@ -33,12 +33,12 @@ describe("SettlementUIHandlers test", () => {
 
         it("should updateHistories in roundHistoryStore", () => {
             // arrange
-            const { roundId, result, settlementResult, md5Result } = settlementStore;
+            const { roundId, result, settlementResult, md5Result, pf } = settlementStore;
             // act
             handler.handle();
 
             // assert
-            expect(roundHistoryStore.updateHistories).toHaveBeenCalledWith({ roundId, result, settlementResult, md5Result });
+            expect(roundHistoryStore.updateHistories).toHaveBeenCalledWith({ roundId, result, settlementResult, md5Result, pf });
         });
     });
 });
