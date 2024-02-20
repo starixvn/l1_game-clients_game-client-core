@@ -83,13 +83,10 @@ export class RoundStore {
     get currentServerSeedHash() {
         if (this.pf && this.pf.roundId === this.clientRoundId) {
             return this.pf.serverSeedHash;
-        } else {
-            if (this.roundHistoryStore.histories.length > 0) {
-                return this.roundHistoryStore.histories[0]["pf"].serverSeedHash;
-            } else {
-                return "";
-            }
+        } else if (this.roundHistoryStore.histories.length > 0) {
+            return this.roundHistoryStore.histories[0]["pf"].serverSeedHash;
         }
+        return "";
     }
 
     get minBet() {
