@@ -57,6 +57,12 @@ export class ProvablyFairStore {
         this.randomClientSeed = this.randomClientSeedValue();
     }
 
+    resetClientSetting() {
+        this.randomClientSeedEnabled = true;
+        this.randomClientSeed = this.randomClientSeedValue();
+        this.manualClientSeed = "";
+    }
+
     private randomClientSeedValue(): string {
         return _.random(1000, 9999).toString();
     }

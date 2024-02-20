@@ -7,7 +7,7 @@ import { StorageManager, localStorageKeys } from "../../shared/utils";
 import { AutoCashOutStore } from "../auto-cash-out/auto-cash-out-store";
 import { BetInputStore } from "../bet-input/bet-input-store";
 import { IGameCrashUserSettings } from "../game-crash-messages";
-import { ProvablyFairStore } from "../provably-fair";
+import { ProvablyFairHandler, ProvablyFairStore } from "../provably-fair";
 
 @injectable()
 export class GameCrashUserSettingHandler {
@@ -17,6 +17,7 @@ export class GameCrashUserSettingHandler {
         @inject(BetInputStore) protected readonly betInputStore: BetInputStore,
         @inject(AutoCashOutStore) protected readonly autoCashOutStore: AutoCashOutStore,
         @inject(ProvablyFairStore) protected readonly provablyFairStore: ProvablyFairStore,
+        @inject(ProvablyFairHandler) protected readonly provablyFairHandler: ProvablyFairHandler,
         @inject(GameUserSettingStore) protected readonly gameUserSettingStore: GameUserSettingStore
     ) {
         reaction(
@@ -24,9 +25,17 @@ export class GameCrashUserSettingHandler {
             (trigger) => {
                 if (trigger?.action === GameUserSettingAction.Save) {
                     this.saveGameUserSetting();
+                } else if (trigger?.action === GameUserSettingAction.Load) {
+                    this.reloadOtherStores();
                 }
             }
         );
+    }
+
+    reloadOtherStores() {
+        this.betInputStore.initBetAmount();
+        this.autoCashOutStore.loadMultiplierFromStorage();
+        this.provablyFairHandler.loadClientSettingFromStorage();
     }
 
     saveGameUserSetting() {

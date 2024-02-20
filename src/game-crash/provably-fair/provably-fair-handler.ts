@@ -49,6 +49,8 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
             this.provablyFairStore.manualClientSeed = manualClientSeed;
             this.provablyFairStore.randomClientSeed = randomClientSeed;
             this.provablyFairStore.randomClientSeedEnabled = randomClientSeedEnabled;
+        } else {
+            this.provablyFairStore.resetClientSetting();
         }
     }
 

@@ -7,7 +7,6 @@ export * as CrashCashOut from "./cash-out";
 export * as CrashGameConfigs from "./game-configs";
 export * from "./game-crash-messages";
 export * as CrashGameUserSetting from "./game-user-setting";
-export * as JoinGameCrash from "./join-game";
 export * as Md5Popup from "./md5-popup";
 export * as CrashMultiplier from "./multiplier";
 export * as CrashOtherPlayer from "./other-player";
