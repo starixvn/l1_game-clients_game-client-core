@@ -79,4 +79,8 @@ export class ProvablyFairStore {
     get allowChangeManualClientSeed() {
         return !this.notAllowChangeClientSeed && !this.randomClientSeedEnabled;
     }
+
+    get selectedRandomMode() {
+        return !this.notAllowChangeClientSeed && this.randomClientSeedEnabled;
+    }
 }
