@@ -30,7 +30,8 @@ describe("CrashRoundHistoryStore", () => {
         },
     ];
 
-    beforeAll(() => {
+    beforeEach(() => {
+        jest.clearAllMocks();
         roundTimeStore = stub<RoundTimeStore>();
         roundHistoryStore = stub<RoundHistoryStore>();
         roundStore = stub<RoundStore>();
@@ -38,10 +39,6 @@ describe("CrashRoundHistoryStore", () => {
         md5PopupStore = stub<Md5PopupStore>();
         pfStore = stub<ProvablyFairStore>();
         Object.defineProperty(roundHistoryStore, "histories", { value: histories, configurable: true, writable: true });
-    });
-
-    beforeEach(() => {
-        jest.clearAllMocks();
         crashRoundHistoryStore = new CrashRoundHistoryStore(
             roundTimeStore,
             roundHistoryStore,
