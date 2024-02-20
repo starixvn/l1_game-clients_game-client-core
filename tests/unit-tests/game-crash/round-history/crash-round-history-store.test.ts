@@ -233,7 +233,7 @@ describe("CrashRoundHistoryStore", () => {
 
         it("when roundIndex equal 0", () => {
             //Arrange
-            md5PopupStore.roundId = 0;
+            md5PopupStore.roundId = 2;
 
             //Act
 
