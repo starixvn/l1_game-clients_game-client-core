@@ -36,7 +36,6 @@ export class ProvablyFairStore {
     randomClientSeedEnabled = true;
     randomClientSeed = this.randomClientSeedValue();
     manualClientSeed = "";
-    isClickPFIcon = false;
     get clientSeed() {
         return this.randomClientSeedEnabled ? this.randomClientSeed : this.manualClientSeed;
     }
@@ -70,7 +69,7 @@ export class ProvablyFairStore {
     }
 
     get showManualClientSeedPopup() {
-        return !this.randomClientSeedEnabled && !this.isClickPFIcon;
+        return !this.randomClientSeedEnabled && this.manualClientSeed === "";
     }
 
     get clientSeedForManualForm() {

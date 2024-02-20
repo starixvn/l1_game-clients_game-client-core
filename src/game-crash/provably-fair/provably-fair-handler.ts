@@ -49,8 +49,4 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
     closeVerification() {
         this.provablyFairStore.openVerification = null;
     }
-
-    handleIsClickPFIcon(isClickPFIcon: boolean) {
-        this.provablyFairStore.isClickPFIcon = isClickPFIcon;
-    }
 }
