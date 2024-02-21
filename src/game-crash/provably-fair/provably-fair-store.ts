@@ -78,15 +78,11 @@ export class ProvablyFairStore {
         return !this.randomClientSeedEnabled && this.manualClientSeed === "";
     }
 
-    get clientSeedForManualForm() {
-        return this.manualClientSeed !== "" ? this.manualClientSeed : this.randomClientSeed;
-    }
-
-    get allowChangeManualClientSeed() {
+    get highlightManualMode() {
         return !this.notAllowChangeClientSeed && !this.randomClientSeedEnabled;
     }
 
-    get selectedRandomMode() {
+    get highlightRandomMode() {
         return !this.notAllowChangeClientSeed && this.randomClientSeedEnabled;
     }
 }
