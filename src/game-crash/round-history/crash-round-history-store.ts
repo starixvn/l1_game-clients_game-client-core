@@ -26,8 +26,8 @@ export class CrashRoundHistoryStore {
         return {
             roundId: this.pfStore.pf.roundId,
             pf: this.pfStore.pf,
-            result: {},
-            settlementResult: {},
+            result: null,
+            settlementResult: null,
         };
     }
 

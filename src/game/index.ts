@@ -17,6 +17,7 @@ export * as Notices from "./notices";
 export * as Orientation from "./orientation";
 export * as PlayerSelections from "./player-selections";
 export * as RoundHistories from "./round-histories";
+export * as RoundPF from "./round-pf";
 export * as Rounds from "./rounds";
 export * as Settlements from "./settlements";
 export * as UserSettings from "./user-settings";

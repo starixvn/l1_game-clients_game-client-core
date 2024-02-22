@@ -1,25 +1,34 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { BetHistoryStore } from "../../game/bet-history/bet-history-store";
+import { RoundPFStore } from "../../game/round-pf";
+import { SettlementStore } from "../../game/settlements/settlement-store";
 import { GameServiceMessage } from "../../shared/models/game-messages";
-import { CrashRoundHistoryStore } from "../round-history";
-import { ProvablyFairStore, VerificationMode } from "./provably-fair-store";
+import { ProvablyFairStore } from "./provably-fair-store";
 
 @injectable()
 export class PFVerificationStore {
-    get verification(): GameServiceMessage.ProvablyFair | null {
-        if (this.provablyFairStore.openVerification) {
-            if (this.provablyFairStore.openVerification.mode === VerificationMode.LatestRounds) {
-                return this.crashRoundHistoryStore.roundHistories.find(
-                    (round) => round.roundId === this.provablyFairStore.openVerification.roundId
-                )?.pf;
-            } else {
-                if (this.betHistoryStore.betHistoryModel) {
-                    return this.betHistoryStore.betHistoryModel.betLogs.find(
-                        (round) => round.roundId === this.provablyFairStore.openVerification.roundId
-                    )?.["pf"];
-                }
+    get verification(): GameServiceMessage.ProvablyFair {
+        if (
+            this.provablyFairStore.openVerification &&
+            this.roundPFStore.pf &&
+            this.roundPFStore.pf.roundId === this.provablyFairStore.openVerification.roundId
+        ) {
+            if (this.settlementStore.pf && this.settlementStore.pf.roundId === this.roundPFStore.pf.roundId) {
+                const { roundId, serverSeedHash } = this.roundPFStore.pf;
+                const { result, serverSeed, clientSeeds, mergeClientSeed, mergeSeed, finalHash } = this.settlementStore.pf;
+                return {
+                    roundId,
+                    serverSeedHash,
+                    result,
+                    serverSeed,
+                    clientSeeds,
+                    mergeClientSeed,
+                    mergeSeed,
+                    finalHash,
+                };
             }
+
+            return this.roundPFStore.pf;
         }
 
         return null;
@@ -27,8 +36,8 @@ export class PFVerificationStore {
 
     constructor(
         @inject(ProvablyFairStore) private readonly provablyFairStore: ProvablyFairStore,
-        @inject(BetHistoryStore) private readonly betHistoryStore: BetHistoryStore,
-        @inject(CrashRoundHistoryStore) private readonly crashRoundHistoryStore: CrashRoundHistoryStore
+        @inject(RoundPFStore) private readonly roundPFStore: RoundPFStore,
+        @inject(SettlementStore) private readonly settlementStore: SettlementStore
     ) {
         makeAutoObservable(this);
     }

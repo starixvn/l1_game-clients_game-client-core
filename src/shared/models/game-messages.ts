@@ -35,6 +35,10 @@ export namespace GameClientEmitMessage {
 
     export const retry = "retry";
     export const reBet = "rebet";
+
+    export class RoundPF {
+        static eventName = "getRoundPF";
+    }
 }
 
 export namespace GameServiceMessage {
@@ -293,6 +297,19 @@ export namespace GameServiceMessage {
         maxMultiplier: number;
 
         static eventName = "gameConfigs";
+    }
+
+    export class RoundPFResult {
+        roundId: number;
+        serverSeedHash: string;
+
+        result?: number;
+        serverSeed?: string;
+        clientSeeds?: SingleClientSeed[];
+        mergeClientSeed?: string;
+        mergeSeed?: string;
+        finalHash?: string;
+        static eventName = "roundPFResult";
     }
 }
 

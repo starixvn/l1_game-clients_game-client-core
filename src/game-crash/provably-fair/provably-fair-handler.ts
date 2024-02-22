@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
 import { GameUserSettingHandler } from "../../game/game-user-settings/game-user-setting-handler";
 import { GameUserSettingAction, GameUserSettingStore } from "../../game/game-user-settings/game-user-setting-store";
+import { RoundPFHandler } from "../../game/round-pf";
 import { GameServiceMessage } from "../../shared";
 import { IHandler } from "../../shared/mediator";
 import { StorageManager, localStorageKeys } from "../../shared/utils";
@@ -15,7 +16,8 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
         @inject(ProvablyFairStore) protected readonly provablyFairStore: ProvablyFairStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(GameUserSettingStore) protected readonly gameUserSettingStore: GameUserSettingStore,
-        @inject(GameUserSettingHandler) protected readonly gameUserSettingHandler: GameUserSettingHandler
+        @inject(GameUserSettingHandler) protected readonly gameUserSettingHandler: GameUserSettingHandler,
+        @inject(RoundPFHandler) protected readonly roundPFHandler: RoundPFHandler
     ) {
         reaction(
             () => this.roundTimeStore.isStartRound,
@@ -69,10 +71,12 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
     }
 
     openVerificationLatestRound(roundId: number) {
+        this.roundPFHandler.requestRoundPF(roundId);
         this.provablyFairStore.openVerification = { mode: VerificationMode.LatestRounds, roundId };
     }
 
     openVerificationHistory(roundId: number) {
+        this.roundPFHandler.requestRoundPF(roundId);
         this.provablyFairStore.openVerification = { mode: VerificationMode.History, roundId };
     }
 
