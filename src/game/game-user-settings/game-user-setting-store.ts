@@ -17,5 +17,6 @@ export class GameUserSettingStore {
         makeAutoObservable(this);
     }
 
-    trigger: GameUserSettingTrigger = {};
+    tempStorage: GameUserSettingTrigger = {};
+    permanentStorage: GameUserSettingTrigger = {};
 }

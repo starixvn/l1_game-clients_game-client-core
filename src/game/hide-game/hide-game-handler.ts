@@ -15,6 +15,6 @@ export class HideGameHandler implements IHandler<void> {
     handle() {
         this.roundRunning.stopRunner();
         this.connectStore.onDisconnected();
-        this.gameUserSettingHandler.triggerSave();
+        this.gameUserSettingHandler.saveTempStorage();
     }
 }

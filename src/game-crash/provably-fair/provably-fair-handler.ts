@@ -6,7 +6,7 @@ import { RoundPFHandler } from "../../game/round-pf";
 import { GameServiceMessage } from "../../shared";
 import { IHandler } from "../../shared/mediator";
 import { StorageManager, localStorageKeys } from "../../shared/utils";
-import { IGameCrashUserSettings } from "../game-crash-messages";
+import { IGameCrashPermanentUserSettings } from "../game-crash-messages";
 import { RoundTimeStore } from "./../../game/rounds/round-time-store";
 import { ProvablyFairStore, VerificationMode } from "./provably-fair-store";
 
@@ -24,13 +24,13 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
             (isStartRound) => {
                 if (isStartRound) {
                     this.provablyFairStore.generateRandomClientSeed();
-                    this.gameUserSettingHandler.triggerSave();
+                    this.saveStorage();
                 }
             }
         );
         this.loadClientSettingFromStorage();
         reaction(
-            () => this.gameUserSettingStore.trigger,
+            () => this.gameUserSettingStore.tempStorage,
             (trigger) => {
                 if (trigger?.action === GameUserSettingAction.Load) {
                     this.loadClientSettingFromStorage();
@@ -45,9 +45,9 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
     }
 
     loadClientSettingFromStorage() {
-        const data = StorageManager.get(localStorageKeys.gameUserSetting) as IGameCrashUserSettings;
-        if (data && data?.pfClientSetting) {
-            const { manualClientSeed, randomClientSeedEnabled, randomClientSeed } = data.pfClientSetting;
+        const data = StorageManager.get(localStorageKeys.permanentGameUserSetting) as IGameCrashPermanentUserSettings;
+        if (data && data?.pf) {
+            const { manualClientSeed, randomClientSeedEnabled, randomClientSeed } = data.pf;
             this.provablyFairStore.manualClientSeed = manualClientSeed;
             this.provablyFairStore.randomClientSeed = randomClientSeed;
             this.provablyFairStore.randomClientSeedEnabled = randomClientSeedEnabled;
@@ -62,12 +62,16 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
 
     clientSeedGenerationMode(randomClientSeedEnabled: boolean) {
         this.provablyFairStore.randomClientSeedEnabled = randomClientSeedEnabled;
-        this.gameUserSettingHandler.triggerSave();
+        this.saveStorage();
+    }
+
+    private saveStorage() {
+        this.gameUserSettingHandler.savePermanentStorage();
     }
 
     saveManualClientSeed(manualClientSeed: string) {
         this.provablyFairStore.manualClientSeed = manualClientSeed;
-        this.gameUserSettingHandler.triggerSave();
+        this.saveStorage();
     }
 
     openVerificationLatestRound(roundId: number) {

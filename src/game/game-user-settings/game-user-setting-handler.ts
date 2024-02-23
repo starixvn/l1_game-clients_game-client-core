@@ -12,21 +12,25 @@ export class GameUserSettingHandler {
         reaction(
             () => this.appStore.isClearStorage,
             (isClearStorage) => {
-                isClearStorage && this.clearStorage();
+                isClearStorage && this.clearTempStorage();
             }
         );
     }
 
-    triggerLoad() {
-        this.userGameSettingStore.trigger = { action: GameUserSettingAction.Load };
+    savePermanentStorage() {
+        this.userGameSettingStore.permanentStorage = { action: GameUserSettingAction.Save };
     }
 
-    triggerSave() {
-        this.userGameSettingStore.trigger = { action: GameUserSettingAction.Save };
+    loadTempStorage() {
+        this.userGameSettingStore.tempStorage = { action: GameUserSettingAction.Load };
     }
 
-    clearStorage() {
+    saveTempStorage() {
+        this.userGameSettingStore.tempStorage = { action: GameUserSettingAction.Save };
+    }
+
+    clearTempStorage() {
         StorageManager.remove(localStorageKeys.gameUserSetting);
-        this.triggerLoad();
+        this.loadTempStorage();
     }
 }

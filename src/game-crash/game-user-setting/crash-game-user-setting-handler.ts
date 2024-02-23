@@ -6,7 +6,7 @@ import { RoundRunningHandlers } from "../../game/rounds";
 import { StorageManager, localStorageKeys } from "../../shared/utils";
 import { AutoCashOutStore } from "../auto-cash-out/auto-cash-out-store";
 import { BetInputStore } from "../bet-input/bet-input-store";
-import { IGameCrashUserSettings } from "../game-crash-messages";
+import { IGameCrashPermanentUserSettings, IGameCrashUserSettings } from "../game-crash-messages";
 import { ProvablyFairHandler, ProvablyFairStore } from "../provably-fair";
 
 @injectable()
@@ -21,12 +21,21 @@ export class GameCrashUserSettingHandler {
         @inject(GameUserSettingStore) protected readonly gameUserSettingStore: GameUserSettingStore
     ) {
         reaction(
-            () => this.gameUserSettingStore.trigger,
+            () => this.gameUserSettingStore.tempStorage,
             (trigger) => {
                 if (trigger?.action === GameUserSettingAction.Save) {
-                    this.saveGameUserSetting();
+                    this.saveTempStorage();
                 } else if (trigger?.action === GameUserSettingAction.Load) {
                     this.reloadOtherStores();
+                }
+            }
+        );
+
+        reaction(
+            () => this.gameUserSettingStore.permanentStorage,
+            (trigger) => {
+                if (trigger?.action === GameUserSettingAction.Save) {
+                    this.savePermanentStorage();
                 }
             }
         );
@@ -38,18 +47,25 @@ export class GameCrashUserSettingHandler {
         this.provablyFairHandler.loadClientSettingFromStorage();
     }
 
-    saveGameUserSetting() {
+    saveTempStorage() {
         const currentSetting: IGameCrashUserSettings = {
             betAmount: this.betInputStore.betAmount,
             enableAutoCashOut: this.autoCashOutStore.enable,
             autoCashOutMultiplier: this.autoCashOutStore.multiplier,
-            pfClientSetting: {
+        };
+
+        StorageManager.set(localStorageKeys.gameUserSetting, currentSetting);
+    }
+
+    savePermanentStorage() {
+        const currentSetting: IGameCrashPermanentUserSettings = {
+            pf: {
                 randomClientSeedEnabled: this.provablyFairStore.randomClientSeedEnabled,
                 randomClientSeed: this.provablyFairStore.randomClientSeed,
                 manualClientSeed: this.provablyFairStore.manualClientSeed,
             },
         };
 
-        StorageManager.set(localStorageKeys.gameUserSetting, currentSetting);
+        StorageManager.set(localStorageKeys.permanentGameUserSetting, currentSetting);
     }
 }

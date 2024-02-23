@@ -118,4 +118,5 @@ export const localStorageKeys = {
     isApp: "app",
     gameIdsSupportBoostedOddsForInstantSite: "gameIdsSupportBoostedOddsForInstantSite",
     gameUserSetting: "game-user-setting",
+    permanentGameUserSetting: "permanent-game-user-setting",
 };

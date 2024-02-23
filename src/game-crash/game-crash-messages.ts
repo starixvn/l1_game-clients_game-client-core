@@ -100,7 +100,10 @@ export interface IGameCrashUserSettings {
     betAmount: number;
     enableAutoCashOut: boolean;
     autoCashOutMultiplier: number;
-    pfClientSetting?: PFClientSetting;
+}
+
+export interface IGameCrashPermanentUserSettings {
+    pf?: PFClientSetting;
 }
 
 export interface LeaderBoardPlayer {
