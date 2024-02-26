@@ -299,16 +299,7 @@ export namespace GameServiceMessage {
         static eventName = "gameConfigs";
     }
 
-    export class RoundPFResult {
-        roundId: number;
-        serverSeedHash: string;
-
-        result?: number;
-        serverSeed?: string;
-        clientSeeds?: SingleClientSeed[];
-        mergeClientSeed?: string;
-        mergeSeed?: string;
-        finalHash?: string;
+    export class RoundPFResult extends ProvablyFair {
         static eventName = "roundPFResult";
     }
 }

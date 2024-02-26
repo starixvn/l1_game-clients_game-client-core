@@ -11,7 +11,6 @@ export interface RoundHistory {
     settlementResult: GameServiceMessage.TSettlementResult;
     winningPlayers?: GameServiceMessage.TWinningPlayers;
     md5Result?: GameServiceMessage.ResultHash;
-    pf?: GameServiceMessage.ProvablyFair;
 }
 
 export interface IJoinGameHistory {
