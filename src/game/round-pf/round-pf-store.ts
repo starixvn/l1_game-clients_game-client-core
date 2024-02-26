@@ -8,4 +8,6 @@ export class RoundPFStore {
         makeAutoObservable(this);
     }
     pf: GameServiceMessage.RoundPFResult = null;
+
+    currentPF: GameServiceMessage.RoundPFResult = null;
 }

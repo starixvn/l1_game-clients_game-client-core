@@ -80,13 +80,6 @@ export class RoundStore {
         return this._clientRoundId;
     }
 
-    get currentServerSeedHash() {
-        if (this.pf && this.pf.roundId === this.clientRoundId) {
-            return this.pf.serverSeedHash;
-        }
-        return "";
-    }
-
     get minBet() {
         return Math.max(this.gameConfigStore.minBet, this.mainPlayerStore.stakeLevel.minBet);
     }
