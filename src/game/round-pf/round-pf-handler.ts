@@ -38,9 +38,9 @@ export class RoundPFHandler implements IMultipleHandlers {
 
     handleReceiveRoundPF(roundPfResult: GameServiceMessage.RoundPFResult) {
         if (this.requestForCurrentRound) {
-            this.roundPFStore.pf = roundPfResult;
-        } else {
             this.roundPFStore.currentPF = roundPfResult;
+        } else {
+            this.roundPFStore.pf = roundPfResult;
         }
     }
 }
