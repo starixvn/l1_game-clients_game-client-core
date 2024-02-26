@@ -44,14 +44,14 @@ describe("HideGameHandler", () => {
             expect(connectStore.onDisconnected).toBeCalled();
         });
 
-        it("should call gameUserSettingHandler.triggerSave", async () => {
+        it("should call gameUserSettingHandler.saveTempStorage", async () => {
             // Arrange
 
             // Act
             handler.handle();
 
             // Assert
-            expect(gameUserSettingHandler.triggerSave).toBeCalled();
+            expect(gameUserSettingHandler.saveTempStorage).toBeCalled();
         });
     });
 });

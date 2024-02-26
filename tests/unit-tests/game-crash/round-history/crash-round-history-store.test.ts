@@ -1,6 +1,6 @@
 import { stub } from "jest-auto-stub";
-import { ProvablyFairStore } from "../../../../src/game-crash/provably-fair/provably-fair-store";
 import { RoundHistoryStore } from "../../../../src/game/round-histories/round-history-store";
+import { RoundPFStore } from "../../../../src/game/round-pf";
 import { Md5PopupStore } from "./../../../../src/game-crash/md5-popup/md5-popup-store";
 import { CrashRoundHistoryStore } from "./../../../../src/game-crash/round-history/crash-round-history-store";
 import { RoundStore } from "./../../../../src/game/rounds/round-store";
@@ -14,7 +14,7 @@ describe("CrashRoundHistoryStore", () => {
     let roundStore: RoundStore;
     let settlementStore: SettlementStore;
     let md5PopupStore: Md5PopupStore;
-    let pfStore: ProvablyFairStore;
+    let roundPFStore: RoundPFStore;
     const histories = [
         {
             roundId: 2,
@@ -37,7 +37,7 @@ describe("CrashRoundHistoryStore", () => {
         roundStore = stub<RoundStore>();
         settlementStore = stub<SettlementStore>();
         md5PopupStore = stub<Md5PopupStore>();
-        pfStore = stub<ProvablyFairStore>();
+        roundPFStore = stub<RoundPFStore>();
         Object.defineProperty(roundHistoryStore, "histories", { value: histories, configurable: true, writable: true });
         crashRoundHistoryStore = new CrashRoundHistoryStore(
             roundTimeStore,
@@ -45,7 +45,7 @@ describe("CrashRoundHistoryStore", () => {
             roundStore,
             settlementStore,
             md5PopupStore,
-            pfStore
+            roundPFStore
         );
     });
 

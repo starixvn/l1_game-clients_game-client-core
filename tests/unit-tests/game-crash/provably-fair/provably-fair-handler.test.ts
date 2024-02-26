@@ -3,6 +3,7 @@ import { ProvablyFairHandler } from "../../../../src/game-crash/provably-fair/pr
 import { ProvablyFairStore } from "../../../../src/game-crash/provably-fair/provably-fair-store";
 import { GameUserSettingHandler } from "../../../../src/game/game-user-settings/game-user-setting-handler";
 import { GameUserSettingStore } from "../../../../src/game/game-user-settings/game-user-setting-store";
+import { RoundPFHandler } from "../../../../src/game/round-pf/round-pf-handler";
 import { RoundTimeStore } from "../../../../src/game/rounds/round-time-store";
 
 describe("ProvablyFairHandler", () => {
@@ -11,16 +12,24 @@ describe("ProvablyFairHandler", () => {
     let roundTimeStore: RoundTimeStore;
     let gameUserSettingStore: GameUserSettingStore;
     let gameUserSettingHandler: GameUserSettingHandler;
+    let roundPFHandler: RoundPFHandler;
 
     beforeAll(() => {
         provablyFairStore = stub<ProvablyFairStore>();
         roundTimeStore = stub<RoundTimeStore>();
         gameUserSettingStore = stub<GameUserSettingStore>();
         gameUserSettingHandler = stub<GameUserSettingHandler>();
+        roundPFHandler = stub<RoundPFHandler>();
     });
     beforeEach(() => {
         jest.clearAllMocks();
-        provablyFairHandler = new ProvablyFairHandler(provablyFairStore, roundTimeStore, gameUserSettingStore, gameUserSettingHandler);
+        provablyFairHandler = new ProvablyFairHandler(
+            provablyFairStore,
+            roundTimeStore,
+            gameUserSettingStore,
+            gameUserSettingHandler,
+            roundPFHandler
+        );
     });
 
     describe("handleClientSeedPopup", () => {
@@ -50,7 +59,7 @@ describe("ProvablyFairHandler", () => {
             expect(provablyFairStore.randomClientSeedEnabled).toEqual(false);
         });
 
-        it("call gameUserSettingHandler.triggerSave ", () => {
+        it("call gameUserSettingHandler.saveTempStorage ", () => {
             //Arrange
             const randomClientSeedEnabled = false;
             provablyFairStore.randomClientSeedEnabled = !randomClientSeedEnabled;
@@ -59,7 +68,7 @@ describe("ProvablyFairHandler", () => {
             provablyFairHandler.clientSeedGenerationMode(randomClientSeedEnabled);
 
             //Assert
-            expect(gameUserSettingHandler.triggerSave).toBeCalled();
+            expect(gameUserSettingHandler.savePermanentStorage).toBeCalled();
         });
     });
 
