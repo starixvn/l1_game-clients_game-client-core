@@ -45,7 +45,6 @@ export class RoundStore {
     private _ownBets: GameServiceMessage.OwnBets = {};
     private _totalBets: GameServiceMessage.TotalBets = {};
     resultHash: GameServiceMessage.ResultHash = null;
-    pf: GameServiceMessage.ProvablyFair = null;
 
     _clientRoundId = 0;
 

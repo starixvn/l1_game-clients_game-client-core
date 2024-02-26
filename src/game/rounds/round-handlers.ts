@@ -25,10 +25,6 @@ export class RoundHandlers implements IMultipleHandlers {
         this.store.resultHash = resultHash;
     }
 
-    handleProvablyFair(pf: GameServiceMessage.ProvablyFair) {
-        this.store.pf = pf;
-    }
-
     eventHandleList = [
         {
             name: GameServiceMessage.roundId,
@@ -45,10 +41,6 @@ export class RoundHandlers implements IMultipleHandlers {
         {
             name: GameServiceMessage.ResultHash.eventName,
             handle: this.handleResultHash,
-        },
-        {
-            name: GameServiceMessage.ProvablyFair.eventName,
-            handle: this.handleProvablyFair,
         },
     ];
 }

@@ -13,10 +13,27 @@ export class RoundPFHandler implements IMultipleHandlers {
         @inject(RoundStore) protected readonly roundStore: RoundStore
     ) {
         reaction(
-            () => this.roundStore.clientRoundId,
-            (roundId: number) => {
-                if (roundId > 0) {
-                    this.requestRoundPF(roundId, true);
+            () => ({ clientRoundId: this.roundStore.clientRoundId, serviceRoundId: this.roundStore.roundId }),
+            (data: { clientRoundId: number; serviceRoundId: number }) => {
+                const { clientRoundId, serviceRoundId } = data;
+
+                if (this.roundPFStore.intervalPF && clientRoundId === this.roundPFStore.intervalPF.roundId) {
+                    const { roundId, serverSeedHash, result, serverSeed, clientSeeds, mergeClientSeed, mergeSeed, finalHash } =
+                        this.roundPFStore.intervalPF;
+                    this.roundPFStore.currentPF = {
+                        roundId,
+                        serverSeedHash,
+                        result,
+                        serverSeed,
+                        clientSeeds,
+                        mergeClientSeed,
+                        mergeSeed,
+                        finalHash,
+                    };
+                } else {
+                    if (clientRoundId > 0 && serviceRoundId > 0) {
+                        this.requestRoundPF(clientRoundId, true);
+                    }
                 }
             }
         );
@@ -29,7 +46,15 @@ export class RoundPFHandler implements IMultipleHandlers {
             name: GameServiceMessage.RoundPFResult.eventName,
             handle: this.handleReceiveRoundPF,
         },
+        {
+            name: GameServiceMessage.ProvablyFair.eventName,
+            handle: this.handleIntervalPF,
+        },
     ];
+
+    handleIntervalPF(pf: GameServiceMessage.ProvablyFair) {
+        this.roundPFStore.intervalPF = pf;
+    }
 
     requestRoundPF(roundId: number, requestForCurrentRound = false) {
         this.requestForCurrentRound = requestForCurrentRound;
