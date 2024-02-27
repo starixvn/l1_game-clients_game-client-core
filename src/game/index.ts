@@ -11,6 +11,7 @@ export * as ExcludedGame from "./excluded-game";
 export * as GameConfigs from "./game-configs";
 export * as GameGuide from "./game-guides";
 export * as GameUserSettings from "./game-user-settings";
+export * as GuidePF from "./guide-pf";
 export * as HideGame from "./hide-game";
 export * as JoinGame from "./join-game";
 export * as Notices from "./notices";
