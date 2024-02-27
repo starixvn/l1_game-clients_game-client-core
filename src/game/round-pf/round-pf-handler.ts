@@ -61,11 +61,14 @@ export class RoundPFHandler implements IMultipleHandlers {
         this.connectionStore.send(GameClientEmitMessage.RoundPF.eventName, { roundId });
     }
 
-    handleReceiveRoundPF(roundPfResult: GameServiceMessage.RoundPFResult) {
+    handleReceiveRoundPF(roundPFResult: GameServiceMessage.RoundPFResult) {
+        if (!roundPFResult) {
+            return;
+        }
         if (this.requestForCurrentRound) {
-            this.roundPFStore.currentPF = roundPfResult;
+            this.roundPFStore.currentPF = roundPFResult;
         } else {
-            this.roundPFStore.pf = roundPfResult;
+            this.roundPFStore.pf = roundPFResult;
         }
     }
 }
