@@ -6,7 +6,15 @@ import { StorageManager, Translator, UrlUtils, localStorageKeys } from "../../sh
 import { GameSetting } from "../game-configs";
 import { WebViewPFVerificationStore } from "./web-vew-verification-store";
 
-export namespace WebViewVerificationHandlers {
+export namespace WebViewPFVerificationHandlers {
+    @injectable()
+    export class VerificationPopupHandler {
+        constructor(@inject(WebViewPFVerificationStore) private readonly webViewPFStore: WebViewPFVerificationStore) {}
+
+        handle(openPopup: boolean) {
+            this.webViewPFStore.openVerificationPopup = openPopup;
+        }
+    }
     @injectable()
     export class GetVerificationURL implements IHandler<{ theme: string; specialDirection: string }> {
         constructor(
@@ -40,10 +48,6 @@ export namespace WebViewVerificationHandlers {
             const session = StorageManager.get(localStorageKeys.session) as ISessionInfo;
 
             return languages[session.language] || "en";
-        }
-
-        handleOpenVerification(openPopup: boolean) {
-            this.webViewPFStore.openVerificationPopup = openPopup;
         }
     }
 }
