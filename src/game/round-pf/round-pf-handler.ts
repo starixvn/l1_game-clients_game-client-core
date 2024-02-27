@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { reaction } from "mobx";
+import { reaction, when } from "mobx";
 import { GameClientEmitMessage, GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { ConnectionStore } from "../connection/connection-store";
 import { RoundStore } from "../rounds/round-store";
@@ -12,12 +12,17 @@ export class RoundPFHandler implements IMultipleHandlers {
         @inject(ConnectionStore) protected readonly connectionStore: ConnectionStore,
         @inject(RoundStore) protected readonly roundStore: RoundStore
     ) {
-        reaction(
-            () => ({ clientRoundId: this.roundStore.clientRoundId, serviceRoundId: this.roundStore.roundId }),
-            (data: { clientRoundId: number; serviceRoundId: number }) => {
-                const { clientRoundId, serviceRoundId } = data;
+        when(
+            () => this.roundStore.clientRoundId > 0 && this.roundStore.roundId > 0,
+            () => {
+                this.requestRoundPF(this.roundStore.clientRoundId, true);
+            }
+        );
 
-                if (this.roundPFStore.intervalPF && clientRoundId === this.roundPFStore.intervalPF.roundId) {
+        reaction(
+            () => this.roundPFStore.intervalPF,
+            () => {
+                if (this.roundPFStore.intervalPF) {
                     const { roundId, serverSeedHash, result, serverSeed, clientSeeds, mergeClientSeed, mergeSeed, finalHash } =
                         this.roundPFStore.intervalPF;
                     this.roundPFStore.currentPF = {
@@ -30,10 +35,6 @@ export class RoundPFHandler implements IMultipleHandlers {
                         mergeSeed,
                         finalHash,
                     };
-                } else {
-                    if (clientRoundId > 0 && serviceRoundId > 0) {
-                        this.requestRoundPF(clientRoundId, true);
-                    }
                 }
             }
         );
