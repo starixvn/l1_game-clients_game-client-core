@@ -7,7 +7,6 @@ import { ProvablyFairStore } from "./provably-fair-store";
 
 @injectable()
 export class PFVerificationStore {
-    openVerificationPopup = false;
     get verification(): GameServiceMessage.ProvablyFair {
         if (
             this.provablyFairStore.openVerification &&

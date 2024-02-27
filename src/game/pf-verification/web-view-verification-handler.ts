@@ -8,7 +8,7 @@ import { WebViewPFVerificationStore } from "./web-vew-verification-store";
 
 export namespace WebViewVerificationHandlers {
     @injectable()
-    export class GetGuideURL implements IHandler<{ theme: string; specialDirection: string }> {
+    export class GetVerificationURL implements IHandler<{ theme: string; specialDirection: string }> {
         constructor(
             @inject(SiteConfigs) private readonly siteConfigs: SiteConfigs,
             @inject(GameSetting) private readonly gameSetting: GameSetting,
@@ -40,6 +40,10 @@ export namespace WebViewVerificationHandlers {
             const session = StorageManager.get(localStorageKeys.session) as ISessionInfo;
 
             return languages[session.language] || "en";
+        }
+
+        handleOpenVerification(openPopup: boolean) {
+            this.webViewPFStore.openVerificationPopup = openPopup;
         }
     }
 }
