@@ -8,7 +8,7 @@ import { WebViewPFVerificationStore } from "./web-vew-verification-store";
 
 export namespace WebViewPFVerificationHandlers {
     @injectable()
-    export class VerificationPopupHandler {
+    export class VerificationPopupHandler implements IHandler<boolean> {
         constructor(@inject(WebViewPFVerificationStore) private readonly webViewPFStore: WebViewPFVerificationStore) {}
 
         handle(openPopup: boolean) {
