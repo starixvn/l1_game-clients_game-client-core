@@ -6,7 +6,7 @@ import { StorageManager, Translator, UrlUtils, localStorageKeys } from "../../sh
 import { GameSetting } from "../game-configs";
 import { WebViewPFVerificationStore } from "./web-vew-verification-store";
 
-export namespace PFVerificationHandlers {
+export namespace WebViewVerificationHandlers {
     @injectable()
     export class GetGuideURL implements IHandler<{ theme: string; specialDirection: string }> {
         constructor(
