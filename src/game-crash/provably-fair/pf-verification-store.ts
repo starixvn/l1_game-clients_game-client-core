@@ -16,7 +16,7 @@ export class PFVerificationStore {
             if (this.settlementStore.pf && this.settlementStore.pf.roundId === this.roundPFStore.pf.roundId) {
                 const { roundId, serverSeedHash } = this.roundPFStore.pf;
                 const { result, serverSeed, clientSeeds, mergeClientSeed, mergeSeed, finalHash } = this.settlementStore.pf;
-                return {
+                const pf = {
                     roundId,
                     serverSeedHash,
                     result,
@@ -26,6 +26,7 @@ export class PFVerificationStore {
                     mergeSeed,
                     finalHash,
                 };
+                this.roundPFStore.pf = pf;
             }
 
             return this.roundPFStore.pf;
