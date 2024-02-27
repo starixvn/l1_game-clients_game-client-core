@@ -49,10 +49,13 @@ export class GameCrashUserSettingHandler {
 
     saveTempStorage() {
         const currentSetting: IGameCrashUserSettings = {
-            betAmount: this.betInputStore.betAmount,
             enableAutoCashOut: this.autoCashOutStore.enable,
             autoCashOutMultiplier: this.autoCashOutStore.multiplier,
         };
+
+        if (this.betInputStore.betAmount > 0) {
+            currentSetting.betAmount = this.betInputStore.betAmount;
+        }
 
         StorageManager.set(localStorageKeys.gameUserSetting, currentSetting);
     }

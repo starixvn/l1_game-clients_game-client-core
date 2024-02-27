@@ -97,7 +97,7 @@ export interface PFClientSetting {
 }
 
 export interface IGameCrashUserSettings {
-    betAmount: number;
+    betAmount?: number;
     enableAutoCashOut: boolean;
     autoCashOutMultiplier: number;
 }
