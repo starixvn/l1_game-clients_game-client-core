@@ -236,9 +236,11 @@ export namespace GameServiceMessage {
         static eventName = "finish";
     }
 
-    export type TResult = {
-        [betChoice: string]: any;
-    };
+    export type TResult =
+        | number
+        | {
+              [betChoice: string]: any;
+          };
 
     export type TSettlementResult = {
         [betChoice: string]: boolean;
