@@ -92,21 +92,6 @@ describe("RoundHandlers test", () => {
         });
     });
 
-    describe("handleProvablyFair", () => {
-        it("should change pf property", () => {
-            // Arrange
-            const roundHandler = new RoundHandlers(roundStore);
-            roundHandler["store"].pf = null;
-            const pf = stub<GameServiceMessage.ProvablyFair>();
-
-            // Act
-            roundHandler.handleProvablyFair(pf);
-
-            // Assert
-            expect(roundHandler["store"].pf).toBe(pf);
-        });
-    });
-
     describe("eventHandleList", () => {
         it("should be equal expected", () => {
             // Arrange
@@ -128,10 +113,6 @@ describe("RoundHandlers test", () => {
                 {
                     name: GameServiceMessage.ResultHash.eventName,
                     handle: roundHandler.handleResultHash,
-                },
-                {
-                    name: GameServiceMessage.ProvablyFair.eventName,
-                    handle: roundHandler.handleProvablyFair,
                 },
             ];
 
