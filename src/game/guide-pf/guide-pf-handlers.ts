@@ -20,6 +20,7 @@ export class GuidePFHandlers {
             t: term,
             f: term,
             c: 0,
+            v: Date.now(),
             displayName: Translator.gameTranslate("game_name"),
         };
         const queryString = Object.keys(params)
