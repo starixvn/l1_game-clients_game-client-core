@@ -57,7 +57,7 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
     }
 
     handleClientSeedPopup(openClientSeedPopup: boolean) {
-        this.provablyFairStore.openClientSeedPopup = openClientSeedPopup;
+        this.provablyFairStore.openClientSeedPopup = openClientSeedPopup ? {} : null;
     }
 
     clientSeedGenerationMode(randomClientSeedEnabled: boolean) {

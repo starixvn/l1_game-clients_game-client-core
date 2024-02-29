@@ -14,15 +14,13 @@ describe("ProvablyFairHandler", () => {
     let gameUserSettingHandler: GameUserSettingHandler;
     let roundPFHandler: RoundPFHandler;
 
-    beforeAll(() => {
+    beforeEach(() => {
+        jest.clearAllMocks();
         provablyFairStore = stub<ProvablyFairStore>();
         roundTimeStore = stub<RoundTimeStore>();
         gameUserSettingStore = stub<GameUserSettingStore>();
         gameUserSettingHandler = stub<GameUserSettingHandler>();
         roundPFHandler = stub<RoundPFHandler>();
-    });
-    beforeEach(() => {
-        jest.clearAllMocks();
         provablyFairHandler = new ProvablyFairHandler(
             provablyFairStore,
             roundTimeStore,
@@ -33,16 +31,25 @@ describe("ProvablyFairHandler", () => {
     });
 
     describe("handleClientSeedPopup", () => {
-        it("when openClientSeedPopup is true", () => {
+        it("should set provablyFairStore.openClientSeedPopup to {}, when param is true", () => {
             //Arrange
-            const openClientSeedPopup = true;
-            provablyFairStore.openClientSeedPopup = !openClientSeedPopup;
+            provablyFairStore.openClientSeedPopup = null;
 
             //Act
-            provablyFairHandler.handleClientSeedPopup(openClientSeedPopup);
+            provablyFairHandler.handleClientSeedPopup(true);
 
             //Assert
-            expect(provablyFairStore.openClientSeedPopup).toEqual(true);
+            expect(provablyFairStore.openClientSeedPopup).toEqual({});
+        });
+        it("should set provablyFairStore.openClientSeedPopup to null, when param is false", () => {
+            //Arrange
+            provablyFairStore.openClientSeedPopup = {};
+
+            //Act
+            provablyFairHandler.handleClientSeedPopup(false);
+
+            //Assert
+            expect(provablyFairStore.openClientSeedPopup).toEqual(null);
         });
     });
 

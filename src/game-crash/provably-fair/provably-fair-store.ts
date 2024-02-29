@@ -40,7 +40,7 @@ export class ProvablyFairStore {
         return this.randomClientSeedEnabled ? this.randomClientSeed : this.manualClientSeed;
     }
 
-    openClientSeedPopup = false;
+    openClientSeedPopup = {};
 
     openVerification: OpenVerification = null;
 

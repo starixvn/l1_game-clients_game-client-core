@@ -5,7 +5,7 @@ import { makeAutoObservable } from "mobx";
 export class WebViewPFVerificationStore {
     url = "";
 
-    openVerificationPopup = false;
+    openVerificationPopup = {};
 
     constructor() {
         makeAutoObservable(this);

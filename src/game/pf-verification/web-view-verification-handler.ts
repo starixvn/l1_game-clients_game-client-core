@@ -12,7 +12,7 @@ export namespace WebViewPFVerificationHandlers {
         constructor(@inject(WebViewPFVerificationStore) private readonly webViewPFStore: WebViewPFVerificationStore) {}
 
         handle(openPopup: boolean) {
-            this.webViewPFStore.openVerificationPopup = openPopup;
+            this.webViewPFStore.openVerificationPopup = openPopup ? {} : null;
         }
     }
     @injectable()
