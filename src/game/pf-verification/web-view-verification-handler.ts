@@ -32,7 +32,7 @@ export namespace WebViewPFVerificationHandlers {
             const queryString = Object.keys(params)
                 .map((key) => `${key}=${params[key]}`)
                 .join("&");
-            this.webViewPFStore.url = `${domain}/pf/${this.getLanguage()}?${queryString}${specialDirection}`;
+            this.webViewPFStore.url = `${domain}/${this.getLanguage()}/pf?${queryString}${specialDirection}`;
         }
 
         private getLanguage(): string {
