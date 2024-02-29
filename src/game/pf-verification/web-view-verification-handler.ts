@@ -28,6 +28,8 @@ export namespace WebViewPFVerificationHandlers {
             const params = {
                 gId: this.gameSetting.id,
                 displayName: Translator.gameTranslate("game_name"),
+                t: "pf",
+                v: Date.now(),
             };
             const queryString = Object.keys(params)
                 .map((key) => `${key}=${params[key]}`)
