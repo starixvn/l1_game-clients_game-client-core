@@ -33,7 +33,6 @@ describe("ProvablyFairHandler", () => {
     describe("handleClientSeedPopup", () => {
         it("should set provablyFairStore.openClientSeedPopup to {}, when param is true", () => {
             //Arrange
-            provablyFairStore.openClientSeedPopup = null;
 
             //Act
             provablyFairHandler.handleClientSeedPopup(true);
@@ -43,7 +42,6 @@ describe("ProvablyFairHandler", () => {
         });
         it("should set provablyFairStore.openClientSeedPopup to null, when param is false", () => {
             //Arrange
-            provablyFairStore.openClientSeedPopup = {};
 
             //Act
             provablyFairHandler.handleClientSeedPopup(false);
