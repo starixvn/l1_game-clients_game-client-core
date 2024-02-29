@@ -19,6 +19,7 @@ export class GuidePFHandlers {
             gId: this.gameSetting.id,
             t: term,
             f: term,
+            c: 0,
             displayName: Translator.gameTranslate("game_name"),
         };
         const queryString = Object.keys(params)
