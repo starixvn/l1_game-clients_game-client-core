@@ -1,3 +1,26 @@
+# [1.51.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.50.1...v1.51.0) (2024-03-07)
+
+
+### Bug Fixes
+
+*  move code open verification from crash game to game ([609f02c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/609f02c74a752bc695de262787111c2970134f05))
+* cannot handle data ([912a378](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/912a3784f50c81ee1c2b7097ea0ae4f54cf0c908))
+* handle show/hide popup ([9e8b70c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9e8b70c308a1b46d9c9ced895fd232e373b28682))
+* update pf-verification-handler ([8ec1871](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/8ec1871efe995a59b1fec78d66405b9e1a91cd5d))
+* update url verification guide ([fafdc82](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/fafdc8256ba33c210510a3f0ea860ae557eba72c))
+
+
+### Features
+
+* add crash provably fair ([0e0d814](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/0e0d81437e3bd2affc119acf9b8ca721e2d0a7ef))
+* add currentServerSeedHash to roundStore ([8ff6b00](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/8ff6b00e5a5a6857f9663afe8b60b9473bea1746))
+* add game-user-setting feature ([d5a231d](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d5a231d449b4dde287a6cf531455ca1fea0e7f02))
+* add open verification popup ([8ca52ed](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/8ca52ed6786b1997a5e49cb55231d065f67a5aff))
+* add pf-verification ([1741d8f](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/1741d8fd30f85bacb3d0b83a662977f8f5e83a44))
+* add unit test ([1ab3fc3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/1ab3fc3823deff8e094663fa0f143ef42ea4f7cd))
+* support TResult with number value ([bab9acb](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/bab9acb14c9fc7f5a0d8d92767bd5da87b4fd7de))
+* update random PF value ([df791cf](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/df791cfdb839eae6307b6240ee46268e2aea9ea9))
+
 ## [1.50.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.50.0...v1.50.1) (2024-01-26)
 
 
