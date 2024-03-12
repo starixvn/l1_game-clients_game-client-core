@@ -25,6 +25,10 @@ export class RoundHandlers implements IMultipleHandlers {
         this.store.resultHash = resultHash;
     }
 
+    handleUserBetPercent(userBetPercent: GameServiceMessage.UserBetPercent) {
+        this.store.userBetPercent = userBetPercent;
+    }
+
     eventHandleList = [
         {
             name: GameServiceMessage.roundId,
@@ -41,6 +45,11 @@ export class RoundHandlers implements IMultipleHandlers {
         {
             name: GameServiceMessage.ResultHash.eventName,
             handle: this.handleResultHash,
+        },
+
+        {
+            name: GameServiceMessage.UserBetPercent.eventName,
+            handle: this.handleUserBetPercent,
         },
     ];
 }

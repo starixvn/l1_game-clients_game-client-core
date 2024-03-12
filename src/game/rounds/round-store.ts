@@ -45,6 +45,7 @@ export class RoundStore {
     private _ownBets: GameServiceMessage.OwnBets = {};
     private _totalBets: GameServiceMessage.TotalBets = {};
     resultHash: GameServiceMessage.ResultHash = null;
+    private _userBetPercent: GameServiceMessage.UserBetPercent = {};
 
     _clientRoundId = 0;
 
@@ -113,6 +114,14 @@ export class RoundStore {
         this._ownBets = ownBets;
     }
 
+    set userBetPercent(betPercent: GameServiceMessage.UserBetPercent) {
+        this._userBetPercent = betPercent;
+    }
+
+    get userBetPercent() {
+        return this._userBetPercent;
+    }
+
     get isResetHighlight(): boolean {
         let isResetHighlight = false;
 
@@ -128,6 +137,7 @@ export class RoundStore {
     }
 
     get highLightAnim(): THighlightAnim {
+        console.log("highLightAnim", this.roundHistoryStore?.getLastRound());
         const isAnim = this.settlementStore.isFinishedShowResult;
         const settlementResult = this.roundHistoryStore?.getLastRound()?.settlementResult;
 
