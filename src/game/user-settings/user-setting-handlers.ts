@@ -1,6 +1,8 @@
 import { inject, injectable } from "inversify";
 import { BrowserDomUtils, StorageManager, localStorageKeys } from "../../shared/utils";
+import { AnalyticsManager, PFObjectName, TrackingAction, TrackingEvent } from "../../shared/utils/analytics-manager";
 import { AudioType } from "../audios";
+import { GameSetting } from "../game-configs";
 import { UserSettingData, UserSettingStore } from "./user-setting-store";
 
 @injectable()
@@ -35,6 +37,13 @@ export class UserSettingHandlers {
             this.setSfxEnable(enable);
             BrowserDomUtils.postMessageToParent({ sfxEnable: enable });
         }
+
+        const objectName = this.getObjectName(type);
+        AnalyticsManager.trackEvent(TrackingEvent.Button, {
+            location: GameSetting?.name || "",
+            action: enable ? TrackingAction.ToggleOn : TrackingAction.ToggleOff,
+            object_name: objectName,
+        });
     }
 
     setMusicEnable(enable: boolean) {
@@ -45,5 +54,10 @@ export class UserSettingHandlers {
     setSfxEnable(enable: boolean) {
         this.userSettingStore.sfxEnable = enable;
         this.saveStorages();
+    }
+
+    private getObjectName(type: number): string {
+        const dict = [PFObjectName.MusicEnabled, PFObjectName.SfxEnabled];
+        return dict[type];
     }
 }
