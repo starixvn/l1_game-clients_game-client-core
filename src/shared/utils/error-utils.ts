@@ -8,6 +8,7 @@ export namespace ErrorUtils {
         "1000": "message_error_occurred",
         "1001": "message_session_timeout",
         "1002": "message_session_timeout",
+        "7001": "message_session_timeout",
         "1007": "message_error_occurred",
         "2001": "splash_login_failed",
         "2002": "message_close_account",
@@ -177,7 +178,7 @@ export namespace ErrorUtils {
     };
 
     export const isSessionTimeoutError = (errorCode: string): boolean => {
-        const expectedTokenErrorCodes = ["1001", "1002", "SB0002", "SB0011"];
+        const expectedTokenErrorCodes = ["1001", "1002", "SB0002", "SB0011", "7001"];
         return expectedTokenErrorCodes.includes(errorCode);
     };
 }
