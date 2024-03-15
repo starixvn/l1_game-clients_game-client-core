@@ -1,3 +1,10 @@
+# [1.52.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.51.0...v1.52.0) (2024-03-15)
+
+
+### Features
+
+* update list backgroud music ([d671dbd](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d671dbd37c83911e0ad9d7b6da32f8994a4a40bc))
+
 # [1.51.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.50.1...v1.51.0) (2024-03-07)
 
 
