@@ -49,8 +49,8 @@ export class AnalyticsManager {
 export const PFObjectName = {
     ReBetButton: "RebetButton",
     PFIcon: "PF Icon",
-    ChangePF: "Change PF",
-    ViewPFGuide: "View PF Guide",
+    PFClientSeed: "PF Client Seed",
+    PFUseGuide: "PF Use Guide",
     MusicEnabled: "musicEnabled",
     SfxEnabled: "sfxEnabled",
 };
