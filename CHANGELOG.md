@@ -1,3 +1,10 @@
+# [1.53.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.52.0...v1.53.0) (2024-03-21)
+
+
+### Features
+
+* add GA ([57d072a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/57d072a224001f56bf93153add583d70289162c8))
+
 # [1.52.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.51.0...v1.52.0) (2024-03-15)
 
 
