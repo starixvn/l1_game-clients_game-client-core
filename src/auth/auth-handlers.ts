@@ -166,6 +166,10 @@ export namespace AuthHandlers {
                     this.appStore.setURLStore(urlParams);
                 }
 
+                if (urlParams?.has(URLParams.operator)) {
+                    StorageManager.set(localStorageKeys.operator, urlParams.get(URLParams.operator));
+                }
+
                 await this.handleSSOAndAuthorize(token, system);
                 BrowserDomUtils.postMessageToParent({ hasSSO: true });
             } else {
@@ -205,6 +209,7 @@ export namespace AuthHandlers {
             this.saveDataSSOInStorage(urlSearchParams);
             const session = urlSearchParams.get(URLParams.session);
             const username = urlSearchParams.get(URLParams.username);
+
             await this.handleAuthorize(session, username);
         }
 
@@ -228,6 +233,10 @@ export namespace AuthHandlers {
                         localStorageKeys.gameIdsSupportBoostedOddsForInstantSite,
                         urlParams.get(URLParams.gameIdsSupportBoostedOddsForInstantSite)
                     );
+                }
+
+                if (urlParams.has(URLParams.operator)) {
+                    StorageManager.set(localStorageKeys.operator, urlParams.get(URLParams.operator));
                 }
             }
         }
