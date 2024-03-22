@@ -202,7 +202,7 @@ export class RoundTimeStore {
         }
 
         if (this.isShowResult) {
-            const duration = this.roundTime - this.placingBet - this.generatingResult;
+            const duration = this.roundTime - this.placingBet - this.startRound;
             this._remaining = duration;
             this._countdownTimer = duration;
         }
