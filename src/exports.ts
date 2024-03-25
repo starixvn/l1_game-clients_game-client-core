@@ -4,6 +4,7 @@ export * as ChipSetting from "./chip-setting";
 export * as Configs from "./configs";
 export * as ConnectSite from "./connect-site";
 export * from "./container";
+export * as RoundBasePF from "./features/provably-fair/round-base";
 export * from "./game";
 export * as GameCrash from "./game-crash";
 export * as Notification from "./notification";
