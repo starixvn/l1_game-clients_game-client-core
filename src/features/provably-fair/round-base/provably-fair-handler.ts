@@ -95,7 +95,7 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
     }
 
     onSaveStorage() {
-        const currentSetting = StorageManager.get(localStorageKeys.permanentGameUserSetting) as PFUserSetting;
+        const currentSetting = (StorageManager.get(localStorageKeys.permanentGameUserSetting) || {}) as PFUserSetting;
 
         const pf = {
             randomClientSeedEnabled: this.provablyFairStore.randomClientSeedEnabled,
