@@ -10,6 +10,9 @@ export class ProvablyFairStore {
     randomClientSeed = this.randomClientSeedValue();
     manualClientSeed = "";
     get clientSeed() {
+        if (this.lastBetClientSeed) {
+            return this.lastBetClientSeed;
+        }
         return this.randomClientSeedEnabled ? this.randomClientSeed : this.manualClientSeed;
     }
 
@@ -18,6 +21,8 @@ export class ProvablyFairStore {
     openVerification: OpenVerification = null;
 
     pf: GameServiceMessage.ProvablyFair = null;
+
+    lastBetClientSeed: string = null;
 
     constructor() {
         makeAutoObservable(this);
@@ -38,9 +43,7 @@ export class ProvablyFairStore {
     }
 
     get notAllowChangeClientSeed() {
-        //TODO: service will send accepted client seed of the first bet,
-        // should not allow change client seed after first bet
-        return false;
+        return this.lastBetClientSeed !== null;
     }
 
     get showManualClientSeedPopup() {

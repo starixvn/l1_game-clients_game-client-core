@@ -1,11 +1,12 @@
 import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
+import { BetStore } from "../../../game/bets";
 import { GameUserSettingHandler } from "../../../game/game-user-settings/game-user-setting-handler";
 import { GameUserSettingAction, GameUserSettingStore } from "../../../game/game-user-settings/game-user-setting-store";
 import { RoundPFHandler } from "../../../game/round-pf";
 import { RoundTimeStore } from "../../../game/rounds/round-time-store";
 import { GameServiceMessage } from "../../../shared";
-import { IHandler } from "../../../shared/mediator";
+import { IMultipleHandlers } from "../../../shared/mediator";
 import { StorageManager, localStorageKeys } from "../../../shared/utils";
 import { PFClientSetting, VerificationMode } from "./definitions";
 import { ProvablyFairStore } from "./provably-fair-store";
@@ -15,13 +16,14 @@ type PFUserSetting = {
 };
 
 @injectable()
-export class ProvablyFairHandler implements IHandler<GameServiceMessage.ProvablyFair> {
+export class ProvablyFairHandler implements IMultipleHandlers {
     constructor(
         @inject(ProvablyFairStore) protected readonly provablyFairStore: ProvablyFairStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(GameUserSettingStore) protected readonly gameUserSettingStore: GameUserSettingStore,
         @inject(GameUserSettingHandler) protected readonly gameUserSettingHandler: GameUserSettingHandler,
-        @inject(RoundPFHandler) protected readonly roundPFHandler: RoundPFHandler
+        @inject(RoundPFHandler) protected readonly roundPFHandler: RoundPFHandler,
+        @inject(BetStore) protected readonly betStore: BetStore
     ) {
         this.loadClientSettingFromStorage();
 
@@ -31,6 +33,7 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
                 if (isStartRound) {
                     this.provablyFairStore.generateRandomClientSeed();
                     this.saveStorage();
+                    this.clearLastBetClientSeed();
                 }
             }
         );
@@ -43,11 +46,41 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
                 }
             }
         );
+
+        reaction(
+            () => this.betStore.lastReceivedBet,
+            (lastReceivedBet) => {
+                lastReceivedBet && this.assignLastBetClientSeed();
+            }
+        );
     }
-    name = GameServiceMessage.ProvablyFair.eventName;
+    eventHandleList = [
+        {
+            name: GameServiceMessage.ProvablyFair.eventName,
+            handle: this.handle,
+        },
+        {
+            name: "clientSeed",
+            handle: this.handleReceiveLastClientSeed,
+        },
+    ];
+
+    private assignLastBetClientSeed() {
+        if (!this.provablyFairStore.lastBetClientSeed) {
+            this.provablyFairStore.lastBetClientSeed = this.provablyFairStore.clientSeed;
+        }
+    }
 
     handle(pf: GameServiceMessage.ProvablyFair) {
         this.provablyFairStore.pf = pf;
+    }
+
+    handleReceiveLastClientSeed(clientSeed: string) {
+        this.provablyFairStore.lastBetClientSeed = clientSeed;
+    }
+
+    clearLastBetClientSeed() {
+        this.provablyFairStore.lastBetClientSeed = null;
     }
 
     loadClientSettingFromStorage() {
