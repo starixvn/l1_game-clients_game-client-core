@@ -29,14 +29,12 @@ export class RoundHistoryStore {
         when(
             () => this.isValidHistories,
             () => {
-                console.log("+++++++++++++++++++ handle isValidHistories ", this.isValidHistories);
                 const lastRound = this.getLastRound();
 
                 if (this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
                     const showResultByFinish =
-                        this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId > lastRound.roundId;
+                        this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId >= lastRound.roundId;
                     if (!showResultByFinish) {
-                        console.log("++++++++++++++++++++++++++++++++++++++++++ joinGameHistory");
                         this.joinGameHistory = {
                             roundHistory: this.getLastRound(),
                         };
