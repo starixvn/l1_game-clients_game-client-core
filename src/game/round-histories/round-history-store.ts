@@ -15,7 +15,6 @@ export interface RoundHistory {
 
 export interface IJoinGameHistory {
     roundHistory: RoundHistory;
-    isShow?: boolean;
 }
 
 @injectable()
@@ -30,11 +29,18 @@ export class RoundHistoryStore {
         when(
             () => this.isValidHistories,
             () => {
-                if (this.isShowResultWhenJoinGame) {
-                    this.joinGameHistory = {
-                        roundHistory: this.getLastRound(),
-                        isShow: true,
-                    };
+                console.log("+++++++++++++++++++ handle isValidHistories ", this.isValidHistories);
+                const lastRound = this.getLastRound();
+
+                if (this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
+                    const showResultByFinish =
+                        this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId > lastRound.roundId;
+                    if (!showResultByFinish) {
+                        console.log("++++++++++++++++++++++++++++++++++++++++++ joinGameHistory");
+                        this.joinGameHistory = {
+                            roundHistory: this.getLastRound(),
+                        };
+                    }
                 }
             }
         );
@@ -66,15 +72,6 @@ export class RoundHistoryStore {
         }
 
         return true;
-    }
-
-    get isShowResultWhenJoinGame() {
-        const { roundTimeStore, settlementStore } = this;
-        const roundState = roundTimeStore?.roundState;
-
-        return (
-            !settlementStore?.currentFinish && (roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || roundState === ROUND_STATE.SHOW_RESULT)
-        );
     }
 
     getLastRound() {
