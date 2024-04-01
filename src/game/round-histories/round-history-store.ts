@@ -30,6 +30,9 @@ export class RoundHistoryStore {
             () => this.isValidHistories,
             () => {
                 const lastRound = this.getLastRound();
+                this.firstJoinGameHistory = {
+                    roundHistory: lastRound,
+                };
 
                 if (this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
                     const showResultByFinish =
@@ -47,6 +50,7 @@ export class RoundHistoryStore {
 
     private _histories: RoundHistory[] = [];
     private _joinGameHistory: IJoinGameHistory = null;
+    private _firstJoinGameHistory: IJoinGameHistory = null;
 
     get histories() {
         return this._histories;
@@ -62,6 +66,14 @@ export class RoundHistoryStore {
 
     set joinGameHistory(joinGameHistory: IJoinGameHistory) {
         this._joinGameHistory = joinGameHistory;
+    }
+
+    get firstJoinGameHistory() {
+        return this._firstJoinGameHistory;
+    }
+
+    set firstJoinGameHistory(history: IJoinGameHistory) {
+        this._firstJoinGameHistory = history;
     }
 
     get isValidHistories(): boolean {
