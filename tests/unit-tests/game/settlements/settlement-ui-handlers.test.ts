@@ -31,14 +31,14 @@ describe("SettlementUIHandlers test", () => {
             expect(settlementStore.isFinishedShowResult).toBe(true);
         });
 
-        it("should updateHistories in roundHistoryStore", () => {
+        it("should insertNewRound in roundHistoryStore", () => {
             // arrange
             const { roundId, result, settlementResult, md5Result } = settlementStore;
             // act
             handler.handle();
 
             // assert
-            expect(roundHistoryStore.updateHistories).toHaveBeenCalledWith({ roundId, result, settlementResult, md5Result });
+            expect(roundHistoryStore.insertNewRound).toHaveBeenCalledWith({ roundId, result, settlementResult, md5Result });
         });
     });
 });

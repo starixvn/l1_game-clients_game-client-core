@@ -137,7 +137,6 @@ export class RoundStore {
     }
 
     get highLightAnim(): THighlightAnim {
-        console.log("highLightAnim", this.roundHistoryStore?.getLastRound());
         const isAnim = this.settlementStore.isFinishedShowResult;
         const settlementResult = this.roundHistoryStore?.getLastRound()?.settlementResult;
 

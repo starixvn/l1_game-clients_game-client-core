@@ -14,6 +14,6 @@ export class RoundHistoryHandlers implements IMultipleHandlers {
     ];
 
     handleRoundHistory(roundHistories: RoundHistory[]) {
-        this.roundHistoryStore.histories = roundHistories;
+        this.roundHistoryStore.updateHistoriesInGame(roundHistories);
     }
 }

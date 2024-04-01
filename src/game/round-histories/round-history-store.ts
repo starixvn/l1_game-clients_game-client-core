@@ -35,8 +35,9 @@ export class RoundHistoryStore {
                     const showResultByFinish =
                         this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId >= lastRound.roundId;
                     if (!showResultByFinish) {
+                        console.log("========================== joinGameHistory created =================");
                         this.joinGameHistory = {
-                            roundHistory: this.getLastRound(),
+                            roundHistory: lastRound,
                         };
                     }
                 }
@@ -76,17 +77,34 @@ export class RoundHistoryStore {
         return this.histories?.[0];
     }
 
-    updateHistories(finish: GameServiceMessage.Finish) {
+    insertNewRound(finish: GameServiceMessage.Finish) {
         const currentRound = finish as RoundHistory;
         if (this.histories[0]?.roundId === currentRound.roundId) {
             return;
         }
         const cloneHistories = JSON.parse(JSON.stringify(this.histories));
         cloneHistories.unshift(currentRound);
-        if (cloneHistories.length > this.gameSetting.numberOfRoundHistory) {
-            cloneHistories.pop();
-        }
+        this.limitNumberRoundHistory(cloneHistories);
 
         this.histories = cloneHistories;
+    }
+
+    limitNumberRoundHistory(roundHistories: any) {
+        if (roundHistories.length > this.gameSetting.numberOfRoundHistory) {
+            roundHistories.pop();
+        }
+    }
+
+    updateHistoriesInGame(roundHistories: RoundHistory[]) {
+        if (roundHistories.length > 0) {
+            const lastRound = roundHistories[0];
+            const missingNewRound = this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId > lastRound.roundId;
+            if (missingNewRound) {
+                roundHistories.unshift(this.settlementStore.currentFinish as RoundHistory);
+                console.log("========================= append new round from last finish");
+            }
+            this.limitNumberRoundHistory(roundHistories);
+        }
+        this.histories = roundHistories;
     }
 }

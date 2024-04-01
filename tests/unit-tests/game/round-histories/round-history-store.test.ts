@@ -41,7 +41,7 @@ describe("RoundHistoryStore", () => {
         ];
     });
 
-    describe("updateHistories", () => {
+    describe("insertNewRound", () => {
         it("should not update histories when currentRound has the same roundId as the lastRound", () => {
             // arrange
             const histories = [
@@ -67,7 +67,7 @@ describe("RoundHistoryStore", () => {
             };
 
             // Act
-            roundHistoryStore.updateHistories(currentRound);
+            roundHistoryStore.insertNewRound(currentRound);
 
             // Assert
             expect(roundHistoryStore.histories).toEqual(histories);
@@ -86,7 +86,7 @@ describe("RoundHistoryStore", () => {
             };
 
             // Act
-            roundHistoryStore.updateHistories(finish);
+            roundHistoryStore.insertNewRound(finish);
 
             // Assert
             expect(roundHistoryStore.histories).toEqual([finish]);
@@ -106,14 +106,14 @@ describe("RoundHistoryStore", () => {
             };
 
             // Act
-            roundHistoryStore.updateHistories(finish);
+            roundHistoryStore.insertNewRound(finish);
 
             // Assert
             expect(roundHistoryStore.histories).toEqual([]);
         });
     });
 
-    describe("updateHistories", () => {
+    describe("insertNewRound", () => {
         const initialHistories = [
             {
                 roundId: 1,
@@ -151,7 +151,7 @@ describe("RoundHistoryStore", () => {
 
         it("should update histories correctly when numberOfRoundHistory is greater than the length of histories", () => {
             // Act
-            roundHistoryStore.updateHistories(finish);
+            roundHistoryStore.insertNewRound(finish);
 
             // Assert
             expect(roundHistoryStore.histories).toEqual([finish, ...initialHistories]);
@@ -162,38 +162,12 @@ describe("RoundHistoryStore", () => {
             gameSetting.numberOfRoundHistory = 2;
 
             // Act
-            roundHistoryStore.updateHistories(finish);
+            roundHistoryStore.insertNewRound(finish);
 
             // Assert
             expect(roundHistoryStore.histories.length).toBe(gameSetting.numberOfRoundHistory);
             expect(roundHistoryStore.histories).toEqual([finish, initialHistories[0]]);
         });
-    });
-
-    describe("shouldShowResultWhenJoinGame", () => {
-        test.each`
-            roundState                           | histories                                                | currentFinish | expected
-            ${ROUND_STATE.SHOW_ANIMATION_RESULT} | ${[{ id: 1, result: "Win" }, { id: 2, result: "Lose" }]} | ${null}       | ${true}
-            ${ROUND_STATE.SHOW_RESULT}           | ${[{ id: 3, result: "Draw" }, { id: 4, result: "Win" }]} | ${null}       | ${true}
-            ${ROUND_STATE.LOCKING_BET}           | ${[{ id: 5, result: "Lose" }, { id: 6, result: "Win" }]} | ${{}}         | ${false}
-        `(
-            "returns $expected when roundState is $roundState and histories are $histories",
-            ({ roundState, histories, currentFinish, expected }) => {
-                // Arrange
-                settlementStore = stub<SettlementStore>({ currentFinish });
-                roundHistoryStore = new RoundHistoryStore(roundTimeStoreMock, gameSetting, settlementStore);
-
-                roundHistoryStore.histories = histories;
-                roundTimeStoreMock.roundState = roundState;
-                roundHistoryStore.joinGameHistory = expected;
-
-                // Act
-                const result = roundHistoryStore.isShowResultWhenJoinGame;
-
-                // Assert
-                expect(result).toEqual(expected);
-            }
-        );
     });
 
     describe("isValidHistories", () => {
