@@ -17,6 +17,12 @@ export interface IJoinGameHistory {
     roundHistory: RoundHistory;
 }
 
+export interface IFirstJoinGameHistory {
+    roundHistory: RoundHistory;
+    staticHighlight: boolean;
+    animationHighlight: boolean;
+}
+
 @injectable()
 export class RoundHistoryStore {
     constructor(
@@ -32,6 +38,8 @@ export class RoundHistoryStore {
                 const lastRound = this.getLastRound();
                 this.firstJoinGameHistory = {
                     roundHistory: lastRound,
+                    staticHighlight: this.roundTimeStore.isPlacingBet || this.roundTimeStore.isStartRound,
+                    animationHighlight: this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult,
                 };
 
                 if (this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
@@ -50,7 +58,7 @@ export class RoundHistoryStore {
 
     private _histories: RoundHistory[] = [];
     private _joinGameHistory: IJoinGameHistory = null;
-    private _firstJoinGameHistory: IJoinGameHistory = null;
+    private _firstJoinGameHistory: IFirstJoinGameHistory = null;
 
     get histories() {
         return this._histories;
@@ -72,7 +80,7 @@ export class RoundHistoryStore {
         return this._firstJoinGameHistory;
     }
 
-    set firstJoinGameHistory(history: IJoinGameHistory) {
+    set firstJoinGameHistory(history: IFirstJoinGameHistory) {
         this._firstJoinGameHistory = history;
     }
 
