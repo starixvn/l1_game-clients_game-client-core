@@ -1,3 +1,16 @@
+# [1.54.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.53.0...v1.54.0) (2024-04-02)
+
+
+### Bug Fixes
+
+* show en-US default ([c184e3e](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/c184e3effa1a4c69fd5dfae8ee360fa4f6db5a01))
+
+
+### Features
+
+* add error code session time out ([615bf00](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/615bf0001e3ad51189ccbdcffc4a6d922d380f3c))
+* store operator in storage-manager ([7446656](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/744665649f3794558d3b497303eeb8616c7c52f4))
+
 # [1.53.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.52.0...v1.53.0) (2024-03-21)
 
 
