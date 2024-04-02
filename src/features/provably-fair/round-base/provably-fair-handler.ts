@@ -77,6 +77,11 @@ export class ProvablyFairHandler implements IMultipleHandlers {
 
     handleReceiveLastClientSeed(clientSeed: string) {
         this.provablyFairStore.lastBetClientSeed = clientSeed;
+        if (this.provablyFairStore.randomClientSeedEnabled) {
+            this.provablyFairStore.randomClientSeed = clientSeed;
+        } else {
+            this.provablyFairStore.manualClientSeed = clientSeed;
+        }
     }
 
     clearLastBetClientSeed() {
