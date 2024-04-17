@@ -18,6 +18,7 @@ export interface IJoinGameHistory {
 }
 
 export interface IFirstJoinGameHistory {
+    roundTime: number;
     roundHistory: RoundHistory;
     staticHighlight: boolean;
     animationHighlight: boolean;
@@ -36,7 +37,9 @@ export class RoundHistoryStore {
             () => this.isValidHistories,
             () => {
                 const lastRound = this.getLastRound();
+                const roundTime = this.roundTimeStore.roundTime;
                 this.firstJoinGameHistory = {
+                    roundTime,
                     roundHistory: lastRound,
                     staticHighlight: this.roundTimeStore.isPlacingBet || this.roundTimeStore.isStartRound,
                     animationHighlight: this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult,
