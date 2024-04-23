@@ -69,10 +69,6 @@ export class RoundStore {
             lastRoundId++;
         }
 
-        if (this.settlementStore.currentFinish) {
-            lastRoundId = this.settlementStore.currentFinish.roundId;
-        }
-
         // when clearing all active data in database and having data in archive collection
         if (this.roundHistoryStore.histories.length === 0 && this.roundId > 0) {
             lastRoundId = this.roundId;
@@ -82,6 +78,17 @@ export class RoundStore {
             this.clientRoundId = lastRoundId;
         }
         return this._clientRoundId;
+    }
+
+    get historyRoundId() {
+        const currentFinish = this.settlementStore.currentFinish;
+        if (!currentFinish) {
+            return this.clientRoundId;
+        }
+        const finishRoundId = currentFinish.roundId;
+        if (this.clientRoundId < finishRoundId) {
+            return finishRoundId;
+        }
     }
 
     get minBet() {
