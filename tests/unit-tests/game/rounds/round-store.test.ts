@@ -195,7 +195,7 @@ describe("RoundStore", () => {
         });
     });
 
-    describe("clientRoundId", () => {
+    describe("historyRoundId", () => {
         describe("when round history is NOT empty", () => {
             describe("when clientRoundId < lastRoundId", () => {
                 test.each([[ROUND_STATE.STARTING_ROUND], [ROUND_STATE.PLACING_BET], [ROUND_STATE.LOCKING_BET], [ROUND_STATE.WAITING]])(
@@ -210,7 +210,7 @@ describe("RoundStore", () => {
                         roundStore._clientRoundId = 0;
 
                         // Act
-                        const result = roundStore.clientRoundId;
+                        const result = roundStore.historyRoundId;
 
                         // Assert
                         expect(result).toEqual(12);
@@ -227,7 +227,7 @@ describe("RoundStore", () => {
                     roundStore._clientRoundId = 0;
 
                     // Act
-                    const result = roundStore.clientRoundId;
+                    const result = roundStore.historyRoundId;
 
                     // Assert
                     expect(result).toEqual(11);
@@ -247,7 +247,7 @@ describe("RoundStore", () => {
                         roundStore._clientRoundId = 15;
 
                         // Act
-                        const result = roundStore.clientRoundId;
+                        const result = roundStore.historyRoundId;
 
                         // Assert
                         expect(result).toEqual(15);
@@ -264,7 +264,7 @@ describe("RoundStore", () => {
                     roundStore._clientRoundId = 15;
 
                     // Act
-                    const result = roundStore.clientRoundId;
+                    const result = roundStore.historyRoundId;
 
                     // Assert
                     expect(result).toEqual(15);
@@ -282,7 +282,7 @@ describe("RoundStore", () => {
                     roundStore.roundId = 20;
 
                     // Act
-                    const result = roundStore.clientRoundId;
+                    const result = roundStore.historyRoundId;
 
                     // Assert
                     expect(result).toEqual(20);
@@ -297,7 +297,7 @@ describe("RoundStore", () => {
                     roundStore.roundId = 20;
 
                     // Act
-                    const result = roundStore.clientRoundId;
+                    const result = roundStore.historyRoundId;
 
                     // Assert
                     expect(result).toEqual(30);
