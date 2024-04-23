@@ -54,6 +54,17 @@ export class RoundStore {
     }
 
     get clientRoundId() {
+        const currentFinish = this.settlementStore.currentFinish;
+        if (!currentFinish) {
+            return this.historyRoundId;
+        }
+        const finishRoundId = currentFinish.roundId;
+        if (this.historyRoundId < finishRoundId) {
+            return finishRoundId;
+        }
+    }
+
+    get historyRoundId() {
         let lastRoundId = 0;
 
         if (this.roundHistoryStore.histories.length > 0) {
@@ -78,17 +89,6 @@ export class RoundStore {
             this.clientRoundId = lastRoundId;
         }
         return this._clientRoundId;
-    }
-
-    get historyRoundId() {
-        const currentFinish = this.settlementStore.currentFinish;
-        if (!currentFinish) {
-            return this.clientRoundId;
-        }
-        const finishRoundId = currentFinish.roundId;
-        if (this.clientRoundId < finishRoundId) {
-            return finishRoundId;
-        }
     }
 
     get minBet() {
