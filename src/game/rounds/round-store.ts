@@ -55,13 +55,10 @@ export class RoundStore {
 
     get clientRoundId() {
         const currentFinish = this.settlementStore.currentFinish;
-        if (!currentFinish) {
+        if (!currentFinish || this.historyRoundId >= currentFinish.roundId) {
             return this.historyRoundId;
         }
-        const finishRoundId = currentFinish.roundId;
-        if (this.historyRoundId < finishRoundId) {
-            return finishRoundId;
-        }
+        return currentFinish.roundId;
     }
 
     get historyRoundId() {
