@@ -11,9 +11,13 @@ export namespace SettlementUIHandlers {
             @inject(RoundHistoryStore) private readonly roundHistoryStore: RoundHistoryStore
         ) {}
         handle() {
-            this.settlementStore.isFinishedShowResult = true;
+            this.handleFinishedShowResult();
             const { roundId, result, settlementResult, md5Result } = this.settlementStore;
             this.roundHistoryStore.insertNewRound({ roundId, result, settlementResult, md5Result });
+        }
+
+        handleFinishedShowResult() {
+            this.settlementStore.isFinishedShowResult = true;
         }
     }
 }
