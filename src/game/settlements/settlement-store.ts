@@ -30,12 +30,13 @@ export class SettlementStore {
 
     get winningPlayers() {
         if (this._winningPlayers) {
-            const winningPlayers = { ...this._winningPlayers };
-            Object.values(winningPlayers).forEach(
-                (winningPlayer) =>
-                    (winningPlayer.bet = NumberUtils.getValueByCurrency(winningPlayer.bet, this.mainPlayerStore.rate, winningPlayer.rate))
-            );
-            return winningPlayers;
+            const convertedWinningPlayers = Object.values(this._winningPlayers).map((winningPlayer) => {
+                return {
+                    ...winningPlayer,
+                    bet: NumberUtils.getValueByCurrency(winningPlayer.bet, this.mainPlayerStore.rate, winningPlayer.rate),
+                };
+            });
+            return convertedWinningPlayers;
         }
         return this._winningPlayers;
     }
