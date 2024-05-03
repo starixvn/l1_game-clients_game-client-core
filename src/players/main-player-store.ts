@@ -46,6 +46,7 @@ export class MainPlayerStore {
         this.fractionalOddsFormat = user.fractionalOddsFormat;
         this.displayPlayerCurrency = user.isDisplayPlayerCurrency;
         this.disableJackpotGames = user.disableJackpotGames;
+        this.rate = user.rate;
     }
 
     setBalance(balance: number, scoin: number, availSpins: number) {
