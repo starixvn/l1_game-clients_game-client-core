@@ -50,7 +50,7 @@ export class ProvablyFairHandler implements IMultipleHandlers {
         reaction(
             () => this.betStore.lastReceivedBet,
             (lastReceivedBet) => {
-                lastReceivedBet && this.assignLastBetClientSeed();
+                lastReceivedBet && lastReceivedBet.value > -1 && this.assignLastBetClientSeed();
             }
         );
     }
