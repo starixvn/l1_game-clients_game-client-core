@@ -30,8 +30,10 @@ export class SettlementStore {
 
     get winningPlayers() {
         if (this._winningPlayers) {
-            const convertedWinningPlayers = Object.values(this._winningPlayers).map((winningPlayer) => {
-                return {
+            const convertedWinningPlayers = {};
+            Object.keys(this._winningPlayers).map((key) => {
+                const winningPlayer = this._winningPlayers[key];
+                convertedWinningPlayers[key] = {
                     ...winningPlayer,
                     bet: NumberUtils.getValueByCurrency(winningPlayer.bet, this.mainPlayerStore.rate, winningPlayer.rate),
                 };

@@ -92,6 +92,25 @@ describe("RoundHandlers test", () => {
         });
     });
 
+    describe("handleUserBetPercent", () => {
+        it("should update userBetPercentage", () => {
+            // Arrange
+            const roundHandler = new RoundHandlers(roundStore);
+            const data = stub<GameServiceMessage.UserBetPercentage>({
+                even: 40,
+                odd: 60,
+            });
+
+            // Act
+            roundHandler.handleUserBetPercent(data);
+
+            // Assert
+            ["even", "odd"].forEach((key) => {
+                expect(roundStore.userBetPercentage[key]).toEqual(data[key]);
+            });
+        });
+    });
+
     describe("eventHandleList", () => {
         it("should be equal expected", () => {
             // Arrange
@@ -113,6 +132,10 @@ describe("RoundHandlers test", () => {
                 {
                     name: GameServiceMessage.ResultHash.eventName,
                     handle: roundHandler.handleResultHash,
+                },
+                {
+                    name: GameServiceMessage.UserBetPercentage.eventName,
+                    handle: roundHandler.handleUserBetPercent,
                 },
             ];
 
