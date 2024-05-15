@@ -16,12 +16,6 @@ export interface TrackingParameter {
     game_name?: string;
 }
 
-declare global {
-    interface globalThis {
-        gtag: any;
-    }
-}
-
 export class AnalyticsManager {
     protected static instance: AnalyticsManager;
 
