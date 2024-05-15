@@ -49,7 +49,6 @@ export class RoundHistoryStore {
                     const showResultByFinish =
                         this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId >= lastRound.roundId;
                     if (!showResultByFinish) {
-                        console.log("========================== joinGameHistory created =================");
                         this.joinGameHistory = {
                             roundHistory: lastRound,
                         };
@@ -124,7 +123,6 @@ export class RoundHistoryStore {
             const missingNewRound = this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId > lastRound.roundId;
             if (missingNewRound) {
                 roundHistories.unshift(this.settlementStore.currentFinish as RoundHistory);
-                console.log("========================= append new round from last finish");
             }
             this.limitNumberRoundHistory(roundHistories);
         }
