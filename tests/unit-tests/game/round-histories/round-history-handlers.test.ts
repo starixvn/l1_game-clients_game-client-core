@@ -39,7 +39,7 @@ describe("RoundHistoryHandlers", () => {
         roundHistoryHandlers.handleRoundHistory(roundHistories);
 
         // Assert that roundHistoryStore.histories is updated correctly
-        expect(roundHistoryStoreStub.histories).toEqual(roundHistories);
+        expect(roundHistoryStoreStub.updateHistoriesInGame).toBeCalledWith(roundHistories);
     });
 
     test("eventHandleList should contain handleRoundHistory for GameServiceMessage.roundHistory event", () => {
