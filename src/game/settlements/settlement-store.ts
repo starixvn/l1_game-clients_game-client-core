@@ -31,7 +31,7 @@ export class SettlementStore {
     get winningPlayers() {
         if (this._winningPlayers) {
             const convertedWinningPlayers = {};
-            Object.keys(this._winningPlayers).map((key) => {
+            Object.keys(this._winningPlayers).forEach((key) => {
                 const winningPlayer = this._winningPlayers[key];
                 convertedWinningPlayers[key] = {
                     ...winningPlayer,
