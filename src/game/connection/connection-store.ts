@@ -117,6 +117,7 @@ export class ConnectionStore {
     }
 
     onDisconnected(reason = "") {
+        console.log(`onDisconnected reason is ${reason} #### `);
         this.handleDisconnectionReason(reason);
         this.isInstant() && this.handleDisconnectInstant(reason);
         this.handleConnectionStatus(false);
