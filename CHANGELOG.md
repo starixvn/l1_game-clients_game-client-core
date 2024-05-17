@@ -1,3 +1,20 @@
+# [1.55.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.54.0...v1.55.0) (2024-05-17)
+
+
+### Bug Fixes
+
+* convert winning bet of winning players duplicate ([5e26cff](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/5e26cff839c9387e1f705811fb1efffb1b129bc2))
+* missing update rate from authorize ([4dd9d0a](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/4dd9d0ac8ca86c78e788dac22b704a9c75e6830e))
+* roundId when join game after finish ([b9e3fa6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/b9e3fa6c40f23927b6efd7025d61bda29e99ce6c))
+* update user service client ([cb69bad](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/cb69badef8b7bd7b68a29ca941ef776724508f30))
+* wrong calculation wait timer ([00a220c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/00a220cb20c7ee950eff6818d8cc1668459bb6e1))
+
+
+### Features
+
+* add round base PF ([77dc3c0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/77dc3c06ecc12115dd6005b01fef495c97e70a3f))
+* handle append new round from finish to histories when ingame ([f7f80a2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/f7f80a27020002cb327b43e1ee558584613fe86a))
+
 # [1.54.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.53.0...v1.54.0) (2024-04-02)
 
 
