@@ -15,10 +15,17 @@ export class FairnessHandler {
     handle(clientSeed: string) {
         this.fairnessStore.clientSeed = clientSeed;
         this.connectionStore.send(GameClientEmitMessage.CutCard.eventName, { cutCardIndex: this.fairnessStore.clientSeed });
-        
     }
 
     saveClientSeed(clientSeed: string) {
         this.fairnessStore.clientSeed = clientSeed;
+    }
+
+    setMinClientSeed(min: number) {
+        this.fairnessStore.minClientSeed = min;
+    }
+
+    setMaxClientSeed(max: number) {
+        this.fairnessStore.minClientSeed = max;
     }
 }

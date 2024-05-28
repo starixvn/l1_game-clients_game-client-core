@@ -1,12 +1,12 @@
 import { inject, injectable } from "inversify";
 import { ConnectionHandlers } from "../../../game/connection/connection-handlers";
 import { GameServiceMessage, IMultipleHandlers } from "../../../shared";
-import { FairnessStore } from "./fairness-store";
+import { CutCardStore } from "./cut-card-store";
 
 @injectable()
 export class CutCardResponseHandlers implements IMultipleHandlers {
     constructor(
-        @inject(FairnessStore) protected readonly fairnessStore: FairnessStore,
+        @inject(CutCardStore) protected readonly fairnessStore: CutCardStore,
         @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler
     ) {}
 

@@ -2,11 +2,6 @@ import { injectable } from "inversify";
 import * as _ from "lodash";
 import { makeAutoObservable } from "mobx";
 
-interface CutCardInfo {
-    cutCardIndex: number;
-    successful: boolean;
-}
-
 @injectable()
 export class FairnessStore {
     constructor() {
@@ -14,10 +9,12 @@ export class FairnessStore {
     }
 
     _clientSeed = "";
-    _cutCardInfo: CutCardInfo = null;
+
+    _minCS = 0;
+    _maxCS = 0;
 
     private randomClientSeedValue(): string {
-        return _.random(300, 350).toString();
+        return _.random(this._minCS, this._maxCS).toString();
     }
 
     get clientSeed() {
@@ -31,11 +28,11 @@ export class FairnessStore {
         this._clientSeed = clientSeed;
     }
 
-    get cutCardInfo() {
-        return this._cutCardInfo;
+    set minClientSeed(min: number) {
+        this._minCS = min;
     }
 
-    set cutCardInfo(cutCardInfo: CutCardInfo) {
-        this._cutCardInfo = cutCardInfo;
+    set maxClientSeed(max: number) {
+        this._maxCS = max;
     }
 }

@@ -1,27 +1,23 @@
 import { injectable } from "inversify";
-import * as _ from "lodash";
 import { makeAutoObservable } from "mobx";
 
+interface CutCardInfo {
+    cutCardIndex: number;
+    successful: boolean;
+}
 @injectable()
 export class CutCardStore {
     constructor() {
         makeAutoObservable(this);
     }
 
-    _clientSeed = "";
+    _cutCardInfo: CutCardInfo = null;
 
-    private randomClientSeedValue(): string {
-        return _.random(300, 350).toString();
+    get cutCardInfo() {
+        return this._cutCardInfo;
     }
 
-    get clientSeed() {
-        if (this._clientSeed === "") {
-            this._clientSeed = this.randomClientSeedValue();
-        }
-        return this._clientSeed;
-    }
-
-    set clientSeed(clientSeed: string) {
-        this._clientSeed = clientSeed;
+    set cutCardInfo(cutCardInfo: CutCardInfo) {
+        this._cutCardInfo = cutCardInfo;
     }
 }
