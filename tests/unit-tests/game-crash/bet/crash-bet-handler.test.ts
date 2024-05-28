@@ -127,13 +127,11 @@ describe("CrashBetHandler", () => {
             undefinedAutoCashOutData = {
                 autoCashOut: undefined,
                 roundId: roundStore.clientRoundId,
-                clientSendTime: expect.any(Date),
                 clientSeed,
             };
             autoCashOutData = {
                 autoCashOut: autoCashOutStore.multiplier,
                 roundId: roundStore.clientRoundId,
-                clientSendTime: expect.any(Date),
                 clientSeed,
             };
         });
@@ -142,7 +140,7 @@ describe("CrashBetHandler", () => {
             // Clean up
             createBetDataSpy.mockRestore();
         });
-        it("should call super.createBetData with the given data and merge with autoCashOut, roundId, and clientSendTime", () => {
+        it("should call super.createBetData with the given data and merge with autoCashOut, roundId", () => {
             // Arrange
             const data = {};
 
