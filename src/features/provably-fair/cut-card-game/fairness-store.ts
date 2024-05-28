@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import * as _ from "lodash";
+
 import { makeAutoObservable } from "mobx";
 
 @injectable()
@@ -13,14 +13,7 @@ export class FairnessStore {
     _minCS = 0;
     _maxCS = 0;
 
-    private randomClientSeedValue(): string {
-        return _.random(this._minCS, this._maxCS).toString();
-    }
-
     get clientSeed() {
-        if (this._clientSeed === "") {
-            this._clientSeed = this.randomClientSeedValue();
-        }
         return this._clientSeed;
     }
 
@@ -32,7 +25,15 @@ export class FairnessStore {
         this._minCS = min;
     }
 
+    get minClientSeed() {
+        return this._minCS;
+    }
+
     set maxClientSeed(max: number) {
         this._maxCS = max;
+    }
+
+    get maxClientSeed() {
+        return this._maxCS;
     }
 }
