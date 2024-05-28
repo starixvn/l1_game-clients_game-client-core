@@ -5,7 +5,7 @@ import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { ShoeStore } from "./shoe-store";
 
 @injectable()
-export class CutCardResponseHandlers implements IMultipleHandlers {
+export class ShoeHandlers implements IMultipleHandlers {
     constructor(
         @inject(FairnessStore) protected readonly fairnessStore: FairnessStore,
         @inject(ShoeStore) protected readonly shoeStore: ShoeStore,
@@ -16,10 +16,18 @@ export class CutCardResponseHandlers implements IMultipleHandlers {
         this.shoeStore.newShoeHash = newShoeHash;
     }
 
+    handleShoeInfo(shoeInfo: GameServiceMessage.ShoeInfo) {
+        this.shoeStore.shoeInfo = shoeInfo;
+    }
+
     eventHandleList = [
         {
             name: GameServiceMessage.NewShoeHash.eventName,
             handle: this.handleNewShoeHash,
+        },
+        {
+            name: GameServiceMessage.ShoeInfo.eventName,
+            handle: this.handleShoeInfo,
         },
     ];
 }

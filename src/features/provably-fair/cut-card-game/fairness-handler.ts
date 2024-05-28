@@ -62,7 +62,7 @@ export class FairnessHandler {
     }
 
     setMaxClientSeed(max: number) {
-        this.fairnessStore.minClientSeed = max;
+        this.fairnessStore.maxClientSeed = max;
     }
 
     generateClientSeed() {

@@ -323,6 +323,13 @@ export namespace GameServiceMessage {
         hashValue: string;
         static eventName = "newShoeHash";
     }
+
+    export class ShoeInfo {
+        cutCardIndex: number;
+        burnCards: number;
+        firstCard: number;
+        static eventName = "shoeInfo";
+    }
 }
 
 export namespace NotificationServiceMessage {
