@@ -1,3 +1,10 @@
+## [1.55.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.55.0...v1.55.1) (2024-05-28)
+
+
+### Bug Fixes
+
+* update avatar images ([4507e35](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/4507e35a4081b34c9e82db967bb3a6c50c7f2d04))
+
 # [1.55.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.54.0...v1.55.0) (2024-05-17)
 
 
