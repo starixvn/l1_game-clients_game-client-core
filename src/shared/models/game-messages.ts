@@ -39,6 +39,10 @@ export namespace GameClientEmitMessage {
     export class RoundPF {
         static eventName = "getRoundPF";
     }
+
+    export class CutCard {
+        static eventName = "cutCard";
+    }
 }
 
 export namespace GameServiceMessage {
@@ -307,6 +311,17 @@ export namespace GameServiceMessage {
 
     export class RoundPFResult extends ProvablyFair {
         static eventName = "roundPFResult";
+    }
+
+    export class CutCard {
+        cutCardIndex: number;
+        successful: boolean;
+        static eventName = "cutCard";
+    }
+
+    export class NewShoeHash {
+        hashValue: string;
+        static eventName = "newShoeHash";
     }
 }
 
