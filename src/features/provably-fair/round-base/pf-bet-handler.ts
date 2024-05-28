@@ -39,7 +39,6 @@ export class PFBetHandler extends BetHandlerBase {
         const betData = super.createBetData(data);
         return Object.assign(betData, {
             roundId: this.roundStore.clientRoundId,
-            clientSendTime: new Date(),
             clientSeed: this.pfStore.clientSeed,
         });
     }
