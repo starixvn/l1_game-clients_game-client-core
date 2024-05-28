@@ -44,7 +44,6 @@ export class CrashBetHandler extends BetHandlerBase {
         return Object.assign(betData, {
             autoCashOut: this.autoCashOutStore.enable ? this.autoCashOutStore.multiplier : undefined,
             roundId: this.roundStore.clientRoundId,
-            clientSendTime: new Date(),
             clientSeed: this.pfStore.clientSeed,
         });
     }

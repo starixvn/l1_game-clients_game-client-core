@@ -53,6 +53,7 @@ export class BetHandlerBase {
             username: this.mainPlayerStore.name,
             freeBet: freebetEnabled,
             amount: this.getBetAmount(),
+            clientSendTime: new Date(),
         };
     }
 
