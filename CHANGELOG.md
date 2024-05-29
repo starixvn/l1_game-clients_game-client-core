@@ -1,3 +1,10 @@
+## [1.55.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.55.1...v1.55.2) (2024-05-29)
+
+
+### Bug Fixes
+
+* change key tracking name ([9b81166](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9b81166dd695617ea98707ca1bae1c59e590d467))
+
 ## [1.55.1](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.55.0...v1.55.1) (2024-05-28)
 
 
