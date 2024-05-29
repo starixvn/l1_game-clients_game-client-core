@@ -45,6 +45,7 @@ export class CrashBetHandler extends BetHandlerBase {
             autoCashOut: this.autoCashOutStore.enable ? this.autoCashOutStore.multiplier : undefined,
             roundId: this.roundStore.clientRoundId,
             clientSeed: this.pfStore.clientSeed,
+            clientSendTime: new Date(),
         });
     }
 

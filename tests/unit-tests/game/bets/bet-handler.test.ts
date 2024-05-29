@@ -197,7 +197,7 @@ describe("BetHandler", () => {
                 betChoice,
                 amount: betStore.amount,
                 freeBet: betStore.freebetEnabled,
-                clientSendTime: expect.any(Date),
+                clientSentTime: expect.any(Date),
             });
             expect(retryHandler.handle).toBeCalled();
         });
