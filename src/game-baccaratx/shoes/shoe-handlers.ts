@@ -1,13 +1,13 @@
 import { inject, injectable } from "inversify";
-import { FairnessStore } from "../../features/provably-fair/cut-card-game/fairness-store";
 import { ConnectionHandlers } from "../../game/connection/connection-handlers";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
+import { CutCardHandler } from "./../../features/provably-fair/cut-card-game/cut-card-handler";
 import { ShoeStore } from "./shoe-store";
 
 @injectable()
 export class ShoeHandlers implements IMultipleHandlers {
     constructor(
-        @inject(FairnessStore) protected readonly fairnessStore: FairnessStore,
+        @inject(CutCardHandler) protected readonly cutCardHandler: CutCardHandler,
         @inject(ShoeStore) protected readonly shoeStore: ShoeStore,
         @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler
     ) {}
@@ -18,6 +18,7 @@ export class ShoeHandlers implements IMultipleHandlers {
 
     handleShoeInfo(shoeInfo: GameServiceMessage.ShoeInfo) {
         this.shoeStore.shoeInfo = shoeInfo;
+        shoeInfo && this.cutCardHandler.resetCutCardInfo();
     }
 
     eventHandleList = [
