@@ -11,10 +11,12 @@ export interface IChipGroup {
     [chipValue: string]: number;
 }
 
+interface MainPlayerChips {
+    [choiceName: string]: IChipGroup;
+}
+
 export interface TChipsByMainPlayerRate {
-    chips: {
-        [choiceName: string]: IChipGroup;
-    };
+    chips: MainPlayerChips;
     isShow: boolean;
 }
 
@@ -34,6 +36,7 @@ export class ChipStore {
     }
 
     private _chips: GameServiceMessage.Chips = {};
+    private _clientChips: MainPlayerChips = {};
     private _playerChip: GameServiceMessage.PlayerChip = null;
     private _ownChip: GameServiceMessage.OwnChip = { betChoice: "", amount: 0 };
     private _reBet: GameServiceMessage.ReBet = {};
@@ -52,6 +55,14 @@ export class ChipStore {
 
     set chips(chips: GameServiceMessage.Chips) {
         this._chips = chips;
+    }
+
+    get clientChips() {
+        return this._clientChips;
+    }
+
+    set clientChips(chips) {
+        this._clientChips = chips;
     }
 
     get playerChip() {
@@ -78,6 +89,7 @@ export class ChipStore {
 
     resetChips() {
         this._chips = {};
+        this._clientChips = {};
         this._playerChip = null;
         this.ownChip = { betChoice: "", amount: 0 };
     }
@@ -89,23 +101,31 @@ export class ChipStore {
             chipsByMainPlayerRate.isShow = false;
         }
 
-        if (this.chips) {
-            for (const rate in this.chips) {
-                const chipsByChoiceName = this.chips[rate];
-                const choiceNames = Object.keys(chipsByChoiceName);
+        if (this.clientChips) {
+            chipsByMainPlayerRate.chips = this.clientChips;
+        }
 
-                for (const name of choiceNames) {
-                    const chipGroup = chipsByChoiceName[name];
+        return chipsByMainPlayerRate;
+    }
 
-                    if (chipGroup) {
-                        const chipValueConvert = this.convertChipToPlayerRate(chipGroup, this.mainPlayerStore.rate, +rate);
-                        chipsByMainPlayerRate.chips[name] = chipValueConvert;
-                    }
+    convertChips() {
+        const chips: MainPlayerChips = {};
+
+        for (const rate in this.chips) {
+            const chipsByChoiceName = this.chips[rate];
+            const choiceNames = Object.keys(chipsByChoiceName);
+
+            for (const name of choiceNames) {
+                const chipGroup = chipsByChoiceName[name];
+
+                if (chipGroup) {
+                    const chipValueConvert = this.convertChipToPlayerRate(chipGroup, this.mainPlayerStore.rate, +rate);
+                    chips[name] = chipValueConvert;
                 }
             }
         }
 
-        return chipsByMainPlayerRate;
+        this.clientChips = chips;
     }
 
     convertChipToPlayerRate(chipGroup: IChipGroup, playerRate: number, chipRate: number) {
