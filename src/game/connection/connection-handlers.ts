@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { GameClientEmitMessage, IHandler } from "../../shared";
+import { GameConfigStore } from "../game-configs/game-config-store";
 import { RoundRunningHandlers } from "../rounds";
 import { ConnectionStore, ISocketOption } from "./connection-store";
 
@@ -17,10 +18,14 @@ export namespace ConnectionHandlers {
     export class InGameHandler implements IHandler<void> {
         constructor(
             @inject(ConnectionStore) private readonly connectionStore: ConnectionStore,
-            @inject(RoundRunningHandlers) private readonly roundRunning: RoundRunningHandlers
+            @inject(RoundRunningHandlers) private readonly roundRunning: RoundRunningHandlers,
+            @inject(GameConfigStore) private readonly gameConfigStore: GameConfigStore
         ) {}
 
         handle() {
+            if (this.gameConfigStore.initialized) {
+                return;
+            }
             this.roundRunning.stopRunner();
             this.connectionStore.send(GameClientEmitMessage.inGame, null);
         }
