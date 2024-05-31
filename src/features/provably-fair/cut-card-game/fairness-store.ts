@@ -8,6 +8,8 @@ export class FairnessStore {
         makeAutoObservable(this);
     }
 
+    _isShowFairnessSettingsPopup = false;
+
     _clientSeed = "";
 
     _minCS = 0;
@@ -35,5 +37,13 @@ export class FairnessStore {
 
     get maxClientSeed() {
         return this._maxCS;
+    }
+
+    get isShowFairnessSettingsPopup() {
+        return this._isShowFairnessSettingsPopup;
+    }
+
+    set isShowFairnessSettingsPopup(isShow: boolean) {
+        this._isShowFairnessSettingsPopup = isShow;
     }
 }

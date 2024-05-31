@@ -82,4 +82,8 @@ export class FairnessHandler {
 
         StorageManager.set(localStorageKeys.permanentGameUserSetting, currentSetting);
     }
+
+    handleShowFairnessSettingsPopup(isShow: boolean) {
+        this.fairnessStore.isShowFairnessSettingsPopup = isShow;
+    }
 }
