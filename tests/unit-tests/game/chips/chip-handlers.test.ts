@@ -57,12 +57,14 @@ describe("ChipHandlers", () => {
             amount: 5,
             red: 10,
         };
+        const addChipToClientChipsSpy = jest.spyOn(chipHandlers, "addChipToClientChips");
 
         // Act
         chipHandlers.handlePlayerChip(playerChipMessage);
 
         // Assert
         expect(chipStoreMock.playerChip).toEqual(playerChipMessage);
+        expect(addChipToClientChipsSpy).toBeCalled();
     });
 
     test("can handle own chip message", () => {
@@ -73,12 +75,52 @@ describe("ChipHandlers", () => {
             amount: 10,
             red: 10,
         };
+        const addChipToClientChipsSpy = jest.spyOn(chipHandlers, "addChipToClientChips");
 
         // Act
         chipHandlers.handleOwnChip(ownChipMessage);
 
         // Assert
         expect(chipStoreMock.ownChip).toEqual(ownChipMessage);
+        expect(addChipToClientChipsSpy).toBeCalledWith(chipStoreMock.ownChip);
+    });
+
+    describe("addChipToClientChips", () => {
+        it("should add chip to clientChips, when not exist chip value of specific bet choice", () => {
+            // Arrange
+            const ownChipMessage = {
+                playerId: 1,
+                betChoice: "even",
+                amount: 10,
+                red: 10,
+            };
+            chipStoreMock.clientChips = {};
+
+            // Act
+            chipHandlers.addChipToClientChips(ownChipMessage);
+
+            // Assert
+            expect(chipStoreMock.clientChips["even"]["10"]).toEqual(1);
+        });
+
+        it("should increase number of chips , when exist chip value on specific bet choice.", () => {
+            // Arrange
+            const ownChipMessage = {
+                playerId: 1,
+                betChoice: "even",
+                amount: 10,
+                red: 10,
+            };
+            chipStoreMock.clientChips = {
+                even: { 10: 2 },
+            };
+
+            // Act
+            chipHandlers.addChipToClientChips(ownChipMessage);
+
+            // Assert
+            expect(chipStoreMock.clientChips["even"]["10"]).toEqual(3);
+        });
     });
 
     test("eventHandleList contains the correct handlers", () => {
