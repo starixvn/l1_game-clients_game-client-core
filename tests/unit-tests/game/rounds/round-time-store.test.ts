@@ -171,14 +171,14 @@ describe("RoundTimeStore Unit Tests", () => {
         });
     });
 
-    describe("isStaringLocking", () => {
+    describe("isStartLocking", () => {
         it("should return true when roundTime equals lockingBet and wholeRound is not zero", () => {
             // Arrange
             roundTimeStore.roundTime = 5;
             roundTimeStore.wholeRound = 1;
 
             // Assert
-            expect(roundTimeStore.isStaringLocking).toBeTruthy();
+            expect(roundTimeStore.isStartLocking).toBeTruthy();
         });
 
         it("should return false when roundTime does not equal lockingBet", () => {
@@ -187,7 +187,7 @@ describe("RoundTimeStore Unit Tests", () => {
             roundTimeStore.wholeRound = 1;
 
             // Assert
-            expect(roundTimeStore.isStaringLocking).toBeFalsy();
+            expect(roundTimeStore.isStartLocking).toBeFalsy();
         });
     });
 
