@@ -1,13 +1,10 @@
 import { inject, injectable } from "inversify";
 import { MultipliersStore } from "../features/multipliers/multipliers-store";
 import { GameConfigStore } from "../game/game-configs";
+import { GameServiceMessage } from "../shared";
 import { IHandler, IMultipleHandlers } from "../shared/mediator";
+import { BetChoice, Card, CardsState } from "./baccarat-defines";
 import { BaccaratMultipliersStore } from "./baccarat-multipliers-store";
-
-export interface Card {
-    rank: number;
-    suit: number;
-}
 
 @injectable()
 export class BaccaratMultipliersHandler implements IMultipleHandlers {
@@ -17,35 +14,112 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
         @inject(BaccaratMultipliersStore) private readonly baccaratMultipliersStore: BaccaratMultipliersStore<Card>
     ) {}
 
-    eventHandleList: IHandler<any, any>[] = [];
+    eventHandleList: IHandler<any, any>[] = [
+        {
+            name: GameServiceMessage.OddsMultipliers,
+            handle: this.convertOddsMultipliers,
+        },
+        {
+            name: GameServiceMessage.Finish.eventName,
+            handle: this.receivedFinaleOdds,
+        },
+    ];
 
-    openCard(betChoice: string, cards: Card[]) {
-        const odds = this.gameConfigStore.odds[betChoice];
-        if (!odds) {
-            return;
+    receivedFinaleOdds(finish: any) {
+        if (finish[GameServiceMessage.FinalOdds.eventName]) {
+            const finalOdds = finish[GameServiceMessage.FinalOdds.eventName];
+            this.baccaratMultipliersStore.finalOdds = finalOdds;
         }
+    }
+
+    registerBetChoices(betChoices: string[]) {
+        this.baccaratMultipliersStore.betChoices = betChoices;
+    }
+
+    convertOddsMultipliers(oddsMultipliers: GameServiceMessage.BaccaratCardMultiplier[]) {
+        const multipliers = oddsMultipliers.map((m) => {
+            const { rank, suit, value } = m;
+            return {
+                item: { rank, suit },
+                value,
+            };
+        });
+
+        this.multipliersStore.multipliers = multipliers;
+    }
+
+    openCards(cardsState: CardsState) {
+        this.baccaratMultipliersStore.betChoices.forEach((betChoice) => {
+            const odds = this.gameConfigStore.odds[betChoice];
+            const cards = this.getCards(cardsState, betChoice);
+            const multipliers = this.getMultipliersValues(cards);
+            this.updatePossiblePayout(betChoice, multipliers, odds - 1);
+        });
+    }
+
+    getMultipliersValues(cards: GameServiceMessage.Card[]) {
         const multipliers: number[] = [];
+
         cards.forEach((card) => {
             const data = this.multipliersStore.multipliers.find((data) => this.isSameCard(card, data.item));
             if (data) {
                 multipliers.push(data.value);
             }
         });
-        if (multipliers.length === 0) {
-            return;
-        }
-
-        this.updateChoicesMultipliers(betChoice, multipliers, odds - 1);
+        return multipliers;
     }
 
-    updateChoicesMultipliers(betChoice: string, multiplierValues: number[], fractionalOdds: number) {
-        this.baccaratMultipliersStore.choicesMultipliers[betChoice] = this.baccaratMultipliersStore.choicesMultipliers[betChoice] ?? {
+    calculateScore(cards: GameServiceMessage.Card[]): number {
+        return cards.reduce((previous, current) => current.rank + previous, 0);
+    }
+
+    isTie(cardsState: CardsState) {
+        if (cardsState[BetChoice.Banker].length !== cardsState[BetChoice.Player].length) {
+            return false;
+        }
+
+        return this.calculateScore(cardsState[BetChoice.Banker]) === this.calculateScore(cardsState[BetChoice.Player]);
+    }
+
+    isPair(cards: Card[]) {
+        if (cards.length < 2) {
+            return false;
+        }
+        return cards[0].rank === cards[1].rank;
+    }
+
+    getCards(cardsState: CardsState, betChoice: string) {
+        if (betChoice === BetChoice.PlayerPair || betChoice === BetChoice.BankerPair) {
+            const hand = betChoice.split("Pair")[0];
+            const cards = cardsState[hand];
+            if (cards && this.isPair(cards)) {
+                return cards.filter((value, index) => index < 2);
+            }
+        }
+        if (betChoice === BetChoice.Tie && this.isTie(cardsState)) {
+            return Object.keys(cardsState).flatMap((hand) => cardsState[hand]);
+        }
+        return [];
+    }
+
+    updateFinalOdds() {
+        const finalOdds = this.baccaratMultipliersStore.finalOdds;
+        const payOut = {};
+        Object.keys(finalOdds).forEach((key) => {
+            payOut[key] = { value: finalOdds[key] };
+        });
+
+        this.baccaratMultipliersStore.possiblePayout = payOut;
+    }
+
+    updatePossiblePayout(betChoice: string, multiplierValues: number[], fractionalOdds: number) {
+        this.baccaratMultipliersStore.possiblePayout[betChoice] = this.baccaratMultipliersStore.possiblePayout[betChoice] ?? {
             value: 0,
             multipliers: [],
         };
 
-        const choicesMultipliers = { ...this.baccaratMultipliersStore.choicesMultipliers };
-        const specificChoiceMultipliers = this.baccaratMultipliersStore.choicesMultipliers[betChoice];
+        const payout = { ...this.baccaratMultipliersStore.possiblePayout };
+        const specificChoiceMultipliers = this.baccaratMultipliersStore.possiblePayout[betChoice];
         specificChoiceMultipliers.multipliers = specificChoiceMultipliers.multipliers ?? [];
 
         const multipliers = specificChoiceMultipliers.multipliers;
@@ -54,7 +128,7 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
         const resultMultipliers = multipliers.reduce((prev, current) => current * prev, fractionalOdds);
         specificChoiceMultipliers.value = 1 + resultMultipliers;
 
-        this.baccaratMultipliersStore.choicesMultipliers = choicesMultipliers;
+        this.baccaratMultipliersStore.possiblePayout = payout;
     }
 
     isSameCard(cardA: Card, cardB: Card): boolean {

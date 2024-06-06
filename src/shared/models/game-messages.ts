@@ -330,6 +330,24 @@ export namespace GameServiceMessage {
         firstCard: number;
         static eventName = "shoeInfo";
     }
+
+    export class Card {
+        rank: number;
+        suit: number;
+    }
+
+    export class BaccaratCardMultiplier {
+        rank: number;
+        suit: number;
+        value: number;
+    }
+
+    export class FinalOdds {
+        [betChoice: string]: number;
+        static eventName = "finalOdds";
+    }
+
+    export const OddsMultipliers = "oddsMultipliers";
 }
 
 export namespace NotificationServiceMessage {
