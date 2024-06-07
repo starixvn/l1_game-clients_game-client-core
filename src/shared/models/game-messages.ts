@@ -363,7 +363,7 @@ export namespace GameServiceMessage {
         rawValue: string;
         cutCardPF: CutCardPF;
         cutCardIndex: number;
-        cards: string[];
+        cards: Card[];
         usedCardIndexes: number[];
         static eventName = "shoeVerification";
     }

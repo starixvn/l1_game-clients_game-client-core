@@ -97,4 +97,12 @@ export class FairnessHandler {
     closeVerification() {
         this.fairnessStore.openVerification = { isOpen: false };
     }
+
+    openCutCardIndex() {
+        this.fairnessStore.openCutCardIndex = true;
+    }
+
+    closeCutCardIndex() {
+        this.fairnessStore.openCutCardIndex = false;
+    }
 }
