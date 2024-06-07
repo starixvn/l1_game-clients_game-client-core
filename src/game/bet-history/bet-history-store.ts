@@ -12,6 +12,7 @@ export type BetHistoryLog = {
     betwin: number;
     totalAmount: number;
     freeBet: boolean;
+    winLoss?: number;
     odds: DynamicObject<number>;
     result: DynamicObject<object>;
     settlementResult: DynamicObject<boolean>;

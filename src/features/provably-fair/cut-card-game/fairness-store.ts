@@ -1,3 +1,5 @@
+import { OpenVerification } from "./definitions";
+
 import { injectable } from "inversify";
 
 import { makeAutoObservable } from "mobx";
@@ -14,6 +16,7 @@ export class FairnessStore {
 
     _minCS = 0;
     _maxCS = 0;
+    openVerification: OpenVerification = null;
 
     get clientSeed() {
         return this._clientSeed;

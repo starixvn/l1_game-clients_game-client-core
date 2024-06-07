@@ -43,6 +43,10 @@ export namespace GameClientEmitMessage {
     export class CutCard {
         static eventName = "cutCard";
     }
+
+    export class ShoeVerification {
+        static eventName = "shoeVerification";
+    }
 }
 
 export namespace GameServiceMessage {
@@ -186,6 +190,11 @@ export namespace GameServiceMessage {
     export class SingleClientSeed {
         nickname: string;
         clientSeed: string;
+    }
+
+    export class CutCardPF {
+        playerCutCards: SingleClientSeed[];
+        serverCutCardIndex: number;
     }
 
     export class ProvablyFair {
@@ -348,6 +357,16 @@ export namespace GameServiceMessage {
     }
 
     export const OddsMultipliers = "oddsMultipliers";
+    export class ShoeVerification {
+        roundId: number;
+        hashValue: string;
+        rawValue: string;
+        cutCardPF: CutCardPF;
+        cutCardIndex: number;
+        cards: string[];
+        usedCardIndexes: number[];
+        static eventName = "shoeVerification";
+    }
 }
 
 export namespace NotificationServiceMessage {
