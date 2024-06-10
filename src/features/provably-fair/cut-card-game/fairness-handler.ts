@@ -98,11 +98,11 @@ export class FairnessHandler {
         this.fairnessStore.openVerification = { isOpen: false };
     }
 
-    openCutCardIndex() {
-        this.fairnessStore.openCutCardIndex = true;
+    openCutCardIndex(roundId: number) {
+        this.fairnessStore.openCutCardIndex = { isOpen: true, roundId };
     }
 
     closeCutCardIndex() {
-        this.fairnessStore.openCutCardIndex = false;
+        this.fairnessStore.openCutCardIndex = { isOpen: false };
     }
 }

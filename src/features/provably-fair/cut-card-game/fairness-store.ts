@@ -17,7 +17,7 @@ export class FairnessStore {
     _minCS = 0;
     _maxCS = 0;
     openVerification: OpenVerification = null;
-    openCutCardIndex = false;
+    openCutCardIndex: OpenVerification = null;
 
     get clientSeed() {
         return this._clientSeed;
