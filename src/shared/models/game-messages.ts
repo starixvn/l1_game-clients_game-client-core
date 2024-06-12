@@ -367,6 +367,12 @@ export namespace GameServiceMessage {
         usedCardIndexes: number[];
         static eventName = "shoeVerification";
     }
+
+    export class BaccaratX {
+        currentIndex: number;
+        cutCardIndex: number;
+        static eventName = "baccaratX";
+    }
 }
 
 export namespace NotificationServiceMessage {
