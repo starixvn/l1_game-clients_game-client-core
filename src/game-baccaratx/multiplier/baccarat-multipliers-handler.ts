@@ -1,9 +1,10 @@
+
 import { inject, injectable } from "inversify";
-import { MultipliersStore } from "../features/multipliers/multipliers-store";
-import { GameConfigStore } from "../game/game-configs";
-import { GameServiceMessage } from "../shared";
-import { IHandler, IMultipleHandlers } from "../shared/mediator";
-import { BetChoice, Card, CardsState } from "./baccarat-defines";
+import { MultipliersStore } from "../../features/multipliers/multipliers-store";
+import { GameConfigStore } from "../../game/game-configs";
+import { GameServiceMessage } from "../../shared";
+import { IHandler, IMultipleHandlers } from "../../shared/mediator";
+import { BetChoice, Card, CardsState } from "../baccarat-defines";
 import { BaccaratMultipliersStore } from "./baccarat-multipliers-store";
 
 @injectable()
@@ -23,7 +24,16 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
             name: GameServiceMessage.Finish.eventName,
             handle: this.receivedFinaleOdds,
         },
+
+        {
+            name: GameServiceMessage.BaccaratMultiplierCards.eventName,
+            handle: this.receivedMultiplierCards,
+        },
     ];
+
+    receivedMultiplierCards(multiplierCards: GameServiceMessage.BaccaratCardMultiplier[]) {
+        this.baccaratMultipliersStore.multiplierCards = multiplierCards;
+    }
 
     receivedFinaleOdds(finish: any) {
         if (finish[GameServiceMessage.FinalOdds.eventName]) {

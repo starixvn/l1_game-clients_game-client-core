@@ -351,6 +351,10 @@ export namespace GameServiceMessage {
         value: number;
     }
 
+    export class BaccaratMultiplierCards {
+        static eventName = "multiplierCards";
+    }
+
     export class FinalOdds {
         [betChoice: string]: number;
         static eventName = "finalOdds";
