@@ -31,4 +31,8 @@ export class ShoeHandlers implements IMultipleHandlers {
             handle: this.handleShoeInfo,
         },
     ];
+
+    sendCardIndex(index: number) {
+        this.shoeStore.shoeInfo.currentIndex = index;
+    }
 }

@@ -337,6 +337,7 @@ export namespace GameServiceMessage {
         cutCardIndex: number;
         burnCards: number;
         firstCard: number;
+        currentIndex: number;
         static eventName = "shoeInfo";
     }
 
@@ -370,12 +371,6 @@ export namespace GameServiceMessage {
         cards: Card[];
         usedCardIndexes: number[];
         static eventName = "shoeVerification";
-    }
-
-    export class BaccaratX {
-        currentIndex: number;
-        cutCardIndex: number;
-        static eventName = "baccaratX";
     }
 }
 
