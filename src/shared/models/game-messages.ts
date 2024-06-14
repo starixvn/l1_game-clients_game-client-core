@@ -47,6 +47,14 @@ export namespace GameClientEmitMessage {
     export class ShoeVerification {
         static eventName = "shoeVerification";
     }
+
+    export class HistoryBetDetails {
+        roundId: number;
+        mode: string;
+        language: string;
+        timeZoneOffset: number;
+        static eventName = "betDetails";
+    }
 }
 
 export namespace GameServiceMessage {
@@ -371,6 +379,10 @@ export namespace GameServiceMessage {
         cards: Card[];
         usedCardIndexes: number[];
         static eventName = "shoeVerification";
+    }
+
+    export class BetDetails {
+        static eventName = "betDetailsUrl";
     }
 }
 
