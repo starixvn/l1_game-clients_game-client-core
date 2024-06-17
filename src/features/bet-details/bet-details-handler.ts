@@ -17,7 +17,7 @@ export class BetDetailsHandler implements IMultipleHandlers {
         },
     ];
 
-    handleBetDetails(url: GameServiceMessage.BetDetails) {
+    handleBetDetails(url: string) {
         this.betDetailsStore.betDetailsUrl = url;
     }
 

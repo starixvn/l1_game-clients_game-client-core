@@ -1,6 +1,5 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { GameServiceMessage } from "../../shared";
 
 @injectable()
 export class BetDetailsStore {
@@ -8,5 +7,5 @@ export class BetDetailsStore {
         makeAutoObservable(this);
     }
 
-    betDetailsUrl: GameServiceMessage.BetDetails = null;
+    betDetailsUrl: string = "";
 }
