@@ -1,16 +1,18 @@
 import { inject, injectable } from "inversify";
 import * as _ from "lodash";
+import { HideGameGameStore } from "../hide-game";
 import { UserSettingStore } from "../user-settings";
 import { AudioAction, AudioStore, MusicState } from "./audio-store";
 @injectable()
 export class AudioHandler {
     constructor(
         @inject(AudioStore) private readonly audioStore: AudioStore,
-        @inject(UserSettingStore) protected readonly userSettingsStore: UserSettingStore
+        @inject(UserSettingStore) protected readonly userSettingsStore: UserSettingStore,
+        @inject(HideGameGameStore) protected readonly hideGameGameStore: HideGameGameStore
     ) {}
 
     playMusic(audioId: string) {
-        if (this.userSettingsStore.musicEnable) {
+        if (this.userSettingsStore.musicEnable && !this.hideGameGameStore.isHideGame) {
             this.audioStore.music = { id: audioId, action: AudioAction.PLAY };
         }
     }
@@ -20,7 +22,7 @@ export class AudioHandler {
     }
 
     playSFX(audioId: string) {
-        if (this.userSettingsStore.sfxEnable) {
+        if (this.userSettingsStore.sfxEnable && !this.hideGameGameStore.isHideGame) {
             this.audioStore.sfx = { id: audioId, action: AudioAction.PLAY };
         }
     }

@@ -44,6 +44,7 @@ export class ConnectionStore {
     isConnectFailed = false;
     signedIn = false;
     isDisconnect = false;
+    isTransError = false;
 
     initConnection(customizeOptions?: ISocketOption) {
         this.reset();
@@ -72,7 +73,7 @@ export class ConnectionStore {
         if (this.connection) {
             this.connection.on(events.connect, this.onConnected.bind(this));
             this.connection.on(events.signedIn, this.onSignedIn.bind(this));
-            this.connection.on(events.connectError, this.onConnectError.bind(this));
+            this.connection.on(events.connectError, this.onConnectFailed.bind(this));
             this.connection.on(events.connectFailed, this.onConnectFailed.bind(this));
             this.connection.on(events.disconnect, this.onDisconnected.bind(this));
         }
@@ -110,22 +111,13 @@ export class ConnectionStore {
         this.signedIn = true;
     }
 
-    onConnectError(error?: Error) {
-        console.log("onConnectError--", error);
-        this.isConnectFailed = true;
-        this.isInstant() && this.postDisconnectMessage();
-        this.handleConnectionStatus(false, error);
-    }
-
     onConnectFailed(error?: Error) {
-        console.log("onConnectFailed--", error);
         this.isConnectFailed = true;
         this.isInstant() && this.postDisconnectMessage();
         this.handleConnectionStatus(false, error);
     }
 
     onDisconnected(reason = "") {
-        console.log("onDisconnected--", reason);
         this.handleDisconnectionReason(reason);
         this.isInstant() && this.handleDisconnectInstant(reason);
         this.handleConnectionStatus(false);
@@ -135,6 +127,9 @@ export class ConnectionStore {
         if (this.isServerDisconnect(reason)) {
             this.isDisconnect = true;
             return;
+        }
+        if (this.isTransportError(reason) && this.isInstant()) {
+            this.isTransError = true;
         }
 
         if (this.shouldLogDisconnection(reason)) {
@@ -165,6 +160,10 @@ export class ConnectionStore {
 
     private isTransportClose(reason: string | unknown) {
         return reason === "transport close";
+    }
+
+    private isTransportError(reason: string | unknown) {
+        return reason === "transport error";
     }
 
     private postDisconnectMessage() {

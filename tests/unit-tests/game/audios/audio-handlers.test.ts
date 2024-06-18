@@ -1,10 +1,12 @@
 import lodash from "lodash";
+import { HideGameGameStore } from "../../../../src/game/hide-game";
 import { AudioAction, AudioHandler, AudioStore, MusicState } from "./../../../../src/game/audios";
 import { UserSettingStore } from "./../../../../src/game/user-settings";
 jest.unmock("lodash");
 describe("AudioHandler", () => {
     let audioStore: AudioStore;
     let userSettingsStore: UserSettingStore;
+    let hideGameGameStore: HideGameGameStore;
     let audioHandler: AudioHandler;
 
     const audioId = "audio-id";
@@ -12,7 +14,8 @@ describe("AudioHandler", () => {
     beforeAll(() => {
         audioStore = new AudioStore();
         userSettingsStore = new UserSettingStore();
-        audioHandler = new AudioHandler(audioStore, userSettingsStore);
+        hideGameGameStore = new HideGameGameStore();
+        audioHandler = new AudioHandler(audioStore, userSettingsStore, hideGameGameStore);
     });
 
     describe("playMusic", () => {

@@ -1,13 +1,14 @@
 import { stub } from "jest-auto-stub";
 import { ConnectionStore } from "../../../../src/game/connection";
 import { GameUserSettingHandler } from "../../../../src/game/game-user-settings/game-user-setting-handler";
-import { HideGameHandler } from "../../../../src/game/hide-game";
+import { HideGameGameStore, HideGameHandler } from "../../../../src/game/hide-game";
 import { RoundRunningHandlers } from "../../../../src/game/rounds";
 
 describe("HideGameHandler", () => {
     let roundRunning: RoundRunningHandlers;
     let connectStore: ConnectionStore;
     let handler: HideGameHandler;
+    let hideGameGameStore: HideGameGameStore;
 
     let gameUserSettingHandler: GameUserSettingHandler;
 
@@ -16,7 +17,8 @@ describe("HideGameHandler", () => {
 
         gameUserSettingHandler = stub<GameUserSettingHandler>();
         roundRunning = stub<RoundRunningHandlers>();
-        handler = new HideGameHandler(roundRunning, connectStore, gameUserSettingHandler);
+        hideGameGameStore = stub<HideGameGameStore>();
+        handler = new HideGameHandler(roundRunning, connectStore, gameUserSettingHandler, hideGameGameStore);
     });
 
     afterEach(() => {
