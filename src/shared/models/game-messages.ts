@@ -112,6 +112,10 @@ export namespace GameServiceMessage {
         static eventName = "userBetPercentage";
     }
 
+    export class BetPercentage extends Bets {
+        static eventName = "betPercentage";
+    }
+
     export type MaxBetPerChoices = Odds;
 
     export class GameConfigs {

@@ -46,6 +46,7 @@ export class RoundStore {
     private _totalBets: GameServiceMessage.TotalBets = {};
     resultHash: GameServiceMessage.ResultHash = null;
     private _userBetPercentage: GameServiceMessage.UserBetPercentage = null;
+    private _betPercentage: GameServiceMessage.UserBetPercentage = null;
 
     _clientRoundId = 0;
 
@@ -128,6 +129,14 @@ export class RoundStore {
 
     get userBetPercentage() {
         return this._userBetPercentage;
+    }
+
+    set betPercentage(betPercent: GameServiceMessage.BetPercentage) {
+        this._betPercentage = betPercent;
+    }
+
+    get betPercentage() {
+        return this._betPercentage;
     }
 
     get isResetHighlight(): boolean {
