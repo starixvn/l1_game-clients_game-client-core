@@ -348,7 +348,7 @@ export namespace GameServiceMessage {
     export class ShoeInfo {
         cutCardIndex: number;
         burnedCards: number;
-        firstCard: number;
+        firstCard: Card;
         currentIndex: number;
         static eventName = "shoeInfo";
     }
