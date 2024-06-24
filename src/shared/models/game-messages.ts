@@ -384,6 +384,12 @@ export namespace GameServiceMessage {
     export class BetDetails {
         static eventName = "betDetailsUrl";
     }
+
+    export class BaccaratXGameConfigs {
+        extraFeeRatio: number;
+
+        static eventName = "gameConfigs";
+    }
 }
 
 export namespace NotificationServiceMessage {
