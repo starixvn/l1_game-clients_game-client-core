@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import * as _ from "lodash";
-import { HideGameGameStore } from "../hide-game";
+import { HideGameStore } from "../hide-game";
 import { UserSettingStore } from "../user-settings";
 import { AudioAction, AudioStore, MusicState } from "./audio-store";
 @injectable()
@@ -8,7 +8,7 @@ export class AudioHandler {
     constructor(
         @inject(AudioStore) private readonly audioStore: AudioStore,
         @inject(UserSettingStore) protected readonly userSettingsStore: UserSettingStore,
-        @inject(HideGameGameStore) protected readonly hideGameGameStore: HideGameGameStore
+        @inject(HideGameStore) protected readonly hideGameGameStore: HideGameStore
     ) {}
 
     playMusic(audioId: string) {

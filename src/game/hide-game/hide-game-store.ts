@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 @injectable()
-export class HideGameGameStore {
+export class HideGameStore {
     private _isHideGame = false;
 
     constructor() {

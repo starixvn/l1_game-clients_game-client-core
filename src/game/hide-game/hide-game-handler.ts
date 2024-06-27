@@ -3,7 +3,7 @@ import { IHandler } from "../../shared/mediator";
 import { ConnectionStore } from "../connection/connection-store";
 import { GameUserSettingHandler } from "../game-user-settings/game-user-setting-handler";
 import { RoundRunningHandlers } from "../rounds/round-running-handlers";
-import { HideGameGameStore } from "./hide-game-store";
+import { HideGameStore } from "./hide-game-store";
 
 @injectable()
 export class HideGameHandler implements IHandler<void> {
@@ -11,7 +11,7 @@ export class HideGameHandler implements IHandler<void> {
         @inject(RoundRunningHandlers) protected readonly roundRunning: RoundRunningHandlers,
         @inject(ConnectionStore) protected readonly connectStore: ConnectionStore,
         @inject(GameUserSettingHandler) protected readonly gameUserSettingHandler: GameUserSettingHandler,
-        @inject(HideGameGameStore) protected readonly hideGameGameStore: HideGameGameStore
+        @inject(HideGameStore) protected readonly hideGameStore: HideGameStore
     ) {}
 
     handle() {
@@ -20,7 +20,7 @@ export class HideGameHandler implements IHandler<void> {
         this.gameUserSettingHandler.saveTempStorage();
     }
 
-    setIsHideGame(status: boolean) {
-        this.hideGameGameStore.isHideGame = status;
+    handleHideGame(status: boolean) {
+        this.hideGameStore.isHideGame = status;
     }
 }
