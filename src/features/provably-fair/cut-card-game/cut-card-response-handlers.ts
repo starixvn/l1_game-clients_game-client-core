@@ -14,10 +14,6 @@ export class CutCardResponseHandlers implements IMultipleHandlers {
 
     handleCutCardResponse(cutCardInfo: GameServiceMessage.CutCard) {
         this.cutCardStore.cutCardInfo = cutCardInfo;
-        if (cutCardInfo.successful) {
-            this.fairnessStore.isShowFairnessSettingsPopup = false;
-            this.fairnessStore.showWaitingScreen = true;
-        }
     }
 
     eventHandleList = [

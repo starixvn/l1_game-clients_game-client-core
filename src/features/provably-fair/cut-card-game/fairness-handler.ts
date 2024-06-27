@@ -87,6 +87,9 @@ export class FairnessHandler {
 
     handleShowFairnessSettingsPopup(isShow: boolean) {
         this.fairnessStore.isShowFairnessSettingsPopup = isShow;
+        if (!isShow) {
+            this.fairnessStore.showWaitingScreen = true;
+        }
     }
 
     updateDontShowAgain(isShow: boolean) {
