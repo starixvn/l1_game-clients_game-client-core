@@ -16,12 +16,18 @@ export class ShoeHandlers implements IMultipleHandlers {
 
     handleNewShoeHash(newShoeHash: GameServiceMessage.NewShoeHash) {
         this.shoeStore.newShoeHash = newShoeHash;
-        this.fairnessStore.isShowFairnessSettingsPopup = true;
+        if (!this.fairnessStore.dontShowAgain) {
+            this.fairnessStore.isShowFairnessSettingsPopup = true;
+        } else {
+            this.fairnessStore.showWaitingScreen = true;
+        }
     }
 
     handleShoeInfo(shoeInfo: GameServiceMessage.ShoeInfo) {
         this.shoeStore.shoeInfo = shoeInfo;
         shoeInfo && this.cutCardHandler.resetCutCardInfo();
+        this.fairnessStore.isShowFairnessSettingsPopup = false;
+        this.fairnessStore.showWaitingScreen = false;
     }
 
     eventHandleList = [

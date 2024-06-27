@@ -11,7 +11,7 @@ export class CutCardStore {
         makeAutoObservable(this);
     }
 
-    _cutCardInfo: CutCardInfo = null;
+    private _cutCardInfo: CutCardInfo = null;
 
     get cutCardInfo() {
         return this._cutCardInfo;

@@ -1,23 +1,26 @@
 import { OpenVerification } from "./definitions";
 
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 
 import { makeAutoObservable } from "mobx";
+import { CutCardStore } from "./cut-card-store";
 
 @injectable()
 export class FairnessStore {
-    constructor() {
+    constructor(@inject(CutCardStore) protected readonly cutCardStore: CutCardStore) {
         makeAutoObservable(this);
     }
 
-    _isShowFairnessSettingsPopup = false;
+    private _isShowFairnessSettingsPopup = false;
+    private _dontShowAgain = false;
 
-    _clientSeed = "";
+    private _clientSeed = "";
 
-    _minCS = 0;
-    _maxCS = 0;
+    private _minCS = 0;
+    private _maxCS = 0;
     openVerification: OpenVerification = null;
     openCutCardIndex: OpenVerification = null;
+    showWaitingScreen = false;
 
     get clientSeed() {
         return this._clientSeed;
@@ -49,5 +52,13 @@ export class FairnessStore {
 
     set isShowFairnessSettingsPopup(isShow: boolean) {
         this._isShowFairnessSettingsPopup = isShow;
+    }
+
+    get dontShowAgain() {
+        return this._dontShowAgain;
+    }
+
+    set dontShowAgain(isShow: boolean) {
+        this._dontShowAgain = isShow;
     }
 }

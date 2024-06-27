@@ -89,6 +89,10 @@ export class FairnessHandler {
         this.fairnessStore.isShowFairnessSettingsPopup = isShow;
     }
 
+    updateDontShowAgain(isShow: boolean) {
+        this.fairnessStore.dontShowAgain = isShow;
+    }
+
     openVerificationHistory(roundId: number) {
         this.roundPFHandler.requestRoundPF(roundId);
         this.fairnessStore.openVerification = { isOpen: true, roundId };
