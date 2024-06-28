@@ -61,6 +61,7 @@ export class RoundHistoryStore {
     private _histories: RoundHistory[] = [];
     private _joinGameHistory: IJoinGameHistory = null;
     private _firstJoinGameHistory: IFirstJoinGameHistory = null;
+    private _receivedInGame = false;
 
     get histories() {
         return this._histories;
@@ -87,8 +88,8 @@ export class RoundHistoryStore {
     }
 
     get isValidHistories(): boolean {
-        const { _histories, roundTimeStore } = this;
-        if (!_histories.length || roundTimeStore.roundState === ROUND_STATE.STOP_GAME_LOOP) {
+        const { roundTimeStore } = this;
+        if (!this._receivedInGame || roundTimeStore.roundState === ROUND_STATE.STOP_GAME_LOOP) {
             return false;
         }
 
@@ -127,5 +128,6 @@ export class RoundHistoryStore {
             this.limitNumberRoundHistory(roundHistories);
         }
         this.histories = roundHistories;
+        this._receivedInGame = true;
     }
 }
