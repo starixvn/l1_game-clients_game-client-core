@@ -1,7 +1,8 @@
-
 import { inject, injectable } from "inversify";
+import { reaction } from "mobx";
 import { MultipliersStore } from "../../features/multipliers/multipliers-store";
 import { GameConfigStore } from "../../game/game-configs";
+import { RoundTimeStore } from "../../game/rounds";
 import { GameServiceMessage } from "../../shared";
 import { IHandler, IMultipleHandlers } from "../../shared/mediator";
 import { BetChoice, Card, CardsState } from "../baccarat-defines";
@@ -12,14 +13,20 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
     constructor(
         @inject(MultipliersStore) private readonly multipliersStore: MultipliersStore<Card>,
         @inject(GameConfigStore) private readonly gameConfigStore: GameConfigStore,
-        @inject(BaccaratMultipliersStore) private readonly baccaratMultipliersStore: BaccaratMultipliersStore<Card>
-    ) {}
+        @inject(BaccaratMultipliersStore) private readonly baccaratMultipliersStore: BaccaratMultipliersStore<Card>,
+        @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore
+    ) {
+        reaction(
+            () => this.roundTimeStore.isStartRound,
+            (isStartRound) => {
+                if (isStartRound) {
+                    this.baccaratMultipliersStore.possiblePayout = {};
+                }
+            }
+        );
+    }
 
     eventHandleList: IHandler<any, any>[] = [
-        {
-            name: GameServiceMessage.OddsMultipliers,
-            handle: this.convertOddsMultipliers,
-        },
         {
             name: GameServiceMessage.Finish.eventName,
             handle: this.receivedFinaleOdds,
@@ -33,6 +40,7 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
 
     receivedMultiplierCards(multiplierCards: GameServiceMessage.BaccaratCardMultiplier[]) {
         this.baccaratMultipliersStore.multiplierCards = multiplierCards;
+        this.convertOddsMultipliers(multiplierCards);
     }
 
     receivedFinaleOdds(finish: any) {
@@ -84,6 +92,9 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
     }
 
     isTie(cardsState: CardsState) {
+        if (!cardsState[BetChoice.Banker] || !cardsState[BetChoice.Player]) {
+            return false;
+        }
         if (cardsState[BetChoice.Banker].length !== cardsState[BetChoice.Player].length) {
             return false;
         }
@@ -109,7 +120,7 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
         if (betChoice === BetChoice.Tie && this.isTie(cardsState)) {
             return Object.keys(cardsState).flatMap((hand) => cardsState[hand]);
         }
-        return [];
+        return cardsState[betChoice] ?? [];
     }
 
     updateFinalOdds() {
@@ -137,7 +148,6 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
 
         const resultMultipliers = multipliers.reduce((prev, current) => current * prev, fractionalOdds);
         specificChoiceMultipliers.value = 1 + resultMultipliers;
-
         this.baccaratMultipliersStore.possiblePayout = payout;
     }
 
