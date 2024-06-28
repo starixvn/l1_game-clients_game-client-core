@@ -178,6 +178,7 @@ export class RoundStore {
         this.ownBets = {};
         this._totalBets = {};
         this._userBetPercentage = null;
+        this._betPercentage = null;
     }
 
     resetRoundStore() {
