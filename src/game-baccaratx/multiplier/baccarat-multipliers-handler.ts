@@ -70,8 +70,12 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
         this.baccaratMultipliersStore.betChoices.forEach((betChoice) => {
             const odds = this.gameConfigStore.odds[betChoice];
             const cards = this.getCards(cardsState, betChoice);
+            if (cards.length > 0) {
             const multipliers = this.getMultipliersValues(cards);
+                if (multipliers.length > 0) {
             this.updatePossiblePayout(betChoice, multipliers, odds - 1);
+                }
+            }
         });
     }
 
