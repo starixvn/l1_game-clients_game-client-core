@@ -31,7 +31,6 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
             name: GameServiceMessage.Finish.eventName,
             handle: this.receivedFinaleOdds,
         },
-
         {
             name: GameServiceMessage.BaccaratMultiplierCards.eventName,
             handle: this.receivedMultiplierCards,
@@ -47,6 +46,14 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
         if (finish[GameServiceMessage.FinalOdds.eventName]) {
             const finalOdds = finish[GameServiceMessage.FinalOdds.eventName];
             this.baccaratMultipliersStore.finalOdds = finalOdds;
+        }
+    }
+
+    parseOddsMultiplers(finish: any) {
+        if (finish[GameServiceMessage.OddsMultipliers]) {
+            console.log(`parseOddsMultiplers   ......`);
+            const multiplierCards = finish[GameServiceMessage.OddsMultipliers];
+            this.convertOddsMultipliers(multiplierCards);
         }
     }
 
@@ -71,9 +78,9 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
             const odds = this.gameConfigStore.odds[betChoice];
             const cards = this.getCards(cardsState, betChoice);
             if (cards.length > 0) {
-            const multipliers = this.getMultipliersValues(cards);
+                const multipliers = this.getMultipliersValues(cards);
                 if (multipliers.length > 0) {
-            this.updatePossiblePayout(betChoice, multipliers, odds - 1);
+                    this.updatePossiblePayout(betChoice, multipliers, odds - 1);
                 }
             }
         });
@@ -127,11 +134,12 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
         return cardsState[betChoice] ?? [];
     }
 
-    updateFinalOdds() {
-        const finalOdds = this.baccaratMultipliersStore.finalOdds;
+    updateFinalPayout(settlementResult: GameServiceMessage.TSettlementResult) {
         const payOut = {};
-        Object.keys(finalOdds).forEach((key) => {
-            payOut[key] = { value: finalOdds[key] };
+        Object.keys(settlementResult).forEach((key) => {
+            if (settlementResult[key]) {
+                payOut[key] = { value: this.baccaratMultipliersStore.possiblePayout[key] };
+            }
         });
 
         this.baccaratMultipliersStore.possiblePayout = payOut;
