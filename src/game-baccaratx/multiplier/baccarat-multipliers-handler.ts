@@ -51,7 +51,6 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
 
     parseOddsMultiplers(finish: any) {
         if (finish[GameServiceMessage.OddsMultipliers]) {
-            console.log(`parseOddsMultiplers   ......`);
             const multiplierCards = finish[GameServiceMessage.OddsMultipliers];
             this.convertOddsMultipliers(multiplierCards);
         }
@@ -137,8 +136,8 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
     updateFinalPayout(settlementResult: GameServiceMessage.TSettlementResult) {
         const payOut = {};
         Object.keys(settlementResult).forEach((key) => {
-            if (settlementResult[key]) {
-                payOut[key] = { value: this.baccaratMultipliersStore.possiblePayout[key] };
+            if (settlementResult[key] && this.baccaratMultipliersStore.possiblePayout[key]) {
+                payOut[key] = { value: this.baccaratMultipliersStore.possiblePayout[key].value };
             }
         });
 
