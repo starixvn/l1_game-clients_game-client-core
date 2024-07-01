@@ -153,12 +153,9 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
 
         const payout = { ...this.baccaratMultipliersStore.possiblePayout };
         const specificChoiceMultipliers = this.baccaratMultipliersStore.possiblePayout[betChoice];
-        specificChoiceMultipliers.multipliers = specificChoiceMultipliers.multipliers ?? [];
+        specificChoiceMultipliers.multipliers = multiplierValues;
 
-        const multipliers = specificChoiceMultipliers.multipliers;
-        multipliers.push(...multiplierValues);
-
-        const resultMultipliers = multipliers.reduce((prev, current) => current * prev, fractionalOdds);
+        const resultMultipliers = multiplierValues.reduce((prev, current) => current * prev, fractionalOdds);
         specificChoiceMultipliers.value = 1 + resultMultipliers;
         this.baccaratMultipliersStore.possiblePayout = payout;
     }
