@@ -17,6 +17,7 @@ export type BetHistoryLog = {
     result: DynamicObject<object>;
     settlementResult: DynamicObject<boolean>;
     betLogDetails?: Array<DynamicObject<object>>;
+    verifiable?: boolean;
 };
 
 export type BetHistoryModel = {
