@@ -107,14 +107,6 @@ export class RoundTimeStore {
     }
 
     get isShowResult() {
-        if (this.roundTime > this.wholeRound) {
-            const maxTime = this.wholeShoe;
-            const generatingResult = this.generatingResult ?? 0;
-            const showingResult = this.showingResult ?? 0;
-            const minTime = maxTime - generatingResult - showingResult;
-            return this.roundTime <= maxTime - generatingResult && this.roundTime > minTime;
-        }
-
         return (
             this.roundTime <= this.wholeRound - this.generatingResult + 1 &&
             this.roundTime > this.placingBet + this.startRound &&
