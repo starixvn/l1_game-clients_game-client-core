@@ -2,17 +2,6 @@ import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { GameServiceMessage } from "../../shared";
 
-interface CutCardInfo {
-    cutCardIndex: number;
-    isSuccessful: boolean;
-}
-
-interface ShoeInfo {
-    cutCardIndex: number;
-    burnCards: number;
-    firstCard: number;
-}
-
 @injectable()
 export class ShoeStore {
     constructor() {

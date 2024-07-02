@@ -3,6 +3,7 @@ import { FairnessStore } from "../../features/provably-fair/cut-card-game/fairne
 import { ConnectionHandlers } from "../../game/connection/connection-handlers";
 import { RoundHistoryStore } from "../../game/round-histories";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
+import { BaccaratMultipliersHandler } from "../multiplier/baccarat-multipliers-handler";
 import { CutCardHandler } from "./../../features/provably-fair/cut-card-game/cut-card-handler";
 import { ShoeStore } from "./shoe-store";
 
@@ -13,17 +14,22 @@ export class ShoeHandlers implements IMultipleHandlers {
         @inject(ShoeStore) protected readonly shoeStore: ShoeStore,
         @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler,
         @inject(FairnessStore) protected readonly fairnessStore: FairnessStore,
-        @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore
+        @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
+        @inject(BaccaratMultipliersHandler) protected readonly baccaratMultipliersHandler: BaccaratMultipliersHandler
     ) {}
 
     handleNewShoeHash(newShoeHash: GameServiceMessage.NewShoeHash) {
         this.shoeStore.newShoeHash = newShoeHash;
-        this.roundHistoryStore.histories = [];
+        this.resetForNewShoe();
         if (!this.fairnessStore.dontShowAgain) {
             this.fairnessStore.isShowFairnessSettingsPopup = true;
         } else {
             this.fairnessStore.showWaitingScreen = true;
         }
+    }
+    resetForNewShoe() {
+        this.roundHistoryStore.histories = [];
+        this.baccaratMultipliersHandler.resetPossiblePayout();
     }
 
     handleShoeInfo(shoeInfo: GameServiceMessage.ShoeInfo) {

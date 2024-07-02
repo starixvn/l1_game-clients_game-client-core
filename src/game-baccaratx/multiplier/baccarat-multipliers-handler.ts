@@ -20,7 +20,7 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
             () => this.roundTimeStore.isStartRound,
             (isStartRound) => {
                 if (isStartRound) {
-                    this.baccaratMultipliersStore.possiblePayout = {};
+                    this.resetPossiblePayout();
                 }
             }
         );
@@ -36,6 +36,10 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
             handle: this.receivedMultiplierCards,
         },
     ];
+
+    resetPossiblePayout() {
+        this.baccaratMultipliersStore.possiblePayout = {};
+    }
 
     receivedMultiplierCards(multiplierCards: GameServiceMessage.BaccaratCardMultiplier[]) {
         this.baccaratMultipliersStore.multiplierCards = multiplierCards;
