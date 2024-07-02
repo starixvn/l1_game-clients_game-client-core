@@ -3,14 +3,6 @@ import { makeAutoObservable } from "mobx";
 
 import { GameSetting } from "../game-configs";
 
-export type RoundTimeSetting = {
-    wholeRound: number;
-    placingBet: number;
-    lockingBet: number;
-    generatingResult: number;
-    startRound: number;
-};
-
 /**
  * Timeline:
  *
@@ -41,11 +33,6 @@ const RoundTimeInitValue = -99999;
 
 @injectable()
 export class RoundTimeStore {
-    wholeRound = 0;
-    placingBet = 0;
-    lockingBet = 0;
-    generatingResult = 0;
-    startRound = 0;
     private _roundTime = RoundTimeInitValue;
     private _roundState = ROUND_STATE.NONE;
     private _countdownTimer = 0;
@@ -56,10 +43,31 @@ export class RoundTimeStore {
     endPlacingBet = false;
     durationShowPromptMessage = 2;
 
-    constructor(@inject(GameSetting) gameSetting: GameSetting) {
+    constructor(@inject(GameSetting) readonly gameSetting: GameSetting) {
         makeAutoObservable(this);
-        this.setRoundTimeSetting(gameSetting.durations as RoundTimeSetting);
         this.setDurationShowPromptMessage(gameSetting?.durationShowPromptMessage);
+    }
+
+    get wholeRound() {
+        return this.gameSetting.durations.wholeRound;
+    }
+    get placingBet() {
+        return this.gameSetting.durations.placingBet;
+    }
+    get lockingBet() {
+        return this.gameSetting.durations.lockingBet;
+    }
+    get generatingResult() {
+        return this.gameSetting.durations.generatingResult;
+    }
+    get showingResult() {
+        return this.gameSetting.durations.showingResult;
+    }
+    get startRound() {
+        return this.gameSetting.durations.startRound;
+    }
+    get wholeShoe() {
+        return this.gameSetting.durations.wholeShoe;
     }
 
     get initialized() {
@@ -91,10 +99,22 @@ export class RoundTimeStore {
     }
 
     get isShowAnimationResult() {
+        if (this.roundTime > this.wholeRound) {
+            return this.roundTime <= this.wholeShoe && this.roundTime > this.wholeShoe - this.generatingResult;
+        }
+
         return (this.roundTime <= this.wholeRound && this.roundTime > this.wholeRound - this.generatingResult) || this.roundTime === 0;
     }
 
     get isShowResult() {
+        if (this.roundTime > this.wholeRound) {
+            const maxTime = this.wholeShoe;
+            const generatingResult = this.generatingResult ?? 0;
+            const showingResult = this.showingResult ?? 0;
+            const minTime = maxTime - generatingResult - showingResult;
+            return this.roundTime <= maxTime - generatingResult && this.roundTime > minTime;
+        }
+
         return (
             this.roundTime <= this.wholeRound - this.generatingResult + 1 &&
             this.roundTime > this.placingBet + this.startRound &&
@@ -140,14 +160,6 @@ export class RoundTimeStore {
 
     resetRoundTime() {
         this._roundTime = this.wholeRound;
-    }
-
-    setRoundTimeSetting(setting: RoundTimeSetting) {
-        this.wholeRound = setting.wholeRound;
-        this.placingBet = setting.placingBet;
-        this.lockingBet = setting.lockingBet;
-        this.generatingResult = setting.generatingResult;
-        this.startRound = setting.startRound;
     }
 
     setDurationShowPromptMessage(durationShowPromptMessage?: number) {

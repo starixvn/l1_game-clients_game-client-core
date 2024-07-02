@@ -36,24 +36,7 @@ export class RoundHistoryStore {
         when(
             () => this.isValidHistories,
             () => {
-                const lastRound = this.getLastRound();
-                const roundTime = this.roundTimeStore.roundTime;
-                this.firstJoinGameHistory = {
-                    roundTime,
-                    roundHistory: lastRound,
-                    staticHighlight: this.roundTimeStore.isPlacingBet || this.roundTimeStore.isStartRound,
-                    animationHighlight: this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult,
-                };
-
-                if (this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
-                    const showResultByFinish =
-                        this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId >= lastRound.roundId;
-                    if (!showResultByFinish) {
-                        this.joinGameHistory = {
-                            roundHistory: lastRound,
-                        };
-                    }
-                }
+                this.generateJoinGameData();
             }
         );
     }
@@ -62,6 +45,28 @@ export class RoundHistoryStore {
     private _joinGameHistory: IJoinGameHistory = null;
     private _firstJoinGameHistory: IFirstJoinGameHistory = null;
     private _receivedInGame = false;
+
+    generateJoinGameData() {
+        console.log("origin generateJoinGameData");
+        const lastRound = this.getLastRound();
+        const roundTime = this.roundTimeStore.roundTime;
+        this.firstJoinGameHistory = {
+            roundTime,
+            roundHistory: lastRound,
+            staticHighlight: this.roundTimeStore.isPlacingBet || this.roundTimeStore.isStartRound,
+            animationHighlight: this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult,
+        };
+
+        if (this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
+            const showResultByFinish =
+                this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId >= lastRound.roundId;
+            if (!showResultByFinish) {
+                this.joinGameHistory = {
+                    roundHistory: lastRound,
+                };
+            }
+        }
+    }
 
     get histories() {
         return this._histories;
