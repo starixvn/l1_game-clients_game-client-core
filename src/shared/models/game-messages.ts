@@ -350,6 +350,7 @@ export namespace GameServiceMessage {
         burnedCards: number;
         firstCard: Card;
         currentIndex: number;
+        new?: boolean;
         static eventName = "shoeInfo";
     }
 
