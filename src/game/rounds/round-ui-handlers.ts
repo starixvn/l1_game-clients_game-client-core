@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
 import { reaction, when } from "mobx";
 import { IHandler } from "../../shared";
+import { ChipStore } from "../chips";
 import { SettlementStatusStore, SettlementStore } from "../settlements";
 import { RoundStore } from "./round-store";
 import { RoundTimeStore } from "./round-time-store";
@@ -12,10 +13,11 @@ export namespace RoundUIHandlers {
             @inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore,
             @inject(RoundStore) private readonly roundStore: RoundStore,
             @inject(SettlementStatusStore) private readonly settlementStatusStore: SettlementStatusStore,
-            @inject(SettlementStore) private readonly settlementStore: SettlementStore
+            @inject(SettlementStore) private readonly settlementStore: SettlementStore,
+            @inject(ChipStore) private readonly chipStore: ChipStore
         ) {
             reaction(
-                () => this.roundTimeStore.isStartRound,
+                () => this.roundTimeStore.isStartingRound,
                 (isStartRound) => isStartRound && this.handle()
             );
 
@@ -32,6 +34,7 @@ export namespace RoundUIHandlers {
         }
 
         resetForNewRound() {
+            this.chipStore.resetChips();
             this.roundStore.resetForNewRound();
             this.settlementStatusStore.resetSettlementStatus();
             this.settlementStore.resetSettlementStore();
