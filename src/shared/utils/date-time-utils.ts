@@ -17,6 +17,10 @@ export namespace DateTimeUtils {
         return moment(new Date(time)).format("DD/MM/YYYY");
     };
 
+    export const getStringDate1 = (time: string) => {
+        return moment(new Date(time)).format("MM/DD/YYYY");
+    };
+
     export const getStringDateByTimeGMT8 = (time: Date) => {
         return moment(time).utcOffset("+08:00").format("HH:mm DD/MM/YYYY");
     };
