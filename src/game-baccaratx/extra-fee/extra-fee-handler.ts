@@ -27,7 +27,7 @@ export class ExtraFeeHandlers implements IMultipleHandlers {
         }
     }
 
-    private resetExtraFee() {
+    resetExtraFee() {
         this.extraFeeStore.extraFee = { isRatio: true, fee: this.gameConfigStore.extraFeeRatio };
     }
 

@@ -4,6 +4,7 @@ import { ConnectionHandlers } from "../../game/connection/connection-handlers";
 import { RoundHistoryStore } from "../../game/round-histories";
 import { RoundUIHandlers } from "../../game/rounds/round-ui-handlers";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
+import { ExtraFeeHandlers } from "../extra-fee";
 import { BaccaratMultipliersHandler } from "../multiplier/baccarat-multipliers-handler";
 import { CutCardHandler } from "./../../features/provably-fair/cut-card-game/cut-card-handler";
 import { ShoeStore } from "./shoe-store";
@@ -17,6 +18,7 @@ export class ShoeHandlers implements IMultipleHandlers {
         @inject(FairnessStore) protected readonly fairnessStore: FairnessStore,
         @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
         @inject(BaccaratMultipliersHandler) protected readonly baccaratMultipliersHandler: BaccaratMultipliersHandler,
+        @inject(ExtraFeeHandlers) protected readonly extraFeeHandlers: ExtraFeeHandlers,
         @inject(RoundUIHandlers.StartingRoundHandler) protected readonly startingRoundHandler: RoundUIHandlers.StartingRoundHandler
     ) {}
 
@@ -30,6 +32,7 @@ export class ShoeHandlers implements IMultipleHandlers {
         }
     }
     resetForNewShoe() {
+        this.extraFeeHandlers.resetExtraFee();
         this.roundHistoryStore.clearRoundHistories();
         this.baccaratMultipliersHandler.handleForNewShoe();
         this.startingRoundHandler.resetForNewRound();
