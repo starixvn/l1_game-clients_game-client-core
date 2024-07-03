@@ -19,5 +19,4 @@ export class BaccaratMultipliersStore<T> {
     finalOdds: GameServiceMessage.FinalOdds = {};
     possiblePayout: ChoicesMultipliers = {};
     betChoices: string[] = [BetChoice.Player, BetChoice.PlayerPair, BetChoice.Tie, BetChoice.Banker, BetChoice.BankerPair];
-    multiplierCards: GameServiceMessage.BaccaratCardMultiplier[] = [];
 }

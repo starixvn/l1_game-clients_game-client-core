@@ -42,7 +42,6 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
     }
 
     receivedMultiplierCards(multiplierCards: GameServiceMessage.BaccaratCardMultiplier[]) {
-        this.baccaratMultipliersStore.multiplierCards = multiplierCards;
         this.convertOddsMultipliers(multiplierCards);
     }
 
