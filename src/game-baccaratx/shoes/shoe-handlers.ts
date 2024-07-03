@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { FairnessStore } from "../../features/provably-fair/cut-card-game/fairness-store";
 import { ConnectionHandlers } from "../../game/connection/connection-handlers";
 import { RoundHistoryStore } from "../../game/round-histories";
+import { RoundUIHandlers } from "../../game/rounds/round-ui-handlers";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { BaccaratMultipliersHandler } from "../multiplier/baccarat-multipliers-handler";
 import { CutCardHandler } from "./../../features/provably-fair/cut-card-game/cut-card-handler";
@@ -15,7 +16,8 @@ export class ShoeHandlers implements IMultipleHandlers {
         @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler,
         @inject(FairnessStore) protected readonly fairnessStore: FairnessStore,
         @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
-        @inject(BaccaratMultipliersHandler) protected readonly baccaratMultipliersHandler: BaccaratMultipliersHandler
+        @inject(BaccaratMultipliersHandler) protected readonly baccaratMultipliersHandler: BaccaratMultipliersHandler,
+        @inject(RoundUIHandlers.StartingRoundHandler) protected readonly startingRoundHandler: RoundUIHandlers.StartingRoundHandler
     ) {}
 
     handleNewShoeHash(newShoeHash: GameServiceMessage.NewShoeHash) {
@@ -30,6 +32,7 @@ export class ShoeHandlers implements IMultipleHandlers {
     resetForNewShoe() {
         this.roundHistoryStore.histories = [];
         this.baccaratMultipliersHandler.resetPossiblePayout();
+        this.startingRoundHandler.resetForNewRound();
     }
 
     handleShoeInfo(shoeInfo: GameServiceMessage.ShoeInfo) {

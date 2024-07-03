@@ -28,6 +28,10 @@ export namespace RoundUIHandlers {
         }
 
         handle() {
+            this.resetForNewRound();
+        }
+
+        resetForNewRound() {
             this.roundStore.resetForNewRound();
             this.settlementStatusStore.resetSettlementStatus();
             this.settlementStore.resetSettlementStore();
