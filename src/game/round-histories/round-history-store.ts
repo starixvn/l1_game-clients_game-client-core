@@ -135,4 +135,8 @@ export class RoundHistoryStore {
         this.histories = roundHistories;
         this._receivedInGame = true;
     }
+
+    clearRoundHistories(){
+        this.histories = [];
+    }
 }
