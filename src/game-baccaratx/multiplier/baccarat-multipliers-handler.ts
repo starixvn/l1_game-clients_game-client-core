@@ -59,6 +59,11 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
         }
     }
 
+    handleForNewShoe() {
+        this.multipliersStore.multipliers = [];
+        this.resetPossiblePayout();
+    }
+
     registerBetChoices(betChoices: string[]) {
         this.baccaratMultipliersStore.betChoices = betChoices;
     }

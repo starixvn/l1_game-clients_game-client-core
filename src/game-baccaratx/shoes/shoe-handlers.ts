@@ -30,8 +30,8 @@ export class ShoeHandlers implements IMultipleHandlers {
         }
     }
     resetForNewShoe() {
-        this.roundHistoryStore.histories = [];
-        this.baccaratMultipliersHandler.resetPossiblePayout();
+        this.roundHistoryStore.clearRoundHistories();
+        this.baccaratMultipliersHandler.handleForNewShoe();
         this.startingRoundHandler.resetForNewRound();
     }
 
