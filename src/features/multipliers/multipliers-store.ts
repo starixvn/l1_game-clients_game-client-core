@@ -17,6 +17,7 @@ export class MultipliersStore<T> {
         }
         return {
             animated: this.roundTimeStore.isStartLocking,
+            visible: !(this.roundTimeStore.isPlacingBet || this.roundTimeStore.isStartingRound),
             multipliers: this.multipliers,
         };
     }
