@@ -46,7 +46,7 @@ export class RoundStore {
     private _totalBets: GameServiceMessage.TotalBets = {};
     resultHash: GameServiceMessage.ResultHash = null;
     private _userBetPercentage: GameServiceMessage.UserBetPercentage = null;
-    private _betPercentage: GameServiceMessage.UserBetPercentage = null;
+    private _betPercentage: GameServiceMessage.UserBetPercentage = {};
 
     _clientRoundId = 0;
 
@@ -178,7 +178,7 @@ export class RoundStore {
         this.ownBets = {};
         this._totalBets = {};
         this._userBetPercentage = null;
-        this._betPercentage = null;
+        this._betPercentage = {};
     }
 
     resetRoundStore() {
