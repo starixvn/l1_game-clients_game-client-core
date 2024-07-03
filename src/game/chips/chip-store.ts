@@ -41,6 +41,8 @@ export class ChipStore {
     private _ownChip: GameServiceMessage.OwnChip = { betChoice: "", amount: 0 };
     private _reBet: GameServiceMessage.ReBet = {};
 
+    clearAllChips = null;
+
     get ownChip() {
         return this._ownChip;
     }
@@ -92,6 +94,7 @@ export class ChipStore {
         this._clientChips = {};
         this._playerChip = null;
         this.ownChip = { betChoice: "", amount: 0 };
+        this.clearAllChips = {};
     }
 
     get chipsByMainPlayerRate(): TChipsByMainPlayerRate {
