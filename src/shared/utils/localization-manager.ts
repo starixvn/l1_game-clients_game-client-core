@@ -15,7 +15,6 @@ export class TranslationOptions {
     onLoaded?: () => void;
     availableLanguages?: string[];
     gameNamespace?: string;
-    tolgeeNamespace?: string;
 }
 
 export class InterpolationOptions {
@@ -181,8 +180,8 @@ export class TranslationManager {
     }
 
     public gameTranslate(key: string, options?: InterpolationOptions) {
-        if (this.options.tolgeeNamespace) {
-            return this.translate(`${this.options.tolgeeNamespace}.${key}`, options);
+        if (this.options.gameNamespace) {
+            return this.translate(`${this.options.gameNamespace}.${key}`, options);
         }
 
         return this.translate(key, options);
