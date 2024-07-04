@@ -18,6 +18,7 @@ export * as Notices from "./notices";
 export * as Orientation from "./orientation";
 export * as PFVerification from "./pf-verification";
 export * as PlayerSelections from "./player-selections";
+export * as PopupsClosed from "./popups-closed";
 export * as RoundHistories from "./round-histories";
 export * as Rounds from "./rounds";
 export * as Settlements from "./settlements";

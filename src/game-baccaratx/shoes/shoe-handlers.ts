@@ -7,6 +7,7 @@ import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { ExtraFeeHandlers } from "../extra-fee";
 import { BaccaratMultipliersHandler } from "../multiplier/baccarat-multipliers-handler";
 import { CutCardHandler } from "./../../features/provably-fair/cut-card-game/cut-card-handler";
+import { PopupsClosedStore } from "./../../game/popups-closed/popups-closed-store";
 import { ShoeStore } from "./shoe-store";
 
 @injectable()
@@ -19,11 +20,13 @@ export class ShoeHandlers implements IMultipleHandlers {
         @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
         @inject(BaccaratMultipliersHandler) protected readonly baccaratMultipliersHandler: BaccaratMultipliersHandler,
         @inject(ExtraFeeHandlers) protected readonly extraFeeHandlers: ExtraFeeHandlers,
-        @inject(RoundUIHandlers.StartingRoundHandler) protected readonly startingRoundHandler: RoundUIHandlers.StartingRoundHandler
+        @inject(RoundUIHandlers.StartingRoundHandler) protected readonly startingRoundHandler: RoundUIHandlers.StartingRoundHandler,
+        @inject(PopupsClosedStore) protected readonly popupsClosed: PopupsClosedStore
     ) {}
 
     handleNewShoeHash(newShoeHash: GameServiceMessage.NewShoeHash) {
         this.shoeStore.newShoeHash = newShoeHash;
+        this.popupsClosed.forceClosed = {};
         this.resetForNewShoe();
         if (!this.fairnessStore.dontShowAgain) {
             this.fairnessStore.isShowFairnessSettingsPopup = true;
