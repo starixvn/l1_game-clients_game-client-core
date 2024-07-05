@@ -109,17 +109,6 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
         return cards.reduce((previous, current) => current.rank + previous, 0);
     }
 
-    isTie(cardsState: CardsState) {
-        if (!cardsState[BetChoice.Banker] || !cardsState[BetChoice.Player]) {
-            return false;
-        }
-        if (cardsState[BetChoice.Banker].length !== cardsState[BetChoice.Player].length) {
-            return false;
-        }
-
-        return this.calculateScore(cardsState[BetChoice.Banker]) === this.calculateScore(cardsState[BetChoice.Player]);
-    }
-
     isPair(cards: Card[]) {
         if (cards.length < 2) {
             return false;
@@ -131,11 +120,11 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
         if (betChoice === BetChoice.PlayerPair || betChoice === BetChoice.BankerPair) {
             const hand = betChoice.split("Pair")[0];
             const cards = cardsState[hand];
-            if (cards && this.isPair(cards)) {
+            if (cards && (cards.length === 1 || this.isPair(cards))) {
                 return cards.filter((value, index) => index < 2);
             }
         }
-        if (betChoice === BetChoice.Tie && this.isTie(cardsState)) {
+        if (betChoice === BetChoice.Tie) {
             return Object.keys(cardsState).flatMap((hand) => cardsState[hand]);
         }
         return cardsState[betChoice] ?? [];
