@@ -59,7 +59,11 @@ export class ShoeHandlers implements IMultipleHandlers {
     }
 
     handleShoeInfo(shoeInfo: GameServiceMessage.ShoeInfo) {
-        this.shoeStore.shoeInfo = shoeInfo;
+        this.shoeStore.shoeInfo = {
+            ...shoeInfo,
+            roundTime: this.roundTimeStore.roundTime,
+            animated: shoeInfo.new || shoeInfo.newShoePhase,
+        };
         this.shoeStore.shoeHash = shoeInfo.hashValue;
 
         if (!!shoeInfo.newShoePhase) {

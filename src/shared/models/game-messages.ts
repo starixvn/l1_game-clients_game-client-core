@@ -346,11 +346,13 @@ export namespace GameServiceMessage {
     }
 
     export class ShoeInfo {
+        roundTime: number;
         cutCardIndex?: number;
         burnedCards: number;
         firstCard: Card;
         currentIndex: number;
 
+        animated?: boolean;
         hashValue?: string;
         newShoePhase?: boolean;
         new?: boolean;
