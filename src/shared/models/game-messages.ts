@@ -346,10 +346,13 @@ export namespace GameServiceMessage {
     }
 
     export class ShoeInfo {
-        cutCardIndex: number;
+        cutCardIndex?: number;
         burnedCards: number;
         firstCard: Card;
         currentIndex: number;
+
+        hashValue?: string;
+        newShoePhase?: boolean;
         new?: boolean;
         static eventName = "shoeInfo";
     }
