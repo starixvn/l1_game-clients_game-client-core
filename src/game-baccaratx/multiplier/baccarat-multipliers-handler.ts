@@ -122,6 +122,8 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
             const cards = cardsState[hand];
             if (cards && (cards.length === 1 || this.isPair(cards))) {
                 return cards.filter((value, index) => index < 2);
+            } else {
+                return [];
             }
         }
         if (betChoice === BetChoice.Tie) {
