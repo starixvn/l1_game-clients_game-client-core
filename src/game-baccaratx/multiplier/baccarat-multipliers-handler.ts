@@ -44,7 +44,8 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
     receivedMultiplierCards(multiplierCards: GameServiceMessage.BaccaratCardMultiplier[]) {
         this.convertOddsMultipliers(multiplierCards);
         console.log(`receive lucky cards at `, this.roundTimeStore.roundTime);
-        this.multipliersStore.generateRenderMultipliers(this.roundTimeStore.isStartLocking);
+        const animated = this.roundTimeStore.roundTime >= 2 && this.roundTimeStore.roundTime < this.roundTimeStore.placingBet;
+        this.multipliersStore.generateRenderMultipliers(animated);
     }
 
     receivedFinaleOdds(finish: any) {
