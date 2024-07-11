@@ -43,6 +43,8 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
 
     receivedMultiplierCards(multiplierCards: GameServiceMessage.BaccaratCardMultiplier[]) {
         this.convertOddsMultipliers(multiplierCards);
+        console.log(`receive lucky cards at `, this.roundTimeStore.roundTime);
+        this.multipliersStore.generateRenderMultipliers(this.roundTimeStore.isStartLocking);
     }
 
     receivedFinaleOdds(finish: any) {
@@ -56,11 +58,12 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
         if (finish[GameServiceMessage.OddsMultipliers]) {
             const multiplierCards = finish[GameServiceMessage.OddsMultipliers];
             this.convertOddsMultipliers(multiplierCards);
+            this.multipliersStore.generateRenderMultipliers(false);
         }
     }
 
     handleForNewShoe() {
-        this.multipliersStore.multipliers = [];
+        this.multipliersStore.clearMultipliers();
         this.resetPossiblePayout();
     }
 

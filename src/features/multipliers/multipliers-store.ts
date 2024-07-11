@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, reaction } from "mobx";
 import { RoundTimeStore } from "../../game/rounds/round-time-store";
 import { MultiplierData } from "./multipliers-define";
 
@@ -7,18 +7,30 @@ import { MultiplierData } from "./multipliers-define";
 export class MultipliersStore<T> {
     constructor(@inject(RoundTimeStore) private readonly roundTimeStore: RoundTimeStore) {
         makeAutoObservable(this);
+        reaction(
+            () => this.roundTimeStore.isStartRound,
+            (isStartRound) => {
+                if (isStartRound) {
+                    this.clearMultipliers();
+                }
+            }
+        );
     }
 
     multipliers: MultiplierData<T>[] = [];
 
+    _renderMultipliers: { animated: boolean; multipliers: MultiplierData<T>[] } = null;
+
     get renderMultipliers() {
-        if (!this.roundTimeStore.initialized) {
-            return null;
-        }
-        return {
-            animated: this.roundTimeStore.isStartLocking,
-            visible: !(this.roundTimeStore.isPlacingBet || this.roundTimeStore.isStartingRound),
-            multipliers: this.multipliers,
-        };
+        return this._renderMultipliers;
+    }
+
+    generateRenderMultipliers(animated: boolean) {
+        this._renderMultipliers = { animated, multipliers: this.multipliers };
+    }
+
+    clearMultipliers() {
+        this.multipliers = [];
+        this._renderMultipliers = null;
     }
 }
