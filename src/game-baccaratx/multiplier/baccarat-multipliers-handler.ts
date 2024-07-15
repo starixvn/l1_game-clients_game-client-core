@@ -42,6 +42,9 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
     }
 
     receivedMultiplierCards(multiplierCards: GameServiceMessage.BaccaratCardMultiplier[]) {
+        if (multiplierCards.length === 0) {
+            return;
+        }
         console.log(`receive lucky cards at `, this.roundTimeStore.roundTime);
         if (this.roundTimeStore.roundTime < this.roundTimeStore.placingBet) {
             console.log(`parse lucky cards`);
