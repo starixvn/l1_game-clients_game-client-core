@@ -12,6 +12,7 @@ import { FairnessStore } from "./fairness-store";
 
 type FairnessUserSetting = {
     clientSeed: string;
+    dontShowAgain: boolean;
 };
 
 @injectable()
@@ -42,6 +43,11 @@ export class FairnessHandler {
             this.fairnessStore.clientSeed = data.clientSeed;
         } else {
             this.generateClientSeed();
+        }
+        if (data && data?.dontShowAgain) {
+            this.fairnessStore.dontShowAgain = data.dontShowAgain;
+        } else {
+            this.fairnessStore.dontShowAgain = false;
         }
     }
 
@@ -81,6 +87,7 @@ export class FairnessHandler {
     onSaveStorage() {
         const currentSetting = (StorageManager.get(localStorageKeys.permanentGameUserSetting) || {}) as FairnessUserSetting;
         currentSetting.clientSeed = this.fairnessStore.clientSeed;
+        currentSetting.dontShowAgain = this.fairnessStore.dontShowAgain;
 
         StorageManager.set(localStorageKeys.permanentGameUserSetting, currentSetting);
     }
@@ -94,6 +101,7 @@ export class FairnessHandler {
 
     updateDontShowAgain(isShow: boolean) {
         this.fairnessStore.dontShowAgain = isShow;
+        this.saveStorage();
     }
 
     openVerificationHistory(roundId: number) {
