@@ -70,10 +70,7 @@ export class ShoeHandlers implements IMultipleHandlers {
             console.log("new shoe time is ", this.roundTimeStore.roundTime);
 
             this.shoeStore.newShoePhase = true;
-
-            if (!shoeInfo?.cutCardIndex) {
-                this.handleShowPopups();
-            }
+            this.handleShowPopups();
             return;
         }
 
