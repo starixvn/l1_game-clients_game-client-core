@@ -7,6 +7,7 @@ export * from "./container";
 export * as RoundBasePF from "./features/provably-fair/round-base";
 export * from "./game";
 export * as GameCrash from "./game-crash";
+export * as GamePusoy from "./game-pusoy";
 export * as Notification from "./notification";
 export * as Player from "./players";
 export * as Shared from "./shared";
