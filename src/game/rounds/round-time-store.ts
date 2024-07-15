@@ -107,6 +107,13 @@ export class RoundTimeStore {
     }
 
     get isShowResult() {
+        if (this.roundTime > this.wholeRound) {
+            return (
+                this.roundTime <= this.wholeShoe - this.generatingResult &&
+                this.roundTime >= this.wholeShoe - this.generatingResult - this.showingResult
+            );
+        }
+
         return (
             this.roundTime <= this.wholeRound - this.generatingResult + 1 &&
             this.roundTime > this.placingBet + this.startRound &&
