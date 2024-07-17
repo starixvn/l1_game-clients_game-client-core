@@ -28,4 +28,9 @@ export namespace DateTimeUtils {
     export const getStringDateNow = () => {
         return moment().format("DDMMYYYY");
     };
+
+    export const getString12HourByTime = (time: string) => {
+        const time1 = moment(new Date(time)).format("hh:mm:ss A");
+        return moment(new Date(time)).format("hh:mm:ss A");
+    };
 }
