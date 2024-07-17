@@ -388,6 +388,7 @@ export namespace GameServiceMessage {
         cutCardIndex: number;
         cards: Card[];
         usedCardIndexes: number[];
+        burnedCards: number;
         static eventName = "shoeVerification";
     }
 
