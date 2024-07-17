@@ -7,7 +7,7 @@ interface EventData {
 }
 
 export enum SettlementAction {
-    TOTAL_WIN = "total-win",
+    REACH_MAX_WIN = "reach-max-win",
 }
 
 @injectable()

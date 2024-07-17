@@ -22,8 +22,8 @@ export class SettlementHandlers implements IMultipleHandlers {
         this.settlementStore.winningPlayers = winners.winningPlayers;
     }
 
-    handleTotalWin() {
-        this.statusStore.eventData = { event: SettlementAction.TOTAL_WIN };
+    handleReachMaxWin() {
+        this.statusStore.eventData = { event: SettlementAction.REACH_MAX_WIN };
     }
 
     eventHandleList = [
