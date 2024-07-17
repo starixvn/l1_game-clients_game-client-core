@@ -22,8 +22,8 @@ export class SettlementHandlers implements IMultipleHandlers {
         this.settlementStore.winningPlayers = winners.winningPlayers;
     }
 
-    handleTotalWin(winAmount: number) {
-        this.statusStore.eventData = { event: SettlementAction.TOTAL_WIN, winAmount: winAmount };
+    handleTotalWin() {
+        this.statusStore.eventData = { event: SettlementAction.TOTAL_WIN };
     }
 
     eventHandleList = [

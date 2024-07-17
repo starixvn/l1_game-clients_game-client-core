@@ -4,7 +4,6 @@ import { GameServiceMessage } from "../../shared";
 
 interface EventData {
     event: string;
-    winAmount: number;
 }
 
 export enum SettlementAction {
