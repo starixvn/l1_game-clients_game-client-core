@@ -213,7 +213,15 @@ export class RoundTimeStore {
         }
 
         if (this.isShowResult) {
-            const duration = this.roundTime - this.placingBet - this.startRound;
+            let duration = 0;
+
+            if (this.roundTime > this.wholeRound) {
+                const minTime = this.wholeShoe - this.generatingResult - this.showingResult;
+                duration = this.roundTime - minTime;
+            } else {
+                duration = this.roundTime - this.placingBet - this.startRound;
+            }
+
             this._remaining = duration;
             this._countdownTimer = duration;
         }
