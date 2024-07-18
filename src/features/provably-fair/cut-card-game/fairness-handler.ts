@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import * as _ from "lodash";
 import { reaction } from "mobx";
 import { RoundPFHandler } from "../../../game-baccaratx/round-pf/round-pf-handler";
+import { ShoeStore } from "../../../game-baccaratx/shoes";
 import { ConnectionStore } from "../../../game/connection/connection-store";
 import { GameUserSettingHandler } from "../../../game/game-user-settings/game-user-setting-handler";
 import { GameUserSettingAction, GameUserSettingStore } from "../../../game/game-user-settings/game-user-setting-store";
@@ -22,7 +23,8 @@ export class FairnessHandler {
 
         @inject(GameUserSettingStore) protected readonly gameUserSettingStore: GameUserSettingStore,
         @inject(GameUserSettingHandler) protected readonly gameUserSettingHandler: GameUserSettingHandler,
-        @inject(RoundPFHandler) protected readonly roundPFHandler: RoundPFHandler
+        @inject(RoundPFHandler) protected readonly roundPFHandler: RoundPFHandler,
+        @inject(ShoeStore) protected readonly shoeStore: ShoeStore
     ) {
         this.loadClientSettingFromStorage();
         reaction(
@@ -91,9 +93,11 @@ export class FairnessHandler {
     }
 
     handleShowFairnessSettingsPopup(isShow: boolean) {
-        this.fairnessStore.isShowFairnessSettingsPopup = isShow;
+        const isCutCardPhase = !this.shoeStore.shoeInfo?.cutCardIndex;
+
+        this.fairnessStore.isShowFairnessSettingsPopup = isShow && isCutCardPhase;
         if (!isShow) {
-            this.fairnessStore.showWaitingScreen = true;
+            this.fairnessStore.showWaitingScreen = isCutCardPhase;
         }
     }
 
