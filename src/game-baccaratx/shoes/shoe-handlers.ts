@@ -37,6 +37,7 @@ export class ShoeHandlers implements IMultipleHandlers {
     }
 
     handleNewShoeHash(newShoeHash: string) {
+        this.shoeStore.shoeInfo = null;
         this.shoeStore.shoeHash = newShoeHash;
         this.shoeStore.newShoePhase = true;
         this.popupsClosed.forceClosed = {};
@@ -70,7 +71,9 @@ export class ShoeHandlers implements IMultipleHandlers {
             console.log("new shoe time is ", this.roundTimeStore.roundTime);
 
             this.shoeStore.newShoePhase = true;
-            this.handleShowPopups();
+            if (!this.shoeStore.shoeInfo?.cutCardIndex) {
+                this.handleShowPopups();
+            }
             return;
         }
 
@@ -89,8 +92,4 @@ export class ShoeHandlers implements IMultipleHandlers {
             handle: this.handleShoeInfo,
         },
     ];
-
-    sendCardIndex(index: number) {
-        this.shoeStore.shoeInfo.currentIndex = index;
-    }
 }

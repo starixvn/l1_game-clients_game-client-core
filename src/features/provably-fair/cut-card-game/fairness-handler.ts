@@ -2,7 +2,6 @@ import { inject, injectable } from "inversify";
 import * as _ from "lodash";
 import { reaction } from "mobx";
 import { RoundPFHandler } from "../../../game-baccaratx/round-pf/round-pf-handler";
-import { ConnectionHandlers } from "../../../game/connection/connection-handlers";
 import { ConnectionStore } from "../../../game/connection/connection-store";
 import { GameUserSettingHandler } from "../../../game/game-user-settings/game-user-setting-handler";
 import { GameUserSettingAction, GameUserSettingStore } from "../../../game/game-user-settings/game-user-setting-store";
@@ -23,8 +22,7 @@ export class FairnessHandler {
 
         @inject(GameUserSettingStore) protected readonly gameUserSettingStore: GameUserSettingStore,
         @inject(GameUserSettingHandler) protected readonly gameUserSettingHandler: GameUserSettingHandler,
-        @inject(RoundPFHandler) protected readonly roundPFHandler: RoundPFHandler,
-        @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler
+        @inject(RoundPFHandler) protected readonly roundPFHandler: RoundPFHandler
     ) {
         this.loadClientSettingFromStorage();
         reaction(
