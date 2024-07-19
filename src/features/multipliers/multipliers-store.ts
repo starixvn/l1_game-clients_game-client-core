@@ -26,6 +26,9 @@ export class MultipliersStore<T> {
     }
 
     generateRenderMultipliers(animated: boolean) {
+        if (this._renderMultipliers) {
+            return;
+        }
         this._renderMultipliers = { animated, multipliers: this.multipliers };
     }
 
