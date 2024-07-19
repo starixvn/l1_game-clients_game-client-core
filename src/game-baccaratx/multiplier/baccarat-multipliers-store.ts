@@ -16,6 +16,7 @@ export class BaccaratMultipliersStore<T> {
         makeAutoObservable(this);
     }
 
+    scores: { [hand: string]: number } = null;
     finalOdds: GameServiceMessage.FinalOdds = {};
     possiblePayout: ChoicesMultipliers = {};
     betChoices: string[] = [BetChoice.Player, BetChoice.PlayerPair, BetChoice.Tie, BetChoice.Banker, BetChoice.BankerPair];

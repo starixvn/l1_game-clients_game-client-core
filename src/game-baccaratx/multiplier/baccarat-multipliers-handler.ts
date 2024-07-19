@@ -5,6 +5,7 @@ import { GameConfigStore } from "../../game/game-configs";
 import { RoundTimeStore } from "../../game/rounds";
 import { GameServiceMessage } from "../../shared";
 import { IHandler, IMultipleHandlers } from "../../shared/mediator";
+import { getTotalScore } from "../../shared/utils/card-utils";
 import { BetChoice, Card, CardsState } from "../baccarat-defines";
 import { BaccaratMultipliersStore } from "./baccarat-multipliers-store";
 
@@ -101,6 +102,16 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
                 }
             }
         });
+        this.updateScore(cardsState);
+    }
+
+    updateScore(cardsState: CardsState) {
+        const scores = {};
+        Object.keys(cardsState).forEach((hand) => {
+            const cards = cardsState[hand];
+            scores[hand] = getTotalScore(cards);
+        });
+        this.baccaratMultipliersStore.scores = scores;
     }
 
     getMultipliersValues(cards: GameServiceMessage.Card[]) {
@@ -113,10 +124,6 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
             }
         });
         return multipliers;
-    }
-
-    calculateScore(cards: GameServiceMessage.Card[]): number {
-        return cards.reduce((previous, current) => current.rank + previous, 0);
     }
 
     isPair(cards: Card[]) {
