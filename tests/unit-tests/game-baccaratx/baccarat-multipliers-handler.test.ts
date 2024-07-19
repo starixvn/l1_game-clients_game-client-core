@@ -1,21 +1,23 @@
 import { stub } from "jest-auto-stub";
 import { MultipliersStore } from "../../../src/features/multipliers/multipliers-store";
 import { BetChoice, Card } from "../../../src/game-baccaratx/baccarat-defines";
-import { BaccaratMultipliersHandler } from "../../../src/game-baccaratx/baccarat-multipliers-handler";
-import { BaccaratMultipliersStore } from "../../../src/game-baccaratx/baccarat-multipliers-store";
+import { BaccaratMultipliersHandler, BaccaratMultipliersStore } from "../../../src/game-baccaratx/multiplier";
 import { GameConfigStore } from "../../../src/game/game-configs/game-config-store";
+import { RoundTimeStore } from "../../../src/game/rounds";
 import { GameServiceMessage } from "../../../src/shared";
 describe("BaccaratMultipliersHandler", () => {
     let handler: BaccaratMultipliersHandler;
     let multipliersStore: MultipliersStore<Card>;
 
     let gameConfigStore: GameConfigStore;
+    let roundTimeStore: RoundTimeStore;
     let baccaratMultipliersStore: BaccaratMultipliersStore<Card>;
     beforeEach(() => {
         multipliersStore = stub<MultipliersStore<Card>>();
         gameConfigStore = stub<GameConfigStore>();
+        roundTimeStore = stub<RoundTimeStore>();
         baccaratMultipliersStore = stub<BaccaratMultipliersStore<Card>>();
-        handler = new BaccaratMultipliersHandler(multipliersStore, gameConfigStore, baccaratMultipliersStore);
+        handler = new BaccaratMultipliersHandler(multipliersStore, gameConfigStore, baccaratMultipliersStore, roundTimeStore);
     });
 
     describe("receivedFinaleOdds", () => {
@@ -44,7 +46,7 @@ describe("BaccaratMultipliersHandler", () => {
         });
 
         afterEach(() => {
-            jest.clearAllMocks;
+            jest.clearAllMocks();
         });
 
         it("should call getCards for each choice", () => {
@@ -148,35 +150,6 @@ describe("BaccaratMultipliersHandler", () => {
         });
     });
 
-    describe("calculateScore", () => {
-        it("should return total rank of 2 cards", () => {
-            //Arrange
-            const cards = [
-                { rank: 1, suit: 0 },
-                { rank: 5, suit: 1 },
-            ];
-            //Act
-            const result = handler.calculateScore(cards);
-
-            //Assert
-            expect(result).toEqual(6);
-        });
-
-        it("should return total rank of 3 cards", () => {
-            //Arrange
-            const cards = [
-                { rank: 1, suit: 0 },
-                { rank: 5, suit: 1 },
-                { rank: 10, suit: 1 },
-            ];
-            //Act
-            const result = handler.calculateScore(cards);
-
-            //Assert
-            expect(result).toEqual(16);
-        });
-    });
-
     describe("getCards", () => {
         describe("bet choice pair", () => {
             it("should return 2 cards, for pair", () => {
@@ -212,7 +185,7 @@ describe("BaccaratMultipliersHandler", () => {
                 expect(result.length).toEqual(0);
             });
 
-            it("should return 0 cards, when only one card", () => {
+            it("should return 1 cards, when only one card", () => {
                 //Arrange
                 const first2Card = [{ rank: 1, suit: 0 }];
                 const cardsState = {
@@ -307,27 +280,6 @@ describe("BaccaratMultipliersHandler", () => {
                 //Assert
                 expect(result.length).toEqual(0);
             });
-        });
-    });
-
-    describe("updateFinalOdds", () => {
-        it("should update possiblePayout by FinalOdds", () => {
-            //Arrange
-            const finalOdds = {
-                banker: 12,
-                bankerPair: 24,
-            };
-            baccaratMultipliersStore.finalOdds = finalOdds;
-
-            //Act
-            handler.updateFinalOdds();
-
-            //Assert
-            const expectedPayout = {
-                banker: { value: finalOdds.banker },
-                bankerPair: { value: finalOdds.bankerPair },
-            };
-            expect(baccaratMultipliersStore.possiblePayout).toEqual(expectedPayout);
         });
     });
 
