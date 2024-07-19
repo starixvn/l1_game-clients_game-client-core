@@ -43,9 +43,7 @@ export class ShoeHandlers implements IMultipleHandlers {
         this.shoeStore.newShoePhase = true;
         this.popupsClosed.forceClosed = {};
         this.resetForNewShoe();
-        console.log("======================= round id current:", this.roundStore.clientRoundId);
         this.roundStore.clientRoundId = this.roundStore.clientRoundId + 1;
-        console.log("======================= round id increased:", this.roundStore.clientRoundId);
         this.handleShowPopups();
     }
     handleShowPopups() {
@@ -64,10 +62,11 @@ export class ShoeHandlers implements IMultipleHandlers {
     }
 
     handleShoeInfo(shoeInfo: GameServiceMessage.ShoeInfo) {
+        const notFinalCutCardIndex = !shoeInfo.cutCardIndex;
         this.shoeStore.shoeInfo = {
             ...shoeInfo,
             roundTime: this.roundTimeStore.roundTime,
-            animated: shoeInfo.new || shoeInfo.newShoePhase,
+            animated: shoeInfo.new || (shoeInfo.newShoePhase && !!shoeInfo.cutCardIndex),
         };
         this.shoeStore.shoeHash = shoeInfo.hashValue;
 
@@ -75,7 +74,7 @@ export class ShoeHandlers implements IMultipleHandlers {
             console.log("new shoe time is ", this.roundTimeStore.roundTime);
 
             this.shoeStore.newShoePhase = true;
-            if (!this.shoeStore.shoeInfo?.cutCardIndex) {
+            if (notFinalCutCardIndex) {
                 this.handleShowPopups();
             }
             return;
