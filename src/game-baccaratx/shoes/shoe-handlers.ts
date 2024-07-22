@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
+import { CutCardStore } from "../../features/provably-fair/cut-card-game";
 import { FairnessStore } from "../../features/provably-fair/cut-card-game/fairness-store";
 import { ConnectionHandlers } from "../../game/connection/connection-handlers";
 import { RoundHistoryStore } from "../../game/round-histories";
@@ -16,6 +17,7 @@ import { ShoeStore } from "./shoe-store";
 export class ShoeHandlers implements IMultipleHandlers {
     constructor(
         @inject(CutCardHandler) protected readonly cutCardHandler: CutCardHandler,
+        @inject(CutCardStore) protected readonly cutCardStore: CutCardStore,
         @inject(ShoeStore) protected readonly shoeStore: ShoeStore,
         @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler,
         @inject(FairnessStore) protected readonly fairnessStore: FairnessStore,
@@ -59,6 +61,7 @@ export class ShoeHandlers implements IMultipleHandlers {
         this.roundHistoryStore.clearRoundHistories();
         this.baccaratMultipliersHandler.handleForNewShoe();
         this.startingRoundHandler.resetForNewRound();
+        this.cutCardStore.showNoticeCutCardFailed = false;
     }
 
     handleShoeInfo(shoeInfo: GameServiceMessage.ShoeInfo) {
@@ -79,10 +82,13 @@ export class ShoeHandlers implements IMultipleHandlers {
             }
             return;
         }
-
-        this.cutCardHandler.resetCutCardInfo();
         this.fairnessStore.isShowFairnessSettingsPopup = false;
         this.fairnessStore.showWaitingScreen = false;
+        if (this.cutCardStore.cutCardInfo && !this.cutCardStore.cutCardInfo.successful) {
+            this.cutCardStore.showNoticeCutCardFailed = true;
+        }
+
+        this.cutCardHandler.resetCutCardInfo();
     }
 
     eventHandleList = [

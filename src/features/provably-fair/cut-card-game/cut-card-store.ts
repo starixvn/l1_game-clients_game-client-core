@@ -13,7 +13,7 @@ export class CutCardStore {
     }
 
     private _cutCardInfo: CutCardInfo = null;
-    private TIME_BEFORE_CUT_CARD = 48;
+    showNoticeCutCardFailed = false;
 
     get cutCardInfo() {
         return this._cutCardInfo;
@@ -21,9 +21,5 @@ export class CutCardStore {
 
     set cutCardInfo(cutCardInfo: CutCardInfo) {
         this._cutCardInfo = cutCardInfo;
-    }
-
-    get showNoticeCutCardMessage() {
-        return this.cutCardInfo && !this.cutCardInfo.successful && this.roundTimeStore.roundTime < this.TIME_BEFORE_CUT_CARD;
     }
 }
