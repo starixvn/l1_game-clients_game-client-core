@@ -4,6 +4,11 @@ import { injectable } from "inversify";
 
 import { makeAutoObservable } from "mobx";
 
+interface CutCardInfo {
+    cutCardIndex: number;
+    successful: boolean;
+}
+
 @injectable()
 export class FairnessStore {
     constructor() {
@@ -19,7 +24,9 @@ export class FairnessStore {
     private _maxCS = 0;
     openVerification: OpenVerification = null;
     openCutCardIndex: OpenVerification = null;
+    private _cutCardInfo: CutCardInfo = null;
     showWaitingScreen = false;
+    showNoticeCutCardFailed = false;
 
     get clientSeed() {
         return this._clientSeed;
@@ -59,5 +66,13 @@ export class FairnessStore {
 
     set dontShowAgain(isShow: boolean) {
         this._dontShowAgain = isShow;
+    }
+
+    get cutCardInfo() {
+        return this._cutCardInfo;
+    }
+
+    set cutCardInfo(cutCardInfo: CutCardInfo) {
+        this._cutCardInfo = cutCardInfo;
     }
 }

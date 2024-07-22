@@ -1,13 +1,13 @@
 import { inject, injectable } from "inversify";
 import * as _ from "lodash";
 import { reaction } from "mobx";
-import { RoundPFHandler } from "../../../game-baccaratx/round-pf/round-pf-handler";
-import { ShoeStore } from "../../../game-baccaratx/shoes";
-import { ConnectionStore } from "../../../game/connection/connection-store";
-import { GameUserSettingHandler } from "../../../game/game-user-settings/game-user-setting-handler";
-import { GameUserSettingAction, GameUserSettingStore } from "../../../game/game-user-settings/game-user-setting-store";
-import { GameClientEmitMessage } from "../../../shared/models/game-messages";
-import { StorageManager, localStorageKeys } from "../../../shared/utils";
+import { ConnectionStore } from "../../game/connection/connection-store";
+import { GameUserSettingHandler } from "../../game/game-user-settings/game-user-setting-handler";
+import { GameUserSettingAction, GameUserSettingStore } from "../../game/game-user-settings/game-user-setting-store";
+import { GameClientEmitMessage } from "../../shared/models/game-messages";
+import { StorageManager, localStorageKeys } from "../../shared/utils";
+import { ShoePFHandler } from "../shoe-pf/shoe-pf-handler";
+import { ShoeStore } from "../shoes/shoe-store";
 import { FairnessStore } from "./fairness-store";
 
 type FairnessUserSetting = {
@@ -23,7 +23,7 @@ export class FairnessHandler {
 
         @inject(GameUserSettingStore) protected readonly gameUserSettingStore: GameUserSettingStore,
         @inject(GameUserSettingHandler) protected readonly gameUserSettingHandler: GameUserSettingHandler,
-        @inject(RoundPFHandler) protected readonly roundPFHandler: RoundPFHandler,
+        @inject(ShoePFHandler) protected readonly shoePFHandler: ShoePFHandler,
         @inject(ShoeStore) protected readonly shoeStore: ShoeStore
     ) {
         this.loadClientSettingFromStorage();
@@ -49,11 +49,6 @@ export class FairnessHandler {
         } else {
             this.fairnessStore.dontShowAgain = false;
         }
-    }
-
-    handle(clientSeed: string) {
-        this.fairnessStore.clientSeed = clientSeed;
-        this.connectionStore.send(GameClientEmitMessage.CutCard.eventName, { cutCardIndex: this.fairnessStore.clientSeed });
     }
 
     saveClientSeed(clientSeed: string) {
@@ -107,7 +102,7 @@ export class FairnessHandler {
     }
 
     openVerificationHistory(roundId: number) {
-        this.roundPFHandler.requestRoundPF(roundId);
+        this.shoePFHandler.requestRoundPF(roundId);
         this.fairnessStore.openVerification = { isOpen: true, roundId };
     }
 
@@ -121,5 +116,14 @@ export class FairnessHandler {
 
     closeCutCardIndex() {
         this.fairnessStore.openCutCardIndex = { isOpen: false };
+    }
+
+    sendClientSeed(clientSeed: string) {
+        this.fairnessStore.clientSeed = clientSeed;
+        this.connectionStore.send(GameClientEmitMessage.CutCard.eventName, { cutCardIndex: this.fairnessStore.clientSeed });
+    }
+
+    resetCutCardInfo() {
+        this.fairnessStore.cutCardInfo = null;
     }
 }

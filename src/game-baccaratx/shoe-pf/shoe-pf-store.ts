@@ -3,7 +3,7 @@ import { makeAutoObservable } from "mobx";
 import { GameServiceMessage } from "../../shared";
 
 @injectable()
-export class RoundPFStore {
+export class ShoePFStore {
     constructor() {
         makeAutoObservable(this);
     }

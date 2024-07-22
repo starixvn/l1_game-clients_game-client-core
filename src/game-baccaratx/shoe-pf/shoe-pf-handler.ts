@@ -1,15 +1,13 @@
 import { inject, injectable } from "inversify";
 import { ConnectionStore } from "../../game/connection/connection-store";
-import { RoundStore } from "../../game/rounds/round-store";
 import { GameClientEmitMessage, GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { RoundPFStore } from "./round-pf-store";
+import { ShoePFStore } from "./shoe-pf-store";
 
 @injectable()
-export class RoundPFHandler implements IMultipleHandlers {
+export class ShoePFHandler implements IMultipleHandlers {
     constructor(
-        @inject(RoundPFStore) protected readonly roundPFStore: RoundPFStore,
-        @inject(ConnectionStore) protected readonly connectionStore: ConnectionStore,
-        @inject(RoundStore) protected readonly roundStore: RoundStore
+        @inject(ShoePFStore) protected readonly roundPFStore: ShoePFStore,
+        @inject(ConnectionStore) protected readonly connectionStore: ConnectionStore
     ) {}
 
     requestRoundPF(roundId: number) {

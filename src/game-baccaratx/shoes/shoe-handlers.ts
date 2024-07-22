@@ -1,25 +1,21 @@
 import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
-import { CutCardStore } from "../../features/provably-fair/cut-card-game";
-import { FairnessStore } from "../../features/provably-fair/cut-card-game/fairness-store";
-import { ConnectionHandlers } from "../../game/connection/connection-handlers";
 import { RoundHistoryStore } from "../../game/round-histories";
 import { RoundStore, RoundTimeStore } from "../../game/rounds";
 import { RoundUIHandlers } from "../../game/rounds/round-ui-handlers";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
+import { FairnessHandler } from "../cut-card-pf";
+import { FairnessStore } from "../cut-card-pf/fairness-store";
 import { ExtraFeeHandlers } from "../extra-fee";
 import { BaccaratMultipliersHandler } from "../multiplier/baccarat-multipliers-handler";
-import { CutCardHandler } from "./../../features/provably-fair/cut-card-game/cut-card-handler";
 import { PopupsClosedStore } from "./../../game/popups-closed/popups-closed-store";
 import { ShoeStore } from "./shoe-store";
 
 @injectable()
 export class ShoeHandlers implements IMultipleHandlers {
     constructor(
-        @inject(CutCardHandler) protected readonly cutCardHandler: CutCardHandler,
-        @inject(CutCardStore) protected readonly cutCardStore: CutCardStore,
+        @inject(FairnessHandler) protected readonly fairnessHandler: FairnessHandler,
         @inject(ShoeStore) protected readonly shoeStore: ShoeStore,
-        @inject(ConnectionHandlers.RetryGameHandler) protected readonly retryGameHandler: ConnectionHandlers.RetryGameHandler,
         @inject(FairnessStore) protected readonly fairnessStore: FairnessStore,
         @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
         @inject(BaccaratMultipliersHandler) protected readonly baccaratMultipliersHandler: BaccaratMultipliersHandler,
@@ -61,7 +57,7 @@ export class ShoeHandlers implements IMultipleHandlers {
         this.roundHistoryStore.clearRoundHistories();
         this.baccaratMultipliersHandler.handleForNewShoe();
         this.startingRoundHandler.resetForNewRound();
-        this.cutCardStore.showNoticeCutCardFailed = false;
+        this.fairnessStore.showNoticeCutCardFailed = false;
     }
 
     handleShoeInfo(shoeInfo: GameServiceMessage.ShoeInfo) {
@@ -84,11 +80,11 @@ export class ShoeHandlers implements IMultipleHandlers {
         }
         this.fairnessStore.isShowFairnessSettingsPopup = false;
         this.fairnessStore.showWaitingScreen = false;
-        if (this.cutCardStore.cutCardInfo && !this.cutCardStore.cutCardInfo.successful) {
-            this.cutCardStore.showNoticeCutCardFailed = true;
+        if (this.fairnessStore.cutCardInfo && !this.fairnessStore.cutCardInfo.successful) {
+            this.fairnessStore.showNoticeCutCardFailed = true;
         }
 
-        this.cutCardHandler.resetCutCardInfo();
+        this.fairnessHandler.resetCutCardInfo();
     }
 
     eventHandleList = [
