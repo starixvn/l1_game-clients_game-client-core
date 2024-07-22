@@ -1,13 +1,12 @@
 import { OpenVerification } from "./definitions";
 
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 
 import { makeAutoObservable } from "mobx";
-import { CutCardStore } from "./cut-card-store";
 
 @injectable()
 export class FairnessStore {
-    constructor(@inject(CutCardStore) protected readonly cutCardStore: CutCardStore) {
+    constructor() {
         makeAutoObservable(this);
     }
 
