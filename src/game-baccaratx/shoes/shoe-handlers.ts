@@ -80,9 +80,6 @@ export class ShoeHandlers implements IMultipleHandlers {
         }
         this.fairnessStore.isShowFairnessSettingsPopup = false;
         this.fairnessStore.showWaitingScreen = false;
-        if (this.fairnessStore.cutCardInfo && !this.fairnessStore.cutCardInfo.successful) {
-            this.fairnessStore.showNoticeCutCardFailed = true;
-        }
 
         this.fairnessHandler.resetCutCardInfo();
     }

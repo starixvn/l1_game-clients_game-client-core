@@ -2,21 +2,12 @@ import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { GameServiceMessage } from "../../shared";
 
-interface EventData {
-    event: string;
-}
-
-export enum SettlementAction {
-    REACH_MAX_WIN = "reach-max-win",
-}
-
 @injectable()
 export class SettlementStatusStore {
     win = false;
     bet = 0;
     winningByChoices: GameServiceMessage.WinningByChoices = {};
     reachMaxWin = false;
-    private _eventData: EventData = null;
 
     constructor() {
         makeAutoObservable(this);
@@ -33,7 +24,6 @@ export class SettlementStatusStore {
         this.win = false;
         this.bet = 0;
         this.reachMaxWin = false;
-        this.eventData = null;
     }
 
     get settlementStatus(): GameServiceMessage.Status {
@@ -43,12 +33,5 @@ export class SettlementStatusStore {
             winningByChoices: this.winningByChoices,
             reachMaxWin: this.reachMaxWin,
         };
-    }
-
-    public get eventData(): EventData {
-        return this._eventData;
-    }
-    public set eventData(value: EventData) {
-        this._eventData = value;
     }
 }

@@ -1,13 +1,16 @@
 import { inject, injectable } from "inversify";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { SettlementAction, SettlementStatusStore } from "./settlement-status-store";
+import { Translator } from "../../shared/utils";
+import { NoticeStore } from "../notices/notice-store";
+import { SettlementStatusStore } from "./settlement-status-store";
 import { SettlementStore } from "./settlement-store";
 
 @injectable()
 export class SettlementHandlers implements IMultipleHandlers {
     constructor(
         @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
-        @inject(SettlementStatusStore) protected readonly statusStore: SettlementStatusStore
+        @inject(SettlementStatusStore) protected readonly statusStore: SettlementStatusStore,
+        @inject(NoticeStore) protected readonly noticeStore: NoticeStore
     ) {}
 
     handleFinish(finish: GameServiceMessage.Finish | undefined) {
@@ -23,7 +26,7 @@ export class SettlementHandlers implements IMultipleHandlers {
     }
 
     handleReachMaxWin() {
-        this.statusStore.eventData = { event: SettlementAction.REACH_MAX_WIN };
+        this.noticeStore.addWarning(Translator.commonTranslate("you_reach_max_win"));
     }
 
     eventHandleList = [
