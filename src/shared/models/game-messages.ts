@@ -308,6 +308,16 @@ export namespace GameServiceMessage {
     export class RoundPFResult extends ProvablyFair {
         static eventName = "roundPFResult";
     }
+
+    export class PlayerHand {
+        hand: {
+            front: number[];
+            middle: number[];
+            back: number[];
+        };
+        slot: number;
+        static eventName = "playerHand";
+    }
 }
 
 export namespace NotificationServiceMessage {
