@@ -166,7 +166,7 @@ export class RoundStore {
     get highlightStatic(): THighlightStatic {
         let settlementResult: GameServiceMessage.TSettlementResult = null;
         let result: GameServiceMessage.TResult = null;
-        if (this.roundTimeStore.roundState === ROUND_STATE.PLACING_BET || this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND) {
+        if (this.roundTimeStore.isPlacingBet || this.roundTimeStore.isStartingRound) {
             settlementResult = this.roundHistoryStore?.getLastRound()?.settlementResult;
             result = this.roundHistoryStore?.getLastRound()?.result;
         }
