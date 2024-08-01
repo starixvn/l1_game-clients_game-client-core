@@ -167,8 +167,9 @@ export class RoundStore {
         let settlementResult: GameServiceMessage.TSettlementResult = null;
         let result: GameServiceMessage.TResult = null;
         if (this.roundTimeStore.isPlacingBet || this.roundTimeStore.isStartingRound) {
-            settlementResult = this.roundHistoryStore?.getLastRound()?.settlementResult;
-            result = this.roundHistoryStore?.getLastRound()?.result;
+            const lastRound = this.roundHistoryStore?.getLastRound();
+            settlementResult = lastRound?.settlementResult;
+            result = lastRound?.result;
         }
 
         return { settlementResult, result };
