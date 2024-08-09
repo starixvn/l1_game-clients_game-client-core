@@ -60,10 +60,14 @@ export class FairnessHandler {
         this.gameUserSettingHandler.savePermanentStorage();
     }
 
+    /**
+     * call from UI component, dont remove it*/
     setMinClientSeed(min: number) {
         this.fairnessStore.minClientSeed = min;
     }
 
+    /**
+     * call from UI component, dont remove it*/
     setMaxClientSeed(max: number) {
         this.fairnessStore.maxClientSeed = max;
     }

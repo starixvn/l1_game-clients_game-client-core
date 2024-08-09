@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { reaction } from "mobx";
+import { DialogsStore } from "../../game/dialogs/dialogs-store";
 import { RoundHistoryStore } from "../../game/round-histories";
 import { RoundStore, RoundTimeStore } from "../../game/rounds";
 import { RoundUIHandlers } from "../../game/rounds/round-ui-handlers";
@@ -8,7 +9,6 @@ import { FairnessHandler } from "../cut-card-pf";
 import { FairnessStore } from "../cut-card-pf/fairness-store";
 import { ExtraFeeHandlers } from "../extra-fee";
 import { BaccaratMultipliersHandler } from "../multiplier/baccarat-multipliers-handler";
-import { PopupsClosedStore } from "./../../game/popups-closed/popups-closed-store";
 import { ShoeStore } from "./shoe-store";
 
 @injectable()
@@ -21,7 +21,7 @@ export class ShoeHandlers implements IMultipleHandlers {
         @inject(BaccaratMultipliersHandler) protected readonly baccaratMultipliersHandler: BaccaratMultipliersHandler,
         @inject(ExtraFeeHandlers) protected readonly extraFeeHandlers: ExtraFeeHandlers,
         @inject(RoundUIHandlers.StartingRoundHandler) protected readonly startingRoundHandler: RoundUIHandlers.StartingRoundHandler,
-        @inject(PopupsClosedStore) protected readonly popupsClosed: PopupsClosedStore,
+        @inject(DialogsStore) protected readonly dialogsStore: DialogsStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(RoundStore) protected readonly roundStore: RoundStore
     ) {
@@ -39,7 +39,7 @@ export class ShoeHandlers implements IMultipleHandlers {
         this.shoeStore.shoeInfo = null;
         this.shoeStore.shoeHash = newShoeHash;
         this.shoeStore.newShoePhase = true;
-        this.popupsClosed.forceClosed = {};
+        this.dialogsStore.forceClosed = {};
         this.resetForNewShoe();
         this.roundStore.clientRoundId = this.roundStore.clientRoundId + 1;
         this.handleShowPopups();
