@@ -47,7 +47,6 @@ export class RoundHistoryStore {
     private _receivedInGame = false;
 
     generateJoinGameData() {
-        console.log("origin generateJoinGameData");
         const lastRound = this.getLastRound();
         const roundTime = this.roundTimeStore.roundTime;
         this.firstJoinGameHistory = {
@@ -136,7 +135,7 @@ export class RoundHistoryStore {
         this._receivedInGame = true;
     }
 
-    clearRoundHistories(){
+    clearRoundHistories() {
         this.histories = [];
     }
 }

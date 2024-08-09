@@ -13,7 +13,6 @@ export class RoundTimeHandlers implements IMultipleHandlers {
     handleRemainingTime(remainingTime: number) {
         this.roundRunningHandlers.stopRunner();
         this.store.roundTime = remainingTime;
-        console.log("set remaining time to " + remainingTime);
         this.roundRunningHandlers.startRunner();
     }
 
