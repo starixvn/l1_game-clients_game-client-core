@@ -30,13 +30,18 @@ export class BaccaratMultipliersHandler implements IMultipleHandlers {
     eventHandleList: IHandler<any, any>[] = [
         {
             name: GameServiceMessage.Finish.eventName,
-            handle: this.receivedFinaleOdds,
+            handle: this.receivedFinish,
         },
         {
             name: GameServiceMessage.BaccaratMultiplierCards.eventName,
             handle: this.receivedMultiplierCards,
         },
     ];
+
+    receivedFinish(finish) {
+        this.receivedFinaleOdds(finish);
+        this.parseOddsMultiplers(finish);
+    }
 
     resetPossiblePayout() {
         this.baccaratMultipliersStore.possiblePayout = {};
