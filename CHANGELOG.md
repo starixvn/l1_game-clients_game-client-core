@@ -1,3 +1,21 @@
+# [1.56.0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.55.2...v1.56.0) (2024-08-12)
+
+
+### Bug Fixes
+
+* bug not emit firstJoinGameHistory ([6a79fb8](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/6a79fb85f745375b9be1d346131b770b99912ff1))
+* gameTranslate for many namespaces ([9d3cfb0](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/9d3cfb02a0aa704ff3e4ab957fe75dde3c083704))
+* move round pf ([05ba08e](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/05ba08e41d412cd0d8997210b1e0a7b4f5505da5))
+* prevent call ingame multiple times ([78511e6](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/78511e675fff48b8ae2c57adbbc65b9cdd020d59))
+* reactive clientChips when change orientation ([23d63c7](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/23d63c70ba0f7b28216a1b0ee99079283165d8e4))
+* reset bet percentage ([d8d45b3](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/d8d45b3d8f170f96bdc96fb2cf48d321ba00eb5e))
+* update model ShoeVerification ([5f99d3c](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/5f99d3c6b82ab36497bfad4e0cb0d9456e0ce713))
+
+
+### Features
+
+* store chips from client ([de416cb](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/commit/de416cb9c27f45a0d5e8b19735b2154326676d3a))
+
 ## [1.55.2](https://git3.nexdev.net/l1/game-clients/game-client-packages/game-client-base/compare/v1.55.1...v1.55.2) (2024-05-29)
 
 
