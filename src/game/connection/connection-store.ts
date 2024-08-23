@@ -27,6 +27,7 @@ export interface ISocketOption {
     path?: string;
     extraHeaders?: object;
     parser?: any;
+    auth?: any;
 }
 
 @injectable()
