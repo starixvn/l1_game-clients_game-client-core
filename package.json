@@ -1,5 +1,5 @@
 {
-    "name": "@sg/game-client-core",
+    "name": "@sg/sg-game-client",
     "version": "0.1.1-beta.0",
     "type": "commonjs",
     "types": "dist/index.d.ts",
