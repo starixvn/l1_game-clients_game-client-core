@@ -7,7 +7,7 @@ import { initUserService } from "./stubs/user-service";
 
 const now = new Date("2023-01-01");
 jest.useFakeTimers().setSystemTime(now);
-jest.mock("sc-user-service-client");
+jest.mock("@sg/sg-user-service-client");
 jest.mock("socket.io-client/dist/socket.io.js", () => {
     return { io: jest.fn() };
 });

@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { UMInfo } from "sc-user-service-client/dist/auth";
+import { UMInfo } from "@sg/sg-user-service-client/dist/auth";
 import { ISessionInfo } from "../auth/auth-store";
 import { AppTypes } from "../shared/constants/app-type";
 import { URLParams } from "../shared/constants/url-params";

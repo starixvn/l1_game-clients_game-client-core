@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
+import { ReCheckInResponse, UMInfo } from "@sg/sg-user-service-client/dist/auth";
 import { NoticeInfo, NoticeStore, NoticeType } from "../game/notices/notice-store";
 import { PlayerSelectionHandlers } from "../game/player-selections";
 import { UserSettingData } from "../game/user-settings/user-setting-store";

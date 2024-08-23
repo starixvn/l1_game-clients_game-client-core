@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { SSOResponse } from "sc-user-service-client/dist/auth";
+import { SSOResponse } from "@sg/sg-user-service-client/dist/auth";
 import { URLParams } from "../shared/constants/url-params";
 import { StorageManager, localStorageKeys } from "../shared/utils";
 

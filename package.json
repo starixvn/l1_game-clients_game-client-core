@@ -36,6 +36,7 @@
         "indent": 4
     },
     "dependencies": {
+        "@sg/sg-user-service-client": "^1.8.1",
         "base64-string": "^1.1.2",
         "eventemitter2": "6.4.9",
         "inversify": "6.0.1",
@@ -43,7 +44,6 @@
         "mobx-logger": "^0.7.1",
         "moment": "^2.29.4",
         "node-polyglot": "^2.5.0",
-        "sc-user-service-client": "1.8.1-beta.1",
         "socket.io-client": "4.6.1",
         "socket.io-msgpack-parser": "^3.0.2",
         "unique-names-generator": "^4.7.1"

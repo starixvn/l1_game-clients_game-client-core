@@ -1,4 +1,4 @@
-import UserServiceClient from "sc-user-service-client";
+import UserServiceClient from "@sg/sg-user-service-client";
 import { normalPlayer } from "./player";
 
 export let userServiceAuth;
