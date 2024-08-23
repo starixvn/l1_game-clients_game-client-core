@@ -168,7 +168,7 @@ export class TranslationManager {
     }
 
     public getGameNamespace() {
-        return this.options.gameNamespaces;
+        return this.options?.gameNamespaces;
     }
 
     public loadTranslationResource() {
@@ -180,7 +180,7 @@ export class TranslationManager {
     }
 
     public gameTranslate(key: string, options?: InterpolationOptions) {
-        if (this.options.gameNamespaces) {
+        if (this.options?.gameNamespaces) {
             for (const namespace of this.options.gameNamespaces) {
                 const keyText = `${namespace}.${key}`;
                 const text = this.translate(keyText, options);
@@ -194,7 +194,7 @@ export class TranslationManager {
     }
 
     public commonTranslate(key: string, options?: InterpolationOptions) {
-        if (this.options.gameNamespaces) {
+        if (this.options?.gameNamespaces) {
             return this.translate(`Common.${key}`, options);
         }
 
@@ -208,7 +208,7 @@ export class TranslationManager {
 
     private getTranslate(key: string, mode?: "game" | "common" | "instant", options?: InterpolationOptions) {
         const namespace = {
-            game: this.options.gameNamespaces,
+            game: this.options?.gameNamespaces,
             common: "Common",
             instant: "InstantGame",
         };
