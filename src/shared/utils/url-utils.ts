@@ -12,12 +12,19 @@ export namespace UrlUtils {
     };
 
     export const getRootDomain = (configs: SiteConfigs) => {
-        const hostName = window.location.hostname;
+        if (!globalThis) {
+            return "";
+        }
+        const hostName = globalThis?.location?.hostname;
         return (!!configs.serverDomainMapper && configs.serverDomainMapper[hostName]) || extractDomainFromHostName(hostName);
     };
 
     export const extractDomainFromHostName = (hostName: string) => {
-        const domainParts = hostName.split(".").reverse();
+        if(!hostName){
+            return ""
+        }
+      
+        const domainParts = hostName?.split(".")?.reverse();
         return `${domainParts[1]}.${domainParts[0]}`;
     };
 
