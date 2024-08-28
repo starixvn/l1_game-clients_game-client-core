@@ -8,14 +8,24 @@ export type DurationSetting = {
     wholeShoe?: number;
 };
 
+
+export type TurnBaseDurationSetting = DurationSetting & {
+    wholeTurn?: number;
+    resultAnimation?: number;
+    switchRoundAnimation?: number;
+    startNewRoundAnim?: number;
+}
+
+
 export class GameSetting {
     id: number;
     name: string;
     configName?: string;
-    durations: DurationSetting;
+    durations: DurationSetting | TurnBaseDurationSetting;
     choices?: string[];
     hedgeBetGroups?: string[][];
     numberOfRoundHistory: number;
     validateBalanceWhenBet?: boolean;
     durationShowPromptMessage?: number;
+    totalTurns?: number;
 }

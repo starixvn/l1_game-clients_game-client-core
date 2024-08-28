@@ -24,7 +24,7 @@ export interface IContainerOptions {
 
 function serializeOptions(input: IContainerOptions): IContainerOptions {
     const defaultOptions: IContainerOptions = {
-        onContainerCreated: () => {},
+        onContainerCreated: () => { },
         disabledFeatures: [],
         globalContainer: null,
         enabledFeatures: [],
