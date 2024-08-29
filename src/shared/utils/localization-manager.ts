@@ -128,7 +128,7 @@ export class TranslationManager {
         return this._polygrot.t(key, options);
     }
 
-    private toLanguageId(languageCode: string) {
+    public toLanguageId(languageCode: string) {
         const languageMapping = {
             "vi-VN": "vi",
             "en-US": "en",
