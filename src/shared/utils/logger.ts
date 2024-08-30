@@ -12,7 +12,7 @@ export const sentryLogger = {
     identifier: "",
     loaded: false,
     isEnabled: () => {
-        if (document && typeof document !== "undefined") {
+        if (typeof document !== "undefined") {
             return sentryLogger.sentryUrl && document?.head;
         }
 
@@ -40,18 +40,19 @@ export const sentryLogger = {
             sentryLogger.env = env;
             sentryLogger.identifier = identifier;
 
-            const sentryScript = document?.createElement("script");
-            if (sentryScript) {
-                sentryScript.setAttribute("id", "sentry-logger");
-                sentryScript.setAttribute("src", "https://browser.sentry-cdn.com/5.15.0/bundle.min.js");
-                sentryScript.setAttribute("integrity", "sha384-+ysfQckQvwCB5SppH41IScIz/Iynt2pePnJNMl+D7ZOzDJ+VYhQEuwB0pA60IDM0");
-                sentryScript.setAttribute("crossorigin", "anonymous");
-                sentryScript.onload = () => {
-                    sentryLogger.loadScript();
-                };
+            if (typeof document !== "undefined") {
+                const sentryScript = document?.createElement("script");
+                if (sentryScript) {
+                    sentryScript.setAttribute("id", "sentry-logger");
+                    sentryScript.setAttribute("src", "https://browser.sentry-cdn.com/5.15.0/bundle.min.js");
+                    sentryScript.setAttribute("integrity", "sha384-+ysfQckQvwCB5SppH41IScIz/Iynt2pePnJNMl+D7ZOzDJ+VYhQEuwB0pA60IDM0");
+                    sentryScript.setAttribute("crossorigin", "anonymous");
+                    sentryScript.onload = () => {
+                        sentryLogger.loadScript();
+                    };
+                }
+                document?.head.appendChild(sentryScript);
             }
-
-            document?.head.appendChild(sentryScript);
         } catch (err) {
             console.log(err);
         }
