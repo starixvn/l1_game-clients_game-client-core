@@ -141,20 +141,20 @@ export namespace ErrorUtils {
         return "Common";
     };
 
-    export const createOptionForHedgeBetGroup = (hedgeBetGroup: string[]) => {
+    export const createOptionForHedgeBetGroup = (hedgeBetGroup: string[], gameName: string) => {
         const option = {};
         hedgeBetGroup?.forEach((choice, index) => {
-            option[`betChoice${index + 1}`] = Translator.gameTranslate(`glossary_${choice}`);
+            option[`betChoice${index + 1}`] = Translator.translate(`${gameName}.glossary_${choice}`);
         });
         return option;
     };
 
-    export const getErrorMessage = (notice: GameServiceMessage.Notice, system: number) => {
+    export const getErrorMessage = (notice: GameServiceMessage.Notice, system: number, gameName: string) => {
         const { errorCode, hedgeBetGroup, gameRoundId } = notice;
         const option = { errorCode };
 
         if (!!hedgeBetGroup) {
-            Object.assign(option, createOptionForHedgeBetGroup(hedgeBetGroup));
+            Object.assign(option, createOptionForHedgeBetGroup(hedgeBetGroup, gameName));
         }
 
         if (!!notice.gameTypeId) {

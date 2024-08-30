@@ -35,7 +35,7 @@ export namespace GameGuideHandlers {
                 minBet: this.roundStore.minBet,
                 maxBet: this.roundStore.maxBet,
                 scrollToId: scrollToId,
-                displayName: Translator.gameTranslate("game_name"),
+                displayName: Translator.translate(`${this.gameSetting.name}.game_name`),
             };
             const queryString = Object.keys(params)
                 .map((key) => `${key}=${params[key]}`)

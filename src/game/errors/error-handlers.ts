@@ -6,6 +6,7 @@ import { Translator } from "../../shared/utils/localization-manager";
 import { NoticeInfo, NoticeStore, NoticeType } from "../notices";
 import { AppTypes } from "./../../shared/constants/app-type";
 import { ErrorStore } from "./error-store";
+import { GameSetting } from "../game-configs";
 
 const { ErrorUtils } = utils;
 
@@ -15,7 +16,8 @@ export class ErrorHandlers implements IMultipleHandlers {
         @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
         @inject(NoticeStore) protected readonly noticeStore: NoticeStore,
         @inject(AuthStore) protected readonly authStore: AuthStore,
-        @inject(ErrorStore) protected readonly errorStore: ErrorStore
+        @inject(ErrorStore) protected readonly errorStore: ErrorStore,
+        @inject(GameSetting) protected readonly gameSetting: GameSetting
     ) {}
 
     getSystem = () => {
@@ -40,7 +42,7 @@ export class ErrorHandlers implements IMultipleHandlers {
             this.mainPlayerStore.stakeLevel.maxBet = maxBet;
         }
 
-        const text = ErrorUtils.getErrorMessage(apiError, this.getSystem());
+        const text = ErrorUtils.getErrorMessage(apiError, this.getSystem(), this.gameSetting.name);
         this.noticeStore.addNotice({
             message: text,
             title: Translator.commonTranslate("notice"),

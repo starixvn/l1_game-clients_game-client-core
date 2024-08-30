@@ -21,7 +21,7 @@ export class NoPermissionHandlers implements IHandler<void> {
         const goToLobby = () => {
             this.backToOperatorLobby.handle();
         };
-        const gameName = Translator.gameTranslate("game_name");
+        const gameName = Translator.translate(`${this.gameSetting.name}.game_name`);
         this.noticeStore.addNotice({
             message: Translator.getMessageFollowSystem(this.authStore.system, "game_excluded", { gameName }),
             title: Translator.commonTranslate("notice"),
