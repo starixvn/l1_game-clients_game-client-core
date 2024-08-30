@@ -12,17 +12,21 @@ export const sentryLogger = {
     identifier: "",
     loaded: false,
     isEnabled: () => {
-        return sentryLogger.sentryUrl && document && document.head;
+        if (document && typeof document !== "undefined") {
+            return sentryLogger.sentryUrl && document?.head;
+        }
+
+        return false;
     },
     loadScript: () => {
-        if (window.Sentry && !sentryLogger.loaded) {
-            window.Sentry.init({
+        if (globalThis.Sentry && !sentryLogger.loaded) {
+            globalThis.Sentry.init({
                 dsn: sentryLogger.sentryUrl,
                 environment: sentryLogger.env,
                 maxValueLength: 5000,
                 ignoreErrors,
             });
-            window.Sentry.setTag("game-client", sentryLogger.identifier);
+            globalThis.Sentry.setTag("game-client", sentryLogger.identifier);
 
             sentryLogger.loaded = true;
         }
@@ -56,14 +60,14 @@ export const sentryLogger = {
     logInfo: (message: string) => {
         if (sentryLogger.isEnabled()) {
             sentryLogger.loadScript();
-            window.Sentry?.captureMessage(`${sentryLogger.identifier}: ${message}`);
+            globalThis.Sentry?.captureMessage(`${sentryLogger.identifier}: ${message}`);
         }
     },
 
     logError: (exception: string | Error) => {
         if (sentryLogger.isEnabled()) {
             sentryLogger.loadScript();
-            window.Sentry?.captureMessage(`${sentryLogger.identifier}: ${exception}`, "error");
+            globalThis.Sentry?.captureMessage(`${sentryLogger.identifier}: ${exception}`, "error");
         }
     },
 };

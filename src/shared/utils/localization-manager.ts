@@ -145,7 +145,7 @@ export class TranslationManager {
     public getLanguageId() {
         let languageId = (StorageManager.get(`current_language`) ?? this.defaultLanguageId) as string;
 
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(globalThis.location.search);
 
         if (urlParams.has("lang")) {
             languageId = this.toLanguageId(urlParams.get("lang"));

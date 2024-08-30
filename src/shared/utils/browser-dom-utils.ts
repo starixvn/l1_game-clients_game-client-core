@@ -10,7 +10,7 @@ export class BrowserDomUtils {
         const parentUrl = StorageManager.get(localStorageKeys.parentUrl)?.toString();
         if (parentUrl) {
             const url = GameUtils.base64Decode(parentUrl);
-            window.parent?.postMessage(data, url);
+            globalThis.parent?.postMessage(data, url);
         }
     }
 }
