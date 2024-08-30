@@ -194,11 +194,7 @@ export class TranslationManager {
     }
 
     public commonTranslate(key: string, options?: InterpolationOptions) {
-        if (this.options?.gameNamespaces) {
-            return this.translate(`Common.${key}`, options);
-        }
-
-        return this.translate(key, options);
+        return this.translate(`Common.${key}`, options);
     }
 
     public getMessageFollowSystem(system: number, key: string, options?: InterpolationOptions) {
