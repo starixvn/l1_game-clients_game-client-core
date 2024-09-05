@@ -115,6 +115,7 @@ describe("DisableGameHandlers tests", () => {
         ];
         test.each(authStoreLangs)("should set disable game true and open popup.", (authStoreLang, expectedDisabledMessages) => {
             // arrange
+            disabledGameStore.um = true;
             disabledGameStore.disabled = true;
             authStore.language = authStoreLang;
 

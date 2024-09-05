@@ -37,17 +37,19 @@ export class DisableGameHandlers implements IMultipleHandlers {
     }
 
     showPopupHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
-        const language = SupportedLanguages.includes(this.authStore.language) ? this.authStore.language : DefaultLanguage;
-        this.noticeStore.addNotice({
-            message: disabledGameInfo[language],
-            title: Translator.commonTranslate("notice"),
-            type: NoticeType.Error,
-            onClose: this.onClosedHandle,
-            showBtnConfirmButton: true,
-            noticeInfo: NoticeInfo.DisabledGame,
-        });
+        if (this.disabledGameStore.um) {
+            const language = SupportedLanguages.includes(this.authStore.language) ? this.authStore.language : DefaultLanguage;
+            this.noticeStore.addNotice({
+                message: disabledGameInfo[language],
+                title: Translator.commonTranslate("notice"),
+                type: NoticeType.Error,
+                onClose: this.onClosedHandle,
+                showBtnConfirmButton: true,
+                noticeInfo: NoticeInfo.DisabledGame,
+            });
 
-        this.disabledGameStore.setShowPopup(true);
+            this.disabledGameStore.setShowPopup(true);
+        }
     }
 
     inGameHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
