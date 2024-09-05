@@ -17,9 +17,7 @@ export const siteConfigs: SiteConfigs = {
     isDev: true,
     systemType: "SG",
     ssl: false,
-    serverDomainMapper: {
-        localhost: "localhost:5002",
-    },
+    serverDomain:"localhost:5002",
     subDomain: "",
     env: "LOCAL",
     subGuideDomain: "l1-guide",

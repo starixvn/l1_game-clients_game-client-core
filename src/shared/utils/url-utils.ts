@@ -12,7 +12,7 @@ export namespace UrlUtils {
     };
 
     export const getRootDomain = (configs: SiteConfigs) => {
-        return configs.serverDomainMapper;
+        return configs.serverDomain;
     };
 
     export const extractDomainFromHostName = (hostName: string) => {
