@@ -4,6 +4,7 @@ import { makeAutoObservable } from "mobx";
 export class DisabledGameStore {
     disabled = false;
     showPopup = false;
+    um = false;
 
     constructor() {
         makeAutoObservable(this);

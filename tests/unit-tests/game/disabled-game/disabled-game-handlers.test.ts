@@ -51,6 +51,7 @@ describe("DisableGameHandlers tests", () => {
 
         noticeStore = new NoticeStore();
         noticeStore.addNotice = jest.fn();
+        gameSettings.durations.placingBet = 36;
 
         roundTimeStore = new RoundTimeStore(gameSettings);
         roundTimeStore.resetRoundTime = jest.fn();
@@ -139,8 +140,8 @@ describe("DisableGameHandlers tests", () => {
                 it("should show popup and clear round running", () => {
                     // arrange
                     disabledGameStore.disabled = true;
+                    disabledGameStore.um = true;
                     disabledGameStore.showPopup = false;
-                    roundTimeStore.placingBet = 36;
                     roundTimeStore.roundTime = 33;
 
                     handler.showPopupHandle = jest.fn();
@@ -160,7 +161,6 @@ describe("DisableGameHandlers tests", () => {
                     // arrange
                     disabledGameStore.disabled = true;
                     disabledGameStore.showPopup = true;
-                    roundTimeStore.placingBet = 36;
                     roundTimeStore.roundTime = 33;
 
                     handler.showPopupHandle = jest.fn();
@@ -180,7 +180,6 @@ describe("DisableGameHandlers tests", () => {
                     // arrange
                     disabledGameStore.disabled = true;
                     disabledGameStore.showPopup = false;
-                    roundTimeStore.placingBet = 36;
                     roundTimeStore.roundTime = 39;
 
                     handler.showPopupHandle = jest.fn();
@@ -198,7 +197,6 @@ describe("DisableGameHandlers tests", () => {
             it("should call stores", () => {
                 // arrange
                 disabledGameStore.disabled = false;
-                roundTimeStore.placingBet = 36;
                 roundTimeStore.roundTime = 39;
 
                 // act
@@ -226,20 +224,24 @@ describe("DisableGameHandlers tests", () => {
 
     describe("handle", () => {
         test.each([
-            [true, 1, 0],
-            [false, 0, 1],
-        ])("should call in game and join game handle correctly.", (endRound, expectedNumerousInGameCall, expectedNumerousJoinGameCall) => {
-            // arrange
-            roundTimeStore.endRound = endRound;
-            handler.inGameHandle = jest.fn();
-            handler.joinGameHandle = jest.fn();
+            [true, true, 1, 0],
+            [false, false, 0, 1],
+        ])(
+            "should call in game and join game handle correctly.",
+            (endRound, um, expectedNumerousInGameCall, expectedNumerousJoinGameCall) => {
+                // arrange
+                disabledGameStore.um = um;
+                roundTimeStore.endRound = endRound;
+                handler.inGameHandle = jest.fn();
+                handler.joinGameHandle = jest.fn();
 
-            // act
-            handler.handle(fakeDisabledGameInfo);
+                // act
+                handler.handle(fakeDisabledGameInfo);
 
-            // assert
-            expect(handler.inGameHandle).toBeCalledTimes(expectedNumerousInGameCall);
-            expect(handler.joinGameHandle).toBeCalledTimes(expectedNumerousJoinGameCall);
-        });
+                // assert
+                expect(handler.inGameHandle).toBeCalledTimes(expectedNumerousInGameCall);
+                expect(handler.joinGameHandle).toBeCalledTimes(expectedNumerousJoinGameCall);
+            }
+        );
     });
 });
