@@ -25,6 +25,7 @@ describe("BetHandler", () => {
     let betChoice: string;
     let showWarningProcessingBet;
     let gameSetting: GameSetting;
+    let betInfo: any = {};
 
     beforeEach(() => {
         noticeStore = new NoticeStore();
@@ -60,6 +61,7 @@ describe("BetHandler", () => {
         mainPlayerStore.scoin = 100;
         betStore.isProcessingBet = false;
         roundTimeStore.roundState = ROUND_STATE.PLACING_BET;
+        betInfo = { betChoice, amount: 200 };
     });
 
     afterEach(() => {
@@ -73,7 +75,7 @@ describe("BetHandler", () => {
             Translator.commonTranslate = jest.fn(() => "Please wait for the next round.");
 
             // Act
-            betHandler.handle(betChoice);
+            betHandler.handle(betInfo);
 
             // Assert
             expect(noticeStore.addWarning).toBeCalledWith("Please wait for the next round.");
@@ -88,7 +90,7 @@ describe("BetHandler", () => {
             Translator.commonTranslate = jest.fn(() => "Cannot bet at the moment. Please wait for a few seconds.");
 
             // Act
-            betHandler.handle(betChoice);
+            betHandler.handle(betInfo);
 
             // Assert
             expect(noticeStore.addWarning).toBeCalledWith("Cannot bet at the moment. Please wait for a few seconds.");
@@ -101,7 +103,7 @@ describe("BetHandler", () => {
             betStore.isProcessingBet = true;
 
             // Act
-            betHandler.handle(betChoice);
+            betHandler.handle(betInfo);
 
             // Assert
             expect(showWarningProcessingBet).toBeCalled();
@@ -109,6 +111,7 @@ describe("BetHandler", () => {
         });
 
         describe("BetHandler when game client check balance", () => {
+            let betInfo: any = {};
             beforeEach(() => {
                 mainPlayerStore.balance = 100;
                 betStore.amount = 200;
@@ -125,7 +128,7 @@ describe("BetHandler", () => {
                 Translator.commonTranslate = jest.fn(() => "Your account has insufficient funds.");
 
                 // Act
-                betHandler.handle(betChoice);
+                betHandler.handle(betInfo);
 
                 // Assert
                 expect(noticeStore.addWarning).toBeCalledWith("Your account has insufficient funds.");
@@ -138,7 +141,7 @@ describe("BetHandler", () => {
                 Translator.commonTranslate = jest.fn(() => "Not enough Scoin to place bet.");
 
                 // Act
-                betHandler.handle(betChoice);
+                betHandler.handle(betInfo);
 
                 // Assert
                 expect(noticeStore.addWarning).toBeCalledWith("Not enough Scoin to place bet.");
@@ -147,6 +150,7 @@ describe("BetHandler", () => {
         });
 
         describe("BetHandler when game client without check balance", () => {
+            let betInfo: any = {};
             beforeEach(() => {
                 mainPlayerStore.balance = 100;
                 betStore.amount = 200;
@@ -159,7 +163,7 @@ describe("BetHandler", () => {
                 Translator.commonTranslate = jest.fn(() => "Your account has insufficient funds.");
 
                 // Act
-                betHandler.handle(betChoice);
+                betHandler.handle(betInfo);
 
                 // Assert
                 expect(noticeStore.addWarning).not.toBeCalled();
@@ -172,7 +176,7 @@ describe("BetHandler", () => {
                 Translator.commonTranslate = jest.fn(() => "Not enough Scoin to place bet.");
 
                 // Act
-                betHandler.handle(betChoice);
+                betHandler.handle(betInfo);
 
                 // Assert
                 expect(noticeStore.addWarning).not.toBeCalled();
@@ -185,9 +189,10 @@ describe("BetHandler", () => {
             mainPlayerStore.scoin = 100;
             mainPlayerStore.balance = 100;
             betStore.amount = 50;
+            betInfo = { betChoice, amount: 50 };
 
             // Act
-            betHandler.handle(betChoice);
+            betHandler.handle(betInfo);
 
             // Assert
             expect(noticeStore.addWarning).not.toBeCalled();
