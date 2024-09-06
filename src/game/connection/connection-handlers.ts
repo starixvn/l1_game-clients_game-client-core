@@ -48,4 +48,14 @@ export namespace ConnectionHandlers {
             this.retryGameId && clearInterval(this.retryGameId);
         }
     }
+    
+    @injectable()
+    export class CloseConnectHandler implements IHandler<void> {
+        constructor(@inject(ConnectionStore) private readonly connectionStore: ConnectionStore) {}
+
+        handle() {
+            this.connectionStore.closeSocket();
+            this.connectionStore.reset();
+        }
+    }
 }
