@@ -12,3 +12,4 @@ export * from "./name-generator";
 export * from "./number-utils";
 export * from "./storage-manager";
 export * from "./url-utils";
+export * from "./auth-utils";

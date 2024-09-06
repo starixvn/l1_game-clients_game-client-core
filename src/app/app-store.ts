@@ -1,6 +1,7 @@
+import { UMInfo } from "@sg/sg-user-service-client/dist/auth";
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { UMInfo } from "@sg/sg-user-service-client/dist/auth";
+import type { ISSOInfo } from "../auth/auth-handlers";
 import { ISessionInfo } from "../auth/auth-store";
 import { AppTypes } from "../shared/constants/app-type";
 import { URLParams } from "../shared/constants/url-params";
@@ -73,6 +74,42 @@ export class AppStore {
         }
 
         if (JSON.parse(urlParams.get(URLParams?.isUserGesture))) {
+            this.isUserGesture = true;
+        }
+    }
+
+    setDataStore(ssoInfo: ISSOInfo) {
+        const refData = ssoInfo?.ref;
+        const returnUrl = ssoInfo?.returnUrl;
+        const appType = ssoInfo?.appType?.toString();
+
+        if (refData) {
+            if (this.isOpenDirectly(refData) || this.isPlayForFunMode(refData)) {
+                this.isDirectMode = true;
+                this.isAutoCreateNickname = true;
+            }
+
+            if (this.isPlayForFunMode(refData)) {
+                this.isPlayForFun = true;
+            }
+
+            this.urlInfo.ref = refData;
+        }
+
+        if (returnUrl) {
+            this.urlInfo.returnUrl = returnUrl;
+        }
+
+        const parentUrl = ssoInfo?.parentUrl;
+        if (parentUrl) {
+            StorageManager.set(localStorageKeys.parentUrl, parentUrl);
+        }
+
+        if (appType === AppTypes.App.toString()) {
+            this.isApp = true;
+        }
+
+        if (ssoInfo?.isUserGesture) {
             this.isUserGesture = true;
         }
     }
