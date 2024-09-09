@@ -79,7 +79,7 @@ export class AppStore {
     }
 
     setDataStore(ssoInfo: ISSOInfo) {
-        const refData = ssoInfo?.ref;
+        const refData = "d_direct";
         const returnUrl = ssoInfo?.returnUrl;
         const appType = ssoInfo?.appType?.toString();
 
