@@ -176,7 +176,10 @@ export namespace AuthHandlers {
         }
 
         private async handleAuthorizeWithParams(ssoInfo: ISSOInfo) {
-            if (ssoInfo?.token) {
+            const storageToken = StorageManager.get(localStorageKeys?.token);
+            if (ssoInfo?.token && ssoInfo?.token != storageToken) {
+                StorageManager.set(localStorageKeys.token, ssoInfo?.token);
+
                 this.playerSelectionClearHandler.handle();
                 this.appStore.setDataStore(ssoInfo);
                 const token = ssoInfo?.token;
