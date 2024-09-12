@@ -7,6 +7,7 @@ import { GameConfigStore } from "../../game/game-configs";
 import { RoundHistoryStore } from "../../game/round-histories";
 import { SettlementStore } from "../../game/settlements";
 import { ROUND_STATE, RoundTimeStore } from "./round-time-store";
+import { Turn } from "./round-handlers";
 
 export type Bets = {
     [betChoice: string]: number;
@@ -41,32 +42,62 @@ export class RoundStore {
         });
     }
 
-    roundId = 0;
+    drawId = 0;
+    _roundId = 0;
     private _ownBets: GameServiceMessage.OwnBets = {};
     private _totalBets: GameServiceMessage.TotalBets = {};
     resultHash: GameServiceMessage.ResultHash = null;
     private _userBetPercentage: GameServiceMessage.UserBetPercentage = null;
     private _betPercentage: GameServiceMessage.UserBetPercentage = {};
+    private _turnCounter = 1;
 
     _clientRoundId = 0;
 
-    set clientRoundId(roundId: number) {
-        this._clientRoundId = roundId;
+
+    private _turnObject: Turn = null;
+
+    set turnObject(turnObject: Turn) {
+        this._turnObject = turnObject;
+    }
+
+    get turnObject() {
+        return this._turnObject;
+    }
+
+    set roundId(roundId: number) {
+        this._roundId = roundId;
+    }
+
+    get roundId() {
+        return this._roundId;
+    }
+
+
+    set turnCounter(turnCounter: number) {
+        this._turnCounter = turnCounter;
+    }
+
+    get turnCounter() {
+        return this._turnCounter;
+    }
+
+    set clientRoundId(drawId: number) {
+        this._clientRoundId = drawId;
     }
 
     get clientRoundId() {
         const currentFinish = this.settlementStore.currentFinish;
-        if (!currentFinish || this.historyRoundId >= currentFinish.roundId) {
+        if (!currentFinish || this.historyRoundId >= currentFinish.drawId) {
             return this.historyRoundId;
         }
-        return currentFinish.roundId;
+        return currentFinish.drawId;
     }
 
     get historyRoundId() {
         let lastRoundId = 0;
 
         if (this.roundHistoryStore.histories.length > 0) {
-            lastRoundId = this.roundHistoryStore.histories[0].roundId;
+            lastRoundId = this.roundHistoryStore.histories[0].drawId;
         }
 
         if (
@@ -79,8 +110,8 @@ export class RoundStore {
         }
 
         // when clearing all active data in database and having data in archive collection
-        if (this.roundHistoryStore.histories.length === 0 && this.roundId > 0) {
-            lastRoundId = this.roundId;
+        if (this.roundHistoryStore.histories.length === 0 && this.drawId > 0) {
+            lastRoundId = this.drawId;
         }
 
         if (this._clientRoundId < lastRoundId) {

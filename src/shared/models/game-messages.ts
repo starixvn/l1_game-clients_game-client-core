@@ -258,6 +258,7 @@ export namespace GameServiceMessage {
         result?: TResult;
         settlementResult?: TSettlementResult;
         roundId?: number;
+        drawId?: number;
         winningPlayers?: TWinningPlayers;
         md5Result?: GameServiceMessage.ResultHash;
         pf?: GameServiceMessage.ProvablyFair;
@@ -268,8 +269,8 @@ export namespace GameServiceMessage {
     export type TResult =
         | number
         | {
-              [betChoice: string]: any;
-          };
+            [betChoice: string]: any;
+        };
 
     export type TSettlementResult = {
         [betChoice: string]: boolean;

@@ -39,6 +39,10 @@ export class RoundTimeStore {
         this._durations = this.gameSetting.durations as TurnBaseDurationSetting
     }
 
+    get TotalTurns() {
+        return this._durations.wholeTurn || 1;
+    }
+
     get wholeTurn() {
         return this._durations.wholeTurn || 0;
     }
@@ -186,13 +190,13 @@ export class RoundTimeStore {
         if (this.wholeRound > 0) {
             const startSwitchRoundPointTime = this.wholeRound - this.showingResult;
             const endSwitchRoundPointTime = startSwitchRoundPointTime - this.switchRoundAnimation;
-            console.log({ startSwitchRoundPointTime, endSwitchRoundPointTime, remainingTime: this._remaining, roundTime: this.roundTime });
+            // console.log({ startSwitchRoundPointTime, endSwitchRoundPointTime, remainingTime: this._remaining, roundTime: this.roundTime });
 
             if (startSwitchRoundPointTime >= this.totalRoundTime && this.totalRoundTime > endSwitchRoundPointTime) {
 
                 // console.log({ remaining: this._remaining });
                 // console.log({ roundTime: this.roundTime });
-                console.log("%cisSwitchRoundInTurn", "color: red; font-size:18px; font-weight: bold");
+                // console.log("%cisSwitchRoundInTurn", "color: red; font-size:18px; font-weight: bold");
                 return true;
             }
         }
@@ -204,7 +208,7 @@ export class RoundTimeStore {
         const turnRemainingTime =
             this.getRoundRemainingTimeToCalculateTurnRemainingTime(totalRoundTime) % this._durations.wholeTurn;
 
-        console.log(`turn base RemainingTime: ${turnRemainingTime}`)
+        // console.log(`turn base RemainingTime: ${turnRemainingTime}`)
 
         return turnRemainingTime <= 0 ? this._durations.wholeTurn : turnRemainingTime;
     }
@@ -232,14 +236,14 @@ export class RoundTimeStore {
             this.totalRoundTime--;
         }
 
-        console.log(`--------------------`)
-        console.log(`totalRoundTime: ${this.totalRoundTime}`)
+        // console.log(`--------------------`)
+        // console.log(`totalRoundTime: ${this.totalRoundTime}`)
         this.roundTime = this.getRemainingTime(this.totalRoundTime);
     }
 
     calculateRoundStatus() {
         this.roundState = this.getCurrentRoundState();
-        console.log({ roundState: this.roundState });
+        // console.log({ roundState: this.roundState });
 
 
         if (this.roundTime < 0) {
@@ -280,8 +284,6 @@ export class RoundTimeStore {
             this._remaining = this.roundTime;
             this._countdownTimer = this.roundTime;
         }
-
-
     }
 
     getCurrentRoundState(): string {
@@ -328,5 +330,9 @@ export class RoundTimeStore {
 
     resetRoundTimeStore() {
         this.roundState = ROUND_STATE.STOP_GAME_LOOP;
+    }
+
+    isInDisplayResultState() {
+        return this.roundState === ROUND_STATE.SHOW_RESULT || this.roundState === ROUND_STATE.STARTING_ROUND;
     }
 }

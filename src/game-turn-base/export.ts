@@ -20,6 +20,6 @@ export * as HideGame from "../game/hide-game";
 
 export * as Bet from "../game/bets";
 // export * as Arrangement from "../game/arrangement";
-export * as Settlement from "../game/settlements";
+export * as Settlement from "./settlements";
 // export * as Survey from "./survey";
 // export * from "./pusoy-service-messages";

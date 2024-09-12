@@ -7,6 +7,7 @@ import { SettlementStore } from "../settlements/settlement-store";
 
 export interface RoundHistory {
     roundId: number;
+    drawId?: number;
     result: GameServiceMessage.TResult;
     settlementResult: GameServiceMessage.TSettlementResult;
     winningPlayers?: GameServiceMessage.TWinningPlayers;
