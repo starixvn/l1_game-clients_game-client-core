@@ -182,6 +182,11 @@ export class RoundHandlers implements IMultipleHandlers {
 
     }
 
+    handleOdds(odds: GameServiceMessage.Odds) {
+        this.store.roundOdds = odds;
+    }
+
+
     eventHandleList = [
         {
             name: GameServiceMessage.roundId,
@@ -216,6 +221,10 @@ export class RoundHandlers implements IMultipleHandlers {
         {
             name: "drawId",
             handle: this.handleDrawId,
+        },
+        {
+            name: "odds",
+            handle: this.handleOdds,
         },
     ];
 }

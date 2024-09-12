@@ -46,6 +46,7 @@ export class RoundStore {
     _roundId = 0;
     private _ownBets: GameServiceMessage.OwnBets = {};
     private _totalBets: GameServiceMessage.TotalBets = {};
+    private _roundOdds: RoundOdds = { odds: {}, fractional: false };
     resultHash: GameServiceMessage.ResultHash = null;
     private _userBetPercentage: GameServiceMessage.UserBetPercentage = null;
     private _betPercentage: GameServiceMessage.UserBetPercentage = {};
@@ -128,11 +129,16 @@ export class RoundStore {
         return Math.min(this.gameConfigStore.maxBet, this.mainPlayerStore.stakeLevel.maxBet);
     }
 
-    get roundOdds() {
-        return {
-            odds: this.gameConfigStore.odds,
+    set roundOdds(odds: GameServiceMessage.Odds) {
+        this._roundOdds = {
+            odds,
             fractional: this.mainPlayerStore.fractionalOddsFormat,
         };
+    }
+
+
+    get roundOdds(): RoundOdds {
+        return this._roundOdds;
     }
 
     set totalBets(totalBets: GameServiceMessage.TotalBets) {

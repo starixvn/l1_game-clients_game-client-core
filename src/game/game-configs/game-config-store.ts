@@ -13,7 +13,7 @@ export class GameConfigStore {
     enableFreeBet = false;
     originalOdds?: GameServiceMessage.Odds = null;
     boostedChoices?: string[] = [];
-
+    oddsRange?: GameServiceMessage.OddsRange = null;
     initialized = false;
 
     constructor() {
