@@ -12,31 +12,16 @@ import {
 import * as Notification from "../notification";
 import * as Players from "../players";
 import * as UnderMaintenance from "../under-maintenance";
-// import { InGameHandler } from "./connection";
-// import { DisableGameHandlers } from "./disabled-game";
 import * as GameTurnBase from "./export";
 import { GameSetting, GameConfigStore } from "../game/game-configs";
-// import { HideGameHandler } from "./hide-game";
 import { RoundStore, RoundTimeHandlers, RoundTimeStore, RoundHandlers } from "./rounds";
 
-import {
-    ProvablyFairHandler as OldProvablyFairHandler,
-    PFBetHandler as OldPFBetHandler,
-    ProvablyFairStore as OldProvablyFairStore
-} from "../features/provably-fair/round-base";
-
 
 import {
-    BetHandler as OldBetHandler,
-    BetStore as OldBetStore,
-    BetResponseHandlers as OldBetResponseHandlers
+    BetHandler as OldBetHandler
 } from "../game/bets/";
 
-
-import { PFBetHandler, ProvablyFairHandler, ProvablyFairStore } from "./provably-fair";
-
-import { BetHandler, BetResponseHandlers, BetStore } from "./bets";
-// import { GameConfigStore as OldGameConfigStore } from "../game/game-configs";
+import { BetHandler } from "./bets";
 
 export const features = [Auth, Players, SiteConfigs, GameTurnBase, Notification, UnderMaintenance, ChipSetting];
 
@@ -61,22 +46,22 @@ export const onContainerCreated = (container: Container, setting?: GameSetting) 
     container.bind(OldRoundTimeStore).toService(RoundTimeStore as any);
 
 
-    container.bind(ProvablyFairHandler).to(ProvablyFairHandler as any);
-    container.bind(OldProvablyFairHandler).to(ProvablyFairHandler as any);
+    // container.bind(ProvablyFairHandler).to(ProvablyFairHandler as any);
+    // container.bind(OldProvablyFairHandler).to(ProvablyFairHandler as any);
 
     container.bind(BetHandler).to(BetHandler as any);
     container.bind(OldBetHandler).to(BetHandler as any);
 
-    container.bind(BetResponseHandlers).to(BetResponseHandlers as any);
-    container.bind(OldBetResponseHandlers).to(BetResponseHandlers as any);
+    // container.bind(BetResponseHandlers).to(BetResponseHandlers as any);
+    // container.bind(OldBetResponseHandlers).to(BetResponseHandlers as any);
     // container.bind(GameConfigStore).to(GameConfigStore as any);
     // container.bind(OldGameConfigStore).toService(GameConfigStore as any);
 
 
-    container.bind(ProvablyFairStore).to(ProvablyFairStore as any);
-    container.bind(OldProvablyFairStore).to(ProvablyFairStore as any);
+    // container.bind(ProvablyFairStore).to(ProvablyFairStore as any);
+    // container.bind(OldProvablyFairStore).to(ProvablyFairStore as any);
 
-    container.bind(BetStore).to(BetStore as any);
-    container.bind(OldBetStore).to(BetStore as any);
+    // container.bind(BetStore).to(BetStore as any);
+    // container.bind(OldBetStore).to(BetStore as any);
 
 };
