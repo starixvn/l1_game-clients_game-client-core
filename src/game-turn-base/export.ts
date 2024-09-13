@@ -18,7 +18,8 @@ export * as GameConfigs from "../game/game-configs";
 export * as DisableGame from "../game/disabled-game";
 export * as HideGame from "../game/hide-game";
 
-export * as Bet from "../game/bets";
+export * as Bet from "./bets";
+export * as ProvablyFair from "./provably-fair";
 // export * as Arrangement from "../game/arrangement";
 export * as Settlement from "./settlements";
 // export * as Survey from "./survey";

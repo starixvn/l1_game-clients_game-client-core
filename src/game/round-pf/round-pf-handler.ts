@@ -54,6 +54,8 @@ export class RoundPFHandler implements IMultipleHandlers {
     ];
 
     handleIntervalPF(pf: GameServiceMessage.ProvablyFair) {
+        console.log("%cGameServiceMessage.ProvablyFair", "color: red; font-size:18px; font-weight: bold");
+        console.log({ pf });
         this.roundPFStore.intervalPF = pf;
     }
 

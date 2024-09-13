@@ -40,13 +40,15 @@ export class RoundStore {
         makeAutoObservable(this, {
             _clientRoundId: false,
         });
+
+
     }
 
     drawId = 0;
     _roundId = 0;
     private _ownBets: GameServiceMessage.OwnBets = {};
     private _totalBets: GameServiceMessage.TotalBets = {};
-    private _roundOdds: RoundOdds = { odds: {}, fractional: false };
+    private _odds: GameServiceMessage.Odds = {};
     resultHash: GameServiceMessage.ResultHash = null;
     private _userBetPercentage: GameServiceMessage.UserBetPercentage = null;
     private _betPercentage: GameServiceMessage.UserBetPercentage = {};
@@ -129,16 +131,23 @@ export class RoundStore {
         return Math.min(this.gameConfigStore.maxBet, this.mainPlayerStore.stakeLevel.maxBet);
     }
 
-    set roundOdds(odds: GameServiceMessage.Odds) {
-        this._roundOdds = {
-            odds,
-            fractional: this.mainPlayerStore.fractionalOddsFormat,
-        };
+
+    set Odds(odds: GameServiceMessage.Odds) {
+        this._odds = odds;
     }
 
 
+    get Odds() {
+        return this._odds;
+    }
+
+
+
     get roundOdds(): RoundOdds {
-        return this._roundOdds;
+        return {
+            odds: this._odds,
+            fractional: this.mainPlayerStore.fractionalOddsFormat
+        }
     }
 
     set totalBets(totalBets: GameServiceMessage.TotalBets) {
