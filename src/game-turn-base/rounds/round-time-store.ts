@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { makeAutoObservable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 
 import { GameSetting, TurnBaseDurationSetting } from "../../game/game-configs";
 
@@ -21,11 +21,11 @@ const RoundTimeInitValue = -99999;
 
 @injectable()
 export class RoundTimeStore {
-    private _totalRoundTime = RoundTimeInitValue;
-    private _roundTime = RoundTimeInitValue;
-    private _roundState = ROUND_STATE.NONE;
-    private _countdownTimer = 0;
-    private _remaining = 0;
+    totalRoundTime = RoundTimeInitValue;
+    roundTime = RoundTimeInitValue;
+    roundState = ROUND_STATE.NONE;
+    countdownTimer = 0;
+    remaining = 0;
     private _durations: TurnBaseDurationSetting = null;
     startNewRound = false;
     endRound = false;
@@ -34,7 +34,40 @@ export class RoundTimeStore {
     durationShowPromptMessage = 2;
 
     constructor(@inject(GameSetting) readonly gameSetting: GameSetting) {
-        makeAutoObservable(this);
+        makeObservable(this, {
+            roundTime: observable,
+            roundState: observable,
+            countdownTimer: observable,
+            remaining: observable,
+            startNewRound: observable,
+            endRound: observable,
+            startPlacingBet: observable,
+            endPlacingBet: observable,
+            durationShowPromptMessage: observable,
+            isWaiting: computed,
+            isStartWaiting: computed,
+            isLocking: computed,
+            isStartLocking: computed,
+            isPlacingBet: computed,
+            isStartPlacingBet: computed,
+            isShowAnimationResult: computed,
+            isShowResult: computed,
+            isStartRound: computed,
+            isStartingRound: computed,
+            isTimeOut: computed,
+            isInRoundTime: computed,
+            isShowDisabledGameMessage: computed,
+            isDisplayingResultState: computed,
+            isVisibleReBet: computed,
+            isShowStartBetMessage: computed,
+            resetRoundTime: action,
+            setDurationShowPromptMessage: action,
+            countdown: action,
+            calculateRoundStatus: action,
+            start: action,
+            resetRoundTimeStore: action
+        });
+
         this.setDurationShowPromptMessage(gameSetting?.durationShowPromptMessage);
         this._durations = this.gameSetting.durations as TurnBaseDurationSetting
     }
@@ -126,7 +159,7 @@ export class RoundTimeStore {
     }
 
     get isShowDisabledGameMessage() {
-        return this._roundTime <= this.placingBet;
+        return this.roundTime <= this.placingBet;
     }
 
     get isDisplayingResultState() {
@@ -145,41 +178,8 @@ export class RoundTimeStore {
         return this.roundTime <= this.placingBet + this.durationShowPromptMessage && this.roundTime > this.placingBet;
     }
 
-    get totalRoundTime() {
-        return this._totalRoundTime;
-    }
-
-    set totalRoundTime(totalRoundTime) {
-        this._totalRoundTime = totalRoundTime;
-    }
-
-    get roundTime() {
-        return this._roundTime;
-    }
-
-    set roundTime(roundTime) {
-        this._roundTime = roundTime;
-        this.calculateRoundStatus();
-    }
-
-    get remaining() {
-        return this._remaining;
-    }
-
-    get roundState() {
-        return this._roundState;
-    }
-
-    set roundState(value: string) {
-        this._roundState = value;
-    }
-
-    get countdownTimer() {
-        return this._countdownTimer;
-    }
-
     resetRoundTime() {
-        this._roundTime = this.wholeTurn;
+        this.roundTime = this.wholeTurn;
     }
 
     setDurationShowPromptMessage(durationShowPromptMessage?: number) {
@@ -239,6 +239,8 @@ export class RoundTimeStore {
         // console.log(`--------------------`)
         // console.log(`totalRoundTime: ${this.totalRoundTime}`)
         this.roundTime = this.getRemainingTime(this.totalRoundTime);
+        this.calculateRoundStatus();
+
     }
 
     calculateRoundStatus() {
@@ -255,11 +257,11 @@ export class RoundTimeStore {
         }
 
         if (this.isWaiting) {
-            this._remaining = this.roundTime - this.placingBet;
+            this.remaining = this.roundTime - this.placingBet;
         }
 
         if (this.isShowAnimationResult) {
-            this._remaining = this.generatingResult;
+            this.remaining = this.generatingResult;
         }
 
         if (this.isShowResult) {
@@ -267,22 +269,22 @@ export class RoundTimeStore {
 
             duration = this.roundTime - this.placingBet - this.startRound;
 
-            this._remaining = duration;
-            this._countdownTimer = duration;
+            this.remaining = duration;
+            this.countdownTimer = duration;
         }
 
         if (this.isStartingRound) {
-            this._remaining = this.startRound;
+            this.remaining = this.startRound;
         }
 
         if (this.isPlacingBet) {
-            this._remaining = this.roundTime - this.lockingBet;
-            this._countdownTimer = this.roundTime;
+            this.remaining = this.roundTime - this.lockingBet;
+            this.countdownTimer = this.roundTime;
         }
 
         if (this.isLocking) {
-            this._remaining = this.roundTime;
-            this._countdownTimer = this.roundTime;
+            this.remaining = this.roundTime;
+            this.countdownTimer = this.roundTime;
         }
     }
 
