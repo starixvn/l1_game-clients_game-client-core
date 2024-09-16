@@ -7,7 +7,7 @@ import { Translator } from "../../shared/utils/localization-manager";
 import { ConnectionStore } from "../connection/connection-store";
 import { NoticeInfo, NoticeStore, NoticeType } from "../notices";
 import { RoundRunningHandlers } from "../rounds";
-import { RoundTimeStore } from "../rounds/round-time-store";
+import { ROUND_STATE, RoundTimeStore } from "../rounds/round-time-store";
 import { AppTypes } from "./../../shared/constants/app-type";
 import { DisabledGameStore } from "./disabled-game-store";
 
@@ -26,18 +26,18 @@ export class DisableGameHandlers implements IMultipleHandlers {
     }
 
     onClosedHandle() {
-        if (!this.isInstantApp()) {
+        if (!this.isInstantOrDirectApp()) {
             this.connectionStore.onDisconnected();
             this.backToOperatorLobby.handle();
         }
     }
 
-    isInstantApp() {
-        return this.authStore.system === AppTypes.Instant;
+    isInstantOrDirectApp() {
+        return this.authStore.system === AppTypes.Instant || this.authStore.system === AppTypes.Direct;
     }
 
     showPopupHandle(disabledGameInfo: GameServiceMessage.DisabledGameInfo) {
-        if (this.disabledGameStore.um) {
+        if (this.disabledGameStore.um || this.roundTimeStore.roundState === ROUND_STATE.NONE) {
             const language = SupportedLanguages.includes(this.authStore.language) ? this.authStore.language : DefaultLanguage;
             this.noticeStore.addNotice({
                 message: disabledGameInfo[language],
@@ -49,6 +49,7 @@ export class DisableGameHandlers implements IMultipleHandlers {
             });
 
             this.disabledGameStore.setShowPopup(true);
+            this.roundTimeStore.roundState === ROUND_STATE.NONE && this.disabledGameStore.setGameStatus(true);
         }
     }
 
