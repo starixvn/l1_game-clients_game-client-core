@@ -6,7 +6,7 @@ import { GameServiceMessage } from "../../shared";
 import { GameConfigStore } from "../../game/game-configs";
 import { RoundHistoryStore } from "../../game/round-histories";
 import { SettlementStore } from "../../game/settlements";
-import { ROUND_STATE, RoundTimeStore } from "./round-time-store";
+import { TURN_ROUND_STATE, RoundTimeStore } from "./round-time-store";
 import { Turn } from "./round-handlers";
 
 export type Bets = {
@@ -104,10 +104,10 @@ export class RoundStore {
         }
 
         if (
-            this.roundTimeStore.roundState === ROUND_STATE.STARTING_ROUND ||
-            this.roundTimeStore.roundState === ROUND_STATE.PLACING_BET ||
-            this.roundTimeStore.roundState === ROUND_STATE.LOCKING_BET ||
-            this.roundTimeStore.roundState === ROUND_STATE.WAITING
+            this.roundTimeStore.roundState === TURN_ROUND_STATE.STARTING_ROUND ||
+            this.roundTimeStore.roundState === TURN_ROUND_STATE.PLACING_BET ||
+            this.roundTimeStore.roundState === TURN_ROUND_STATE.LOCKING_BET ||
+            this.roundTimeStore.roundState === TURN_ROUND_STATE.WAITING
         ) {
             lastRoundId++;
         }
@@ -189,9 +189,9 @@ export class RoundStore {
         let isResetHighlight = false;
 
         switch (this.roundTimeStore.roundState) {
-            case ROUND_STATE.LOCKING_BET:
-            case ROUND_STATE.STOP_GAME_LOOP:
-            case ROUND_STATE.SHOW_ANIMATION_RESULT:
+            case TURN_ROUND_STATE.LOCKING_BET:
+            case TURN_ROUND_STATE.STOP_GAME_LOOP:
+            case TURN_ROUND_STATE.SHOW_ANIMATION_RESULT:
                 isResetHighlight = true;
                 break;
         }

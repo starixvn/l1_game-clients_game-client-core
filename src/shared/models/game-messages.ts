@@ -86,8 +86,6 @@ export namespace GameServiceMessage {
         maxBet: number;
 
         static eventName = "userStakeLevel";
-        // static eventName = "stakeLevel";
-
     }
     export const remainingTime = "remainingTime";
     export const um = "um";
@@ -96,11 +94,6 @@ export namespace GameServiceMessage {
     export const roundId = "roundId";
     export type Odds = {
         [betChoice: string]: number;
-    };
-
-    export type OddsRange = {
-        min: Odds,
-        max: Odds,
     };
 
     class Bets {
@@ -135,7 +128,6 @@ export namespace GameServiceMessage {
         enableFreeBet: boolean;
         originalOdds?: Odds;
         boostedChoices?: Odds;
-        oddsRange?: GameServiceMessage.OddsRange;
 
         static eventName = "gameConfigs";
     }

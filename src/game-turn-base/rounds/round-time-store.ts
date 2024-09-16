@@ -1,19 +1,11 @@
 import { inject, injectable } from "inversify";
-import { action, computed, makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 
 import { GameSetting, TurnBaseDurationSetting } from "../../game/game-configs";
+import { ROUND_STATE } from "../../game/rounds";
 
-export const ROUND_STATE = {
-    START_GAME_LOOP: "startGameLoop",
-    STARTING_ROUND: "startingRound",
-    PLACING_BET: "placingBet",
-    LOCKING_BET: "lockingBet",
-    WAITING: "waiting",
-    SHOW_ANIMATION_RESULT: "showAnimationResult",
-    SHOW_RESULT: "showResult",
-    CHANGE_REMAINING_TIME: "changeRemainingTime",
-    STOP_GAME_LOOP: "stopGameLoop",
-    NONE: "none",
+export const TURN_ROUND_STATE = {
+    ...ROUND_STATE,
     SWITCH_ROUND: "SwitchRound"
 };
 
@@ -21,12 +13,13 @@ const RoundTimeInitValue = -99999;
 
 @injectable()
 export class RoundTimeStore {
+    private _durations: TurnBaseDurationSetting = null;
+
     totalRoundTime = RoundTimeInitValue;
     roundTime = RoundTimeInitValue;
-    roundState = ROUND_STATE.NONE;
+    roundState = TURN_ROUND_STATE.NONE;
     countdownTimer = 0;
     remaining = 0;
-    private _durations: TurnBaseDurationSetting = null;
     startNewRound = false;
     endRound = false;
     startPlacingBet = false;
@@ -60,12 +53,6 @@ export class RoundTimeStore {
             isDisplayingResultState: computed,
             isVisibleReBet: computed,
             isShowStartBetMessage: computed,
-            resetRoundTime: action,
-            setDurationShowPromptMessage: action,
-            countdown: action,
-            calculateRoundStatus: action,
-            start: action,
-            resetRoundTimeStore: action
         });
 
         this.setDurationShowPromptMessage(gameSetting?.durationShowPromptMessage);
@@ -155,7 +142,7 @@ export class RoundTimeStore {
     }
 
     get isInRoundTime() {
-        return this.roundState === ROUND_STATE.PLACING_BET || this.roundState === ROUND_STATE.LOCKING_BET;
+        return this.roundState === TURN_ROUND_STATE.PLACING_BET || this.roundState === TURN_ROUND_STATE.LOCKING_BET;
     }
 
     get isShowDisabledGameMessage() {
@@ -164,9 +151,9 @@ export class RoundTimeStore {
 
     get isDisplayingResultState() {
         return (
-            this.roundState === ROUND_STATE.SHOW_ANIMATION_RESULT ||
-            this.roundState === ROUND_STATE.SHOW_RESULT ||
-            this.roundState === ROUND_STATE.STOP_GAME_LOOP
+            this.roundState === TURN_ROUND_STATE.SHOW_ANIMATION_RESULT ||
+            this.roundState === TURN_ROUND_STATE.SHOW_RESULT ||
+            this.roundState === TURN_ROUND_STATE.STOP_GAME_LOOP
         );
     }
 
@@ -240,7 +227,6 @@ export class RoundTimeStore {
         // console.log(`totalRoundTime: ${this.totalRoundTime}`)
         this.roundTime = this.getRemainingTime(this.totalRoundTime);
         this.calculateRoundStatus();
-
     }
 
     calculateRoundStatus() {
@@ -250,10 +236,6 @@ export class RoundTimeStore {
 
         if (this.roundTime < 0) {
             return;
-        }
-
-        if (this.isSwitchRoundInTurn) {
-
         }
 
         if (this.isWaiting) {
@@ -290,51 +272,51 @@ export class RoundTimeStore {
 
     getCurrentRoundState(): string {
         if (this.roundTime < 0) {
-            return ROUND_STATE.WAITING;
+            return TURN_ROUND_STATE.WAITING;
         }
 
         let currentState = "";
 
         if (this.isWaiting) {
-            currentState = ROUND_STATE.WAITING;
+            currentState = TURN_ROUND_STATE.WAITING;
         }
 
         if (this.isShowAnimationResult) {
-            currentState = ROUND_STATE.SHOW_ANIMATION_RESULT;
+            currentState = TURN_ROUND_STATE.SHOW_ANIMATION_RESULT;
         }
 
         if (this.isShowResult) {
-            currentState = ROUND_STATE.SHOW_RESULT;
+            currentState = TURN_ROUND_STATE.SHOW_RESULT;
         }
 
         if (this.isStartingRound) {
-            currentState = ROUND_STATE.STARTING_ROUND;
+            currentState = TURN_ROUND_STATE.STARTING_ROUND;
         }
 
         if (this.isPlacingBet) {
-            currentState = ROUND_STATE.PLACING_BET;
+            currentState = TURN_ROUND_STATE.PLACING_BET;
         }
 
         if (this.isLocking) {
-            currentState = ROUND_STATE.LOCKING_BET;
+            currentState = TURN_ROUND_STATE.LOCKING_BET;
         }
 
         if (this.isSwitchRoundInTurn) {
-            return ROUND_STATE.SWITCH_ROUND;
+            return TURN_ROUND_STATE.SWITCH_ROUND;
         }
 
         return currentState;
     }
 
     start() {
-        this.roundState = ROUND_STATE.START_GAME_LOOP;
+        this.roundState = TURN_ROUND_STATE.START_GAME_LOOP;
     }
 
     resetRoundTimeStore() {
-        this.roundState = ROUND_STATE.STOP_GAME_LOOP;
+        this.roundState = TURN_ROUND_STATE.STOP_GAME_LOOP;
     }
 
     isInDisplayResultState() {
-        return this.roundState === ROUND_STATE.SHOW_RESULT || this.roundState === ROUND_STATE.STARTING_ROUND;
+        return this.roundState === TURN_ROUND_STATE.SHOW_RESULT || this.roundState === TURN_ROUND_STATE.STARTING_ROUND;
     }
 }

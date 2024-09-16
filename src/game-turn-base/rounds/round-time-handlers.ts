@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
-import { RoundRunningHandlers } from "./round-running-handlers";
 import { RoundTimeStore } from "./round-time-store";
-import { GameSetting, TurnBaseDurationSetting } from "../../game/game-configs";
+import { GameSetting } from "../../game/game-configs";
+import { RoundRunningHandlers } from "../../game/rounds";
 
 @injectable()
 export class RoundTimeHandlers implements IMultipleHandlers {
@@ -21,47 +21,10 @@ export class RoundTimeHandlers implements IMultipleHandlers {
         this.roundRunningHandlers.startRunner();
     }
 
-    handleStartNewRoundStatus(snr: boolean) {
-        this.store.startNewRound = snr;
-    }
-
-    handleStartPlacingBetStatus(spb: boolean) {
-        this.store.startPlacingBet = spb;
-    }
-
-    handleEndPlacingBetStatus(epb: boolean) {
-        this.store.endPlacingBet = epb;
-    }
-
-    handleEndRoundStatus(finish: GameServiceMessage.Finish | undefined) {
-        if (finish) {
-            this.store.endRound = true;
-            this.store.endPlacingBet = false;
-            this.store.startPlacingBet = false;
-            this.store.startNewRound = false;
-        }
-    }
-
     eventHandleList = [
         {
             name: GameServiceMessage.remainingTime,
             handle: this.handleRemainingTime,
-        },
-        {
-            name: GameServiceMessage.snr,
-            handle: this.handleStartNewRoundStatus,
-        },
-        {
-            name: GameServiceMessage.spb,
-            handle: this.handleStartPlacingBetStatus,
-        },
-        {
-            name: GameServiceMessage.epb,
-            handle: this.handleEndPlacingBetStatus,
-        },
-        {
-            name: GameServiceMessage.Finish.eventName,
-            handle: this.handleEndRoundStatus,
         },
     ];
 }

@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
 import { GameServiceMessage } from "../../shared";
+import { GameTurnBaseServiceMessage } from "../../game-turn-base/game-turn-base-messages";
 
 @injectable()
 export class GameConfigStore {
@@ -13,7 +14,7 @@ export class GameConfigStore {
     enableFreeBet = false;
     originalOdds?: GameServiceMessage.Odds = null;
     boostedChoices?: string[] = [];
-    oddsRange?: GameServiceMessage.OddsRange = null;
+    oddsRange?: GameTurnBaseServiceMessage.OddsRange = null;
     initialized = false;
 
     constructor() {

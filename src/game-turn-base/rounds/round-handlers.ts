@@ -4,6 +4,7 @@ import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { RoundStore } from "./round-store";
 import { GameSetting, TurnBaseDurationSetting } from "../../game/game-configs";
 import { RoundTimeStore } from "./round-time-store";
+import { GameTurnBaseServiceMessage } from "../game-turn-base-messages";
 
 export class TurnTimeline {
     /**
@@ -123,32 +124,6 @@ export class RoundHandlers implements IMultipleHandlers {
         this.turnTimelineCounter = new TurnTimelineCounter(gameSetting.durations);
     }
 
-    handleRoundId(roundId: number) {
-        if (roundId > 0) {
-            this.store.roundId = roundId;
-            this.roundId = roundId;
-        }
-    }
-
-    handleOwnBets(ownBets: GameServiceMessage.OwnBets) {
-        this.store.ownBets = ownBets;
-    }
-
-    handleTotalBets(totalBets: GameServiceMessage.TotalBets) {
-        this.store.totalBets = totalBets;
-    }
-
-    handleResultHash(resultHash: GameServiceMessage.ResultHash) {
-        this.store.resultHash = resultHash;
-    }
-
-    handleUserBetPercent(userBetPercent: GameServiceMessage.UserBetPercentage) {
-        this.store.userBetPercentage = userBetPercent;
-    }
-
-    handleBetPercent(betPercent: GameServiceMessage.BetPercentage) {
-        this.store.betPercentage = betPercent;
-    }
 
     handleRemainingTime = (remainingTime: number) => {
         if (this.shouldRunWhenFirstLoad) {
@@ -157,8 +132,6 @@ export class RoundHandlers implements IMultipleHandlers {
     };
 
     handleDrawId(drawId: number) {
-
-
         const turnIndex = drawId % this._totalTurn;
         let turnCounter = turnIndex === 0 ? this._totalTurn : turnIndex;
 
@@ -188,41 +161,15 @@ export class RoundHandlers implements IMultipleHandlers {
 
     eventHandleList = [
         {
-            name: GameServiceMessage.roundId,
-            handle: this.handleRoundId,
-        },
-        {
-            name: GameServiceMessage.OwnBets.eventName,
-            handle: this.handleOwnBets,
-        },
-        {
-            name: GameServiceMessage.TotalBets.eventName,
-            handle: this.handleTotalBets,
-        },
-        {
-            name: GameServiceMessage.ResultHash.eventName,
-            handle: this.handleResultHash,
-        },
-
-        {
-            name: GameServiceMessage.UserBetPercentage.eventName,
-            handle: this.handleUserBetPercent,
-        },
-
-        {
-            name: GameServiceMessage.BetPercentage.eventName,
-            handle: this.handleBetPercent,
-        },
-        {
-            name: "remainingTime",
+            name: GameServiceMessage.remainingTime,
             handle: this.handleRemainingTime,
         },
         {
-            name: "drawId",
+            name: GameTurnBaseServiceMessage.drawId,
             handle: this.handleDrawId,
         },
         {
-            name: "odds",
+            name: GameTurnBaseServiceMessage.odds,
             handle: this.handleOdds,
         },
     ];

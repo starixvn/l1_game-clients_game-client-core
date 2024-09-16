@@ -1,19 +1,16 @@
 
+import { GameServiceMessage } from "../shared";
 
 export namespace GameTurnBaseServiceMessage {
-    export class Bet {
+    export const drawId = "drawId";
+    export const odds = "odds";
 
-        static eventName = "bet";
+    export type OddsRange = {
+        min: GameServiceMessage.Odds,
+        max: GameServiceMessage.Odds,
+    };
+
+    export class GameConfigs extends GameServiceMessage.GameConfigs {
+        oddsRange?: OddsRange;
     }
-
-    export interface PFClientSetting {
-        randomClientSeedEnabled: boolean;
-        manualClientSeed: string;
-        randomClientSeed: string;
-    }
-
-    export interface IGameCrashPermanentUserSettings {
-        pf?: PFClientSetting;
-    }
-
 }
