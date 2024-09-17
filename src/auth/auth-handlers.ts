@@ -183,7 +183,7 @@ export namespace AuthHandlers {
                 this.playerSelectionClearHandler.handle();
                 this.appStore.setDataStore(ssoInfo);
                 const token = ssoInfo?.token;
-                const system = +ssoInfo?.appType || AppTypes.Club;
+                const system = +ssoInfo?.appType || AppTypes.Direct;
 
                 if (ssoInfo?.operator) {
                     StorageManager.set(localStorageKeys.operator, ssoInfo?.operator);
