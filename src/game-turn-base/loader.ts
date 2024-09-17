@@ -8,13 +8,14 @@ import {
     RoundTimeStore as OldRoundTimeStore,
     RoundTimeHandlers as OldRoundTimeHandlers,
     RoundHandlers as OldRoundHandlers,
+    RoundRunningHandlers as OldRoundRunningHandlers,
 } from "../game/rounds";
 import * as Notification from "../notification";
 import * as Players from "../players";
 import * as UnderMaintenance from "../under-maintenance";
 import * as GameTurnBase from "./export";
 import { GameSetting, GameConfigStore } from "../game/game-configs";
-import { RoundStore, RoundTimeHandlers, RoundTimeStore, RoundHandlers } from "./rounds";
+import { RoundStore, RoundTimeHandlers, RoundTimeStore, RoundHandlers, RoundRunningHandlers } from "./rounds";
 
 
 import {
@@ -40,4 +41,7 @@ export const onContainerCreated = (container: Container, setting?: GameSetting) 
 
     container.bind(BetHandler).to(BetHandler as any);
     container.bind(OldBetHandler).toService(BetHandler as any);
+
+    container.bind(RoundRunningHandlers).to(RoundRunningHandlers as any);
+    container.bind(OldRoundRunningHandlers).toService(RoundRunningHandlers as any);
 };

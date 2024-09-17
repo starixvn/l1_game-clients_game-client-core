@@ -183,6 +183,7 @@ export class RoundStore {
     }
 
     resetRoundStore() {
+        console.log(`round base resetRoundStore`);
         this.resetForNewRound();
         this.resultHash = null;
     }

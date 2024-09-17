@@ -53,7 +53,10 @@ export class RoundStore {
     private _userBetPercentage: GameServiceMessage.UserBetPercentage = null;
     private _betPercentage: GameServiceMessage.UserBetPercentage = {};
     private _turnCounter = 1;
-
+    private _roundData: GameServiceMessage.TurnBaseGameRoundData = {
+        balls: [],
+        drawId: 0
+    };
     _clientRoundId = 0;
 
 
@@ -131,17 +134,22 @@ export class RoundStore {
         return Math.min(this.gameConfigStore.maxBet, this.mainPlayerStore.stakeLevel.maxBet);
     }
 
+    set RoundData(roundData: GameServiceMessage.TurnBaseGameRoundData) {
+        this._roundData = roundData;
+    }
+
+    get RoundData() {
+        return this._roundData;
+    }
+
 
     set Odds(odds: GameServiceMessage.Odds) {
         this._odds = odds;
     }
 
-
     get Odds() {
         return this._odds;
     }
-
-
 
     get roundOdds(): RoundOdds {
         return {
@@ -229,7 +237,12 @@ export class RoundStore {
     }
 
     resetRoundStore() {
+        console.log(`turn base resetRoundStore`);
         this.resetForNewRound();
         this.resultHash = null;
+    }
+
+    resetRoundData() {
+        this._roundData.balls = [];
     }
 }

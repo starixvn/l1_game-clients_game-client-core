@@ -159,6 +159,24 @@ export class RoundHandlers implements IMultipleHandlers {
         this.store.Odds = odds;
     }
 
+
+    handleRoundData(roundData: GameServiceMessage.TurnBaseGameRoundData) {
+        console.log({ roundData });
+        this.store.RoundData = roundData;
+    }
+
+    handleFinish(finish: GameServiceMessage.Finish | undefined) {
+        const result = finish?.result as GameServiceMessage.LuckyNextResult;
+        const resultRoundData = {
+            balls: [result?.ball],
+        };
+
+        this.store.RoundData = {
+            balls: this.store.RoundData?.balls?.concat(resultRoundData.balls) || resultRoundData.balls,
+            drawId: result?.drawId,
+        }
+    }
+
     eventHandleList = [
         {
             name: GameServiceMessage.remainingTime,
@@ -171,6 +189,14 @@ export class RoundHandlers implements IMultipleHandlers {
         {
             name: GameTurnBaseServiceMessage.odds,
             handle: this.handleOdds,
+        },
+        {
+            name: GameServiceMessage.TurnBaseGameRoundData.eventName,
+            handle: this.handleRoundData,
+        },
+        {
+            name: GameServiceMessage.Finish.eventName,
+            handle: this.handleFinish,
         },
     ];
 }
