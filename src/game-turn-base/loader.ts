@@ -10,6 +10,14 @@ import {
     RoundHandlers as OldRoundHandlers,
     RoundRunningHandlers as OldRoundRunningHandlers,
 } from "../game/rounds";
+import {
+    RoundHistoryStore as OldRoundHistoryStore,
+} from "../game/round-histories";
+import {
+    SettlementStore as OldSettlementStore,
+    SettlementUIHandlers as OldSettlementUIHandlers,
+} from "../game/settlements";
+
 import * as Notification from "../notification";
 import * as Players from "../players";
 import * as UnderMaintenance from "../under-maintenance";
@@ -17,12 +25,13 @@ import * as GameTurnBase from "./export";
 import { GameSetting, GameConfigStore } from "../game/game-configs";
 import { RoundStore, RoundTimeHandlers, RoundTimeStore, RoundHandlers, RoundRunningHandlers } from "./rounds";
 
-
 import {
     BetHandler as OldBetHandler
 } from "../game/bets/";
 
 import { BetHandler } from "./bets";
+import { RoundHistoryStore } from "./round-histories";
+import { SettlementStore, SettlementUIHandlers } from "./settlements";
 
 export const features = [Auth, Players, SiteConfigs, GameTurnBase, Notification, UnderMaintenance, ChipSetting];
 
@@ -44,4 +53,13 @@ export const onContainerCreated = (container: Container, setting?: GameSetting) 
 
     container.bind(RoundRunningHandlers).to(RoundRunningHandlers as any);
     container.bind(OldRoundRunningHandlers).toService(RoundRunningHandlers as any);
+
+    container.bind(RoundHistoryStore).to(RoundHistoryStore as any);
+    container.bind(OldRoundHistoryStore).toService(RoundHistoryStore as any);
+
+    container.bind(SettlementStore).to(SettlementStore as any);
+    container.bind(OldSettlementStore).toService(SettlementStore as any);
+
+    container.bind(SettlementUIHandlers.FinishedShowResult).to(SettlementUIHandlers.FinishedShowResult as any);
+    container.bind(OldSettlementUIHandlers.FinishedShowResult).to(SettlementUIHandlers.FinishedShowResult as any);
 };

@@ -9,10 +9,11 @@ export namespace SettlementUIHandlers {
         constructor(
             @inject(SettlementStore) private readonly settlementStore: SettlementStore,
             @inject(RoundHistoryStore) private readonly roundHistoryStore: RoundHistoryStore
-        ) {}
+        ) { }
         handle() {
             this.handleFinishedShowResult();
             const { roundId, result, settlementResult, md5Result } = this.settlementStore;
+            console.log(" this.roundHistoryStore.insertNewRound({ roundId, result, settlementResult, md5Result });")
             this.roundHistoryStore.insertNewRound({ roundId, result, settlementResult, md5Result });
         }
 

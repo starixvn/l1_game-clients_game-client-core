@@ -1,0 +1,24 @@
+import { inject, injectable } from "inversify";
+import { IHandler } from "../../shared";
+import { RoundHistoryStore } from "../round-histories";
+import { SettlementStore } from "./settlement-store";
+
+export namespace SettlementUIHandlers {
+    @injectable()
+    export class FinishedShowResult implements IHandler<void> {
+        constructor(
+            @inject(SettlementStore) private readonly settlementStore: SettlementStore,
+            @inject(RoundHistoryStore) private readonly roundHistoryStore: RoundHistoryStore
+        ) { }
+        handle() {
+            this.handleFinishedShowResult();
+            const { roundId, result, settlementResult, md5Result, drawId } = this.settlementStore;
+            console.log(" this.roundHistoryStore.insertNewRound({ roundId, result, settlementResult, md5Result,drawId });")
+            this.roundHistoryStore.insertNewRound({ roundId, result, settlementResult, md5Result, drawId });
+        }
+
+        handleFinishedShowResult() {
+            this.settlementStore.isFinishedShowResult = true;
+        }
+    }
+}
