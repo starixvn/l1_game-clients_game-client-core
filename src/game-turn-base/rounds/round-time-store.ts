@@ -1,8 +1,6 @@
 import { inject, injectable } from "inversify";
-import { computed, makeObservable, observable } from "mobx";
-
 import { GameSetting, TurnBaseDurationSetting } from "../../game/game-configs";
-import { ROUND_STATE } from "../../game/rounds";
+import { ROUND_STATE, RoundTimeStore as RoundTimeStoreBase } from "../../game/rounds";
 
 export const TURN_ROUND_STATE = {
     ...ROUND_STATE,
@@ -12,50 +10,12 @@ export const TURN_ROUND_STATE = {
 const RoundTimeInitValue = -99999;
 
 @injectable()
-export class RoundTimeStore {
+export class RoundTimeStore extends RoundTimeStoreBase {
     private _durations: TurnBaseDurationSetting = null;
-
     totalRoundTime = RoundTimeInitValue;
-    roundTime = RoundTimeInitValue;
-    roundState = TURN_ROUND_STATE.NONE;
-    countdownTimer = 0;
-    remaining = 0;
-    startNewRound = false;
-    endRound = false;
-    startPlacingBet = false;
-    endPlacingBet = false;
-    durationShowPromptMessage = 2;
 
     constructor(@inject(GameSetting) readonly gameSetting: GameSetting) {
-        makeObservable(this, {
-            roundTime: observable,
-            roundState: observable,
-            countdownTimer: observable,
-            remaining: observable,
-            startNewRound: observable,
-            endRound: observable,
-            startPlacingBet: observable,
-            endPlacingBet: observable,
-            durationShowPromptMessage: observable,
-            isWaiting: computed,
-            isStartWaiting: computed,
-            isLocking: computed,
-            isStartLocking: computed,
-            isPlacingBet: computed,
-            isStartPlacingBet: computed,
-            isShowAnimationResult: computed,
-            isShowResult: computed,
-            isStartRound: computed,
-            isStartingRound: computed,
-            isTimeOut: computed,
-            isInRoundTime: computed,
-            isShowDisabledGameMessage: computed,
-            isDisplayingResultState: computed,
-            isVisibleReBet: computed,
-            isShowStartBetMessage: computed,
-        });
-
-        this.setDurationShowPromptMessage(gameSetting?.durationShowPromptMessage);
+        super(gameSetting);
         this._durations = this.gameSetting.durations as TurnBaseDurationSetting
     }
 
@@ -66,111 +26,13 @@ export class RoundTimeStore {
     get wholeTurn() {
         return this._durations.wholeTurn || 0;
     }
-    get wholeRound() {
-        return this._durations.wholeRound;
-    }
-    get placingBet() {
-        return this._durations.placingBet;
-    }
-    get lockingBet() {
-        return this._durations.lockingBet;
-    }
-    get generatingResult() {
-        return this._durations.generatingResult;
-    }
-    get showingResult() {
-        return this._durations.showingResult;
-    }
-    get startRound() {
-        return this._durations.startRound;
-    }
 
     get switchRoundAnimation() {
         return this._durations.switchRoundAnimation;
     }
 
-    get initialized() {
-        return this.roundTime !== RoundTimeInitValue;
-    }
-
-    get isWaiting() {
-        return this.roundTime > this.placingBet;
-    }
-
-    get isStartWaiting() {
-        return this.roundTime === this.wholeTurn;
-    }
-
-    get isLocking() {
-        return this.roundTime <= this.lockingBet && this.roundTime > 0;
-    }
-
-    get isStartLocking() {
-        return this.roundTime === this.lockingBet;
-    }
-
-    get isPlacingBet() {
-        return this.roundTime <= this.placingBet && this.roundTime > this.lockingBet;
-    }
-
-    get isStartPlacingBet() {
-        return this.roundTime === this.placingBet;
-    }
-
-    get isShowAnimationResult() {
-        return (this.roundTime <= this.wholeTurn && this.roundTime > this.wholeTurn - this.generatingResult) || this.roundTime === 0;
-    }
-
-    get isShowResult() {
-        return (
-            this.roundTime <= this.wholeTurn - this.generatingResult + 1 &&
-            this.roundTime > this.placingBet + this.startRound &&
-            this.wholeTurn !== 0
-        );
-    }
-
-    get isStartRound() {
-        return this.roundTime === this.placingBet + this.startRound;
-    }
-
-    get isStartingRound() {
-        return this.roundTime <= this.placingBet + this.startRound && this.roundTime > this.placingBet;
-    }
-
-    get isTimeOut() {
-        return this.roundTime === 0;
-    }
-
-    get isInRoundTime() {
-        return this.roundState === TURN_ROUND_STATE.PLACING_BET || this.roundState === TURN_ROUND_STATE.LOCKING_BET;
-    }
-
-    get isShowDisabledGameMessage() {
-        return this.roundTime <= this.placingBet;
-    }
-
-    get isDisplayingResultState() {
-        return (
-            this.roundState === TURN_ROUND_STATE.SHOW_ANIMATION_RESULT ||
-            this.roundState === TURN_ROUND_STATE.SHOW_RESULT ||
-            this.roundState === TURN_ROUND_STATE.STOP_GAME_LOOP
-        );
-    }
-
-    get isVisibleReBet() {
-        return this.isStartingRound || this.isLocking || this.isWaiting;
-    }
-
-    get isShowStartBetMessage() {
-        return this.roundTime <= this.placingBet + this.durationShowPromptMessage && this.roundTime > this.placingBet;
-    }
-
-    resetRoundTime() {
+    override resetRoundTime() {
         this.roundTime = this.wholeTurn;
-    }
-
-    setDurationShowPromptMessage(durationShowPromptMessage?: number) {
-        durationShowPromptMessage && (this.durationShowPromptMessage = durationShowPromptMessage);
     }
 
     get isSwitchRoundInTurn() {
@@ -216,104 +78,31 @@ export class RoundTimeStore {
         return remainingTime;
     }
 
-    countdown() {
+    override countdown() {
         if (this.totalRoundTime <= 1) {
             this.totalRoundTime = 0;
         } else {
             this.totalRoundTime--;
         }
 
-        // console.log(`--------------------`)
-        // console.log(`totalRoundTime: ${this.totalRoundTime}`)
+        console.log(`--------------------`)
+        console.log(`totalRoundTime: ${this.totalRoundTime}`)
         this.roundTime = this.getRemainingTime(this.totalRoundTime);
         this.calculateRoundStatus();
     }
 
-    calculateRoundStatus() {
-        this.roundState = this.getCurrentRoundState();
-        // console.log({ roundState: this.roundState });
 
-
+    override getCurrentRoundState(): string {
         if (this.roundTime < 0) {
-            return;
+            return ROUND_STATE.WAITING;
         }
 
-        if (this.isWaiting) {
-            this.remaining = this.roundTime - this.placingBet;
-        }
-
-        if (this.isShowAnimationResult) {
-            this.remaining = this.generatingResult;
-        }
-
-        if (this.isShowResult) {
-            let duration = 0;
-
-            duration = this.roundTime - this.placingBet - this.startRound;
-
-            this.remaining = duration;
-            this.countdownTimer = duration;
-        }
-
-        if (this.isStartingRound) {
-            this.remaining = this.startRound;
-        }
-
-        if (this.isPlacingBet) {
-            this.remaining = this.roundTime - this.lockingBet;
-            this.countdownTimer = this.roundTime;
-        }
-
-        if (this.isLocking) {
-            this.remaining = this.roundTime;
-            this.countdownTimer = this.roundTime;
-        }
-    }
-
-    getCurrentRoundState(): string {
-        if (this.roundTime < 0) {
-            return TURN_ROUND_STATE.WAITING;
-        }
-
-        let currentState = "";
-
-        if (this.isWaiting) {
-            currentState = TURN_ROUND_STATE.WAITING;
-        }
-
-        if (this.isShowAnimationResult) {
-            currentState = TURN_ROUND_STATE.SHOW_ANIMATION_RESULT;
-        }
-
-        if (this.isShowResult) {
-            currentState = TURN_ROUND_STATE.SHOW_RESULT;
-        }
-
-        if (this.isStartingRound) {
-            currentState = TURN_ROUND_STATE.STARTING_ROUND;
-        }
-
-        if (this.isPlacingBet) {
-            currentState = TURN_ROUND_STATE.PLACING_BET;
-        }
-
-        if (this.isLocking) {
-            currentState = TURN_ROUND_STATE.LOCKING_BET;
-        }
 
         if (this.isSwitchRoundInTurn) {
             return TURN_ROUND_STATE.SWITCH_ROUND;
         }
 
-        return currentState;
-    }
-
-    start() {
-        this.roundState = TURN_ROUND_STATE.START_GAME_LOOP;
-    }
-
-    resetRoundTimeStore() {
-        this.roundState = TURN_ROUND_STATE.STOP_GAME_LOOP;
+        return super.getCurrentRoundState();
     }
 
     isInDisplayResultState() {
