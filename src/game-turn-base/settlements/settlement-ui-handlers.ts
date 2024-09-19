@@ -13,7 +13,6 @@ export namespace SettlementUIHandlers {
         handle() {
             this.handleFinishedShowResult();
             const { roundId, result, settlementResult, md5Result, drawId } = this.settlementStore;
-            // console.log(" this.roundHistoryStore.insertNewRound({ roundId, result, settlementResult, md5Result,drawId });")
             this.roundHistoryStore.insertNewRound({ roundId, result, settlementResult, md5Result, drawId });
         }
 

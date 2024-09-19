@@ -107,7 +107,7 @@ export class RoundHistoryStore {
 
     insertNewRound(finish: GameServiceMessage.Finish) {
         const currentRound = finish as RoundHistory;
-        // console.log(`insertNewRound : ${currentRound.drawId} `)
+
         if (this.histories[0]?.drawId === currentRound.drawId) {
             return;
         }

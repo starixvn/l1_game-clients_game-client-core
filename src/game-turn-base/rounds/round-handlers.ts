@@ -138,7 +138,6 @@ export class RoundHandlers extends RoundHandlersBase {
 
         this.store.clientRoundId = drawId;
         this.store.turnCounter = turnCounter;
-        console.log({ drawId, turnCounter });
 
         if (this.shouldRunWhenFirstLoad) {
             this.shouldRunWhenFirstLoad = false;
@@ -157,12 +156,10 @@ export class RoundHandlers extends RoundHandlersBase {
     }
 
     handleOdds(odds: GameServiceMessage.Odds) {
-        console.log({ odds });
         this.store.odds = odds;
     }
 
     handleRoundData(roundData: GameServiceMessage.TurnBaseGameRoundData) {
-        console.log({ roundData });
         this.store.roundData = roundData;
     }
 
