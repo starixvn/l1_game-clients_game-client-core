@@ -1,10 +1,11 @@
 import { inject, injectable } from "inversify";
 
-import { GameServiceMessage, IMultipleHandlers } from "../../shared";
+import { GameServiceMessage } from "../../shared";
 import { RoundStore } from "./round-store";
 import { GameSetting, TurnBaseDurationSetting } from "../../game/game-configs";
 import { RoundTimeStore } from "./round-time-store";
 import { GameTurnBaseServiceMessage } from "../game-turn-base-messages";
+import { RoundHandlers as RoundHandlersBase } from "../../game/rounds";
 
 export class TurnTimeline {
     /**
@@ -107,7 +108,7 @@ export class TurnTimelineCounter {
 }
 
 @injectable()
-export class RoundHandlers implements IMultipleHandlers {
+export class RoundHandlers extends RoundHandlersBase {
     private _totalTurn = 1;
     private shouldRunWhenFirstLoad = false;
     private roundRemainingTime = 0;
@@ -118,12 +119,12 @@ export class RoundHandlers implements IMultipleHandlers {
         @inject(RoundStore) protected readonly store: RoundStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(GameSetting) readonly gameSetting: GameSetting) {
+        super(store);
+
         this.shouldRunWhenFirstLoad = true;
         this._totalTurn = gameSetting.totalTurns;
-
         this.turnTimelineCounter = new TurnTimelineCounter(gameSetting.durations);
     }
-
 
     handleRemainingTime = (remainingTime: number) => {
         if (this.shouldRunWhenFirstLoad) {
@@ -156,23 +157,24 @@ export class RoundHandlers implements IMultipleHandlers {
     }
 
     handleOdds(odds: GameServiceMessage.Odds) {
-        this.store.Odds = odds;
+        console.log({ odds });
+        this.store.odds = odds;
     }
-
 
     handleRoundData(roundData: GameServiceMessage.TurnBaseGameRoundData) {
         console.log({ roundData });
-        this.store.RoundData = roundData;
+        this.store.roundData = roundData;
     }
 
     handleFinish(finish: GameServiceMessage.Finish | undefined) {
+        console.log(` handleFinish(finish: GameServiceMessage.Finish | undefined)`)
         const result = finish?.result as GameServiceMessage.LuckyNextResult;
         const resultRoundData = {
             balls: [result?.ball],
         };
 
-        this.store.RoundData = {
-            balls: this.store.RoundData?.balls?.concat(resultRoundData.balls) || resultRoundData.balls,
+        this.store.roundData = {
+            balls: this.store.roundData?.balls?.concat(resultRoundData.balls) || resultRoundData.balls,
             drawId: result?.drawId,
         }
     }

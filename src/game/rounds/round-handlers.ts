@@ -5,7 +5,7 @@ import { RoundStore } from "./round-store";
 
 @injectable()
 export class RoundHandlers implements IMultipleHandlers {
-    constructor(@inject(RoundStore) protected readonly store: RoundStore) {}
+    constructor(@inject(RoundStore) protected readonly store: RoundStore) { }
 
     handleRoundId(roundId: number) {
         if (roundId > 0) {
@@ -50,7 +50,6 @@ export class RoundHandlers implements IMultipleHandlers {
             name: GameServiceMessage.ResultHash.eventName,
             handle: this.handleResultHash,
         },
-
         {
             name: GameServiceMessage.UserBetPercentage.eventName,
             handle: this.handleUserBetPercent,

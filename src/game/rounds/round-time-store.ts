@@ -214,7 +214,7 @@ export class RoundTimeStore {
 
     calculateRoundStatus() {
         this.roundState = this.getCurrentRoundState();
-        console.log(this.roundState);
+
         if (this.roundTime < 0) {
             return;
         }

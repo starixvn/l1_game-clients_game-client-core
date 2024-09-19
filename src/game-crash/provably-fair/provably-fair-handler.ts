@@ -41,8 +41,6 @@ export class ProvablyFairHandler implements IHandler<GameServiceMessage.Provably
     name = GameServiceMessage.ProvablyFair.eventName;
 
     handle(pf: GameServiceMessage.ProvablyFair) {
-        console.log("%cGameServiceMessage.ProvablyFair", "color: red; font-size:18px; font-weight: bold");
-        console.log({ pf });
         this.provablyFairStore.pf = pf;
     }
 

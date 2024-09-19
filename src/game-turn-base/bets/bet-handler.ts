@@ -41,7 +41,7 @@ export class BetHandler extends BetHandlerBase {
                 randomClientSeed: this.provablyFairStore.randomClientSeed
             }
         });
-        console.log({ betData });
+
         this.handleBetData(betData);
     }
 }

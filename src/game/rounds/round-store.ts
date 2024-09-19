@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { makeAutoObservable } from "mobx";
+import { computed, makeAutoObservable, makeObservable, observable, action } from "mobx";
 
 import { MainPlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared";
@@ -29,18 +29,6 @@ export interface THighlightStatic {
 
 @injectable()
 export class RoundStore {
-    constructor(
-        @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore,
-        @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
-        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
-        @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
-        @inject(SettlementStore) protected readonly settlementStore: SettlementStore
-    ) {
-        makeAutoObservable(this, {
-            _clientRoundId: false,
-        });
-    }
-
     roundId = 0;
     private _ownBets: GameServiceMessage.OwnBets = {};
     private _totalBets: GameServiceMessage.TotalBets = {};
@@ -49,6 +37,47 @@ export class RoundStore {
     private _betPercentage: GameServiceMessage.UserBetPercentage = {};
 
     _clientRoundId = 0;
+
+    constructor(
+        @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore,
+        @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
+        @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
+        @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
+        @inject(SettlementStore) protected readonly settlementStore: SettlementStore
+    ) {
+        makeObservable(this, {
+            roundId: observable,
+            // _ownBets: observable,
+            // _totalBets: observable,
+            resultHash: observable,
+            // _userBetPercentage: observable,
+            // _betPercentage: observable,
+            // _clientRoundId: observable,
+
+            clientRoundId: computed,
+            historyRoundId: computed,
+            minBet: computed,
+            maxBet: computed,
+            roundOdds: computed,
+            totalBets: computed,
+            ownBets: computed,
+            userBetPercentage: computed,
+            betPercentage: computed,
+            isResetHighlight: computed,
+            highLightAnim: computed,
+            highlightStatic: computed,
+
+            //  clientRoundId: action,
+            //  totalBets: action,
+            //  ownBets: action,
+            //  userBetPercentage: action,
+            //  betPercentage: action,
+
+            resetForNewRound: action,
+            resetRoundStore: action,
+        });
+    }
+
 
     set clientRoundId(roundId: number) {
         this._clientRoundId = roundId;
@@ -183,7 +212,6 @@ export class RoundStore {
     }
 
     resetRoundStore() {
-        console.log(`round base resetRoundStore`);
         this.resetForNewRound();
         this.resultHash = null;
     }

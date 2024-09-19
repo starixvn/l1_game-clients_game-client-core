@@ -85,8 +85,8 @@ export class RoundTimeStore extends RoundTimeStoreBase {
             this.totalRoundTime--;
         }
 
-        console.log(`--------------------`)
-        console.log(`totalRoundTime: ${this.totalRoundTime}`)
+        // console.log(`--------------------`)
+        // console.log(`totalRoundTime: ${this.totalRoundTime}`)
         this.roundTime = this.getRemainingTime(this.totalRoundTime);
         this.calculateRoundStatus();
     }
