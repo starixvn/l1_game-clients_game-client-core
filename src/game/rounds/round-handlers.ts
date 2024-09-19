@@ -9,12 +9,12 @@ export class RoundHandlers implements IMultipleHandlers {
 
     handleRoundId(roundId: number) {
         if (roundId > 0) {
-            this.store.setRoundId(roundId);
+            this.store.roundId = roundId;
         }
     }
 
     handleOwnBets(ownBets: GameServiceMessage.OwnBets) {
-        this.store.setOwnBets(ownBets);
+        this.store.ownBets = ownBets;
     }
 
     handleTotalBets(totalBets: GameServiceMessage.TotalBets) {
@@ -22,15 +22,15 @@ export class RoundHandlers implements IMultipleHandlers {
     }
 
     handleResultHash(resultHash: GameServiceMessage.ResultHash) {
-        this.store.setResultHash(resultHash);
+        this.store.resultHash = resultHash;
     }
 
     handleUserBetPercent(userBetPercent: GameServiceMessage.UserBetPercentage) {
-        this.store.setUserBetPercentage(userBetPercent);
+        this.store.userBetPercentage = userBetPercent;
     }
 
     handleBetPercent(betPercent: GameServiceMessage.BetPercentage) {
-        this.store.setBetPercentage(betPercent);
+        this.store.betPercentage = betPercent;
     }
 
     eventHandleList = [

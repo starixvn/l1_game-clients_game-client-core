@@ -27,32 +27,40 @@ export interface IFirstJoinGameHistory {
 
 @injectable()
 export class RoundHistoryStore {
-    private _histories: RoundHistory[] = [];
-    private _joinGameHistory: IJoinGameHistory = null;
+    histories: RoundHistory[] = [];
+    joinGameHistory: IJoinGameHistory = null;
     firstJoinGameHistory: IFirstJoinGameHistory = null;
     receivedInGame = false;
 
     constructor(
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(GameSetting) protected readonly gameSetting: GameSetting,
-        @inject(SettlementStore) protected readonly settlementStore: SettlementStore
+        @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
+        histories = [],
+        joinGameHistory = null,
+        firstJoinGameHistory = null,
+        receivedInGame = false
     ) {
         makeObservable(this, {
             receivedInGame: observable,
             firstJoinGameHistory: observable,
-            setFirstJoinGameHistory: action,
+            histories: observable,
+            joinGameHistory: observable,
 
-            histories: computed,
-            joinGameHistory: computed,
             isValidHistories: computed,
+
             getLastRound: action,
             insertNewRound: action,
             limitNumberRoundHistory: action,
             updateHistoriesInGame: action,
             clearRoundHistories: action,
             generateJoinGameData: action,
-            setReceivedInGame: action
         });
+
+        this.histories = histories;
+        this.joinGameHistory = joinGameHistory;
+        this.firstJoinGameHistory = firstJoinGameHistory;
+        this.receivedInGame = receivedInGame;
 
         when(
             () => this.isValidHistories,
@@ -62,20 +70,15 @@ export class RoundHistoryStore {
             }
         );
     }
-
-    setReceivedInGame(receivedInGame) {
-        this.receivedInGame = receivedInGame;
-    }
-
     generateJoinGameData() {
         const lastRound = this.getLastRound();
         const roundTime = this.roundTimeStore.roundTime;
-        this.setFirstJoinGameHistory({
+        this.firstJoinGameHistory = {
             roundTime,
             roundHistory: lastRound,
             staticHighlight: this.roundTimeStore.isPlacingBet || this.roundTimeStore.isStartRound,
             animationHighlight: this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult,
-        });
+        };
 
         if (this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
             const showResultByFinish =
@@ -86,27 +89,6 @@ export class RoundHistoryStore {
                 };
             }
         }
-    }
-
-    get histories() {
-        return this._histories;
-    }
-
-    set histories(histories: RoundHistory[]) {
-        this._histories = histories;
-    }
-
-    get joinGameHistory() {
-        return this._joinGameHistory;
-    }
-
-    set joinGameHistory(joinGameHistory: IJoinGameHistory) {
-        this._joinGameHistory = joinGameHistory;
-    }
-
-
-    setFirstJoinGameHistory(history: IFirstJoinGameHistory) {
-        this.firstJoinGameHistory = history;
     }
 
     get isValidHistories(): boolean {
@@ -151,7 +133,7 @@ export class RoundHistoryStore {
         }
         this.histories = roundHistories;
 
-        this.setReceivedInGame(true);
+        this.receivedInGame = true;
     }
 
     clearRoundHistories() {

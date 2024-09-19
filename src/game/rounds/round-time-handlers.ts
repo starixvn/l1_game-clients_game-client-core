@@ -2,7 +2,6 @@ import { inject, injectable } from "inversify";
 import { GameServiceMessage, IMultipleHandlers } from "../../shared";
 import { RoundRunningHandlers } from "./round-running-handlers";
 import { RoundTimeStore } from "./round-time-store";
-import { runInAction } from "mobx";
 
 @injectable()
 export class RoundTimeHandlers implements IMultipleHandlers {
@@ -13,7 +12,7 @@ export class RoundTimeHandlers implements IMultipleHandlers {
 
     handleRemainingTime(remainingTime: number) {
         this.roundRunningHandlers.stopRunner();
-        this.store.setRoundTime(remainingTime);
+        this.store.roundTime = remainingTime;
         this.roundRunningHandlers.startRunner();
     }
 

@@ -11,12 +11,21 @@ export class SettlementStore {
     result: GameServiceMessage.TResult = null;
     settlementResult: GameServiceMessage.TSettlementResult = null;
     private _winningPlayers: GameServiceMessage.TWinningPlayers = null;
-    private _isFinishedShowResult = false;
+    isFinishedShowResult = false;
     md5Result: GameServiceMessage.ResultHash = null;
     currentFinish: GameServiceMessage.Finish = null;
     pf: GameServiceMessage.ProvablyFair = null;
 
-    constructor(@inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore) {
+    constructor(
+        @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
+        roundId = 0,
+        result: GameServiceMessage.TResult = null,
+        settlementResult: GameServiceMessage.TSettlementResult = null,
+        isFinishedShowResult = false,
+        md5Result: GameServiceMessage.ResultHash = null,
+        currentFinish: GameServiceMessage.Finish = null,
+        pf: GameServiceMessage.ProvablyFair = null,
+    ) {
         makeObservable(this, {
             roundId: observable,
             result: observable,
@@ -24,20 +33,21 @@ export class SettlementStore {
             md5Result: observable,
             currentFinish: observable,
             pf: observable,
-            isFinishedShowResult: computed,
+            isFinishedShowResult: observable,
+
             winningPlayers: computed,
+
             setSettlementStore: action,
             resetSettlementStore: action
         });
-    }
 
-
-    public get isFinishedShowResult() {
-        return this._isFinishedShowResult;
-    }
-
-    public set isFinishedShowResult(value) {
-        this._isFinishedShowResult = value;
+        this.roundId = roundId;
+        this.result = result;
+        this.settlementResult = settlementResult;
+        this.isFinishedShowResult = isFinishedShowResult;
+        this.md5Result = md5Result;
+        this.currentFinish = currentFinish;
+        this.pf = pf;
     }
 
     get winningPlayers() {

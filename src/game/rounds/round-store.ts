@@ -43,26 +43,24 @@ export class RoundStore {
         @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
-        @inject(SettlementStore) protected readonly settlementStore: SettlementStore
+        @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
+        roundId = 0,
+        resultHash = null,
+        ownBets = {},
+        userBetPercentage = null,
+        betPercentage = {}
     ) {
+
         makeObservable(this, {
             roundId: observable,
-            setRoundId: action,
-
             resultHash: observable,
-            setResultHash: action,
 
             totalBets: observable,
             setTotalBets: action,
 
             ownBets: observable,
-            setOwnBets: action,
-
             userBetPercentage: observable,
-            setUserBetPercentage: action,
-
             betPercentage: observable,
-            setBetPercentage: action,
 
             clientRoundId: computed,
             setClientRoundId: action,
@@ -79,6 +77,12 @@ export class RoundStore {
             resetForNewRound: action,
             resetRoundStore: action,
         });
+
+        this.roundId = roundId;
+        this.resultHash = resultHash,
+            this.ownBets = ownBets;
+        this.userBetPercentage = userBetPercentage;
+        this.betPercentage = betPercentage;
     }
 
 
@@ -143,26 +147,6 @@ export class RoundStore {
         }, {});
     }
 
-    setOwnBets(ownBets: GameServiceMessage.OwnBets) {
-        this.ownBets = ownBets;
-    }
-
-    setUserBetPercentage(betPercent: GameServiceMessage.UserBetPercentage) {
-        this.userBetPercentage = betPercent;
-    }
-
-    setBetPercentage(betPercent: GameServiceMessage.BetPercentage) {
-        this.betPercentage = betPercent;
-    }
-
-    setResultHash(resultHash: GameServiceMessage.ResultHash) {
-        this.resultHash = resultHash;
-    }
-
-    setRoundId(roundId: number) {
-        this.roundId = roundId;
-    }
-
     get isResetHighlight(): boolean {
         let isResetHighlight = false;
 
@@ -208,6 +192,6 @@ export class RoundStore {
 
     resetRoundStore() {
         this.resetForNewRound();
-        this.setResultHash(null);
+        this.resultHash = null;
     }
 }

@@ -8,7 +8,7 @@ import { SettlementStore } from "../../game/settlements";
 import { TURN_ROUND_STATE, RoundTimeStore } from "./round-time-store";
 import { Turn } from "./round-handlers";
 import { RoundOdds, RoundStore as RoundStoreBase } from "../../game/rounds";
-import { action, makeObservable, observable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 
 @injectable()
 export class RoundStore extends RoundStoreBase {
@@ -26,7 +26,15 @@ export class RoundStore extends RoundStoreBase {
         @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
-        @inject(SettlementStore) protected readonly settlementStore: SettlementStore
+        @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
+        drawId: number = 0,
+        turnCounter = 1,
+        turnObject = null,
+        odds: {},
+        roundData: {
+            balls: [],
+            drawId: 0
+        }
     ) {
         super(gameConfigStore, roundHistoryStore, roundTimeStore, mainPlayerStore, settlementStore);
 
@@ -35,15 +43,26 @@ export class RoundStore extends RoundStoreBase {
             odds: observable,
             turnCounter: observable,
             turnObject: observable,
-            roundData: observable,
-
-            setRoundData: action
+            roundData: observable
+            // setRoundData: action
         });
+
+        this.drawId = drawId,
+            this.turnCounter = turnCounter,
+            this.turnObject = turnObject,
+            this.odds = odds,
+            this.roundData = roundData;
     }
 
-    setRoundData(roundData: GameServiceMessage.TurnBaseGameRoundData) {
-        this.roundData = roundData;
-    }
+    // setDrawId(drawId:number){
+    //     this.drawId = drawId;
+    // }
+
+    // setOdds
+
+    // setRoundData(roundData: GameServiceMessage.TurnBaseGameRoundData) {
+    //     this.roundData = roundData;
+    // }
 
     override set clientRoundId(drawId: number) {
         this._clientRoundId = drawId;

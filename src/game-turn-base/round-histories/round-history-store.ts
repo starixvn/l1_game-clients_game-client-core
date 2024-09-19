@@ -18,12 +18,12 @@ export class RoundHistoryStore extends RoundHistoryStoreBase {
     generateJoinGameData() {
         const lastRound = this.getLastRound();
         const roundTime = this.roundTimeStore.roundTime;
-        this.setFirstJoinGameHistory({
+        this.firstJoinGameHistory = {
             roundTime,
             roundHistory: lastRound,
             staticHighlight: this.roundTimeStore.isPlacingBet || this.roundTimeStore.isStartRound,
             animationHighlight: this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult,
-        });
+        };
 
         if (this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
             const showResultByFinish =
@@ -59,6 +59,6 @@ export class RoundHistoryStore extends RoundHistoryStoreBase {
             this.limitNumberRoundHistory(roundHistories);
         }
         this.histories = roundHistories;
-        this.setReceivedInGame(true);
+        this.receivedInGame = true;
     }
 }
