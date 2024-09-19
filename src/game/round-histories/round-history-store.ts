@@ -29,7 +29,7 @@ export interface IFirstJoinGameHistory {
 export class RoundHistoryStore {
     private _histories: RoundHistory[] = [];
     private _joinGameHistory: IJoinGameHistory = null;
-    private _firstJoinGameHistory: IFirstJoinGameHistory = null;
+    firstJoinGameHistory: IFirstJoinGameHistory = null;
     receivedInGame = false;
 
     constructor(
@@ -39,9 +39,11 @@ export class RoundHistoryStore {
     ) {
         makeObservable(this, {
             receivedInGame: observable,
+            firstJoinGameHistory: observable,
+            setFirstJoinGameHistory: action,
+
             histories: computed,
             joinGameHistory: computed,
-            firstJoinGameHistory: computed,
             isValidHistories: computed,
             getLastRound: action,
             insertNewRound: action,
@@ -68,12 +70,12 @@ export class RoundHistoryStore {
     generateJoinGameData() {
         const lastRound = this.getLastRound();
         const roundTime = this.roundTimeStore.roundTime;
-        this.firstJoinGameHistory = {
+        this.setFirstJoinGameHistory({
             roundTime,
             roundHistory: lastRound,
             staticHighlight: this.roundTimeStore.isPlacingBet || this.roundTimeStore.isStartRound,
             animationHighlight: this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult,
-        };
+        });
 
         if (this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
             const showResultByFinish =
@@ -102,12 +104,9 @@ export class RoundHistoryStore {
         this._joinGameHistory = joinGameHistory;
     }
 
-    get firstJoinGameHistory() {
-        return this._firstJoinGameHistory;
-    }
 
-    set firstJoinGameHistory(history: IFirstJoinGameHistory) {
-        this._firstJoinGameHistory = history;
+    setFirstJoinGameHistory(history: IFirstJoinGameHistory) {
+        this.firstJoinGameHistory = history;
     }
 
     get isValidHistories(): boolean {

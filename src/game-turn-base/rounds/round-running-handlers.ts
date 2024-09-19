@@ -2,7 +2,6 @@ import { inject, injectable } from "inversify";
 import { GameSetting } from "../..//game/game-configs";
 import { RoundTimeStore, TURN_ROUND_STATE } from "./round-time-store";
 import { RoundStore } from "./round-store";
-import { GameServiceMessage } from "../../shared";
 import { RoundRunningHandlers as RoundRunningHandlersBase } from "../../game/rounds";
 
 @injectable()
