@@ -70,7 +70,9 @@ export class RoundTimeStore {
             isDisplayingResultState: computed,
             isVisibleReBet: computed,
             isShowStartBetMessage: computed,
-            resetRoundTime: action
+            setRoundTime: action,
+            setRoundState: action,
+            setCountDownTimer: action
         });
 
         this.setDurationShowPromptMessage(gameSetting?.durationShowPromptMessage);
@@ -186,26 +188,28 @@ export class RoundTimeStore {
     }
 
     resetRoundTime() {
-        this.roundTime = this.wholeRound;
+        this.setRoundTime(this.wholeRound);
     }
 
     setDurationShowPromptMessage(durationShowPromptMessage?: number) {
         durationShowPromptMessage && (this.durationShowPromptMessage = durationShowPromptMessage);
     }
 
-    // get roundTime() {
-    //     return this._roundTime;
-    // }
+    setRoundTime(roundTime: number) {
+        this.roundTime = roundTime;
+    }
 
-    // set roundTime(roundTime) {
-    //     this._roundTime = roundTime;
+    setRoundState(value: string) {
+        this.roundState = value;
+    }
 
-    // }
-
+    setCountDownTimer(time: number) {
+        this.countdownTimer = time;
+    }
 
     countdown() {
         if (this.roundTime <= 1) {
-            this.roundTime = 0;
+            this.setRoundTime(0);
         } else {
             this.roundTime--;
             this.calculateRoundStatus();
@@ -213,7 +217,7 @@ export class RoundTimeStore {
     }
 
     calculateRoundStatus() {
-        this.roundState = this.getCurrentRoundState();
+        this.setRoundState(this.getCurrentRoundState());
 
         if (this.roundTime < 0) {
             return;
@@ -238,7 +242,7 @@ export class RoundTimeStore {
             }
 
             this.remaining = duration;
-            this.countdownTimer = duration;
+            this.setCountDownTimer(duration);
         }
 
         if (this.isStartingRound) {
@@ -247,12 +251,12 @@ export class RoundTimeStore {
 
         if (this.isPlacingBet) {
             this.remaining = this.roundTime - this.lockingBet;
-            this.countdownTimer = this.roundTime;
+            this.setCountDownTimer(this.roundTime);
         }
 
         if (this.isLocking) {
             this.remaining = this.roundTime;
-            this.countdownTimer = this.roundTime;
+            this.setCountDownTimer(this.roundTime);
         }
     }
 
@@ -289,10 +293,10 @@ export class RoundTimeStore {
     }
 
     start() {
-        this.roundState = ROUND_STATE.START_GAME_LOOP;
+        this.setRoundState(ROUND_STATE.START_GAME_LOOP);
     }
 
     resetRoundTimeStore() {
-        this.roundState = ROUND_STATE.STOP_GAME_LOOP;
+        this.setRoundState(ROUND_STATE.STOP_GAME_LOOP);
     }
 }

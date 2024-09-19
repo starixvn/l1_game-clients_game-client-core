@@ -32,7 +32,7 @@ export class RoundTimeStore extends RoundTimeStoreBase {
     }
 
     override resetRoundTime() {
-        this.roundTime = this.wholeTurn;
+        this.setRoundTime(this.wholeTurn);
     }
 
     get isSwitchRoundInTurn() {
@@ -78,7 +78,7 @@ export class RoundTimeStore extends RoundTimeStoreBase {
             this.totalRoundTime--;
         }
 
-        this.roundTime = this.getRemainingTime(this.totalRoundTime);
+        this.setRoundTime(this.getRemainingTime(this.totalRoundTime));
         this.calculateRoundStatus();
     }
 
