@@ -21,10 +21,10 @@ export class RoundRunningHandlers extends RoundRunningHandlersBase {
         this.runnerId = setInterval(() => {
             this.roundTimeStore.countdown();
             if (this.roundTimeStore.roundState === TURN_ROUND_STATE.SWITCH_ROUND) {
-                this.roundStore.roundData = {
+                this.roundStore.setRoundData({
                     balls: [],
                     drawId: this.roundStore.roundData.drawId
-                };
+                });
             }
         }, 1000);
     }

@@ -170,10 +170,10 @@ export class RoundHandlers extends RoundHandlersBase {
             balls: [result?.ball],
         };
 
-        this.store.roundData = {
+        this.store.setRoundData({
             balls: this.store.roundData?.balls?.concat(resultRoundData.balls) || resultRoundData.balls,
             drawId: result?.drawId,
-        }
+        });
     }
 
     eventHandleList = [

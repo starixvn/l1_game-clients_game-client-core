@@ -47,13 +47,26 @@ export class RoundStore {
     ) {
         makeObservable(this, {
             roundId: observable,
+            setRoundId: action,
+
             resultHash: observable,
+            setResultHash: action,
+
             totalBets: observable,
+            setTotalBets: action,
+
             ownBets: observable,
+            setOwnBets: action,
+
             userBetPercentage: observable,
+            setUserBetPercentage: action,
+
             betPercentage: observable,
+            setBetPercentage: action,
 
             clientRoundId: computed,
+            setClientRoundId: action,
+
             historyRoundId: computed,
             minBet: computed,
             maxBet: computed,
@@ -63,16 +76,8 @@ export class RoundStore {
             highLightAnim: computed,
             highlightStatic: computed,
 
-            setClientRoundId: action,
-            setTotalBets: action,
-            setOwnBets: action,
-            setUserBetPercentage: action,
-            setBetPercentage: action,
-
             resetForNewRound: action,
             resetRoundStore: action,
-            setResultHash: action,
-            setRoundId: action
         });
     }
 

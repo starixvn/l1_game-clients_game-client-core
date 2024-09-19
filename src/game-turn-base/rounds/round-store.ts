@@ -8,7 +8,7 @@ import { SettlementStore } from "../../game/settlements";
 import { TURN_ROUND_STATE, RoundTimeStore } from "./round-time-store";
 import { Turn } from "./round-handlers";
 import { RoundOdds, RoundStore as RoundStoreBase } from "../../game/rounds";
-import { makeObservable, observable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 
 @injectable()
 export class RoundStore extends RoundStoreBase {
@@ -35,8 +35,14 @@ export class RoundStore extends RoundStoreBase {
             odds: observable,
             turnCounter: observable,
             turnObject: observable,
-            roundData: observable
+            roundData: observable,
+
+            setRoundData: action
         });
+    }
+
+    setRoundData(roundData: GameServiceMessage.TurnBaseGameRoundData) {
+        this.roundData = roundData;
     }
 
     override set clientRoundId(drawId: number) {
