@@ -30,7 +30,7 @@ export class RoundHistoryStore {
     private _histories: RoundHistory[] = [];
     private _joinGameHistory: IJoinGameHistory = null;
     private _firstJoinGameHistory: IFirstJoinGameHistory = null;
-    protected _receivedInGame = false;
+    receivedInGame = false;
 
     constructor(
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
@@ -38,6 +38,7 @@ export class RoundHistoryStore {
         @inject(SettlementStore) protected readonly settlementStore: SettlementStore
     ) {
         makeObservable(this, {
+            receivedInGame: observable,
             histories: computed,
             joinGameHistory: computed,
             firstJoinGameHistory: computed,
@@ -48,13 +49,20 @@ export class RoundHistoryStore {
             updateHistoriesInGame: action,
             clearRoundHistories: action,
             generateJoinGameData: action,
+            setReceivedInGame: action
         });
+
         when(
             () => this.isValidHistories,
             () => {
+                console.log(`this.generateJoinGameData();`);
                 this.generateJoinGameData();
             }
         );
+    }
+
+    setReceivedInGame(receivedInGame) {
+        this.receivedInGame = receivedInGame;
     }
 
     generateJoinGameData() {
@@ -104,7 +112,7 @@ export class RoundHistoryStore {
 
     get isValidHistories(): boolean {
         const { roundTimeStore } = this;
-        if (!this._receivedInGame || roundTimeStore.roundState === ROUND_STATE.STOP_GAME_LOOP) {
+        if (!this.receivedInGame || roundTimeStore.roundState === ROUND_STATE.STOP_GAME_LOOP) {
             return false;
         }
 
@@ -143,7 +151,8 @@ export class RoundHistoryStore {
             this.limitNumberRoundHistory(roundHistories);
         }
         this.histories = roundHistories;
-        this._receivedInGame = true;
+
+        this.setReceivedInGame(true);
     }
 
     clearRoundHistories() {

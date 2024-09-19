@@ -59,6 +59,6 @@ export class RoundHistoryStore extends RoundHistoryStoreBase {
             this.limitNumberRoundHistory(roundHistories);
         }
         this.histories = roundHistories;
-        this._receivedInGame = true;
+        this.setReceivedInGame(true);
     }
 }
