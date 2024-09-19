@@ -31,7 +31,7 @@ import {
 
 import { BetHandler } from "./bets";
 import { RoundHistoryStore } from "./round-histories";
-import { SettlementStore, SettlementUIHandlers } from "./settlements";
+import { SettlementStore, TurnBaseSettlementUIHandlers } from "./settlements";
 
 export const features = [Auth, Players, SiteConfigs, GameTurnBase, Notification, UnderMaintenance, ChipSetting];
 
@@ -60,6 +60,6 @@ export const onContainerCreated = (container: Container, setting?: GameSetting) 
     container.bind(SettlementStore).to(SettlementStore as any);
     container.bind(OldSettlementStore).toService(SettlementStore as any);
 
-    container.bind(SettlementUIHandlers.FinishedShowResult).to(SettlementUIHandlers.FinishedShowResult as any);
-    container.bind(OldSettlementUIHandlers.FinishedShowResult).to(SettlementUIHandlers.FinishedShowResult as any);
+    container.bind(TurnBaseSettlementUIHandlers.FinishedShowResult).to(TurnBaseSettlementUIHandlers.FinishedShowResult as any);
+    container.bind(OldSettlementUIHandlers.FinishedShowResult).to(TurnBaseSettlementUIHandlers.FinishedShowResult as any);
 };

@@ -7,8 +7,8 @@ export namespace SettlementUIHandlers {
     @injectable()
     export class FinishedShowResult implements IHandler<void> {
         constructor(
-            @inject(SettlementStore) private readonly settlementStore: SettlementStore,
-            @inject(RoundHistoryStore) private readonly roundHistoryStore: RoundHistoryStore
+            @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
+            @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore
         ) { }
         handle() {
             this.handleFinishedShowResult();

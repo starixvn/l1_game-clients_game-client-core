@@ -16,7 +16,6 @@ export class SettlementStore {
     currentFinish: GameServiceMessage.Finish = null;
     pf: GameServiceMessage.ProvablyFair = null;
 
-
     constructor(@inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore) {
         makeObservable(this, {
             roundId: observable,
