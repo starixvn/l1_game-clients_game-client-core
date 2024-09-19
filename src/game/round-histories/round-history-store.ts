@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { makeAutoObservable, when } from "mobx";
+import { action, computed, makeObservable, observable, when } from "mobx";
 import { GameServiceMessage } from "../../shared";
 import { GameSetting } from "../game-configs";
 import { ROUND_STATE, RoundTimeStore } from "../rounds/round-time-store";
@@ -27,13 +27,28 @@ export interface IFirstJoinGameHistory {
 
 @injectable()
 export class RoundHistoryStore {
+    private _histories: RoundHistory[] = [];
+    private _joinGameHistory: IJoinGameHistory = null;
+    private _firstJoinGameHistory: IFirstJoinGameHistory = null;
+    protected _receivedInGame = false;
+
     constructor(
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(GameSetting) protected readonly gameSetting: GameSetting,
         @inject(SettlementStore) protected readonly settlementStore: SettlementStore
     ) {
-        makeAutoObservable(this);
-
+        makeObservable(this, {
+            histories: computed,
+            joinGameHistory: computed,
+            firstJoinGameHistory: computed,
+            isValidHistories: computed,
+            getLastRound: action,
+            insertNewRound: action,
+            limitNumberRoundHistory: action,
+            updateHistoriesInGame: action,
+            clearRoundHistories: action,
+            generateJoinGameData: action,
+        });
         when(
             () => this.isValidHistories,
             () => {
@@ -41,11 +56,6 @@ export class RoundHistoryStore {
             }
         );
     }
-
-    private _histories: RoundHistory[] = [];
-    private _joinGameHistory: IJoinGameHistory = null;
-    private _firstJoinGameHistory: IFirstJoinGameHistory = null;
-    private _receivedInGame = false;
 
     generateJoinGameData() {
         const lastRound = this.getLastRound();

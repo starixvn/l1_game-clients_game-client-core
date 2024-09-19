@@ -1,16 +1,12 @@
 import { inject, injectable } from "inversify";
 import * as _ from "lodash";
-import { makeAutoObservable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { GameServiceMessage } from "../../shared";
 import { NumberUtils } from "../../shared/utils/number-utils";
 
 @injectable()
 export class SettlementStore {
-    constructor(@inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore) {
-        makeAutoObservable(this);
-    }
-
     roundId = 0;
     result: GameServiceMessage.TResult = null;
     settlementResult: GameServiceMessage.TSettlementResult = null;
@@ -19,6 +15,23 @@ export class SettlementStore {
     md5Result: GameServiceMessage.ResultHash = null;
     currentFinish: GameServiceMessage.Finish = null;
     pf: GameServiceMessage.ProvablyFair = null;
+
+
+    constructor(@inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore) {
+        makeObservable(this, {
+            roundId: observable,
+            result: observable,
+            settlementResult: observable,
+            md5Result: observable,
+            currentFinish: observable,
+            pf: observable,
+            isFinishedShowResult: computed,
+            winningPlayers: computed,
+            setSettlementStore: action,
+            resetSettlementStore: action
+        });
+    }
+
 
     public get isFinishedShowResult() {
         return this._isFinishedShowResult;
