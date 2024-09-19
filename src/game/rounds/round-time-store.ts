@@ -33,27 +33,27 @@ const RoundTimeInitValue = -99999;
 
 @injectable()
 export class RoundTimeStore {
-    roundTime = RoundTimeInitValue;
-    roundState = ROUND_STATE.NONE;
-    countdownTimer = 0;
-    remaining = 0;
-    startNewRound = false;
-    endRound = false;
-    startPlacingBet = false;
-    endPlacingBet = false;
     durationShowPromptMessage = 2;
 
     constructor(
         @inject(GameSetting) readonly gameSetting: GameSetting,
-        roundTime = RoundTimeInitValue,
-        roundState = ROUND_STATE.NONE,
-        countdownTimer = 0,
-        remaining = 0,
-        startNewRound = false,
-        endRound = false,
-        startPlacingBet = false,
-        endPlacingBet = false
+        public roundTime = RoundTimeInitValue,
+        public roundState = ROUND_STATE.NONE,
+        public countdownTimer = 0,
+        public remaining = 0,
+        public startNewRound = false,
+        public endRound = false,
+        public startPlacingBet = false,
+        public endPlacingBet = false
     ) {
+        this.roundState = roundState;
+        this.roundTime = roundTime;
+        this.countdownTimer = countdownTimer;
+        this.remaining = remaining;
+        this.startNewRound = startNewRound;
+        this.endRound = endRound;
+        this.startPlacingBet = startPlacingBet;
+        this.endPlacingBet = endPlacingBet;
 
         makeObservable(this, {
             roundTime: observable,
@@ -91,14 +91,7 @@ export class RoundTimeStore {
             countdown: action
         });
 
-        this.roundState = roundState;
-        this.roundTime = roundTime;
-        this.countdownTimer = countdownTimer;
-        this.remaining = remaining;
-        this.startNewRound = startNewRound;
-        this.endRound = endRound;
-        this.startPlacingBet = startPlacingBet;
-        this.endPlacingBet = endPlacingBet;
+
 
         this.setDurationShowPromptMessage(gameSetting?.durationShowPromptMessage);
     }

@@ -7,18 +7,16 @@ import { makeObservable, observable } from "mobx";
 
 @injectable()
 export class SettlementStore extends SettlementStoreBase {
-    drawId = 0;
-
     constructor(
         @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
-        drawId = 0
+        public drawId = 0
     ) {
         super(mainPlayerStore);
+        this.drawId = drawId;
+
         makeObservable(this, {
             drawId: observable
         });
-
-        this.drawId = drawId;
     }
 
     setSettlementStore(finish: GameServiceMessage.Finish | undefined) {

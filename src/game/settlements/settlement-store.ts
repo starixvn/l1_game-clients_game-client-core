@@ -7,25 +7,26 @@ import { NumberUtils } from "../../shared/utils/number-utils";
 
 @injectable()
 export class SettlementStore {
-    roundId = 0;
-    result: GameServiceMessage.TResult = null;
-    settlementResult: GameServiceMessage.TSettlementResult = null;
     private _winningPlayers: GameServiceMessage.TWinningPlayers = null;
-    isFinishedShowResult = false;
-    md5Result: GameServiceMessage.ResultHash = null;
-    currentFinish: GameServiceMessage.Finish = null;
-    pf: GameServiceMessage.ProvablyFair = null;
 
     constructor(
         @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
-        roundId = 0,
-        result: GameServiceMessage.TResult = null,
-        settlementResult: GameServiceMessage.TSettlementResult = null,
-        isFinishedShowResult = false,
-        md5Result: GameServiceMessage.ResultHash = null,
-        currentFinish: GameServiceMessage.Finish = null,
-        pf: GameServiceMessage.ProvablyFair = null,
+        public roundId = 0,
+        public result: GameServiceMessage.TResult = null,
+        public settlementResult: GameServiceMessage.TSettlementResult = null,
+        public isFinishedShowResult = false,
+        public md5Result: GameServiceMessage.ResultHash = null,
+        public currentFinish: GameServiceMessage.Finish = null,
+        public pf: GameServiceMessage.ProvablyFair = null,
     ) {
+        this.roundId = roundId;
+        this.result = result;
+        this.settlementResult = settlementResult;
+        this.isFinishedShowResult = isFinishedShowResult;
+        this.md5Result = md5Result;
+        this.currentFinish = currentFinish;
+        this.pf = pf;
+
         makeObservable(this, {
             roundId: observable,
             result: observable,
@@ -40,14 +41,6 @@ export class SettlementStore {
             setSettlementStore: action,
             resetSettlementStore: action
         });
-
-        this.roundId = roundId;
-        this.result = result;
-        this.settlementResult = settlementResult;
-        this.isFinishedShowResult = isFinishedShowResult;
-        this.md5Result = md5Result;
-        this.currentFinish = currentFinish;
-        this.pf = pf;
     }
 
     get winningPlayers() {

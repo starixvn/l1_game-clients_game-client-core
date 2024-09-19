@@ -29,12 +29,6 @@ export interface THighlightStatic {
 
 @injectable()
 export class RoundStore {
-    roundId = 0;
-    resultHash: GameServiceMessage.ResultHash = null;
-    ownBets: GameServiceMessage.OwnBets = {};
-    userBetPercentage: GameServiceMessage.UserBetPercentage = null;
-    betPercentage: GameServiceMessage.UserBetPercentage = {};
-
     totalBets: GameServiceMessage.TotalBets = {};
     _clientRoundId = 0;
 
@@ -44,12 +38,18 @@ export class RoundStore {
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
         @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
-        roundId = 0,
-        resultHash = null,
-        ownBets = {},
-        userBetPercentage = null,
-        betPercentage = {}
+        public roundId = 0,
+        public resultHash = null,
+        public ownBets = {},
+        public userBetPercentage = null,
+        public betPercentage = {}
     ) {
+
+        this.roundId = roundId;
+        this.resultHash = resultHash,
+            this.ownBets = ownBets;
+        this.userBetPercentage = userBetPercentage;
+        this.betPercentage = betPercentage;
 
         makeObservable(this, {
             roundId: observable,
@@ -78,11 +78,6 @@ export class RoundStore {
             resetRoundStore: action,
         });
 
-        this.roundId = roundId;
-        this.resultHash = resultHash,
-            this.ownBets = ownBets;
-        this.userBetPercentage = userBetPercentage;
-        this.betPercentage = betPercentage;
     }
 
 

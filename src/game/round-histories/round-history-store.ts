@@ -27,20 +27,20 @@ export interface IFirstJoinGameHistory {
 
 @injectable()
 export class RoundHistoryStore {
-    histories: RoundHistory[] = [];
-    joinGameHistory: IJoinGameHistory = null;
-    firstJoinGameHistory: IFirstJoinGameHistory = null;
-    receivedInGame = false;
-
     constructor(
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(GameSetting) protected readonly gameSetting: GameSetting,
         @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
-        histories = [],
-        joinGameHistory = null,
-        firstJoinGameHistory = null,
-        receivedInGame = false
+        public histories = [],
+        public joinGameHistory = null,
+        public firstJoinGameHistory = null,
+        public receivedInGame = false
     ) {
+        this.histories = histories;
+        this.joinGameHistory = joinGameHistory;
+        this.firstJoinGameHistory = firstJoinGameHistory;
+        this.receivedInGame = receivedInGame;
+
         makeObservable(this, {
             receivedInGame: observable,
             firstJoinGameHistory: observable,
@@ -56,11 +56,6 @@ export class RoundHistoryStore {
             clearRoundHistories: action,
             generateJoinGameData: action,
         });
-
-        this.histories = histories;
-        this.joinGameHistory = joinGameHistory;
-        this.firstJoinGameHistory = firstJoinGameHistory;
-        this.receivedInGame = receivedInGame;
 
         when(
             () => this.isValidHistories,
