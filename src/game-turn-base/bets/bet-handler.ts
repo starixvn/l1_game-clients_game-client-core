@@ -8,11 +8,7 @@ import { OrientationStore } from "../../game/orientation";
 import { RoundStore, RoundTimeStore } from "../../game/rounds";
 import { MainPlayerStore } from "../../players";
 import { ProvablyFairStore } from "../../features/provably-fair/round-base";
-
-export interface IBetInfo {
-    betChoice: string;
-    amount: number;
-}
+import { IBetInfo } from "../../game/bets";
 
 @injectable()
 export class BetHandler extends BetHandlerBase {

@@ -27,6 +27,8 @@ export interface IFirstJoinGameHistory {
 
 @injectable()
 export class RoundHistoryStore {
+    protected displayedRoundId: string = "roundId";
+
     constructor(
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(GameSetting) protected readonly gameSetting: GameSetting,
@@ -77,7 +79,7 @@ export class RoundHistoryStore {
 
         if (this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
             const showResultByFinish =
-                this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId >= lastRound.roundId;
+                this.settlementStore.currentFinish && this.settlementStore.currentFinish[this.displayedRoundId] >= lastRound[this.displayedRoundId];
             if (!showResultByFinish) {
                 this.joinGameHistory = {
                     roundHistory: lastRound,
@@ -101,7 +103,7 @@ export class RoundHistoryStore {
 
     insertNewRound(finish: GameServiceMessage.Finish) {
         const currentRound = finish as RoundHistory;
-        if (this.histories[0]?.roundId === currentRound.roundId) {
+        if (this.histories[0] && this.histories[0][this.displayedRoundId] === currentRound[this.displayedRoundId]) {
             return;
         }
         const cloneHistories = JSON.parse(JSON.stringify(this.histories));
@@ -120,7 +122,7 @@ export class RoundHistoryStore {
     updateHistoriesInGame(roundHistories: RoundHistory[]) {
         if (roundHistories.length > 0) {
             const lastRound = roundHistories[0];
-            const missingNewRound = this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId > lastRound.roundId;
+            const missingNewRound = this.settlementStore.currentFinish && this.settlementStore.currentFinish[this.displayedRoundId] > lastRound[this.displayedRoundId];
             if (missingNewRound) {
                 roundHistories.unshift(this.settlementStore.currentFinish as RoundHistory);
             }
