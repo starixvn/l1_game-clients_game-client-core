@@ -29,7 +29,7 @@ export const ROUND_STATE = {
     NONE: "none",
 };
 
-const RoundTimeInitValue = -99999;
+export const RoundTimeInitValue = -99999;
 
 @injectable()
 export class RoundTimeStore {

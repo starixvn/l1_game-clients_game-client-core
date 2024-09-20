@@ -1,13 +1,11 @@
 import { inject, injectable } from "inversify";
 import { GameSetting, TurnBaseDurationSetting } from "../../game/game-configs";
-import { ROUND_STATE, RoundTimeStore as RoundTimeStoreBase } from "../../game/rounds";
+import { ROUND_STATE, RoundTimeInitValue, RoundTimeStore as RoundTimeStoreBase } from "../../game/rounds";
 
 export const TURN_ROUND_STATE = {
     ...ROUND_STATE,
     SWITCH_ROUND: "SwitchRound"
 };
-
-const RoundTimeInitValue = -99999;
 
 @injectable()
 export class RoundTimeStore extends RoundTimeStoreBase {

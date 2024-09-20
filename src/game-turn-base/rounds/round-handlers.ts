@@ -29,7 +29,6 @@ export class RoundHandlers extends RoundHandlersBase {
     }
 
     handleFinish(finish: GameServiceMessage.Finish | undefined) {
-        console.log(` handleFinish(finish: GameServiceMessage.Finish | undefined)`)
         const result = finish?.result as GameServiceMessage.LuckyNextResult;
         const resultRoundData = {
             balls: [result?.ball],

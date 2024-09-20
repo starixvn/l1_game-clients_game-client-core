@@ -62,7 +62,6 @@ export class RoundHistoryStore {
         when(
             () => this.isValidHistories,
             () => {
-                console.log(`this.generateJoinGameData();`);
                 this.generateJoinGameData();
             }
         );
