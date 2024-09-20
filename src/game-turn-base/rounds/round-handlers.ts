@@ -136,7 +136,7 @@ export class RoundHandlers extends RoundHandlersBase {
         const turnIndex = drawId % this._totalTurn;
         let turnCounter = turnIndex === 0 ? this._totalTurn : turnIndex;
 
-        this.store.clientRoundId = drawId;
+        this.store.setClientRoundId(drawId);
         this.store.turnCounter = turnCounter;
 
         if (this.shouldRunWhenFirstLoad) {

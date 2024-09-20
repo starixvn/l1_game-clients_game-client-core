@@ -13,7 +13,7 @@ export class RoundTimeHandlers extends RoundTimeHandlersBase {
 
     override handleRemainingTime(remainingTime: number) {
         this.roundRunningHandlers.stopRunner();
-        this.store.totalRoundTime = remainingTime;
+        this.store.totalMainRoundTime = remainingTime;
         this.roundRunningHandlers.startRunner();
     }
 }

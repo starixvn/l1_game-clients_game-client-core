@@ -31,6 +31,7 @@ export interface THighlightStatic {
 export class RoundStore {
     totalBets: GameServiceMessage.TotalBets = {};
     _clientRoundId = 0;
+    protected displayedRoundId: string = "roundId";
 
     constructor(
         @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore,
@@ -46,8 +47,8 @@ export class RoundStore {
     ) {
 
         this.roundId = roundId;
-        this.resultHash = resultHash,
-            this.ownBets = ownBets;
+        this.resultHash = resultHash;
+        this.ownBets = ownBets;
         this.userBetPercentage = userBetPercentage;
         this.betPercentage = betPercentage;
 
@@ -77,27 +78,24 @@ export class RoundStore {
             resetForNewRound: action,
             resetRoundStore: action,
         });
-
     }
 
-
-    setClientRoundId(roundId: number) {
-        this._clientRoundId = roundId;
-    }
 
     get clientRoundId() {
         const currentFinish = this.settlementStore.currentFinish;
-        if (!currentFinish || this.historyRoundId >= currentFinish.roundId) {
+
+        if (!currentFinish || this.historyRoundId >= currentFinish[this.displayedRoundId]) {
             return this.historyRoundId;
         }
-        return currentFinish.roundId;
+
+        return currentFinish[this.displayedRoundId];
     }
 
     get historyRoundId() {
         let lastRoundId = 0;
 
         if (this.roundHistoryStore.histories.length > 0) {
-            lastRoundId = this.roundHistoryStore.histories[0].roundId;
+            lastRoundId = this.roundHistoryStore.histories[0][this.displayedRoundId];
         }
 
         if (
@@ -110,8 +108,8 @@ export class RoundStore {
         }
 
         // when clearing all active data in database and having data in archive collection
-        if (this.roundHistoryStore.histories.length === 0 && this.roundId > 0) {
-            lastRoundId = this.roundId;
+        if (this.roundHistoryStore.histories.length === 0 && this[this.displayedRoundId] > 0) {
+            lastRoundId = this[this.displayedRoundId];
         }
 
         if (this._clientRoundId < lastRoundId) {
@@ -133,13 +131,6 @@ export class RoundStore {
             odds: this.gameConfigStore.odds,
             fractional: this.mainPlayerStore.fractionalOddsFormat,
         };
-    }
-
-    setTotalBets(totalBets: GameServiceMessage.TotalBets) {
-        this.totalBets = Object.keys(totalBets).reduce((total, betChoice) => {
-            total[betChoice] = this.totalBets[betChoice] / this.mainPlayerStore.rate;
-            return total;
-        }, {});
     }
 
     get isResetHighlight(): boolean {
@@ -176,6 +167,17 @@ export class RoundStore {
         }
 
         return { settlementResult, result };
+    }
+
+    setClientRoundId(roundId: number) {
+        this._clientRoundId = roundId;
+    }
+
+    setTotalBets(totalBets: GameServiceMessage.TotalBets) {
+        this.totalBets = Object.keys(totalBets).reduce((total, betChoice) => {
+            total[betChoice] = this.totalBets[betChoice] / this.mainPlayerStore.rate;
+            return total;
+        }, {});
     }
 
     resetForNewRound() {

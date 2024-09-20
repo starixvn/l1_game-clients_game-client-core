@@ -12,7 +12,7 @@ const RoundTimeInitValue = -99999;
 @injectable()
 export class RoundTimeStore extends RoundTimeStoreBase {
     private _durations: TurnBaseDurationSetting = null;
-    totalRoundTime = RoundTimeInitValue;
+    totalMainRoundTime = RoundTimeInitValue;
 
     constructor(@inject(GameSetting) readonly gameSetting: GameSetting) {
         super(gameSetting);
@@ -40,7 +40,7 @@ export class RoundTimeStore extends RoundTimeStoreBase {
             const startSwitchRoundPointTime = this.wholeRound - this.showingResult;
             const endSwitchRoundPointTime = startSwitchRoundPointTime - this.switchRoundAnimation;
 
-            if (startSwitchRoundPointTime >= this.totalRoundTime && this.totalRoundTime > endSwitchRoundPointTime) {
+            if (startSwitchRoundPointTime >= this.totalMainRoundTime && this.totalMainRoundTime > endSwitchRoundPointTime) {
                 return true;
             }
         }
@@ -72,28 +72,18 @@ export class RoundTimeStore extends RoundTimeStoreBase {
     }
 
     override countdown() {
-        if (this.totalRoundTime <= 1) {
-            this.totalRoundTime = 0;
+        if (this.totalMainRoundTime <= 1) {
+            this.totalMainRoundTime = 0;
         } else {
-            this.totalRoundTime--;
+            this.totalMainRoundTime--;
         }
 
-        this.roundTime = this.getRemainingTime(this.totalRoundTime);
+        this.roundTime = this.getRemainingTime(this.totalMainRoundTime);
         this.calculateRoundStatus();
     }
 
-
     override getCurrentRoundState(): string {
-        if (this.roundTime < 0) {
-            return ROUND_STATE.WAITING;
-        }
-
-
-        if (this.isSwitchRoundInTurn) {
-            return TURN_ROUND_STATE.SWITCH_ROUND;
-        }
-
-        return super.getCurrentRoundState();
+        return this.isSwitchRoundInTurn ? TURN_ROUND_STATE.SWITCH_ROUND : super.getCurrentRoundState();
     }
 
     isInDisplayResultState() {

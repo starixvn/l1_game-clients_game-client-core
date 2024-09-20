@@ -219,8 +219,9 @@ export class RoundTimeStore {
             this.roundTime = 0;
         } else {
             this.roundTime--;
-            this.calculateRoundStatus();
         }
+
+        this.calculateRoundStatus();
     }
 
     calculateRoundStatus() {
