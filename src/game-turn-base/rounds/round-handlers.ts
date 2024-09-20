@@ -6,14 +6,20 @@ import { GameSetting } from "../../game/game-configs";
 import { RoundTimeStore } from "./round-time-store";
 import { GameTurnBaseServiceMessage } from "../game-turn-base-messages";
 import { RoundHandlers as RoundHandlersBase } from "../../game/rounds";
+import { BetStore } from "../../game/bets";
 
 @injectable()
 export class RoundHandlers extends RoundHandlersBase {
     constructor(
         @inject(RoundStore) protected readonly store: RoundStore,
+        @inject(BetStore) protected readonly betStore: BetStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(GameSetting) readonly gameSetting: GameSetting) {
         super(store);
+    }
+
+     handleOwnChip(ownChip: GameTurnBaseServiceMessage.OwnChip) {
+        this.betStore.betChoice =Object.keys(ownChip.betChoices)[0]
     }
 
     handleDrawId(drawId: number) {
@@ -56,6 +62,10 @@ export class RoundHandlers extends RoundHandlersBase {
         {
             name: GameServiceMessage.Finish.eventName,
             handle: this.handleFinish,
+        },
+        {
+            name: GameTurnBaseServiceMessage.OwnChip.eventName,
+            handle: this.handleOwnChip,
         },
     ];
 }

@@ -13,4 +13,11 @@ export namespace GameTurnBaseServiceMessage {
     export class GameConfigs extends GameServiceMessage.GameConfigs {
         oddsRange?: OddsRange;
     }
+
+    export class OwnChip {
+        betChoices: string;
+        amount: number;
+
+        static eventName = "ownChip";
+    }
 }
