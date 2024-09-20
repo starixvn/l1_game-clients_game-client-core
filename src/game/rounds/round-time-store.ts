@@ -91,8 +91,6 @@ export class RoundTimeStore {
             countdown: action
         });
 
-
-
         this.setDurationShowPromptMessage(gameSetting?.durationShowPromptMessage);
     }
 
@@ -212,7 +210,6 @@ export class RoundTimeStore {
     setDurationShowPromptMessage(durationShowPromptMessage?: number) {
         durationShowPromptMessage && (this.durationShowPromptMessage = durationShowPromptMessage);
     }
-
 
     countdown() {
         if (this.roundTime <= 1) {
