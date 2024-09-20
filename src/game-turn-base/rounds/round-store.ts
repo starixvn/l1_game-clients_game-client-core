@@ -18,8 +18,6 @@ export class RoundStore extends RoundStoreBase {
         @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
         @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
         public drawId: number = 0,
-        public turnCounter = 1,
-        public turnObject = null,
         public odds = {},
         public roundData = {
             balls: [],
@@ -28,17 +26,13 @@ export class RoundStore extends RoundStoreBase {
     ) {
         super(gameConfigStore, roundHistoryStore, roundTimeStore, mainPlayerStore, settlementStore);
 
-        this.drawId = drawId,
-            this.turnCounter = turnCounter,
-            this.turnObject = turnObject,
-            this.odds = odds,
-            this.roundData = roundData;
+        this.drawId = drawId;
+        this.odds = odds;
+        this.roundData = roundData;
 
         makeObservable(this, {
             drawId: observable,
             odds: observable,
-            turnCounter: observable,
-            turnObject: observable,
             roundData: observable
         });
     }
