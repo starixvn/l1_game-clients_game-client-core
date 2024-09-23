@@ -18,10 +18,7 @@ export class BetResponseHandlers extends BetResponseHandlersBase {
     handleBetChoice(betChoice: any) {}
 
     eventHandleList = [
-        {
-            name: GameServiceMessage.BetResponse.eventName,
-            handle: this.handleBetResponse,
-        },
+        ...this.eventHandleList,
         {
             name: GameServiceMessage.betChoice,
             handle: this.handleBetChoice,
