@@ -1,10 +1,11 @@
 import { inject, injectable } from "inversify";
-import { GameSetting, TurnBaseDurationSetting } from "../../game/game-configs";
+import { GameSetting } from "../game-configs/game-setting";
+import type { TurnBaseDurationSetting } from "../game-configs/game-setting";
 import { ROUND_STATE, RoundTimeInitValue, RoundTimeStore as RoundTimeStoreBase } from "../../game/rounds";
 
 export const TURN_ROUND_STATE = {
     ...ROUND_STATE,
-    SWITCH_ROUND: "SwitchRound"
+    SWITCH_ROUND: "SwitchRound",
 };
 
 @injectable()
@@ -14,7 +15,7 @@ export class RoundTimeStore extends RoundTimeStoreBase {
 
     constructor(@inject(GameSetting) readonly gameSetting: GameSetting) {
         super(gameSetting);
-        this._durations = this.gameSetting.durations as TurnBaseDurationSetting
+        this._durations = this.gameSetting.durations as TurnBaseDurationSetting;
     }
 
     get totalTurns() {
@@ -47,8 +48,7 @@ export class RoundTimeStore extends RoundTimeStoreBase {
     }
 
     getRemainingTime(totalRoundTime: number): number {
-        const turnRemainingTime =
-            this.getRoundRemainingTimeToCalculateTurnRemainingTime(totalRoundTime) % this._durations.wholeTurn;
+        const turnRemainingTime = this.getRoundRemainingTimeToCalculateTurnRemainingTime(totalRoundTime) % this._durations.wholeTurn;
 
         return turnRemainingTime <= 0 ? this._durations.wholeTurn : turnRemainingTime;
     }

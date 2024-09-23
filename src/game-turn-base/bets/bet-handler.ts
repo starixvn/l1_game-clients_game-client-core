@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { BetHandlerBase } from "../../game/bets/bet-handler-base";
 import { BetStore } from "../../game/bets/bet-store";
 import { ConnectionHandlers, ConnectionStore } from "../../game/connection";
-import { GameSetting } from "../../game/game-configs/game-setting";
+import { GameSetting } from "../game-configs/game-setting";
 import { NoticeStore } from "../../game/notices";
 import { OrientationStore } from "../../game/orientation";
 import { RoundStore, RoundTimeStore } from "../../game/rounds";

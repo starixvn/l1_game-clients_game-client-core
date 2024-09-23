@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { GameSetting } from "../../game/game-configs";
+import { GameSetting } from "../game-configs/game-setting";
 import { RoundTimeStore } from "../rounds/round-time-store";
 import { SettlementStore } from "../settlements/settlement-store";
 import { RoundHistoryStore as RoundHistoryStoreBase } from "../../game/round-histories";

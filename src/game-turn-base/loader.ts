@@ -16,7 +16,6 @@ import * as Notification from "../notification";
 import * as Players from "../players";
 import * as UnderMaintenance from "../under-maintenance";
 import * as GameTurnBase from "./export";
-import { GameSetting } from "../game/game-configs";
 import { RoundStore, RoundTimeHandlers, RoundTimeStore, RoundHandlers, RoundRunningHandlers } from "./rounds";
 
 import { BetHandler as OldBetHandler, BetResponseHandlers as OldBetResponseHandlers } from "../game/bets/";
@@ -27,7 +26,7 @@ import { SettlementStore, TurnBaseSettlementUIHandlers } from "./settlements";
 
 export const features = [Auth, Players, SiteConfigs, GameTurnBase, Notification, UnderMaintenance, ChipSetting];
 
-export const onContainerCreated = (container: Container, setting?: GameSetting) => {
+export const onContainerCreated = (container: Container) => {
     container.bind(OldRoundStore).toService(RoundStore);
 
     container.bind(OldRoundTimeStore).toService(RoundTimeStore);

@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 
 import { GameServiceMessage } from "../../shared";
 import { RoundStore } from "./round-store";
-import { GameSetting } from "../../game/game-configs";
+import { GameSetting } from "../game-configs/game-setting";
 import { RoundTimeStore } from "./round-time-store";
 import { GameTurnBaseServiceMessage } from "../game-turn-base-messages";
 import { RoundHandlers as RoundHandlersBase } from "../../game/rounds";
