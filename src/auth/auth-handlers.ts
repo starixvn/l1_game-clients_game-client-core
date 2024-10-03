@@ -121,7 +121,7 @@ export namespace AuthHandlers {
                 message: text,
                 title: Translator.commonTranslate("notice"),
                 type: NoticeType.Error,
-                onClose: () => {},
+                onClose: null,
                 showBtnConfirmButton: true,
                 noticeInfo: NoticeInfo.SignName,
             });

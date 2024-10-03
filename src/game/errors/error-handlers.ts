@@ -47,7 +47,7 @@ export class ErrorHandlers implements IMultipleHandlers {
             message: text,
             title: Translator.commonTranslate("notice"),
             type: NoticeType.Error,
-            onClose: () => {},
+            onClose: null,
             noticeInfo: NoticeInfo.ApiError,
         });
     }
