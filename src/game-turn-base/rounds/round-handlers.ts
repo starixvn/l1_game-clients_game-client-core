@@ -14,12 +14,13 @@ export class RoundHandlers extends RoundHandlersBase {
         @inject(RoundStore) protected readonly store: RoundStore,
         @inject(BetStore) protected readonly betStore: BetStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
-        @inject(GameSetting) readonly gameSetting: GameSetting) {
+        @inject(GameSetting) readonly gameSetting: GameSetting
+    ) {
         super(store);
     }
 
-     handleOwnChip(ownChip: GameTurnBaseServiceMessage.OwnChip) {
-        this.betStore.betChoice =Object.keys(ownChip.betChoices)[0]
+    handleOwnChip(ownChip: GameTurnBaseServiceMessage.OwnChip) {
+        this.betStore.betChoice = Object.keys(ownChip.betChoices)[0];
     }
 
     handleDrawId(drawId: number) {
@@ -31,7 +32,7 @@ export class RoundHandlers extends RoundHandlersBase {
     }
 
     handleRoundData(roundData: GameServiceMessage.TurnBaseGameRoundData) {
-        this.store.roundData = roundData;
+        this.store.setRoundData(roundData);
     }
 
     handleFinish(finish: GameServiceMessage.Finish | undefined) {
@@ -40,10 +41,10 @@ export class RoundHandlers extends RoundHandlersBase {
             balls: [result?.ball],
         };
 
-        this.store.roundData = {
+        this.store.setRoundData({
             balls: this.store.roundData?.balls?.concat(resultRoundData.balls) || resultRoundData.balls,
             drawId: result?.drawId,
-        };
+        });
     }
 
     eventHandleList = [

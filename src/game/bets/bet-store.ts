@@ -23,6 +23,7 @@ export class BetStore {
     }
 
     private _amount = 1;
+    private _isProcessingBet: boolean = false;
     freebetEnabled = false;
 
     get availableBalance() {
@@ -39,7 +40,13 @@ export class BetStore {
 
     private _lastReceivedBet: ILastReceivedBet = null;
 
-    isProcessingBet = false;
+    get isProcessingBet() {
+        return this._isProcessingBet;
+    }
+
+    set isProcessingBet(isProcessingBet: boolean) {
+        this._isProcessingBet = isProcessingBet;
+    }
 
     get lastReceivedBet() {
         return this._lastReceivedBet;
@@ -59,7 +66,7 @@ export class BetStore {
     }
 
     private _betChoice = null;
-    
+
     get betChoice() {
         return this._betChoice;
     }
@@ -67,6 +74,4 @@ export class BetStore {
     set betChoice(betChoice: string) {
         this._betChoice = betChoice;
     }
-
-   
 }

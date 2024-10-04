@@ -5,7 +5,8 @@ import { RoundHistoryStore } from "../../game/round-histories";
 import { SettlementStore } from "../../game/settlements";
 import { RoundTimeStore } from "./round-time-store";
 import { RoundOdds, RoundStore as RoundStoreBase } from "../../game/rounds";
-import { makeObservable, observable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
+import { GameServiceMessage } from "../../shared/models/game-messages";
 
 @injectable()
 export class RoundStore extends RoundStoreBase {
@@ -19,9 +20,9 @@ export class RoundStore extends RoundStoreBase {
         @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
         public drawId: number = 0,
         public odds = {},
-        public roundData = {
+        public roundData: GameServiceMessage.TurnBaseGameRoundData = {
             balls: [],
-            drawId: 0
+            drawId: 0,
         }
     ) {
         super(gameConfigStore, roundHistoryStore, roundTimeStore, mainPlayerStore, settlementStore);
@@ -33,14 +34,19 @@ export class RoundStore extends RoundStoreBase {
         makeObservable(this, {
             drawId: observable,
             odds: observable,
-            roundData: observable
+            roundData: observable,
+            setRoundData: action,
         });
+    }
+
+    setRoundData(roundData: GameServiceMessage.TurnBaseGameRoundData) {
+        this.roundData = roundData;
     }
 
     override get roundOdds(): RoundOdds {
         return {
             odds: this.odds,
-            fractional: this.mainPlayerStore.fractionalOddsFormat
-        }
+            fractional: this.mainPlayerStore.fractionalOddsFormat,
+        };
     }
 }
