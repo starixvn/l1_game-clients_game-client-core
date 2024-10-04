@@ -93,8 +93,9 @@ export namespace ErrorUtils {
         SB1934: "not_enough_spin",
         SB1935: "invalid_bet",
         SB1939: "message_hedge_bet",
-        SB1940: "message_invalid_cashout",
-        SB1941: "message_invalid_value_cashout",
+        SB1940: "SabaNumber.message_max_payout",
+        SB1941: "SabaNumber.message_placebet_next_draw",
+        SB1942: "SabaNumber.message_draw_maxbet",
     };
 
     const CommonErrorList = [
@@ -129,6 +130,9 @@ export namespace ErrorUtils {
         }
 
         const errorMessage = ErrorCodeDictionary[errorCode];
+        if (isXDErrorCode(errorCode)) {
+            return errorMessage;
+        }
 
         return `${keyPrefix}.${errorMessage}`;
     };
@@ -158,7 +162,7 @@ export namespace ErrorUtils {
         }
 
         if (!!notice.gameTypeId) {
-            Object.assign(option, { gameName: Translator.gameTranslate("game_name") });
+            Object.assign(option, { gameName: Translator.translate(`${gameName}.game_name`) });
         }
 
         if (!!notice.minBet) {
@@ -180,5 +184,10 @@ export namespace ErrorUtils {
     export const isSessionTimeoutError = (errorCode: string): boolean => {
         const expectedTokenErrorCodes = ["1001", "1002", "SB0002", "SB0011", "7001"];
         return expectedTokenErrorCodes.includes(errorCode);
+    };
+
+    const isXDErrorCode = (errorCode: string) => {
+        const xDErrorCodes = ["SB1940", "SB1941", "SB1942"];
+        return xDErrorCodes.includes(errorCode);
     };
 }
