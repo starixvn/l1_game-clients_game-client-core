@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import { GameServiceMessage } from "../../shared";
 import { RoundStore } from "./round-store";
 import { GameSetting } from "../game-configs/game-setting";
-import { RoundTimeStore } from "./round-time-store";
+import { RoundTimeStore, TURN_ROUND_STATE } from "./round-time-store";
 import { GameTurnBaseServiceMessage } from "../game-turn-base-messages";
 import { RoundHandlers as RoundHandlersBase } from "../../game/rounds";
 import { BetStore } from "../../game/bets";
@@ -24,7 +24,11 @@ export class RoundHandlers extends RoundHandlersBase {
     }
 
     handleDrawId(drawId: number) {
-        this.store.setClientRoundId(drawId);
+        if (this.roundTimeStore.isDisplayingResultState) {
+            this.store.setClientRoundId(drawId - 1);
+        } else {
+            this.store.setClientRoundId(drawId);
+        }
     }
 
     handleOdds(odds: GameServiceMessage.Odds) {

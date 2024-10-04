@@ -47,6 +47,10 @@ export class RoundTimeStore extends RoundTimeStoreBase {
         return false;
     }
 
+    get isDisplayingResultState() {
+        return this.roundState === ROUND_STATE.SHOW_ANIMATION_RESULT || this.roundState === ROUND_STATE.SHOW_RESULT;
+    }
+
     getRemainingTime(totalRoundTime: number): number {
         const turnRemainingTime = this.getRoundRemainingTimeToCalculateTurnRemainingTime(totalRoundTime) % this._durations.wholeTurn;
 
