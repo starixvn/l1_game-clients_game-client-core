@@ -1,6 +1,7 @@
 import { Container } from "inversify";
 import * as Auth from "../auth";
 import * as ChipSetting from "../chip-setting";
+import { GameSetting as OldGameSetting } from "../game/game-configs/game-setting";
 import * as SiteConfigs from "../configs";
 import {
     RoundStore as OldRoundStore,
@@ -23,10 +24,13 @@ import { BetHandler as OldBetHandler, BetResponseHandlers as OldBetResponseHandl
 import { BetHandler, BetResponseHandlers } from "./bets";
 import { RoundHistoryStore } from "./round-histories";
 import { SettlementStore, TurnBaseSettlementUIHandlers } from "./settlements";
+import { GameSetting } from "./game-configs";
 
 export const features = [Auth, Players, SiteConfigs, GameTurnBase, Notification, UnderMaintenance, ChipSetting];
 
 export const onContainerCreated = (container: Container) => {
+    container.bind(OldGameSetting).toService(GameSetting);
+
     container.bind(OldRoundStore).toService(RoundStore);
 
     container.bind(OldRoundTimeStore).toService(RoundTimeStore);
