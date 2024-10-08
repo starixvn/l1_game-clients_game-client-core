@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
-import UserServiceClient from "@sg/sg-user-service-client";
-import Auth from "@sg/sg-user-service-client/dist/auth";
-import Setting from "@sg/sg-user-service-client/dist/setting";
+import UserServiceClient from "sc-user-service-client";
+import Auth from "sc-user-service-client/dist/auth";
+import Setting from "sc-user-service-client/dist/setting";
 import { SiteConfigs } from "../configs";
 import { UrlUtils } from "../shared/utils";
 

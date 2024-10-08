@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { ManagerOptions, Socket, SocketOptions, io } from "socket.io-client";
-import * as MsgpackParser from "socket.io-msgpack-parser";
+import { Socket, io } from "socket.io-client/dist/socket.io.js";
+import { io as ioMsgPack } from "socket.io-client/dist/socket.io.msgpack.min.js";
 import { AuthStore, ISessionInfo } from "../../auth";
 import { SiteConfigs } from "../../configs/site-configs";
 import { GameClientEmitMessage, Mediator } from "../../shared";
@@ -26,8 +26,6 @@ export interface ISocketOption {
     upgrade?: boolean;
     path?: string;
     extraHeaders?: object;
-    parser?: any;
-    auth?: any;
 }
 
 @injectable()
@@ -59,13 +57,12 @@ export class ConnectionStore {
             upgrade: false,
             forceNew: true,
         };
-        const options = { ...optionsDefault, ...customizeOptions } as Partial<ManagerOptions & SocketOptions>;
+        const options = { ...optionsDefault, ...customizeOptions };
 
         if (this.siteConfigs.enableMsgpackParserAllGames) {
-            options.parser = MsgpackParser;
-            this.connection = io(socketUri, options);
+            this.connection = ioMsgPack(options.socketUri, options);
         } else {
-            this.connection = io(socketUri, options);
+            this.connection = io(options.socketUri, options);
         }
 
         this.initBaseListener();

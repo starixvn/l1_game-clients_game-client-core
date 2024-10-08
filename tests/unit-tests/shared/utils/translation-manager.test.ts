@@ -19,7 +19,7 @@ describe("TranslationManager", () => {
             tolgeeUrl: "",
             onLoaded: jest.fn(),
             availableLanguages: ["en", "vi"],
-            gameNamespaces: ["GameNamespace"],
+            gameNamespace: "GameNamespace",
             getStaticData: (languageId: string) => {
                 if (languageId == "vi") {
                     return {
@@ -148,7 +148,7 @@ describe("TranslationManager", () => {
 
     it("should use gameNamespace when calling gameTranslate", () => {
         //Arrange
-        translationManager.options.gameNamespaces = ["GameNamespace"];
+        translationManager.options.gameNamespace = "GameNamespace";
         const key = "key";
         const options: InterpolationOptions = { var: "value" };
         translationManager.options.getStaticData = (languageId: string) => {
@@ -169,7 +169,7 @@ describe("TranslationManager", () => {
 
     it('should use "Common" namespace when calling commonTranslate', () => {
         //Arrange
-        translationManager.options.gameNamespaces = ["GameNamespace"];
+        translationManager.options.gameNamespace = "GameNamespace";
         const key = "key";
         const options: InterpolationOptions = { var: "value" };
         translationManager.options.getStaticData = (languageId: string) => {

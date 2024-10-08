@@ -1,20 +1,24 @@
-import { ReCheckInResponse, UMInfo } from "@sg/sg-user-service-client/dist/auth";
 import { inject, injectable } from "inversify";
+import { ReCheckInResponse, UMInfo } from "sc-user-service-client/dist/auth";
 import { NoticeInfo, NoticeStore, NoticeType } from "../game/notices/notice-store";
 import { PlayerSelectionHandlers } from "../game/player-selections";
+import { UserSettingData } from "../game/user-settings/user-setting-store";
+import { NotificationHandlers } from "../notification/notification-handlers";
 import { MainPlayerStore } from "../players";
 import { GameServiceMessage, IHandler, utils } from "../shared";
 import { AppTypes } from "../shared/constants/app-type";
 import { BrowserDomUtils } from "../shared/utils/browser-dom-utils";
+import { GameUtils } from "../shared/utils/game-utils";
 import { Translator } from "../shared/utils/localization-manager";
 import { sentryLogger } from "../shared/utils/logger";
 import { NameGenerator } from "../shared/utils/name-generator";
 import { StorageManager, localStorageKeys } from "../shared/utils/storage-manager";
 import { AppStore } from "./../app/app-store";
+import { URLParams } from "./../shared/constants/url-params";
 import { AuthStore, ISessionInfo } from "./auth-store";
 import { UserService } from "./user-service";
 
-const { ErrorUtils, AuthUtils } = utils;
+const { ErrorUtils } = utils;
 
 interface IAuthorizeResponse {
     errorCode?: string;
@@ -24,16 +28,6 @@ interface IAuthorizeResponse {
     umInfo?: UMInfo;
     authorized?: boolean;
     user?: GameServiceMessage.User;
-}
-
-export interface ISSOInfo {
-    token?: string;
-    ref?: string;
-    returnUrl?: string;
-    appType?: number;
-    parentUrl?: string;
-    isUserGesture?: string;
-    operator?: string;
 }
 
 export namespace AuthHandlers {
@@ -55,7 +49,8 @@ export namespace AuthHandlers {
             @inject(AppStore) private readonly appStore: AppStore,
             @inject(MainPlayerStore) private readonly mainPlayerStore: MainPlayerStore,
             @inject(UserService) private readonly userService: UserService,
-            @inject(SignOut) private readonly signOutHandler: SignOut
+            @inject(SignOut) private readonly signOutHandler: SignOut,
+            @inject(NotificationHandlers) private readonly notificationHandlers: NotificationHandlers
         ) {}
 
         async handle({ session = "", username = "" }) {
@@ -63,15 +58,16 @@ export namespace AuthHandlers {
                 const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
                 this.session = session || sessionInfo?.session;
                 this.username = username || sessionInfo?.username;
-
                 const response = (await this.userService.authorize(this.session, this.username)) as IAuthorizeResponse;
-
                 if (response.isUM) {
                     this.appStore.setUM(response.umInfo);
-                } else if (response.isSuccessful === false) {
-                    this.signOutHandler.handle();
                 } else {
-                    await this.handleAuthorizedResponse(response);
+                    if (response.isSuccessful !== undefined && !response.isSuccessful) {
+                        this.signOutHandler.handle();
+                    } else {
+                        await this.handleAuthorizedResponse(response);
+                        this.notificationHandlers.handle(sessionInfo);
+                    }
                 }
             } catch (err) {
                 sentryLogger.logError(err);
@@ -79,25 +75,20 @@ export namespace AuthHandlers {
         }
 
         private async handleAuthorizedResponse(response: IAuthorizeResponse) {
-            if (this.needAutoGenerateNickname(response?.authorized)) {
+            if (this.needAutoGenerateNickname(response.authorized)) {
                 await this.autoGenerateName();
-                return;
+            } else {
+                if (!response.authorized && !response.user) {
+                    this.authStore.isShowSignName = true;
+                } else {
+                    response.user && this.mainPlayerStore.setAuthorizeStore(response.user);
+                    this.authStore.isAuthorized = response.authorized;
+                }
             }
-
-            if (!response?.authorized && !response?.user) {
-                this.authStore.isShowSignName = true;
-                return;
-            }
-
-            if (response?.user) {
-                this.mainPlayerStore.setAuthorizeStore(response.user);
-            }
-
-            this.authStore.isAuthorized = response?.authorized;
         }
 
         private needAutoGenerateNickname(isAuthorized: boolean) {
-            return !isAuthorized && this.appStore?.isAutoCreateNickname;
+            return !isAuthorized && this.appStore.isAutoCreateNickname;
         }
 
         private async autoGenerateName() {
@@ -121,25 +112,15 @@ export namespace AuthHandlers {
                 message: text,
                 title: Translator.commonTranslate("notice"),
                 type: NoticeType.Error,
-                onClose: null,
+                onClose: () => {},
                 showBtnConfirmButton: true,
                 noticeInfo: NoticeInfo.SignName,
             });
         }
-
-        async verifySessionFromStorage() {
-            const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
-            this.session = sessionInfo?.session;
-            this.username = sessionInfo?.username;
-
-            const response = (await this.userService.authorize(this.session, this.username)) as IAuthorizeResponse;
-
-            return response?.isSuccessful && response?.authorized;
-        }
     }
 
     @injectable()
-    export class SSO implements IHandler<ISSOInfo> {
+    export class SSO implements IHandler<URLSearchParams> {
         constructor(
             @inject(AuthStore) private readonly authStore: AuthStore,
             @inject(AppStore) private readonly appStore: AppStore,
@@ -150,52 +131,58 @@ export namespace AuthHandlers {
             private readonly playerSelectionClearHandler: PlayerSelectionHandlers.ClearHandlers
         ) {}
 
-        async handle(ssoInfo: ISSOInfo) {
+        async handle(urlParams: URLSearchParams) {
             try {
-                if (!this.isValidSessionStorage(ssoInfo)) {
+                if (!this.isValidSessionStorage(urlParams)) {
                     return;
                 }
 
-                await this.handleAuthorizeWithParams(ssoInfo);
+                await this.handleAuthorizeWithURLParams(urlParams);
             } catch (err) {
                 this.authStore.ssoErrorMessage = Translator.commonTranslate("splash_connection_lost");
                 sentryLogger.logError(err);
             }
         }
 
-        private isValidSessionStorage(ssoInfo: ISSOInfo) {
+        private isValidSessionStorage(urlParams: URLSearchParams) {
             const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
-            const isSessionExpired = AuthUtils.verifySession(sessionInfo);
-            if (isSessionExpired && !ssoInfo.token) {
+            const isSessionExpired = verifySession(sessionInfo);
+            if (isSessionExpired && !(urlParams?.has(URLParams.token) || urlParams?.has(URLParams.params))) {
                 this.signOutHandler.handle();
-
                 return false;
             }
 
             return true;
         }
 
-        private async handleAuthorizeWithParams(ssoInfo: ISSOInfo) {
-            const storageToken = StorageManager.get(localStorageKeys?.token);
-            if (ssoInfo?.token && ssoInfo?.token != storageToken) {
-                StorageManager.set(localStorageKeys.token, ssoInfo?.token);
-
+        private async handleAuthorizeWithURLParams(urlParams: URLSearchParams) {
+            if (urlParams?.has(URLParams.token)) {
                 this.playerSelectionClearHandler.handle();
-                this.appStore.setDataStore(ssoInfo);
-                const token = ssoInfo?.token;
-                const system = +ssoInfo?.appType || AppTypes.Direct;
+                this.appStore.setURLStore(urlParams);
+                const token = urlParams.get(URLParams.token);
+                const system = +urlParams.get(URLParams.appType) || AppTypes.Club;
 
-                if (ssoInfo?.operator) {
-                    StorageManager.set(localStorageKeys.operator, ssoInfo?.operator);
+                if (urlParams?.has(URLParams.returnUrl)) {
+                    this.appStore.setURLStore(urlParams);
                 }
+
+                if (urlParams?.has(URLParams.operator)) {
+                    StorageManager.set(localStorageKeys.operator, urlParams.get(URLParams.operator));
+                }
+
                 await this.handleSSOAndAuthorize(token, system);
                 BrowserDomUtils.postMessageToParent({ hasSSO: true });
             } else {
-                this.authStore.setAuthStoreFromStorage(StorageManager.get(localStorageKeys.session) as ISessionInfo);
-                this.appStore.loadReturnUrlAnd();
-                this.appStore.loadDirectMode();
-                this.appStore.loadApp();
-                await this.handleAuthorize();
+                if (urlParams?.has(URLParams.params)) {
+                    this.playerSelectionClearHandler.handle();
+                    this.handleAuthorizeFromMainClient(urlParams);
+                } else {
+                    this.authStore.setAuthStoreFromStorage(StorageManager.get(localStorageKeys.session) as ISessionInfo);
+                    this.appStore.loadReturnUrlAnd();
+                    this.appStore.loadDirectMode();
+                    this.appStore.loadApp();
+                    await this.handleAuthorize();
+                }
             }
         }
 
@@ -214,7 +201,19 @@ export namespace AuthHandlers {
             }
         }
 
-        private saveDataSSOInStorage() {
+        private async handleAuthorizeFromMainClient(urlParams: URLSearchParams) {
+            const params = GameUtils.base64Decode(urlParams.get(URLParams.params));
+            const urlSearchParams = new URLSearchParams(params);
+            this.authStore.setAuthStoreFromUrlParam(urlSearchParams);
+            this.appStore.setURLStore(urlSearchParams);
+            this.saveDataSSOInStorage(urlSearchParams);
+            const session = urlSearchParams.get(URLParams.session);
+            const username = urlSearchParams.get(URLParams.username);
+
+            await this.handleAuthorize(session, username);
+        }
+
+        private saveDataSSOInStorage(urlParams?: URLSearchParams) {
             this.clearDataSSOInStorage();
             StorageManager.set(localStorageKeys.session, this.authStore.getSessionInfo());
             if (this.appStore.isDirectMode) {
@@ -222,6 +221,24 @@ export namespace AuthHandlers {
             }
             this.appStore.saveReturnUrl();
             this.appStore.saveIsApp();
+            if (urlParams) {
+                const playerSetting: UserSettingData = {
+                    musicEnable: urlParams.has(URLParams.musicEnable) ? urlParams.get(URLParams.musicEnable) === "true" : true,
+                    sfxEnable: urlParams.has(URLParams.sfxEnable) ? urlParams.get(URLParams.sfxEnable) === "true" : true,
+                };
+                StorageManager.set(localStorageKeys.playerSetting, playerSetting);
+
+                if (urlParams.has(URLParams.gameIdsSupportBoostedOddsForInstantSite)) {
+                    StorageManager.set(
+                        localStorageKeys.gameIdsSupportBoostedOddsForInstantSite,
+                        urlParams.get(URLParams.gameIdsSupportBoostedOddsForInstantSite)
+                    );
+                }
+
+                if (urlParams.has(URLParams.operator)) {
+                    StorageManager.set(localStorageKeys.operator, urlParams.get(URLParams.operator));
+                }
+            }
         }
 
         private clearDataSSOInStorage() {
@@ -232,17 +249,26 @@ export namespace AuthHandlers {
         }
 
         private async handleAuthorize(session?: string, username?: string) {
+            this.clearQueryStringOnUrl();
             if (!session || !username) {
                 const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
                 if (!sessionInfo) {
                     this.signOutHandler.handle();
-
                     return;
                 }
                 session = sessionInfo.session;
                 username = sessionInfo.username;
             }
             await this.authorizeHandler.handle({ session, username });
+        }
+
+        private clearQueryStringOnUrl() {
+            try {
+                BrowserDomUtils.postMessageToParent({ clearQueryStringOnUrl: true });
+                history.pushState(null, "", location.href.split("?")[0]);
+            } catch (ex) {
+                console.log(ex);
+            }
         }
     }
 
@@ -301,7 +327,7 @@ export namespace AuthHandlers {
         private async handleRecheckIn() {
             try {
                 const sessionInfo = StorageManager.get(localStorageKeys.session) as ISessionInfo;
-                const isSessionExpired = AuthUtils.verifySession(sessionInfo);
+                const isSessionExpired = verifySession(sessionInfo);
 
                 if (isSessionExpired) {
                     this.signOutHandler.handle();
@@ -349,4 +375,26 @@ export namespace AuthHandlers {
             StorageManager.remove(localStorageKeys.session);
         }
     }
+
+    const SESSION_EXPIRED_TIMEOUT_MINUTES = 19.8;
+    const verifySession = (sessionInfo: ISessionInfo) => {
+        let isSessionExpired = true;
+
+        try {
+            if (sessionInfo && sessionInfo.ssoTime) {
+                const now: Date = new Date();
+                const lastRecheckIn: Date = new Date(sessionInfo.ssoTime);
+                const differenceInMinutes = Math.abs(now.getTime() - lastRecheckIn.getTime()) / (1000 * 60);
+
+                if (differenceInMinutes <= SESSION_EXPIRED_TIMEOUT_MINUTES) {
+                    isSessionExpired = false;
+                }
+            }
+        } catch (ex) {
+            sentryLogger.logError(ex);
+            console.log(ex);
+        }
+
+        return isSessionExpired;
+    };
 }

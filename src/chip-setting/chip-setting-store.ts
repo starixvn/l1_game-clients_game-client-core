@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { makeAutoObservable } from "mobx";
-import { ChipInfo } from "@sg/sg-user-service-client/dist/setting";
+import { ChipInfo } from "sc-user-service-client/dist/setting";
 
 export type TChipSetting = {
     [value: number]: string;

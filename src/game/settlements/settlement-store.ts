@@ -1,46 +1,31 @@
 import { inject, injectable } from "inversify";
 import * as _ from "lodash";
-import { action, computed, makeObservable, observable } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { MainPlayerStore } from "../../players/main-player-store";
 import { GameServiceMessage } from "../../shared";
 import { NumberUtils } from "../../shared/utils/number-utils";
 
 @injectable()
 export class SettlementStore {
+    constructor(@inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore) {
+        makeAutoObservable(this);
+    }
+
+    roundId = 0;
+    result: GameServiceMessage.TResult = null;
+    settlementResult: GameServiceMessage.TSettlementResult = null;
     private _winningPlayers: GameServiceMessage.TWinningPlayers = null;
+    private _isFinishedShowResult = false;
+    md5Result: GameServiceMessage.ResultHash = null;
+    currentFinish: GameServiceMessage.Finish = null;
+    pf: GameServiceMessage.ProvablyFair = null;
 
-    constructor(
-        @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
-        public roundId = 0,
-        public result: GameServiceMessage.TResult = null,
-        public settlementResult: GameServiceMessage.TSettlementResult = null,
-        public isFinishedShowResult = false,
-        public md5Result: GameServiceMessage.ResultHash = null,
-        public currentFinish: GameServiceMessage.Finish = null,
-        public pf: GameServiceMessage.ProvablyFair = null,
-    ) {
-        this.roundId = roundId;
-        this.result = result;
-        this.settlementResult = settlementResult;
-        this.isFinishedShowResult = isFinishedShowResult;
-        this.md5Result = md5Result;
-        this.currentFinish = currentFinish;
-        this.pf = pf;
+    public get isFinishedShowResult() {
+        return this._isFinishedShowResult;
+    }
 
-        makeObservable(this, {
-            roundId: observable,
-            result: observable,
-            settlementResult: observable,
-            md5Result: observable,
-            currentFinish: observable,
-            pf: observable,
-            isFinishedShowResult: observable,
-
-            winningPlayers: computed,
-
-            setSettlementStore: action,
-            resetSettlementStore: action
-        });
+    public set isFinishedShowResult(value) {
+        this._isFinishedShowResult = value;
     }
 
     get winningPlayers() {

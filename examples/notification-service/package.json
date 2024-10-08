@@ -1,0 +1,28 @@
+{
+    "name": "notification-service",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "nodemon src/server.ts ",
+        "install-then-start": "npm install && npm run start",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start-docker": "node build/server.js",
+        "tsc": "tsc",
+        "build": "tsc"
+    },
+    "dependencies": {
+        "cors": "2.8.5",
+        "express": "^4.18.1",
+        "nodemon": "2.0.22",
+        "sc-base-database": "^1.9.2",
+        "sc-common": "^1.8.1",
+        "socket.io": "4.6.1",
+        "socket.io-msgpack-parser": "^3.0.1"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.13",
+        "@types/express": "^4.17.13",
+        "@types/node": "18.15.11",
+        "concurrently": "^8.0.1",
+        "typescript": "^4.7.4"
+    }
+}

@@ -112,7 +112,7 @@ export namespace NoticeErrorsHandlers {
         }
 
         showNotice() {
-            const gameName = Translator.translate(`${this.gameSetting.name}.game_name`);
+            const gameName = Translator.gameTranslate("game_name");
             const message = Translator.getMessageFollowSystem(this.authStore.system, "message_lost_game_connection", { gameName });
             const backToLobby = () => {
                 this.backToOperatorLobbyHandler.handle();

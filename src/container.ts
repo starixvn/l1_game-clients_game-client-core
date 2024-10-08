@@ -1,12 +1,9 @@
 import { Container } from "inversify";
 
-import * as App from "./app";
 import * as Auth from "./auth";
-import * as GameConfigs from "./game/game-configs";
 import * as ChipSetting from "./chip-setting";
-import * as Configs from "./configs";
+import * as SiteConfigs from "./configs";
 import * as Game from "./game";
-import * as GameTurnBase from "./game-turn-base";
 import * as Notification from "./notification";
 import * as Players from "./players";
 import type { AnyConstructor } from "./shared";
@@ -27,7 +24,7 @@ export interface IContainerOptions {
 
 function serializeOptions(input: IContainerOptions): IContainerOptions {
     const defaultOptions: IContainerOptions = {
-        onContainerCreated: () => { },
+        onContainerCreated: () => {},
         disabledFeatures: [],
         globalContainer: null,
         enabledFeatures: [],
@@ -36,7 +33,7 @@ function serializeOptions(input: IContainerOptions): IContainerOptions {
     return Object.assign(defaultOptions, input);
 }
 
-export const defaultFeatures = [Auth, Players, Configs, Game, Notification, UnderMaintenance, ChipSetting];
+export const defaultFeatures = [Auth, Players, SiteConfigs, Game, Notification, UnderMaintenance, ChipSetting];
 
 export function getContainer(options: IContainerOptions = {}) {
     const { onContainerCreated, disabledFeatures, globalContainer, enabledFeatures, features } = serializeOptions(options);
@@ -67,57 +64,3 @@ export function buildObserverContainer(container: Container) {
         resolve: (ctor: AnyConstructor) => container.get(ctor),
     };
 }
-
-const getCommonStore = (sharedContainer: Container) => {
-    const appStore = sharedContainer.get(App.AppStore);
-    const authStore = sharedContainer.get(Auth.AuthStore);
-    const notificationStore = sharedContainer.get(Notification.NotificationStore);
-    const mainPlayerStore = sharedContainer.get(Players.MainPlayerStore);
-    return {
-        appStore,
-        authStore,
-        notificationStore,
-        mainPlayerStore,
-    };
-};
-
-export function getGameContainer(
-    gameSetting: GameConfigs.GameSetting,
-    siteConfig: Configs.SiteConfigs,
-    sharedContainer: Container
-): IContainerOptions {
-    const { appStore, authStore, notificationStore, mainPlayerStore } = getCommonStore(sharedContainer);
-    return {
-        onContainerCreated: (container) => {
-            container.bind(GameConfigs.GameSetting).toConstantValue(gameSetting);
-            container.bind(Configs.SiteConfigs).toConstantValue(siteConfig);
-
-            container.bind(App.AppStore).toConstantValue(appStore);
-            container.bind(Auth.AuthStore).toConstantValue(authStore);
-            container.bind(Notification.NotificationStore).toConstantValue(notificationStore);
-            container.bind(Players.MainPlayerStore).toConstantValue(mainPlayerStore);
-        },
-    };
-}
-
-export const getGameTurnBaseContainer = (
-    gameSetting: GameTurnBase.GameConfigs.GameSetting,
-    siteConfig: Configs.SiteConfigs,
-    sharedContainer: Container
-): IContainerOptions => {
-    const { appStore, authStore, notificationStore, mainPlayerStore } = getCommonStore(sharedContainer);
-    return {
-        onContainerCreated: (container) => {
-            container.bind(GameTurnBase.GameConfigs.GameSetting).toConstantValue(gameSetting);
-            container.bind(Configs.SiteConfigs).toConstantValue(siteConfig);
-
-            container.bind(App.AppStore).toConstantValue(appStore);
-            container.bind(Auth.AuthStore).toConstantValue(authStore);
-            container.bind(Notification.NotificationStore).toConstantValue(notificationStore);
-
-            container.bind(Players.MainPlayerStore).toConstantValue(mainPlayerStore);
-
-            GameTurnBase.onContainerCreated(container);
-        },
-    };
-};

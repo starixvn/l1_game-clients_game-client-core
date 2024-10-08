@@ -1,5 +1,6 @@
 import { stub } from "jest-auto-stub";
 import { io } from "socket.io-client/dist/socket.io.js";
+import { io as ioMsgPack } from "socket.io-client/dist/socket.io.msgpack.min.js";
 import { AuthStore } from "../../../../src/auth/auth-store";
 import { ConnectionStore, events } from "../../../../src/game/connection";
 import { GameClientEmitMessage, Mediator } from "../../../../src/shared";

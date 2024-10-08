@@ -27,7 +27,7 @@ export namespace WebViewPFVerificationHandlers {
             const domain = UrlUtils.buildGameGuideUrl(this.siteConfigs);
             const params = {
                 gId: this.gameSetting.id,
-                displayName: Translator.translate(`${this.gameSetting.name}.game_name`),
+                displayName: Translator.gameTranslate("game_name"),
                 t: "pf",
                 v: Date.now(),
             };

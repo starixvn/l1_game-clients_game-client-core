@@ -9,8 +9,8 @@ describe("UrlUtils", () => {
             writable: true,
         });
 
-        Object.defineProperty(siteConfigs, "serverDomain", {
-            value: "unittest.com",
+        Object.defineProperty(siteConfigs, "serverDomainMapper", {
+            value: { "www.unittest.com": "unittest.com" },
             writable: true,
         });
 
@@ -60,7 +60,7 @@ describe("UrlUtils", () => {
     });
 
     describe("getRootDomain", () => {
-        it("should return root domain from serverDomain if available", () => {
+        it("should return root domain from serverDomainMapper if available", () => {
             //Arrange
             const expected = "unittest.com";
 
@@ -147,7 +147,9 @@ describe("UrlUtils", () => {
                 isDev: true,
                 systemType: "ENV1",
                 ssl: false,
-                serverDomain: "localhost:5002",
+                serverDomainMapper: {
+                    localhost: "localhost:5002",
+                },
                 subDomain: "",
                 env: "LOCAL",
                 subGuideDomain: "test-guide",
@@ -171,7 +173,9 @@ describe("UrlUtils", () => {
                 isDev: true,
                 systemType: "ENV1",
                 ssl: false,
-                serverDomain: "localhost:5002",
+                serverDomainMapper: {
+                    localhost: "localhost:5002",
+                },
                 subDirectory: "exz",
                 subDomain: "",
                 env: "LOCAL",
@@ -197,7 +201,9 @@ describe("UrlUtils", () => {
                 isDev: true,
                 systemType: "ENV1",
                 ssl: false,
-                serverDomain: "localhost:5002",
+                serverDomainMapper: {
+                    localhost: "localhost:5002",
+                },
                 subDirectory: undefined,
                 subDomain: "",
                 env: "LOCAL",

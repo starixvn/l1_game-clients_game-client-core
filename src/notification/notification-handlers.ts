@@ -2,10 +2,9 @@ import { inject, injectable } from "inversify";
 import { SiteConfigs } from "../configs";
 import { UrlUtils } from "../shared/utils";
 import { io } from "socket.io-client/dist/socket.io.js";
-import * as MsgpackParser from "socket.io-msgpack-parser";
+import { io as ioMsgPack } from "socket.io-client/dist/socket.io.msgpack.min.js";
 import { ISessionInfo } from "../auth";
 import { NotificationStore } from "./notification-store";
-import { ISocketOption } from "../game/connection";
 
 @injectable()
 export class NotificationHandlers {
@@ -18,7 +17,7 @@ export class NotificationHandlers {
         const { isDev, enableMsgpackParserOnNotification, subDirectory } = this.siteConfigs;
         const socketUri = isDev ? this.siteConfigs.notificationServiceUrlDev : UrlUtils.buildUrl("http", "/", this.siteConfigs);
 
-        const options: ISocketOption = {
+        const options = {
             path: `/${UrlUtils.getSubDirectory(subDirectory)}${isDev ? "" : "notification/"}socket.io`,
             socketUri,
             transports: ["websocket"],
@@ -30,8 +29,7 @@ export class NotificationHandlers {
             },
         };
         if (enableMsgpackParserOnNotification) {
-            options.parser = MsgpackParser;
-            this.notificationStore.connection = io(options.socketUri, options);
+            this.notificationStore.connection = ioMsgPack(options.socketUri, options);
         } else {
             this.notificationStore.connection = io(options.socketUri, options);
         }

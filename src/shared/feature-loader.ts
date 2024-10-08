@@ -75,7 +75,6 @@ export interface IFeatureLoaderOptions {
 
 export function loadFeatures({ container, disabledFeatures, enabledFeatures, features }: IFeatureLoaderOptions) {
     const loadedFeatures = getAllFeatures(...features);
-    console.debug(`avail features: ${loadedFeatures.map(({ FEATURE_NAME }) => FEATURE_NAME).join(", ")}`);
     const filteredFeatures = loadedFeatures.filter(({ FEATURE_NAME }) =>
         enabledFeatures.length ? enabledFeatures.includes(FEATURE_NAME) : !disabledFeatures.includes(FEATURE_NAME)
     );

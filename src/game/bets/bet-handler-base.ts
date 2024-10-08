@@ -25,26 +25,21 @@ export class BetHandlerBase {
 
     isValidBet(amount: number) {
         if (this.isInPhasePreventBet()) {
-            return this.invalidateBet();
+            return false;
         }
 
         if (this.betStore.isProcessingBet) {
             this.showWarningProcessingBet();
-            return this.invalidateBet();
+            return false;
         }
 
         const availableBalance = this.betStore.availableBalance;
         if (this.gameSetting?.validateBalanceWhenBet && amount > availableBalance) {
             this.showNoticePlaceBetFailure();
-            return this.invalidateBet();
+            return false;
         }
 
         return true;
-    }
-
-    invalidateBet(): boolean {
-        this.betStore.validBet = { value: false };
-        return false;
     }
 
     getBetAmount() {
@@ -71,7 +66,6 @@ export class BetHandlerBase {
         const amount = data.amount;
         if (this.isValidBet(amount)) {
             this.betStore.isProcessingBet = true;
-            this.betStore.validBet = { value: false };
             this.connectionStore.send(GameClientEmitMessage.Bet.eventName, data);
             this.retryGameHandler.handle();
         }

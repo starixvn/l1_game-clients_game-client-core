@@ -1,4 +1,4 @@
-import { SSOResponse } from "@sg/sg-user-service-client/dist/auth";
+import { SSOResponse } from "sc-user-service-client/dist/auth";
 import { AuthStore, ISessionInfo } from "../../../src/auth";
 import { StorageManager, localStorageKeys } from "../../../src/shared/utils/storage-manager";
 

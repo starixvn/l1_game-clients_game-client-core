@@ -4,7 +4,9 @@ export const siteConfigs: gc.Configs.SiteConfigs = {
     isDev: true,
     systemType: "SG",
     ssl: false,
-    serverDomain: "localhost:5002",
+    serverDomainMapper: {
+        localhost: "localhost:5002",
+    },
     subDomain: "",
     env: "LOCAL",
     subGuideDomain: "l1-guide",

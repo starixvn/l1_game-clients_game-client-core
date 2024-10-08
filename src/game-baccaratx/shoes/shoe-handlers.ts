@@ -41,7 +41,7 @@ export class ShoeHandlers implements IMultipleHandlers {
         this.shoeStore.newShoePhase = true;
         this.dialogsStore.forceClosed = {};
         this.resetForNewShoe();
-        this.roundStore.setClientRoundId(this.roundStore.clientRoundId + 1);
+        this.roundStore.clientRoundId = this.roundStore.clientRoundId + 1;
         this.handleShowPopups();
     }
     handleShowPopups() {

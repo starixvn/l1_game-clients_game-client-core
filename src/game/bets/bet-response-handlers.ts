@@ -22,27 +22,17 @@ export class BetResponseHandlers implements IMultipleHandlers {
     handleBetResponse(endBet: number) {
         this.stopProcessingBetAndClearInterval();
         this.betStore.lastReceivedBet = { value: endBet, isAnimated: true };
-        endBet > 0 && (this.betStore.validBet = { value: true });
     }
 
     stopProcessingBetAndClearInterval() {
         this.betStore.isProcessingBet = false;
-        this.betStore.validBet = { value: false };
         this.retryGameHandler.clearInterval();
-    }
-
-    handleBetChoice(betChoice: string) {
-        this.betStore.betChoice = betChoice;
     }
 
     eventHandleList = [
         {
             name: GameServiceMessage.BetResponse.eventName,
             handle: this.handleBetResponse,
-        },
-        {
-            name: GameServiceMessage.betChoice,
-            handle: this.handleBetChoice,
         },
     ];
 }

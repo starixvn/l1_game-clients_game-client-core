@@ -1,7 +1,7 @@
 export class SiteConfigs {
     systemType: string;
     ssl: boolean;
-    serverDomain?: string;
+    serverDomainMapper?: { [key: string]: string };
     subDomain: string;
     env: string;
     sentryUrl?: string;

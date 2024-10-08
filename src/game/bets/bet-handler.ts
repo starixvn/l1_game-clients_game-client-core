@@ -2,15 +2,10 @@ import { injectable } from "inversify";
 
 import { BetHandlerBase } from "./bet-handler-base";
 
-export interface IBetInfo {
-    betChoice: string;
-    amount: number;
-}
-
 @injectable()
 export class BetHandler extends BetHandlerBase {
-    handle(betInfo: IBetInfo) {
-        const betData = this.createBetData(betInfo);
+    handle(betChoice: string) {
+        const betData = this.createBetData({ betChoice });
         this.handleBetData(betData);
     }
 }

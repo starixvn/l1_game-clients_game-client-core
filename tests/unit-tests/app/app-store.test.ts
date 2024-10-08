@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { UMInfo } from "@sg/sg-user-service-client/dist/auth";
+import { UMInfo } from "sc-user-service-client/dist/auth";
 import { AppStore } from "../../../src/app/app-store";
 import { BrowserDomUtils, StorageManager, localStorageKeys } from "../../../src/shared/utils";
 

@@ -5,7 +5,7 @@ import { PlayerSelection, PlayerSelectionStore } from "./player-selection-store"
 export namespace PlayerSelectionHandlers {
     @injectable()
     export class InitHandlers {
-        constructor(@inject(PlayerSelectionStore) private playerIngameSelectionStore: PlayerSelectionStore) { }
+        constructor(@inject(PlayerSelectionStore) private playerIngameSelectionStore: PlayerSelectionStore) {}
 
         async handle() {
             const settings = StorageManager.get(localStorageKeys.playerIngameSelections);
@@ -23,7 +23,7 @@ export namespace PlayerSelectionHandlers {
 
     @injectable()
     export class ChipHandlers {
-        constructor(@inject(PlayerSelectionStore) private readonly playerIngameSelectionStore: PlayerSelectionStore) { }
+        constructor(@inject(PlayerSelectionStore) private readonly playerIngameSelectionStore: PlayerSelectionStore) {}
 
         async handle(chip: number) {
             this.playerIngameSelectionStore.chip = chip;
@@ -33,7 +33,7 @@ export namespace PlayerSelectionHandlers {
 
     @injectable()
     export class ClearHandlers {
-        constructor(@inject(PlayerSelectionStore) private readonly playerIngameSelectionStore: PlayerSelectionStore) { }
+        constructor(@inject(PlayerSelectionStore) private readonly playerIngameSelectionStore: PlayerSelectionStore) {}
 
         async handle() {
             this.playerIngameSelectionStore.setDefaultValues();
