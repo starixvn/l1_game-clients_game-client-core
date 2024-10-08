@@ -49,8 +49,8 @@ export class LocalStorage implements IActionStorage {
 export class Memory implements IActionStorage {
     localMemory: any;
     constructor() {
-        window.localMemory = {};
-        this.localMemory = window.localMemory;
+        globalThis.localMemory = {};
+        this.localMemory = globalThis.localMemory;
     }
 
     remove(name: string) {
@@ -120,4 +120,5 @@ export const localStorageKeys = {
     gameUserSetting: "game-user-setting",
     permanentGameUserSetting: "permanent-game-user-setting",
     operator: "op",
+    token: "token",
 };

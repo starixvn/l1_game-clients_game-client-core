@@ -4,6 +4,7 @@ import { GameServiceMessage, IMultipleHandlers, utils } from "../../shared";
 import { RoundStore } from "../rounds";
 import { AppTypes } from "./../../shared/constants/app-type";
 import { NoticeStore } from "./notice-store";
+import { GameSetting } from "../game-configs";
 
 const { ErrorUtils } = utils;
 
@@ -15,7 +16,8 @@ export class NoticeHandlers implements IMultipleHandlers {
         @inject(NoticeStore)
         protected readonly noticeStore: NoticeStore,
         @inject(AuthStore)
-        protected readonly authStore: AuthStore
+        protected readonly authStore: AuthStore,
+        @inject(GameSetting) protected readonly gameSetting: GameSetting
     ) {}
 
     getSystem = () => {
@@ -28,7 +30,7 @@ export class NoticeHandlers implements IMultipleHandlers {
             return;
         }
 
-        const text = ErrorUtils.getErrorMessage(notice, this.getSystem());
+        const text = ErrorUtils.getErrorMessage(notice, this.getSystem(), this.gameSetting.name);
         this.noticeStore.addWarning(text);
     }
 

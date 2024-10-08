@@ -8,7 +8,7 @@ export class RoundTimeHandlers implements IMultipleHandlers {
     constructor(
         @inject(RoundTimeStore) protected readonly store: RoundTimeStore,
         @inject(RoundRunningHandlers) protected readonly roundRunningHandlers: RoundRunningHandlers
-    ) {}
+    ) { }
 
     handleRemainingTime(remainingTime: number) {
         this.roundRunningHandlers.stopRunner();

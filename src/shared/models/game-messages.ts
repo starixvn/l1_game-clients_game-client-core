@@ -258,6 +258,7 @@ export namespace GameServiceMessage {
         result?: TResult;
         settlementResult?: TSettlementResult;
         roundId?: number;
+        drawId?: number;
         winningPlayers?: TWinningPlayers;
         md5Result?: GameServiceMessage.ResultHash;
         pf?: GameServiceMessage.ProvablyFair;
@@ -265,11 +266,18 @@ export namespace GameServiceMessage {
         static eventName = "finish";
     }
 
+    export type LuckyNextResult = {
+        ball: number,
+        drawId: number
+    }
+
     export type TResult =
         | number
         | {
-              [betChoice: string]: any;
-          };
+            [betChoice: string]: any;
+        }
+        | LuckyNextResult;
+
 
     export type TSettlementResult = {
         [betChoice: string]: boolean;
@@ -401,6 +409,12 @@ export namespace GameServiceMessage {
 
         static eventName = "gameConfigs";
     }
+
+    export class TurnBaseGameRoundData {
+        drawId: number;
+        balls: number[];
+        static eventName = "roundData";
+    }
 }
 
 export namespace NotificationServiceMessage {
@@ -438,4 +452,6 @@ export namespace NotificationServiceMessage {
         promotions: Array<BoostedOddsModel>;
         static eventName = "promotions";
     }
+
+
 }

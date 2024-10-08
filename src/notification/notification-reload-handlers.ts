@@ -17,7 +17,7 @@ export namespace NotificationReloadHandlers {
 
         handle() {
             const reload = () => {
-                window.location.reload();
+                globalThis.location.reload();
             };
             this.noticeStore.addNotice({
                 message: Translator.getMessageFollowSystem(this.authStore.system, "message_new_update_available"),

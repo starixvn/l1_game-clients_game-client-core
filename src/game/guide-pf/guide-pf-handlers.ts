@@ -21,7 +21,7 @@ export class GuidePFHandlers {
             f: term,
             c: 0,
             v: Date.now(),
-            displayName: Translator.gameTranslate("game_name"),
+            displayName: Translator.translate(`${this.gameSetting.name}.game_name`),
         };
         const queryString = Object.keys(params)
             .map((key) => `${key}=${params[key]}`)

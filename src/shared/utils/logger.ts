@@ -12,17 +12,21 @@ export const sentryLogger = {
     identifier: "",
     loaded: false,
     isEnabled: () => {
-        return sentryLogger.sentryUrl && document && document.head;
+        if (typeof document !== "undefined") {
+            return sentryLogger.sentryUrl && document?.head;
+        }
+
+        return false;
     },
     loadScript: () => {
-        if (window.Sentry && !sentryLogger.loaded) {
-            window.Sentry.init({
+        if (globalThis.Sentry && !sentryLogger.loaded) {
+            globalThis.Sentry.init({
                 dsn: sentryLogger.sentryUrl,
                 environment: sentryLogger.env,
                 maxValueLength: 5000,
                 ignoreErrors,
             });
-            window.Sentry.setTag("game-client", sentryLogger.identifier);
+            globalThis.Sentry.setTag("game-client", sentryLogger.identifier);
 
             sentryLogger.loaded = true;
         }
@@ -36,18 +40,19 @@ export const sentryLogger = {
             sentryLogger.env = env;
             sentryLogger.identifier = identifier;
 
-            const sentryScript = document?.createElement("script");
-            if (sentryScript) {
-                sentryScript.setAttribute("id", "sentry-logger");
-                sentryScript.setAttribute("src", "https://browser.sentry-cdn.com/5.15.0/bundle.min.js");
-                sentryScript.setAttribute("integrity", "sha384-+ysfQckQvwCB5SppH41IScIz/Iynt2pePnJNMl+D7ZOzDJ+VYhQEuwB0pA60IDM0");
-                sentryScript.setAttribute("crossorigin", "anonymous");
-                sentryScript.onload = () => {
-                    sentryLogger.loadScript();
-                };
+            if (typeof document !== "undefined") {
+                const sentryScript = document?.createElement("script");
+                if (sentryScript) {
+                    sentryScript.setAttribute("id", "sentry-logger");
+                    sentryScript.setAttribute("src", "https://browser.sentry-cdn.com/5.15.0/bundle.min.js");
+                    sentryScript.setAttribute("integrity", "sha384-+ysfQckQvwCB5SppH41IScIz/Iynt2pePnJNMl+D7ZOzDJ+VYhQEuwB0pA60IDM0");
+                    sentryScript.setAttribute("crossorigin", "anonymous");
+                    sentryScript.onload = () => {
+                        sentryLogger.loadScript();
+                    };
+                }
+                document?.head.appendChild(sentryScript);
             }
-
-            document?.head.appendChild(sentryScript);
         } catch (err) {
             console.log(err);
         }
@@ -56,14 +61,14 @@ export const sentryLogger = {
     logInfo: (message: string) => {
         if (sentryLogger.isEnabled()) {
             sentryLogger.loadScript();
-            window.Sentry?.captureMessage(`${sentryLogger.identifier}: ${message}`);
+            globalThis.Sentry?.captureMessage(`${sentryLogger.identifier}: ${message}`);
         }
     },
 
     logError: (exception: string | Error) => {
         if (sentryLogger.isEnabled()) {
             sentryLogger.loadScript();
-            window.Sentry?.captureMessage(`${sentryLogger.identifier}: ${exception}`, "error");
+            globalThis.Sentry?.captureMessage(`${sentryLogger.identifier}: ${exception}`, "error");
         }
     },
 };

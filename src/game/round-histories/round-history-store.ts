@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { makeAutoObservable, when } from "mobx";
+import { action, computed, makeObservable, observable, when } from "mobx";
 import { GameServiceMessage } from "../../shared";
 import { GameSetting } from "../game-configs";
 import { ROUND_STATE, RoundTimeStore } from "../rounds/round-time-store";
@@ -7,6 +7,7 @@ import { SettlementStore } from "../settlements/settlement-store";
 
 export interface RoundHistory {
     roundId: number;
+    drawId?: number;
     result: GameServiceMessage.TResult;
     settlementResult: GameServiceMessage.TSettlementResult;
     winningPlayers?: GameServiceMessage.TWinningPlayers;
@@ -26,12 +27,37 @@ export interface IFirstJoinGameHistory {
 
 @injectable()
 export class RoundHistoryStore {
+    protected displayedRoundId: string = "roundId";
+
     constructor(
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(GameSetting) protected readonly gameSetting: GameSetting,
-        @inject(SettlementStore) protected readonly settlementStore: SettlementStore
+        @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
+        public histories = [],
+        public joinGameHistory = null,
+        public firstJoinGameHistory = null,
+        public receivedInGame = false
     ) {
-        makeAutoObservable(this);
+        this.histories = histories;
+        this.joinGameHistory = joinGameHistory;
+        this.firstJoinGameHistory = firstJoinGameHistory;
+        this.receivedInGame = receivedInGame;
+
+        makeObservable(this, {
+            receivedInGame: observable,
+            firstJoinGameHistory: observable,
+            histories: observable,
+            joinGameHistory: observable,
+
+            isValidHistories: computed,
+
+            getLastRound: action,
+            insertNewRound: action,
+            limitNumberRoundHistory: action,
+            updateHistoriesInGame: action,
+            clearRoundHistories: action,
+            generateJoinGameData: action,
+        });
 
         when(
             () => this.isValidHistories,
@@ -40,12 +66,6 @@ export class RoundHistoryStore {
             }
         );
     }
-
-    private _histories: RoundHistory[] = [];
-    private _joinGameHistory: IJoinGameHistory = null;
-    private _firstJoinGameHistory: IFirstJoinGameHistory = null;
-    private _receivedInGame = false;
-
     generateJoinGameData() {
         const lastRound = this.getLastRound();
         const roundTime = this.roundTimeStore.roundTime;
@@ -58,7 +78,7 @@ export class RoundHistoryStore {
 
         if (this.roundTimeStore.isShowAnimationResult || this.roundTimeStore.isShowResult) {
             const showResultByFinish =
-                this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId >= lastRound.roundId;
+                this.settlementStore.currentFinish && this.settlementStore.currentFinish[this.displayedRoundId] >= lastRound[this.displayedRoundId];
             if (!showResultByFinish) {
                 this.joinGameHistory = {
                     roundHistory: lastRound,
@@ -67,33 +87,9 @@ export class RoundHistoryStore {
         }
     }
 
-    get histories() {
-        return this._histories;
-    }
-
-    set histories(histories: RoundHistory[]) {
-        this._histories = histories;
-    }
-
-    get joinGameHistory() {
-        return this._joinGameHistory;
-    }
-
-    set joinGameHistory(joinGameHistory: IJoinGameHistory) {
-        this._joinGameHistory = joinGameHistory;
-    }
-
-    get firstJoinGameHistory() {
-        return this._firstJoinGameHistory;
-    }
-
-    set firstJoinGameHistory(history: IFirstJoinGameHistory) {
-        this._firstJoinGameHistory = history;
-    }
-
     get isValidHistories(): boolean {
         const { roundTimeStore } = this;
-        if (!this._receivedInGame || roundTimeStore.roundState === ROUND_STATE.STOP_GAME_LOOP) {
+        if (!this.receivedInGame || roundTimeStore.roundState === ROUND_STATE.STOP_GAME_LOOP) {
             return false;
         }
 
@@ -106,7 +102,7 @@ export class RoundHistoryStore {
 
     insertNewRound(finish: GameServiceMessage.Finish) {
         const currentRound = finish as RoundHistory;
-        if (this.histories[0]?.roundId === currentRound.roundId) {
+        if (this.histories[0] && this.histories[0][this.displayedRoundId] === currentRound[this.displayedRoundId]) {
             return;
         }
         const cloneHistories = JSON.parse(JSON.stringify(this.histories));
@@ -125,14 +121,15 @@ export class RoundHistoryStore {
     updateHistoriesInGame(roundHistories: RoundHistory[]) {
         if (roundHistories.length > 0) {
             const lastRound = roundHistories[0];
-            const missingNewRound = this.settlementStore.currentFinish && this.settlementStore.currentFinish.roundId > lastRound.roundId;
+            const missingNewRound = this.settlementStore.currentFinish && this.settlementStore.currentFinish[this.displayedRoundId] > lastRound[this.displayedRoundId];
             if (missingNewRound) {
                 roundHistories.unshift(this.settlementStore.currentFinish as RoundHistory);
             }
             this.limitNumberRoundHistory(roundHistories);
         }
         this.histories = roundHistories;
-        this._receivedInGame = true;
+
+        this.receivedInGame = true;
     }
 
     clearRoundHistories() {

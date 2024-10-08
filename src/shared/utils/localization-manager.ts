@@ -128,7 +128,7 @@ export class TranslationManager {
         return this._polygrot.t(key, options);
     }
 
-    private toLanguageId(languageCode: string) {
+    public toLanguageId(languageCode: string) {
         const languageMapping = {
             "vi-VN": "vi",
             "en-US": "en",
@@ -145,7 +145,7 @@ export class TranslationManager {
     public getLanguageId() {
         let languageId = (StorageManager.get(`current_language`) ?? this.defaultLanguageId) as string;
 
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(globalThis.location.search);
 
         if (urlParams.has("lang")) {
             languageId = this.toLanguageId(urlParams.get("lang"));
@@ -168,7 +168,7 @@ export class TranslationManager {
     }
 
     public getGameNamespace() {
-        return this.options.gameNamespaces;
+        return this.options?.gameNamespaces;
     }
 
     public loadTranslationResource() {
@@ -180,7 +180,7 @@ export class TranslationManager {
     }
 
     public gameTranslate(key: string, options?: InterpolationOptions) {
-        if (this.options.gameNamespaces) {
+        if (this.options?.gameNamespaces) {
             for (const namespace of this.options.gameNamespaces) {
                 const keyText = `${namespace}.${key}`;
                 const text = this.translate(keyText, options);
@@ -194,11 +194,7 @@ export class TranslationManager {
     }
 
     public commonTranslate(key: string, options?: InterpolationOptions) {
-        if (this.options.gameNamespaces) {
-            return this.translate(`Common.${key}`, options);
-        }
-
-        return this.translate(key, options);
+        return this.translate(`Common.${key}`, options);
     }
 
     public getMessageFollowSystem(system: number, key: string, options?: InterpolationOptions) {
@@ -208,7 +204,7 @@ export class TranslationManager {
 
     private getTranslate(key: string, mode?: "game" | "common" | "instant", options?: InterpolationOptions) {
         const namespace = {
-            game: this.options.gameNamespaces,
+            game: this.options?.gameNamespaces,
             common: "Common",
             instant: "InstantGame",
         };

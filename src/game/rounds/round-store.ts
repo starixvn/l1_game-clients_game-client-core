@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { makeAutoObservable } from "mobx";
+import { computed, makeObservable, observable, action } from "mobx";
 
 import { MainPlayerStore } from "../../players";
 import { GameServiceMessage } from "../../shared";
@@ -29,44 +29,73 @@ export interface THighlightStatic {
 
 @injectable()
 export class RoundStore {
+    totalBets: GameServiceMessage.TotalBets = {};
+    _clientRoundId = 0;
+    protected displayedRoundId: string = "roundId";
+
     constructor(
         @inject(GameConfigStore) protected readonly gameConfigStore: GameConfigStore,
         @inject(RoundHistoryStore) protected readonly roundHistoryStore: RoundHistoryStore,
         @inject(RoundTimeStore) protected readonly roundTimeStore: RoundTimeStore,
         @inject(MainPlayerStore) protected readonly mainPlayerStore: MainPlayerStore,
-        @inject(SettlementStore) protected readonly settlementStore: SettlementStore
+        @inject(SettlementStore) protected readonly settlementStore: SettlementStore,
+        public roundId = 0,
+        public resultHash = null,
+        public ownBets = {},
+        public userBetPercentage = null,
+        public betPercentage = {}
     ) {
-        makeAutoObservable(this, {
-            _clientRoundId: false,
+
+        this.roundId = roundId;
+        this.resultHash = resultHash;
+        this.ownBets = ownBets;
+        this.userBetPercentage = userBetPercentage;
+        this.betPercentage = betPercentage;
+
+        makeObservable(this, {
+            roundId: observable,
+            resultHash: observable,
+
+            totalBets: observable,
+            setTotalBets: action,
+
+            ownBets: observable,
+            userBetPercentage: observable,
+            betPercentage: observable,
+
+            clientRoundId: computed,
+            setClientRoundId: action,
+
+            historyRoundId: computed,
+            minBet: computed,
+            maxBet: computed,
+            roundOdds: computed,
+
+            isResetHighlight: computed,
+            highLightAnim: computed,
+            highlightStatic: computed,
+
+            resetForNewRound: action,
+            resetRoundStore: action,
         });
     }
 
-    roundId = 0;
-    private _ownBets: GameServiceMessage.OwnBets = {};
-    private _totalBets: GameServiceMessage.TotalBets = {};
-    resultHash: GameServiceMessage.ResultHash = null;
-    private _userBetPercentage: GameServiceMessage.UserBetPercentage = null;
-    private _betPercentage: GameServiceMessage.UserBetPercentage = {};
-
-    _clientRoundId = 0;
-
-    set clientRoundId(roundId: number) {
-        this._clientRoundId = roundId;
-    }
 
     get clientRoundId() {
         const currentFinish = this.settlementStore.currentFinish;
-        if (!currentFinish || this.historyRoundId >= currentFinish.roundId) {
+
+        if (!currentFinish || this.historyRoundId >= currentFinish[this.displayedRoundId]) {
             return this.historyRoundId;
         }
-        return currentFinish.roundId;
+
+        return currentFinish[this.displayedRoundId];
     }
 
     get historyRoundId() {
         let lastRoundId = 0;
 
         if (this.roundHistoryStore.histories.length > 0) {
-            lastRoundId = this.roundHistoryStore.histories[0].roundId;
+            lastRoundId = this.roundHistoryStore.histories[0][this.displayedRoundId];
         }
 
         if (
@@ -79,12 +108,12 @@ export class RoundStore {
         }
 
         // when clearing all active data in database and having data in archive collection
-        if (this.roundHistoryStore.histories.length === 0 && this.roundId > 0) {
-            lastRoundId = this.roundId;
+        if (this.roundHistoryStore.histories.length === 0 && this[this.displayedRoundId] > 0) {
+            lastRoundId = this[this.displayedRoundId];
         }
 
         if (this._clientRoundId < lastRoundId) {
-            this.clientRoundId = lastRoundId;
+            this._clientRoundId = lastRoundId;
         }
         return this._clientRoundId;
     }
@@ -102,41 +131,6 @@ export class RoundStore {
             odds: this.gameConfigStore.odds,
             fractional: this.mainPlayerStore.fractionalOddsFormat,
         };
-    }
-
-    set totalBets(totalBets: GameServiceMessage.TotalBets) {
-        this._totalBets = totalBets;
-    }
-
-    get totalBets() {
-        return Object.keys(this._totalBets).reduce((total, betChoice) => {
-            total[betChoice] = this._totalBets[betChoice] / this.mainPlayerStore.rate;
-            return total;
-        }, {});
-    }
-
-    get ownBets() {
-        return this._ownBets;
-    }
-
-    set ownBets(ownBets: GameServiceMessage.OwnBets) {
-        this._ownBets = ownBets;
-    }
-
-    set userBetPercentage(betPercent: GameServiceMessage.UserBetPercentage) {
-        this._userBetPercentage = betPercent;
-    }
-
-    get userBetPercentage() {
-        return this._userBetPercentage;
-    }
-
-    set betPercentage(betPercent: GameServiceMessage.BetPercentage) {
-        this._betPercentage = betPercent;
-    }
-
-    get betPercentage() {
-        return this._betPercentage;
     }
 
     get isResetHighlight(): boolean {
@@ -175,11 +169,22 @@ export class RoundStore {
         return { settlementResult, result };
     }
 
+    setClientRoundId(roundId: number) {
+        this._clientRoundId = roundId;
+    }
+
+    setTotalBets(totalBets: GameServiceMessage.TotalBets) {
+        this.totalBets = Object.keys(totalBets).reduce((total, betChoice) => {
+            total[betChoice] = this.totalBets[betChoice] / this.mainPlayerStore.rate;
+            return total;
+        }, {});
+    }
+
     resetForNewRound() {
         this.ownBets = {};
-        this._totalBets = {};
-        this._userBetPercentage = null;
-        this._betPercentage = {};
+        this.totalBets = {};
+        this.userBetPercentage = null;
+        this.betPercentage = {};
     }
 
     resetRoundStore() {

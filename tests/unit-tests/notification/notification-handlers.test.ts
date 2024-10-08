@@ -1,10 +1,10 @@
 import { stub } from "jest-auto-stub";
+import { io } from "socket.io-client/dist/socket.io.js";
+import * as MsgpackParser from "socket.io-msgpack-parser";
 import { NotificationStore } from "../../../src/notification";
 import { NotificationHandlers } from "../../../src/notification/notification-handlers";
-import { io } from "socket.io-client/dist/socket.io.js";
-import { io as ioMsgPack } from "socket.io-client/dist/socket.io.msgpack.min.js";
-import { siteConfigs } from "../container.test";
 import { UrlUtils } from "../../../src/shared/utils";
+import { siteConfigs } from "../container.test";
 
 jest.mock("../../../src/shared/utils/storage-manager", () => ({
     StorageManager: {
@@ -58,7 +58,7 @@ describe("NotificationHandlers tests", () => {
                 handler["siteConfigs"].notificationServiceUrlDev = notificationServiceUrlDev;
                 handler["siteConfigs"].isDev = true;
                 (UrlUtils.getSubDirectory as jest.Mock).mockReturnValueOnce("");
-                const options = {
+                const options: any = {
                     path: "/socket.io",
                     socketUri: "https://localhost:3008",
                     transports: ["websocket"],
@@ -68,15 +68,17 @@ describe("NotificationHandlers tests", () => {
                         ss: fakeSession.session,
                         username: fakeSession.username,
                     },
+                    parser: MsgpackParser,
                 };
+
                 const connection = { msgpack: true };
-                (ioMsgPack as jest.Mock).mockReturnValue(connection);
+                (io as jest.Mock).mockReturnValue(connection);
 
                 // act
                 handler.handle(fakeSession);
 
                 // assert
-                expect(ioMsgPack).toHaveBeenCalledWith(notificationServiceUrlDev, options);
+                expect(io).toHaveBeenCalledWith(notificationServiceUrlDev, options);
                 expect(notificationStore.connection).toEqual(connection);
                 expect(notificationStore.initListener).toHaveBeenCalled();
             });
